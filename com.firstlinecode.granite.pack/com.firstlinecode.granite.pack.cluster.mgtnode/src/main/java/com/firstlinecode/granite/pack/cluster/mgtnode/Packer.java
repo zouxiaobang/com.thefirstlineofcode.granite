@@ -136,6 +136,9 @@ public class Packer {
 
 	private void recopyAppnodeDependencies() {
 		Main.runMvn(new File(options.getProjectDirPath()), "-f", "repository-pom.xml", "dependency:copy-dependencies");
+		if (options.isCommerical()) {			
+			Main.runMvn(new File(options.getProjectDirPath()), "-f", "gem-pom.xml", "dependency:copy-dependencies");
+		}
 	}
 	
 	private void deleteAppnodeDependencies(File dependenciesDir) {

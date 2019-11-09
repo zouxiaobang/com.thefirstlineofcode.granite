@@ -127,6 +127,9 @@ public class Main {
 				
 				options.setRepositoryDirPath(args[i]);
 				i++;
+			} else if ("-commerical".equals(args[i])) {
+				options.setCommerical(true);
+				i++;
 			} else if ("-help".equals(args[i])) {
 				throw new IllegalArgumentException("-help should be used alonely.");
 			} else {

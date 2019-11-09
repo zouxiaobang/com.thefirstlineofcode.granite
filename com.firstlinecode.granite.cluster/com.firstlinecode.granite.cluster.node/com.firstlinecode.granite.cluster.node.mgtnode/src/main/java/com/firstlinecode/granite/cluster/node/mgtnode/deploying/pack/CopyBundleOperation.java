@@ -13,9 +13,15 @@ public class CopyBundleOperation {
 	private static final Logger logger = LoggerFactory.getLogger(CopyBundleOperation.class);
 	
 	private String bundleName;
+	private boolean optional;
 	
 	public CopyBundleOperation(String bundleName) {
+		this(bundleName, false);
+	}
+	
+	public CopyBundleOperation(String bundleName, boolean optional) {
 		this.bundleName = bundleName;
+		this.optional = optional;
 	}
 
 	public void copy(IPackContext context) {
@@ -26,6 +32,11 @@ public class CopyBundleOperation {
 				bundle = aBundle;
 				break;
 			}
+		}
+		
+		if (bundle == null && optional) {
+			logger.info("Optinal bundle {} not found. ignore to copy it.", bundleName);
+			return;
 		}
 		
 		if (bundle == null) {

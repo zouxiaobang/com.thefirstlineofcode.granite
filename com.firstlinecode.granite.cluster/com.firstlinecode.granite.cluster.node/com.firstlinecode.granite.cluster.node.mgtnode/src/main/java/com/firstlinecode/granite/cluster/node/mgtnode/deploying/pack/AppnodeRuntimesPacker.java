@@ -268,7 +268,20 @@ public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
 		
 		CopyBundleOperation[] copyBundles = new CopyBundleOperation[sCopyBundles.length];
 		for (int i = 0; i < sCopyBundles.length; i++) {
-			copyBundles[i] = new CopyBundleOperation(sCopyBundles[i]);
+			String bundleName = sCopyBundles[i];
+			boolean optional = false;
+			int optionalSeparator = sCopyBundles[i].indexOf(" - ");
+			if (optionalSeparator != -1) {
+				bundleName = sCopyBundles[i].substring(0, optionalSeparator).trim();
+				String sOptional = sCopyBundles[i].substring(optionalSeparator + 3).trim();
+				if (sOptional == null || sOptional.isEmpty()) {						
+					throw new RuntimeException("Illegal pack module configuration format. Check pack_modules.ini file.");
+				}
+				
+				optional = sOptional.equals("optional");
+			}
+			
+			copyBundles[i] = new CopyBundleOperation(bundleName, optional);
 		}
 		
 		return copyBundles;

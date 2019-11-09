@@ -12,12 +12,14 @@ public class Options {
 	private boolean cleanCache;
 	private boolean cleanUpdate;
 	private String[] modules;
+	private boolean commerical;
 	
 	public Options() {
 		help = false;
 		update = false;
 		cleanCache = false;
 		cleanUpdate = false;
+		commerical = false;
 	}
 	
 	public boolean isHelp() {
@@ -110,6 +112,14 @@ public class Options {
 	
 	public void setCleanCache(boolean cleanCache) {
 		this.cleanCache = cleanCache;
+	}
+	
+	public boolean isCommerical() {
+		return commerical;
+	}
+	
+	public void setCommerical(boolean commerical) {
+		this.commerical = commerical;
 	}
 	
 }
