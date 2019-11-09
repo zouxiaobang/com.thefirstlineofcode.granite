@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+        <groupId>com.firstlinecode.granite</groupId>
+        <artifactId>com.firstlinecode.granite.lite</artifactId>
+        <version>0.2.1.RELEASE</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+	
+    <properties>
+		<bundle.symbolicName>com.firstlinecode.granite.lite.session</bundle.symbolicName>
+		<bundle.namespace>com.firstlinecode.granite.lite.session</bundle.namespace>
+	</properties>
+	
+	<groupId>com.firstlinecode.granite.lite</groupId>
+	<artifactId>com.firstlinecode.granite.lite.session</artifactId>
+	<name>${bundle.symbolicName}</name>
+	<packaging>bundle</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.firstlinecode.granite.framework</groupId>
+			<artifactId>com.firstlinecode.granite.framework.core</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>

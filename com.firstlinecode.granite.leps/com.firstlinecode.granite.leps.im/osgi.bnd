@@ -1,0 +1,31 @@
+#-----------------------------------------------------------------
+# Use this file to add customized Bnd instructions for the bundle
+#-----------------------------------------------------------------
+
+Granite-Application-Component-Scan: true
+
+Granite-Presence-Processors: com.firstlinecode.granite.leps.im.StandardPresenceProcessor
+	 
+Granite-Message-Processors: com.firstlinecode.granite.leps.im.StandardMessageProcessor
+
+Granite-Xep-Processors: xep=iq->query|jabber:iq:roster;\
+ class=com.firstlinecode.granite.leps.im.roster.RosterProcessor,\
+ xep=iq->subscribe|urn:lep:subscription;\
+ class=com.firstlinecode.granite.leps.im.subscription.SubscribeProcessor,\
+ xep=iq->subscribed|urn:lep:subscription;\
+ class=com.firstlinecode.granite.leps.im.subscription.SubscribedProcessor,\
+ xep=iq->unsubscribe|urn:lep:subscription;\
+ class=com.firstlinecode.granite.leps.im.subscription.UnsubscribeProcessor,\
+ xep=iq->unsubscribed|urn:lep:subscription;\
+ class=com.firstlinecode.granite.leps.im.subscription.UnsubscribedProcessor,\
+ xep=message->trace|urn:lep:traceable;\
+ class=com.firstlinecode.granite.leps.im.traceable.TraceableMessageProcessor,\
+ xep=iq->trace|urn:lep:traceable;\
+ class=com.firstlinecode.granite.leps.im.traceable.TraceProcessor
+
+Granite-Iq-Result-Processors: com.firstlinecode.granite.leps.im.subscription.AcknowledgementProcessor
+
+Granite-Event-Listeners: event=com.firstlinecode.granite.framework.im.ResourceAvailabledEvent;\
+ event-listener=com.firstlinecode.granite.leps.im.subscription.ResourceAvailabledEventListener,\
+ event=com.firstlinecode.granite.framework.im.ResourceAvailabledEvent;\
+ event-listener=com.firstlinecode.granite.leps.im.traceable.ResourceAvailabledEventListener

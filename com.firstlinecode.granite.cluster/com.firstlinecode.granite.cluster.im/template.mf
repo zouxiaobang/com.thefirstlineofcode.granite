@@ -1,0 +1,7 @@
+Import-Template: org.springframework.*;version="[4.3.7,5)",
+ com.firstlinecode.granite.framework.*;version="[0.2.1.RELEASE,1.0.0.RELEASE)"
+Excluded-Imports: com.firstlinecode.granite.cluster.im.*
+Import-Package: org.springframework.core;version="[4.3.7,5)",
+ org.springframework.aop;version="[4.3.7,5)",
+ org.springframework.aop.framework;version="[4.3.7,5)",
+ org.aopalliance.aop;version="[1.0.0,2)"

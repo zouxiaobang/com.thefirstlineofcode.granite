@@ -1,0 +1,27 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+		http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.firstlinecode.granite.xeps</groupId>
+		<artifactId>com.firstlinecode.granite.xeps</artifactId>
+		<version>0.2.1.RELEASE</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<groupId>com.firstlinecode.granite.xeps.component</groupId>
+	<artifactId>com.firstlinecode.granite.xeps.component</artifactId>
+	<packaging>pom</packaging>
+	<name>Jabber Component Protocol</name>
+
+	<modules>
+		<module>com.firstlinecode.granite.xeps.component.stream</module>
+		<module>com.firstlinecode.granite.xeps.component.stream.accept</module>
+		<module>com.firstlinecode.granite.xeps.component.parsing</module>
+		<module>com.firstlinecode.granite.xeps.component.processing</module>
+		<module>com.firstlinecode.granite.xeps.component.routing</module>
+	</modules>
+
+</project>

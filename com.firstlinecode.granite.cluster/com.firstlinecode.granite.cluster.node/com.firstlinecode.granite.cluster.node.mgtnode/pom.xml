@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+        <groupId>com.firstlinecode.granite.cluster</groupId>
+        <artifactId>com.firstlinecode.granite.cluster.node</artifactId>
+        <version>0.2.1.RELEASE</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    
+	<properties>
+		<bundle.symbolicName>com.firstlinecode.granite.cluster.node.mgtnode</bundle.symbolicName>
+		<bundle.namespace>com.firstlinecode.granite.cluster.node.mgtnode</bundle.namespace>
+	</properties>
+	
+	<groupId>com.firstlinecode.granite.cluster.node</groupId>
+	<artifactId>com.firstlinecode.granite.cluster.node.mgtnode</artifactId>
+	<name>${bundle.symbolicName}</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.firstlinecode.granite.cluster.node</groupId>
+			<artifactId>com.firstlinecode.granite.cluster.node.commons</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ignite</groupId>
+			<artifactId>ignite-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.cache</groupId>
+			<artifactId>cache-api</artifactId>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<finalName>granite-cluster-mgtnode-${project.version}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<mainClass>com.firstlinecode.granite.cluster.node.mgtnode.Main</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<appendAssemblyId>false</appendAssemblyId>
+					<descriptors>
+						<descriptor>src/assembly/descriptor.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

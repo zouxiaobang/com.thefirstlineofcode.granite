@@ -1,0 +1,6 @@
+Import-Template: org.apache.ibatis.*;version="[3.2.8,4)",
+ org.springframework.*;version="[4.3.7,5)",
+ com.firstlinecode.granite.framework.application.*;version="[0.2.1.RELEASE,1.0.0.RELEASE)"
+Excluded-Exports: com.firstlinecode.granite.lite.dba.internal.*
+Excluded-Imports: com.firstlinecode.granite.lite.dba.*
+Bundle-Activator: ${bundle.namespace}.internal.Activator
