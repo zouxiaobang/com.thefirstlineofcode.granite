@@ -100,10 +100,6 @@
 			<groupId>com.firstlinecode.granite.lite</groupId>
 			<artifactId>com.firstlinecode.granite.lite.xeps.ibr</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.firstlinecode.gem.server</groupId>
-			<artifactId>com.firstlinecode.gem.server.bxmpp</artifactId>
-		</dependency>
 	</dependencies>
 	
 	<build>
