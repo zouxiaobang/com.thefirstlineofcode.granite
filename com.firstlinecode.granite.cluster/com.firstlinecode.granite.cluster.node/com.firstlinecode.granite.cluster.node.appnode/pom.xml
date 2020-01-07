@@ -61,7 +61,7 @@
 				<configuration>
 					<appendAssemblyId>false</appendAssemblyId>
 					<descriptors>
-						<descriptor>descriptor.xml</descriptor>
+						<descriptor>src/assembly/descriptor.xml</descriptor>
 					</descriptors>
 				</configuration>
 				<executions>
