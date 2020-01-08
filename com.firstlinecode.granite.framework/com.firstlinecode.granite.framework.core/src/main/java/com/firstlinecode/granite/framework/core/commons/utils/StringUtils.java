@@ -35,5 +35,9 @@ public class StringUtils {
 		
 		return sb.toString();
 	}
+
+	public static boolean isEmpty(String string) {
+		return string == null || string.isEmpty();
+	}
 	
 }
