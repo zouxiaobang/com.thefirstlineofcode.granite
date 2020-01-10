@@ -12,6 +12,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class Packer {
+	private static final String CONFIGURATION_DIR = "/configuration/com.firstlinecode.granite/";
+	public static final String COMPONENT_BINDING_LITE_CONFIG_FILE = "component-binding-lite.ini";
+	private static final String SAND_COMPONENT_BINDING_LITE_CONFIG_FILE = "sand-component-binding-lite.ini";
+	private static final String APPLICATION_CONFIG_FILE = "application.ini";
+	private static final String SAND_APPLICATION_CONFIG_FILE = "sand-application.ini";
 	private static final String NAME_PREFIX_OSGI_BUNDLE = "org.eclipse.osgi-";
 	private static final String NAME_PREFIX_ECLIPSE_COMMON_BUNDLE = "org.eclipse.equinox.common-";
 	private static final String NAME_PREFIX_ECLIPSE_UPDATE_BUNDLE = "org.eclipse.update.configurator-";
@@ -89,8 +94,10 @@ public class Packer {
 	private void copyDependencies() {
 		if (options.getProtocol() == Options.Protocol.STANDARD) {
 			Main.runMvn(new File(options.getProjectDirPath()), "-fstandard-pom.xml", "dependency:copy-dependencies");
-		} else {
+		} else if (options.getProtocol() == Options.Protocol.LEP) {
 			Main.runMvn(new File(options.getProjectDirPath()), "-fleps-pom.xml", "dependency:copy-dependencies");
+		} else {
+			Main.runMvn(new File(options.getProjectDirPath()), "-fsand-pom.xml", "dependency:copy-dependencies");			
 		}
 		
 		if (options.isCommerical()) {
@@ -103,7 +110,23 @@ public class Packer {
 		File configFilesDir = new File(targetDir.getParent(), "config");
 		
 		for (File configFile : configFilesDir.listFiles()) {
-			writeFileToZip(zos, options.getAppName() + "/configuration/com.firstlinecode.granite/" + configFile.getName(), configFile);
+			if (options.getProtocol() != Options.Protocol.SAND) {
+				if (SAND_APPLICATION_CONFIG_FILE.equals(configFile.getName()) ||
+						SAND_COMPONENT_BINDING_LITE_CONFIG_FILE.equals(configFile.getName()))
+					continue;
+				
+				writeFileToZip(zos, options.getAppName() + CONFIGURATION_DIR + configFile.getName(), configFile);
+			} else {
+				if (APPLICATION_CONFIG_FILE.equals(configFile.getName()) ||
+						COMPONENT_BINDING_LITE_CONFIG_FILE.equals(configFile.getName())) {
+					continue;
+				} else if (configFile.getName().equals(SAND_APPLICATION_CONFIG_FILE)) {					
+					writeFileToZip(zos, options.getAppName() + CONFIGURATION_DIR + APPLICATION_CONFIG_FILE, configFile);					
+				} else {
+					writeFileToZip(zos, options.getAppName() + CONFIGURATION_DIR + configFile.getName(), configFile);					
+				}
+			}
+
 		}
 	}
 

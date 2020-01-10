@@ -24,6 +24,7 @@
 		<granite.leps.version>0.2.1.RELEASE</granite.leps.version>
 		<granite.lite.version>0.2.1.RELEASE</granite.lite.version>
 		<granite.cluster.version>0.2.1.RELEASE</granite.cluster.version>
+		<sand.version>0.1.0.RELEASE</sand.version>
 		<gem.version>0.2.0.RELEASE</gem.version>
 	</properties>
 
@@ -862,7 +863,15 @@
 				<artifactId>com.firstlinecode.granite.cluster.im</artifactId>
 				<version>${granite.cluster.version}</version>
 			</dependency>
-			
+
+			<!-- sand plugin-->
+			<dependency>
+				<groupId>com.firstlinecode.sand.server</groupId>
+				<artifactId>com.firstlinecode.sand.server.ibdr</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+
+			<!-- gem plugins -->
 			<dependency>
 				<groupId>com.firstlinecode.gem.server</groupId>
 				<artifactId>com.firstlinecode.gem.server.bxmpp</artifactId>

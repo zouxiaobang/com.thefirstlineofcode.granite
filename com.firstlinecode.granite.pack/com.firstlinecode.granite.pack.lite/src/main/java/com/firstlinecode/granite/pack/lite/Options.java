@@ -10,13 +10,16 @@ public class Options {
 	private String appName;
 	private String targetDirPath;
 	private String graniteProjectDirPath;
+	private String sandProjectName;
+	private String sandProjectDirPath;
 	private String projectDirPath;
 	private Protocol protocol;
 	private boolean commerical;
 	
 	public enum Protocol {
 		LEP,
-		STANDARD
+		STANDARD,
+		SAND
 	}
 	
 	public Options() {
@@ -90,6 +93,22 @@ public class Options {
 
 	public void setGraniteProjectDirPath(String graniteDir) {
 		this.graniteProjectDirPath = graniteDir;
+	}
+	
+	public String getSandProjectName() {
+		return sandProjectName;
+	}
+	
+	public void setSandProjectName(String sandProjectName) {
+		this.sandProjectName = sandProjectName;
+	}
+	
+	public String getSandProjectDirPath() {
+		return sandProjectDirPath;
+	}
+
+	public void setSandProjectDirPath(String sandDir) {
+		this.sandProjectDirPath = sandDir;
 	}
 
 	public String getProjectDirPath() {

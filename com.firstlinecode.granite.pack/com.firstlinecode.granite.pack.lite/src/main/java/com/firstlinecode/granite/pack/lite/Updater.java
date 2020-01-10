@@ -19,21 +19,27 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 public class Updater {
+	private static final String GRANITE_SUB_SYSTEM_PREFIX = "granite.";
+	private static final String SAND_SUBSYSTEM_PREFIX = "sand.";
+	
 	private static final String GRANITE_PROJECT_PACKAGE_PREFIX = "com.firstlinecode.granite.";
 
 	private static final String DIRECTORY_NAME_CACHE = ".cache";
-
 	private static final String FILE_NAME_SUBSYSTEMS = "subsystems.ini";
-
 	private static final String FILE_NAME_BUNDLEINFOS = "bundleinfos.ini";
 
-	private static final String[] SUBSYSTEM_NAMES = new String[] {
-			"framework",
-			"im",
-			"stream",
-			"xeps",
-			"leps",
-			"lite"
+	private static final String[] GRANITE_SUBSYSTEM_NAMES = new String[] {
+			"granite.framework",
+			"granite.im",
+			"granite.stream",
+			"granite.xeps",
+			"granite.leps",
+			"granite.lite"
+	};
+	
+	private static final String[] SAND_SUBSYSTEM_NAMES = new String[] {
+			"sand.protocols",
+			"sand.server"
 	};
 	
 	private Map<String, String[]> subsystems;
@@ -43,7 +49,7 @@ public class Updater {
 	
 	public Updater(Options options) {
 		this.options = options;
-		subsystems = new HashMap<>(6);
+		subsystems = new HashMap<>(8);
 		bundleInfos = new HashMap<>(20);
 	}
 
@@ -61,15 +67,21 @@ public class Updater {
 		
 		String[] modules = options.getModules();
 		if (modules == null)
-			modules = SUBSYSTEM_NAMES;
+			modules = getModules();
 		
 		List<String> updatedBundles = new ArrayList<>();
 		for (String module : modules) {
 			if (isSubsystem(module)) {
 				updateSubsystem(module, clean, updatedBundles);
 			} else {
-				if (!module.startsWith(GRANITE_PROJECT_PACKAGE_PREFIX)) {
-					module = GRANITE_PROJECT_PACKAGE_PREFIX + module;
+				if (!module.startsWith(GRANITE_PROJECT_PACKAGE_PREFIX) && !module.startsWith(options.getSandProjectName())) {
+					if (module.startsWith("granite.")) {
+						module = GRANITE_PROJECT_PACKAGE_PREFIX + module.substring(8);						
+					} else if (module.startsWith("sand.")) {
+						module = options.getSandProjectName() + '.' + module.substring(5);
+					} else {
+						throw new IllegalArgumentException(String.format("Illegal module name '%s'", module));
+					}
 				}
 				
 				if (bundleInfos.containsKey(module)) {
@@ -92,10 +104,34 @@ public class Updater {
 		
 		System.out.println(String.format("Bundles %s updated.", bundles.toString()));
 	}
+
+	private String[] getModules() {
+		if (options.getSandProjectDirPath() == null) {			
+			return GRANITE_SUBSYSTEM_NAMES;
+		} else {
+			String[] graniteAndSandSubsystemNames = new String[GRANITE_SUBSYSTEM_NAMES.length + SAND_SUBSYSTEM_NAMES.length];
+			
+			for (int i = 0; i < GRANITE_SUBSYSTEM_NAMES.length; i++) {
+				graniteAndSandSubsystemNames[i] = GRANITE_SUBSYSTEM_NAMES[i];
+			}
+			
+			for (int i = 0; i < SAND_SUBSYSTEM_NAMES.length; i++) {
+				graniteAndSandSubsystemNames[i + GRANITE_SUBSYSTEM_NAMES.length] = SAND_SUBSYSTEM_NAMES[i];
+			}
+			
+			return graniteAndSandSubsystemNames;
+		}
+	}
 	
 	private void updateBundle(String bundle, boolean clean, List<String> updatedBundles) {
-		if (!bundle.startsWith(GRANITE_PROJECT_PACKAGE_PREFIX)) {
-			bundle = GRANITE_PROJECT_PACKAGE_PREFIX + bundle;
+		if (bundle.startsWith(GRANITE_SUB_SYSTEM_PREFIX)) {
+			bundle = GRANITE_PROJECT_PACKAGE_PREFIX + bundle.substring(8);
+		} else if (bundle.startsWith(SAND_SUBSYSTEM_PREFIX)) {
+			bundle = options.getSandProjectName() + '.' + bundle.substring(5);			
+		}
+		
+		if (!bundleInfos.containsKey(bundle)) {
+			throw new IllegalArgumentException(String.format("Illegal bundle name '%s'", bundle));
 		}
 		
 		BundleInfo bundleInfo = bundleInfos.get(bundle);
@@ -139,10 +175,20 @@ public class Updater {
 	}
 
 	private void updateSubsystem(String subsystem, boolean clean, List<String> updatedBundles) {
-		String subsystemFullName = GRANITE_PROJECT_PACKAGE_PREFIX + subsystem;
-		File subsystemProjectDir = new File(options.getGraniteProjectDirPath(), subsystemFullName);
+		String subsystemFullName = null;
+		File subsystemProjectDir = null;
+		
+		if (subsystem.startsWith(GRANITE_SUB_SYSTEM_PREFIX)) {
+			subsystemFullName = GRANITE_PROJECT_PACKAGE_PREFIX + subsystem.substring(8);
+			subsystemProjectDir = new File(options.getGraniteProjectDirPath(), subsystemFullName);
+		} else if (subsystem.startsWith(SAND_SUBSYSTEM_PREFIX)) {
+			subsystemFullName = options.getSandProjectName() + '.' + subsystem.substring(5);
+			subsystemProjectDir = new File(options.getSandProjectDirPath(), subsystemFullName);
+		} else {
+			throw new IllegalArgumentException(String.format("Illegal subsystem name '%s'", subsystem));
+		}
 		if (!subsystemProjectDir.exists()) {
-			throw new RuntimeException(String.format("Subsystem[%s] project directory doesn't exist.", subsystem));
+			throw new RuntimeException(String.format("Subsystem[%s] project directory[%s] doesn't exist.", subsystem, subsystemProjectDir.getPath()));
 		}
 		
 		if (clean) {
@@ -276,7 +322,7 @@ public class Updater {
 		
 		for (File plugin : pluginsDir.listFiles()) {
 			String pluginFileName = plugin.getName();
-			if (!isGraniteArtifact(pluginFileName)) {
+			if (!isGraniteArtifact(pluginFileName) && !isSandArtifact(pluginFileName)) {
 				continue;
 			}
 			
@@ -381,8 +427,13 @@ public class Updater {
 
 	private void collectCacheData() {
 		File graniteProjectDir = new File(options.getGraniteProjectDirPath());
-		
 		collectCacheData(graniteProjectDir, null);
+		
+		if (options.getSandProjectDirPath() == null)
+			return;
+		
+		File sandProjectDir = new File(options.getSandProjectDirPath());
+		collectCacheData(sandProjectDir, null);
 	}
 
 	private void collectCacheData(File currentDir, String subsystem) {
@@ -418,7 +469,7 @@ public class Updater {
 
 	private String getSubsystem(File file) {
 		String fileName = file.getName();
-		for (String subsystemName : SUBSYSTEM_NAMES) {
+		for (String subsystemName : getModules()) {
 			if (fileName.endsWith("." + subsystemName)) {
 				return subsystemName;
 			}
@@ -456,6 +507,10 @@ public class Updater {
 	private boolean isGraniteArtifact(String pluginFileName) {
 		return pluginFileName.startsWith(GRANITE_PROJECT_PACKAGE_PREFIX);
 	}
+	
+	private boolean isSandArtifact(String pluginFileName) {
+		return pluginFileName.startsWith(options.getSandProjectName() + '.');
+	}
 
 	private boolean isCacheCreated() {
 		File cacheDir = new File(options.getTargetDirPath(), DIRECTORY_NAME_CACHE);
@@ -466,7 +521,7 @@ public class Updater {
 	}
 	
 	private boolean isSubsystem(String module) {
-		for (String subsystemName : SUBSYSTEM_NAMES) {
+		for (String subsystemName : getModules()) {
 			if (subsystemName.equals(module))
 				return true;
 		}

@@ -9,6 +9,7 @@ import java.util.Arrays;
 public class Main {
 	private static final String DEFAULT_VERSION = "0.2.1.RELEASE";
 	private static final String NAME_PREFIX_APP = "granite-lite-";
+	private static final String DEFAULT_SAND_PROJECT_NAME = "com.firstlinecode.sand";
 	
 	private Options options;
 	
@@ -95,10 +96,23 @@ public class Main {
 					options.setProtocol(Options.Protocol.LEP);
 				} else if ("standard".equals(args[i])) {
 					options.setProtocol(Options.Protocol.STANDARD);
+				} else if ("sand".equals(args[i])) {
+					options.setProtocol(Options.Protocol.SAND);
 				} else {
-					throw new IllegalArgumentException(String.format("Illegal protocol: %s. Only 'lep' or 'standard' supported.", args[i]));
+					throw new IllegalArgumentException(String.format("Illegal protocol: %s. Only 'lep', 'standard' or 'sand' supported.", args[i]));
 				}
 				i++;
+			} else if ("sandProjectName".equals(args[i])) {
+				if (i == (args.length - 1)) {
+					throw new IllegalArgumentException("-sandProjectName should follow a [SAND-PROJECT-NAME] option value.");
+				}
+				i++;
+				
+				if (args[i].startsWith("-")) {
+					throw new IllegalArgumentException("-sandProjectName should follow a [SAND-PROJECT-NAME] option value.");
+				}
+				
+				options.setSandProjectName(args[i]);
 			} else if ("-commerical".equals(args[i])) {
 				options.setCommerical(true);
 				i++;
@@ -129,6 +143,10 @@ public class Main {
 		options.setTargetDirPath(getTargetDirPath());
 		options.setProjectDirPath(getProjectDirPath(options.getTargetDirPath()));
 		options.setGraniteProjectDirPath(getGraniteProjectDirPath(options.getProjectDirPath()));
+		if (options.getSandProjectName() == null) {
+			options.setSandProjectName(DEFAULT_SAND_PROJECT_NAME);
+		}
+		options.setSandProjectDirPath(getSandProjectDirPath(options.getProjectDirPath(), options.getSandProjectName()));
 		
 		return options;
 	}
@@ -137,12 +155,13 @@ public class Main {
 		System.out.println("Usage:");
 		System.out.println("java -jar com.firstlinecode.granite.pack.lite-${VERSION}.jar [OPTIONS] [Bundle-SymbolicNames or SubSystems]");
 		System.out.println("OPTIONS:");
-		System.out.println("-help                Display help information.");
-		System.out.println("-update              Update specified modules.");
-		System.out.println("-cleanUpdate         Clean and update specified modules.");
-		System.out.println("-cleanCache          Clean the packing cache.");
-		System.out.println("-version VERSION     Specify the version(Default is 0.2.1-RELEASE).");
-		System.out.println("-prototol PROTOCOL   Specify the protocol('lep' or 'standard'. Default is 'standard').");
+		System.out.println("-help                                Display help information.");
+		System.out.println("-update                              Update specified modules.");
+		System.out.println("-cleanUpdate                         Clean and update specified modules.");
+		System.out.println("-cleanCache                          Clean the packing cache.");
+		System.out.println("-version VERSION                     Specify the version(Default is 0.2.1-RELEASE).");
+		System.out.println("-prototol PROTOCOL                   Specify the protocol('standard', 'lep' or 'sand'. Default is 'standard').");
+		System.out.println("-sandProjectName SAND-PROJECT-NAME   Specify the sand project name. Default is 'com.firstlinecode.sand').");
 	}
 
 	private String getTargetDirPath() {
@@ -164,6 +183,17 @@ public class Main {
 	
 	private String getGraniteProjectDirPath(String projectDirPath) {
 		return new File(projectDirPath).getParentFile().getParentFile().getPath();
+	}
+	
+	private String getSandProjectDirPath(String projectDirPath, String sandProjectName) {
+		File lithosphereDir = new File(projectDirPath).getParentFile().getParentFile().getParentFile();
+		
+		File sandProjectDir = new File(lithosphereDir, sandProjectName);
+		if (sandProjectDir.exists()) {
+			return sandProjectDir.getPath();
+		}
+		
+		return null;
 	}
 	
 	private String getProjectDirPath(String targetDirPath) {
