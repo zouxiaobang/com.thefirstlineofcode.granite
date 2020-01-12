@@ -218,6 +218,18 @@
 						<groupId>org.eclipse.virgo.bundlor</groupId>
 						<artifactId>org.eclipse.virgo.bundlor.maven</artifactId>
 						<version>1.1.2.RELEASE</version>
+						<dependencies>
+							<dependency>
+								<groupId>org.eclipse.virgo.bundlor</groupId>
+								<artifactId>org.eclipse.virgo.bundlor</artifactId>
+								<version>1.1.2.RELEASE</version>
+							</dependency>
+							<dependency>
+								<groupId>org.eclipse.virgo.bundlor</groupId>
+								<artifactId>org.eclipse.virgo.bundlor.blint</artifactId>
+								<version>1.1.2.RELEASE</version>
+							</dependency>
+						</dependencies>
 						<executions>
 							<execution>
 								<id>bundlor</id>
@@ -272,17 +284,33 @@
 			<url>http://repo1.maven.org/maven2</url>
 		</pluginRepository>
 		<pluginRepository>
+			<id>spring.plugins</id>
+			<name>Spring Plugins Repository</name>
+			<url>http://repo.spring.io/plugins-release</url>
+		</pluginRepository>
+		<pluginRepository>
 			<id>eclipse.virgo.build.bundles.release</id>
 			<name>Eclipse Virgo Build</name>
-			<url>http://build.eclipse.org/rt/virgo/maven/bundles/release</url>
+			<url>http://build.eclipse.org/rt/virgo/gradle/bundles/release</url>
 		</pluginRepository>
 	</pluginRepositories>
 
 	<repositories> 
-	<repository>
-            <id>central</id>
-            <url>http://repo1.maven.org/maven2</url>
-         </repository>
+		<repository>
+			<id>jcenter</id>
+			<name>JCenter Repository</name>
+			<url>https://jcenter.bintray.com/</url>
+    		</repository>
+		<repository>
+			<id>central</id>
+			<name>Central Repository</name>
+			<url>http://repo1.maven.org/maven2</url>
+		</repository>
+		<repository>
+			<id>spring.plugins</id>
+			<name>Spring Plugins Repository</name>
+			<url>http://repo.spring.io/plugins-release</url>
+		</repository>
 <!--		<repository>
 			<id>com.firstlinecode.release</id>
 			<name>FirstLineCode Repository - Releases</name>
@@ -293,10 +321,6 @@
 			<name>FirstLineCode Repository - Snapshots</name>
 			<url>http://repo.firstlinecode.com/content/repositories/snapshots</url>
 		</repository> -->
-<!--	<repository>
-            <id>mvnrepository</id>
-            <url>http://mvnrepository.com</url>
-         </repository>-->
   </repositories>
 
 	<dependencyManagement>
