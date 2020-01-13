@@ -127,7 +127,7 @@ public class ComponentAcceptMessageProcessor implements IComponentMessageProcess
 		try {
 			Object object = parsingFactory.parse(message, true);
 			if (object instanceof Stream) {
-				return ((Stream)object).getClose();
+				return ((Stream)object).isClose();
 			}
 			
 			return false;			
