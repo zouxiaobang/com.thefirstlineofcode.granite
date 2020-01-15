@@ -97,11 +97,15 @@ public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMe
 	@Override
 	public void setConfiguration(IConfiguration configuration) {
 		ip = configuration.getString(CONFIGURATION_KEY_IP);
-		port = configuration.getInteger(CONFIGURATION_KEY_PORT, 5222);
+		port = configuration.getInteger(CONFIGURATION_KEY_PORT, getDefaultPort());
 		connectionTimeout = configuration.getInteger(CONFIGURATION_KEY_CONNECTION_TIMEOUT, 2 * 60);
 		loggingMina = configuration.getBoolean(CONFIGURATION_KEY_LOGGING_MINA, false);
 		numberOfProcessors = configuration.getInteger(CONFIGURATION_KEY_NUMBER_OF_PROCESSORS,
 				Runtime.getRuntime().availableProcessors());
+	}
+
+	protected int getDefaultPort() {
+		return 5222;
 	}
 
 	@Override
