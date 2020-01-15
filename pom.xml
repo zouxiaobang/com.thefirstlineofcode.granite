@@ -890,8 +890,8 @@
 
 			<!-- sand plugin-->
 			<dependency>
-				<groupId>com.firstlinecode.sand.server</groupId>
-				<artifactId>com.firstlinecode.sand.server.ibdr</artifactId>
+				<groupId>com.firstlinecode.sand.server.core</groupId>
+				<artifactId>com.firstlinecode.sand.server.core.ibdr</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
 

@@ -73,8 +73,8 @@
 			<artifactId>com.firstlinecode.granite.lite.xeps.disco</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.firstlinecode.sand.server</groupId>
-			<artifactId>com.firstlinecode.sand.server.ibdr</artifactId>
+			<groupId>com.firstlinecode.sand.server.core</groupId>
+			<artifactId>com.firstlinecode.sand.server.core.ibdr</artifactId>
 		</dependency>
 	</dependencies>
 	
