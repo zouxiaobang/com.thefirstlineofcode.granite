@@ -102,6 +102,14 @@
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server.core</groupId>
+			<artifactId>com.firstlinecode.sand.server.core.stream</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.sand.server.core</groupId>
+			<artifactId>com.firstlinecode.sand.server.core.auth</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.sand.server.core</groupId>
 			<artifactId>com.firstlinecode.sand.server.core.ibdr</artifactId>
 		</dependency>
 	</dependencies>
