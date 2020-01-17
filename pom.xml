@@ -895,8 +895,8 @@
 				<version>${sand.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.sand.server.core</groupId>
-				<artifactId>com.firstlinecode.sand.server.core.auth</artifactId>
+				<groupId>com.firstlinecode.sand.server.lite</groupId>
+				<artifactId>com.firstlinecode.sand.server.lite.auth</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
 			<dependency>

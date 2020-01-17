@@ -153,7 +153,7 @@ public class Repository implements IRepository, IContributionClassTracker<Compon
 			
 			int countToken = tokenizer.countTokens();
 			for (int i = 0; i < countToken; i++) {
-				dependeices[i] = tokenizer.nextToken();
+				dependeices[i] = tokenizer.nextToken().trim();
 			}
 			
 			componentBindings.put(key, dependeices);
@@ -307,7 +307,7 @@ public class Repository implements IRepository, IContributionClassTracker<Compon
 	}
 
 	private void scanDependencies(Class<?> clazz, IComponentInfo componentInfo) {
-		for (Field field : clazz.getDeclaredFields()) {
+		for (Field field : getClassFields(clazz, null)) {
 			Dependency dependencyAnnotation = field.getAnnotation(Dependency.class);
 			if (dependencyAnnotation == null) {
 				continue;
@@ -376,6 +376,21 @@ public class Repository implements IRepository, IContributionClassTracker<Compon
 			
 			
 		}
+	}
+
+	private List<Field> getClassFields(Class<?> clazz, List<Field> fields) {
+		if (fields == null)
+			fields = new ArrayList<Field>();
+		
+		for (Field field : clazz.getDeclaredFields()) {
+			fields.add(field);
+		}
+		
+		Class<?> parent = clazz.getSuperclass();
+		if (parent.getAnnotation(Component.class) == null)
+			return fields;
+		
+		return getClassFields(parent, fields);
 	}
 
 	private int getBindedDependenciesCount(String id) {

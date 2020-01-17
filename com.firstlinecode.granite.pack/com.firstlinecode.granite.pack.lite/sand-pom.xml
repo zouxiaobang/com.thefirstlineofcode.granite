@@ -58,15 +58,23 @@
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>com.firstlinecode.granite.lite.auth</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.firstlinecode.granite.lite</groupId>
 			<artifactId>com.firstlinecode.granite.lite.session</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
 			<artifactId>com.firstlinecode.granite.lite.integration</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.lite</groupId>
+			<artifactId>com.firstlinecode.granite.lite.auth</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.lite</groupId>
+			<artifactId>com.firstlinecode.granite.lite.xeps.ibr</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.lite</groupId>
+			<artifactId>com.firstlinecode.granite.lite.im</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
@@ -78,11 +86,11 @@
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server.core</groupId>
-			<artifactId>com.firstlinecode.sand.server.core.auth</artifactId>
+			<artifactId>com.firstlinecode.sand.server.core.ibdr</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.firstlinecode.sand.server.core</groupId>
-			<artifactId>com.firstlinecode.sand.server.core.ibdr</artifactId>
+			<groupId>com.firstlinecode.sand.server.lite</groupId>
+			<artifactId>com.firstlinecode.sand.server.lite.auth</artifactId>
 		</dependency>
 	</dependencies>
 	
