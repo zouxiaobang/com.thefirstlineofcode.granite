@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.firstlinecode.granite.framework.core.IApplication;
 import com.firstlinecode.granite.framework.core.annotations.AppComponent;
+import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.commons.osgi.IBundleContextAware;
 import com.firstlinecode.granite.framework.core.commons.utils.ContributionClass;
@@ -29,17 +30,17 @@ import com.firstlinecode.granite.framework.core.commons.utils.IContributionClass
 import com.firstlinecode.granite.framework.core.config.IApplicationConfiguration;
 import com.firstlinecode.granite.framework.core.config.IApplicationConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
+import com.firstlinecode.granite.framework.core.repository.CreationException;
+import com.firstlinecode.granite.framework.core.repository.IComponentCollector;
+import com.firstlinecode.granite.framework.core.repository.IComponentInfo;
+import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
+import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.supports.ApplicationComponentConfigurations;
 import com.firstlinecode.granite.framework.core.supports.IApplicationComponentConfigurations;
 import com.firstlinecode.granite.framework.core.supports.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.supports.IApplicationComponentServiceAware;
 import com.firstlinecode.granite.framework.core.supports.data.IDataObjectFactory;
 import com.firstlinecode.granite.framework.core.supports.data.IDataObjectFactoryAware;
-import com.firstlinecode.granite.framework.core.repository.CreationException;
-import com.firstlinecode.granite.framework.core.repository.IComponentCollector;
-import com.firstlinecode.granite.framework.core.repository.IComponentInfo;
-import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
-import com.firstlinecode.granite.framework.core.repository.IInitializable;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.InvocationHandler;
@@ -268,7 +269,7 @@ public class ApplicationService implements IComponentCollector, IApplicationComp
 			return injectors;
 		
 		injectors = new ArrayList<>();
-		for (Field field : clazz.getDeclaredFields()) {
+		for (Field field : getClassFields(clazz, null)) {
 			Dependency dependencyAnnotation = field.getAnnotation(Dependency.class);
 			if (dependencyAnnotation == null) {
 				continue;
@@ -303,6 +304,21 @@ public class ApplicationService implements IComponentCollector, IApplicationComp
 		List<DependencyInjector> old = dependencyInjectors.putIfAbsent(clazz, injectors);
 		
 		return old == null ? injectors : old;
+	}
+	
+	private List<Field> getClassFields(Class<?> clazz, List<Field> fields) {
+		if (fields == null)
+			fields = new ArrayList<Field>();
+		
+		for (Field field : clazz.getDeclaredFields()) {
+			fields.add(field);
+		}
+		
+		Class<?> parent = clazz.getSuperclass();
+		if (parent.getAnnotation(Component.class) == null)
+			return fields;
+		
+		return getClassFields(parent, fields);
 	}
 
 	private interface DependencyInjector {
