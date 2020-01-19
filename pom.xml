@@ -890,8 +890,8 @@
 
 			<!-- sand plugin-->
 			<dependency>
-				<groupId>com.firstlinecode.sand.server.core</groupId>
-				<artifactId>com.firstlinecode.sand.server.core.stream</artifactId>
+				<groupId>com.firstlinecode.sand.server</groupId>
+				<artifactId>com.firstlinecode.sand.server.stream</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
 			<dependency>
@@ -900,8 +900,8 @@
 				<version>${sand.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.sand.server.core</groupId>
-				<artifactId>com.firstlinecode.sand.server.core.ibdr</artifactId>
+				<groupId>com.firstlinecode.sand.server.leps</groupId>
+				<artifactId>com.firstlinecode.sand.server.leps.ibdr</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
 

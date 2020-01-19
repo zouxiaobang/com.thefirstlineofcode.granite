@@ -15,7 +15,7 @@ import com.firstlinecode.granite.framework.core.repository.IComponentQueryer;
 import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
 
 public class GraniteCommandProvider implements CommandProvider {
-	private static final String MSG_HELP = "\tgranite - managing and monitoring granite application\r\n";
+	private static final String MSG_HELP = "granite - monitoring and managing granite application.\r\n";
 	
 	private static final String MSG_DETAIL_HELP =
 			"\tgranite services - List all services.\r\n" +
