@@ -281,17 +281,12 @@
 		<pluginRepository>
 			<id>central</id>
 			<name>Maven Central Repository</name>
-			<url>http://repo1.maven.org/maven2</url>
+			<url>https://repo1.maven.org/maven2</url>
 		</pluginRepository>
 		<pluginRepository>
 			<id>spring.plugins</id>
 			<name>Spring Plugins Repository</name>
-			<url>http://repo.spring.io/plugins-release</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>eclipse.virgo.build.bundles.release</id>
-			<name>Eclipse Virgo Build</name>
-			<url>http://build.eclipse.org/rt/virgo/gradle/bundles/release</url>
+			<url>https://repo.spring.io/plugins-release/</url>
 		</pluginRepository>
 	</pluginRepositories>
 
