@@ -299,12 +299,12 @@
 		<repository>
 			<id>central</id>
 			<name>Central Repository</name>
-			<url>http://repo1.maven.org/maven2</url>
+			<url>https://repo1.maven.org/maven2</url>
 		</repository>
 		<repository>
 			<id>spring.plugins</id>
 			<name>Spring Plugins Repository</name>
-			<url>http://repo.spring.io/plugins-release</url>
+			<url>https://repo.spring.io/plugins-release</url>
 		</repository>
 <!--		<repository>
 			<id>com.firstlinecode.release</id>
