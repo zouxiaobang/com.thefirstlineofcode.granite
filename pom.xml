@@ -279,6 +279,11 @@
 
 	<pluginRepositories>
 		<pluginRepository>
+                        <id>jcenter</id>
+                        <name>JCenter Repository</name>
+                        <url>https://jcenter.bintray.com/</url>
+                </pluginRepository>
+		<pluginRepository>
 			<id>central</id>
 			<name>Maven Central Repository</name>
 			<url>https://repo1.maven.org/maven2</url>
@@ -292,31 +297,31 @@
 
 	<repositories> 
 		<repository>
-			<id>jcenter</id>
-			<name>JCenter Repository</name>
-			<url>https://jcenter.bintray.com/</url>
-    		</repository>
+                        <id>jcenter</id>
+                        <name>JCenter Repository</name>
+                        <url>https://jcenter.bintray.com/</url>
+                </repository>
+                <repository>
+                        <id>central</id>
+                        <name>Central Repository</name>
+                        <url>https://repo1.maven.org/maven2</url>
+                </repository>
+                <repository>
+                        <id>spring.plugins</id>
+                        <name>Spring Plugins Repository</name>
+                        <url>https://repo.spring.io/plugins-release</url>
+                </repository>
 		<repository>
-			<id>central</id>
-			<name>Central Repository</name>
-			<url>https://repo1.maven.org/maven2</url>
-		</repository>
-		<repository>
-			<id>spring.plugins</id>
-			<name>Spring Plugins Repository</name>
-			<url>https://repo.spring.io/plugins-release</url>
-		</repository>
-<!--		<repository>
-			<id>com.firstlinecode.release</id>
-			<name>FirstLineCode Repository - Releases</name>
-			<url>http://repo.firstlinecode.com/content/repositories/releases</url>
-		</repository>
-		<repository>
-			<id>com.firstlinecode.snapshot</id>
-			<name>FirstLineCode Repository - Snapshots</name>
-			<url>http://repo.firstlinecode.com/content/repositories/snapshots</url>
-		</repository> -->
-  </repositories>
+                        <id>com.firstlinecode.releases</id>
+                        <name>FirstLineCode Repository - Releases</name>
+                        <url>http://47.115.36.99/repository/maven-releases/</url>
+                </repository>
+                <repository>
+			<id>com.firstlinecode.snapshots</id>
+                        <name>FirstLineCode Repository - Snapshots</name>
+                        <url>http://47.115.36.99/repository/maven-snapshots/</url>
+                </repository>
+	</repositories>
 
 	<dependencyManagement>
 		<dependencies>
@@ -911,17 +916,16 @@
 	</dependencyManagement>
 	
 	<distributionManagement>
-		<repository>
-			<id>com.firstlinecode.release</id>
-			<name>CloudEggTech Repository - Releases</name>
-			<url>http://repo.firstlinecode.com/content/repositories/releases</url>
-		</repository>
-		
-		<snapshotRepository>
-			<id>com.firstlinecode.snapshot</id>
-			<name>CloudEggTech Repository - Snapshots</name>
-			<url>http://repo.firstlinecode.com/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
+                <repository>
+                        <id>com.firstlinecode.releases</id>
+                        <name>FirstLineCode Repository - Releases</name>
+                        <url>http://47.115.36.99/repository/maven-releases/</url>
+                </repository>
 
+                <snapshotRepository>
+                        <id>com.firstlinecode.snapshots</id>
+                        <name>FirstLineCode Repository - Snapshots</name>
+                        <url>http://47.115.36.99/repository/maven-snapshots/</url>
+                </snapshotRepository>
+        </distributionManagement>
 </project>
