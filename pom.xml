@@ -297,6 +297,16 @@
 
 	<repositories> 
 		<repository>
+                        <id>com.firstlinecode.releases</id>
+                        <name>FirstLineCode Repository - Releases</name>
+                        <url>http://47.115.36.99/repository/maven-releases/</url>
+                </repository>
+                <repository>
+			<id>com.firstlinecode.snapshots</id>
+                        <name>FirstLineCode Repository - Snapshots</name>
+                        <url>http://47.115.36.99/repository/maven-snapshots/</url>
+                </repository>
+		<repository>
                         <id>jcenter</id>
                         <name>JCenter Repository</name>
                         <url>https://jcenter.bintray.com/</url>
@@ -310,16 +320,6 @@
                         <id>spring.plugins</id>
                         <name>Spring Plugins Repository</name>
                         <url>https://repo.spring.io/plugins-release</url>
-                </repository>
-		<repository>
-                        <id>com.firstlinecode.releases</id>
-                        <name>FirstLineCode Repository - Releases</name>
-                        <url>http://47.115.36.99/repository/maven-releases/</url>
-                </repository>
-                <repository>
-			<id>com.firstlinecode.snapshots</id>
-                        <name>FirstLineCode Repository - Snapshots</name>
-                        <url>http://47.115.36.99/repository/maven-snapshots/</url>
                 </repository>
 	</repositories>
 
