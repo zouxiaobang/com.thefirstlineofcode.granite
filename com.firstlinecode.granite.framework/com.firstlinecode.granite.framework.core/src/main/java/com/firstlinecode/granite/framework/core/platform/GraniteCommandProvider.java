@@ -15,7 +15,19 @@ import com.firstlinecode.granite.framework.core.repository.IComponentQueryer;
 import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
 
 public class GraniteCommandProvider implements CommandProvider {
-	private static final String MSG_HELP = "granite - monitoring and managing granite application.\r\n";
+	private static final String PARAM_CLOSE = "close";
+
+	private static final String PARAM_COMPONENTS = "components";
+
+	private static final String PARAM_SERVICE = "service";
+
+	private static final String PARAM_SERVICES = "services";
+
+	private static final String PARAM_HELP = "help";
+
+	private static final String COMMAND_GRANITE = "granite";
+
+	private static final String MSG_HELP = "granite - Monitoring and managing granite application.\r\n";
 	
 	private static final String MSG_DETAIL_HELP =
 			"\tgranite services - List all services.\r\n" +
@@ -39,7 +51,7 @@ public class GraniteCommandProvider implements CommandProvider {
 	
 	public Object _help(CommandInterpreter interpreter) {
 		String commandName = interpreter.nextArgument();
-		if ("granite".equals(commandName))
+		if (COMMAND_GRANITE.equals(commandName))
 			return getDetailHelp();
 		
 		return false;
@@ -52,11 +64,11 @@ public class GraniteCommandProvider implements CommandProvider {
 	public void _granite(CommandInterpreter interpreter) {
 		String nextArg = interpreter.nextArgument();
 		
-		if (nextArg == null || "help".equals(nextArg)) {
+		if (nextArg == null || PARAM_HELP.equals(nextArg)) {
 			printDetailHelp(interpreter);
-		} else if ("services".equals(nextArg)) {
+		} else if (PARAM_SERVICES.equals(nextArg)) {
 			listComponents(interpreter, componentQueryer.getServices());
-		} else if ("service".equals(nextArg)) {
+		} else if (PARAM_SERVICE.equals(nextArg)) {
 			String serviceId = interpreter.nextArgument();
 			
 			if (serviceId == null) {
@@ -73,9 +85,9 @@ public class GraniteCommandProvider implements CommandProvider {
 			}
 			
 			printService(interpreter, service);
-		} else if ("components".equals(nextArg)) {
+		} else if (PARAM_COMPONENTS.equals(nextArg)) {
 			listComponents(interpreter, componentQueryer.getComponents());
-		} else if ("close".equals(nextArg)) {
+		} else if (PARAM_CLOSE.equals(nextArg)) {
 			close();
 		} else {
 			printDetailHelp(interpreter);
