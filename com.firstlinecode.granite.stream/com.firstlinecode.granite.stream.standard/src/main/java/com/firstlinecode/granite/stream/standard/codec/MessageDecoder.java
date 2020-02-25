@@ -7,7 +7,7 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.firstlinecode.basalt.protocol.oxm.preprocessing.IMessagePreprocessor;
+import com.firstlinecode.basalt.oxm.preprocessing.IMessagePreprocessor;
 
 public class MessageDecoder extends CumulativeProtocolDecoder {
 	private static final Logger logger = LoggerFactory.getLogger(MessageDecoder.class);

@@ -1,7 +1,7 @@
 package com.firstlinecode.granite.xeps.component.routing;
 
 import com.firstlinecode.basalt.protocol.im.stanza.Message;
-import com.firstlinecode.basalt.protocol.oxm.translators.im.MessageTranslatorFactory;
+import com.firstlinecode.basalt.oxm.translators.im.MessageTranslatorFactory;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.routing.MinimumRoutingProcessor;
 

@@ -3,8 +3,8 @@ package com.firstlinecode.granite.xeps.component.parsing;
 import com.firstlinecode.basalt.protocol.core.ProtocolChain;
 import com.firstlinecode.basalt.protocol.im.stanza.Message;
 import com.firstlinecode.basalt.protocol.im.stanza.Presence;
-import com.firstlinecode.basalt.protocol.oxm.parsers.im.MessageParserFactory;
-import com.firstlinecode.basalt.protocol.oxm.parsers.im.PresenceParserFactory;
+import com.firstlinecode.basalt.oxm.parsers.im.MessageParserFactory;
+import com.firstlinecode.basalt.oxm.parsers.im.PresenceParserFactory;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.parsing.MinimumMessageParsingProcessor;
 

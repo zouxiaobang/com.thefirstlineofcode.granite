@@ -6,7 +6,7 @@ import org.apache.mina.filter.codec.ProtocolEncoderAdapter;
 import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 
 import com.firstlinecode.basalt.protocol.Constants;
-import com.firstlinecode.basalt.protocol.oxm.binary.IBinaryXmppProtocolConverter;
+import com.firstlinecode.basalt.oxm.binary.IBinaryXmppProtocolConverter;
 
 public class MessageEncoder extends ProtocolEncoderAdapter {
 	private IBinaryXmppProtocolConverter bxmppProtocolConverter;

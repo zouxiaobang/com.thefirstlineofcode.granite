@@ -26,7 +26,7 @@ import com.firstlinecode.basalt.protocol.core.stanza.error.StanzaError;
 import com.firstlinecode.basalt.protocol.core.stream.error.StreamError;
 import com.firstlinecode.basalt.protocol.im.stanza.Message;
 import com.firstlinecode.basalt.protocol.im.stanza.Presence;
-import com.firstlinecode.basalt.protocol.oxm.parsing.FlawedProtocolObject;
+import com.firstlinecode.basalt.oxm.parsing.FlawedProtocolObject;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.auth.IAuthenticator;

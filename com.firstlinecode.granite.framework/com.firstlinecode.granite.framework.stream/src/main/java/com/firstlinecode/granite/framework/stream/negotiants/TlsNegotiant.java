@@ -13,9 +13,9 @@ import com.firstlinecode.basalt.protocol.core.stream.error.NotAuthorized;
 import com.firstlinecode.basalt.protocol.core.stream.tls.Failure;
 import com.firstlinecode.basalt.protocol.core.stream.tls.Proceed;
 import com.firstlinecode.basalt.protocol.core.stream.tls.StartTls;
-import com.firstlinecode.basalt.protocol.oxm.annotation.AnnotatedParserFactory;
-import com.firstlinecode.basalt.protocol.oxm.parsers.core.stream.tls.StartTlsParser;
-import com.firstlinecode.basalt.protocol.oxm.translators.SimpleObjectTranslatorFactory;
+import com.firstlinecode.basalt.oxm.annotation.AnnotatedParserFactory;
+import com.firstlinecode.basalt.oxm.parsers.core.stream.tls.StartTlsParser;
+import com.firstlinecode.basalt.oxm.translators.SimpleObjectTranslatorFactory;
 import com.firstlinecode.granite.framework.core.connection.IClientConnectionContext;
 import com.firstlinecode.granite.framework.core.integration.IMessage;
 

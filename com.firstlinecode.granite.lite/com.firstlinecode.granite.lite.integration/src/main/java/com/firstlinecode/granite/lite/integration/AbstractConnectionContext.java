@@ -10,7 +10,7 @@ import com.firstlinecode.basalt.protocol.core.IError;
 import com.firstlinecode.basalt.protocol.core.JabberId;
 import com.firstlinecode.basalt.protocol.core.stanza.Stanza;
 import com.firstlinecode.basalt.protocol.core.stream.Stream;
-import com.firstlinecode.basalt.protocol.oxm.OxmService;
+import com.firstlinecode.basalt.oxm.OxmService;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
 import com.firstlinecode.granite.framework.core.integration.IMessage;
 import com.firstlinecode.granite.framework.core.integration.IMessageChannel;

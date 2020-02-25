@@ -355,7 +355,7 @@ public class Starter implements Serializable {
 					logger.error("Can't stop http server.", e);
 				}
 				server.destroy();
-				logger.error("Some exception occured in http server thread. System will exit.", e);
+				logger.error("Some exceptions occurred in http server thread. System will exit.", e);
 			} finally {
 				synchronized (Starter.this) {
 					Starter.this.notify();
