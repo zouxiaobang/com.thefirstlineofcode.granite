@@ -896,12 +896,17 @@
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.sand.server.lite</groupId>
-				<artifactId>com.firstlinecode.sand.server.lite.auth</artifactId>
+				<artifactId>com.firstlinecode.sand.server.lite.devices</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.sand.server.leps</groupId>
 				<artifactId>com.firstlinecode.sand.server.leps.ibdr</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.sand.server.lite.leps</groupId>
+				<artifactId>com.firstlinecode.sand.server.lite.leps.concentrator</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
 

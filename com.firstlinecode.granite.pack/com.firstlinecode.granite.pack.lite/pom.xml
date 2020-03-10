@@ -106,7 +106,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server.lite</groupId>
-			<artifactId>com.firstlinecode.sand.server.lite.auth</artifactId>
+			<artifactId>com.firstlinecode.sand.server.lite.devices</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server.leps</groupId>
