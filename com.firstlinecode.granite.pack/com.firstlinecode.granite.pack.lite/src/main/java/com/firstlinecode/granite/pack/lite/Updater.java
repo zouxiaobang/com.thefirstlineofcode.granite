@@ -136,9 +136,9 @@ public class Updater {
 		
 		BundleInfo bundleInfo = bundleInfos.get(bundle);
 		if (clean) {
-			Main.runMvn(new File(bundleInfo.projectDirPath), "clean", "package");
+			Main.runMvn(new File(bundleInfo.projectDirPath), options.isOffline(), "clean", "package");
 		} else {
-			Main.runMvn(new File(bundleInfo.projectDirPath), "package");
+			Main.runMvn(new File(bundleInfo.projectDirPath), options.isOffline(), "package");
 		}
 		
 		updateBundle(bundleInfo);
@@ -192,9 +192,9 @@ public class Updater {
 		}
 		
 		if (clean) {
-			Main.runMvn(subsystemProjectDir, "clean", "package");
+			Main.runMvn(subsystemProjectDir, options.isOffline(), "clean", "package");
 		} else {
-			Main.runMvn(subsystemProjectDir, "package");
+			Main.runMvn(subsystemProjectDir, options.isOffline(), "package");
 		}
 		
 		String[] bundles = subsystems.get(subsystem);

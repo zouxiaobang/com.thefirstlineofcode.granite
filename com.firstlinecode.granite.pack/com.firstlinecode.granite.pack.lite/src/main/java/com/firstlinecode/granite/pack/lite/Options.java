@@ -15,6 +15,7 @@ public class Options {
 	private String projectDirPath;
 	private Protocol protocol;
 	private boolean commerical;
+	private boolean offline;
 	
 	public enum Protocol {
 		LEP,
@@ -29,6 +30,7 @@ public class Options {
 		cleanUpdate = false;
 		protocol = Protocol.STANDARD;
 		commerical = false;
+		offline = false;
 	}
 	
 	public boolean isHelp() {
@@ -146,4 +148,13 @@ public class Options {
 	public void setCommerical(boolean commerical) {
 		this.commerical = commerical;
 	}
+
+	public boolean isOffline() {
+		return offline;
+	}
+
+	public void setOffline(boolean offline) {
+		this.offline = offline;
+	}
+	
 }

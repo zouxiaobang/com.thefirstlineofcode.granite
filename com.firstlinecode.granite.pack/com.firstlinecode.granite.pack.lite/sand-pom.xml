@@ -93,7 +93,7 @@
 			<artifactId>com.firstlinecode.sand.server.lite.devices</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.firstlinecode.sand.server.lite.leps</groupId>
+			<groupId>com.firstlinecode.sand.server.lite</groupId>
 			<artifactId>com.firstlinecode.sand.server.lite.leps.concentrator</artifactId>
 		</dependency>
 	</dependencies>

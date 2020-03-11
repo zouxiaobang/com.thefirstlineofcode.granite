@@ -93,15 +93,15 @@ public class Packer {
 	
 	private void copyDependencies() {
 		if (options.getProtocol() == Options.Protocol.STANDARD) {
-			Main.runMvn(new File(options.getProjectDirPath()), "-fstandard-pom.xml", "dependency:copy-dependencies");
+			Main.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fstandard-pom.xml", "dependency:copy-dependencies");
 		} else if (options.getProtocol() == Options.Protocol.LEP) {
-			Main.runMvn(new File(options.getProjectDirPath()), "-fleps-pom.xml", "dependency:copy-dependencies");
+			Main.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fleps-pom.xml", "dependency:copy-dependencies");
 		} else {
-			Main.runMvn(new File(options.getProjectDirPath()), "-fsand-pom.xml", "dependency:copy-dependencies");			
+			Main.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fsand-pom.xml", "dependency:copy-dependencies");			
 		}
 		
 		if (options.isCommerical()) {
-			Main.runMvn(new File(options.getProjectDirPath()), "-fgem-pom.xml", "dependency:copy-dependencies");
+			Main.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fgem-pom.xml", "dependency:copy-dependencies");
 		}
 	}
 

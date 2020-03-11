@@ -116,6 +116,9 @@ public class Main {
 			} else if ("-commerical".equals(args[i])) {
 				options.setCommerical(true);
 				i++;
+			} else if ("-offline".equals(args[i])) {
+				options.setOffline(true);
+				i++;
 			} else {
 				options.setModules(Arrays.copyOfRange(args, i, args.length));
 				break;
@@ -200,15 +203,27 @@ public class Main {
 		return new File(targetDirPath).getParentFile().getPath();
 	}
 	
-	public static void runMvn(File workingDir, String... args) {
+	public static void runMvn(File workingDir, boolean offline, String... args) {
 		if (args == null || args.length == 0) {
 			throw new IllegalArgumentException("Null mvn args.");
 		}
 		
-		String[] cmdArray = new String[args.length + 1];
-		cmdArray[0] = getMvnCmd();
-		for (int i = 0; i < args.length; i++) {
-			cmdArray[i + 1] = args[i];
+		String[] cmdArray;
+		if (offline) {
+			cmdArray = new String[args.length + 2];			
+			
+			cmdArray[0] = getMvnCmd();
+			cmdArray[1] = "-o";
+			for (int i = 0; i < args.length; i++) {
+				cmdArray[i + 2] = args[i];
+			}
+		} else {
+			cmdArray = new String[args.length + 1];
+			
+			cmdArray[0] = getMvnCmd();
+			for (int i = 0; i < args.length; i++) {
+				cmdArray[i + 1] = args[i];
+			}
 		}
 		
 		try {

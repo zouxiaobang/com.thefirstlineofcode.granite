@@ -905,7 +905,7 @@
 				<version>${sand.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.sand.server.lite.leps</groupId>
+				<groupId>com.firstlinecode.sand.server.lite</groupId>
 				<artifactId>com.firstlinecode.sand.server.lite.leps.concentrator</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
