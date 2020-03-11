@@ -162,6 +162,7 @@ public class Main {
 		System.out.println("-update                              Update specified modules.");
 		System.out.println("-cleanUpdate                         Clean and update specified modules.");
 		System.out.println("-cleanCache                          Clean the packing cache.");
+		System.out.println("-offline                             Run in offline mode.");
 		System.out.println("-version VERSION                     Specify the version(Default is 0.2.1-RELEASE).");
 		System.out.println("-prototol PROTOCOL                   Specify the protocol('standard', 'lep' or 'sand'. Default is 'standard').");
 		System.out.println("-sandProjectName SAND-PROJECT-NAME   Specify the sand project name. Default is 'com.firstlinecode.sand').");
