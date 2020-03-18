@@ -106,11 +106,19 @@
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server.lite</groupId>
-			<artifactId>com.firstlinecode.sand.server.lite.devices</artifactId>
+			<artifactId>com.firstlinecode.sand.server.lite.device</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.firstlinecode.sand.server.leps</groupId>
-			<artifactId>com.firstlinecode.sand.server.leps.ibdr</artifactId>
+			<groupId>com.firstlinecode.sand.server</groupId>
+			<artifactId>com.firstlinecode.sand.server.ibdr</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.sand.server</groupId>
+			<artifactId>com.firstlinecode.sand.server.concentrator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.sand.server.lite</groupId>
+			<artifactId>com.firstlinecode.sand.server.lite.concentrator</artifactId>
 		</dependency>
 	</dependencies>
 	
