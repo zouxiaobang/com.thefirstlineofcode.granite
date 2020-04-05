@@ -155,6 +155,9 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 		public void lost(Bundle bundle, String contribution) throws Exception {
 			List<Xep> xeps = bundleAndXeps.remove(bundle);
 			
+			if (xeps == null || xeps.isEmpty())
+				return;
+			
 			for (Xep xep : xeps) {
 				for (ProtocolChain chain : xep.getProtocolChains()) {
 					bundleAndXepProcessorClasses.remove(chain);
