@@ -65,7 +65,7 @@ public class SpringComponentInfo implements IComponentInfo, IApplicationComponen
 
 	@Override
 	public IComponentInfo getAliasComponent(String alias) {
-		throw new UnsupportedOperationException("alias not allowed");
+		throw new UnsupportedOperationException("Alias not allowed");
 	}
 	
 	@Override

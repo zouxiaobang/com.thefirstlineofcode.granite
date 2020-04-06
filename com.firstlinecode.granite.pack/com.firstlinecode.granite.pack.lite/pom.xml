@@ -102,6 +102,10 @@
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server</groupId>
+			<artifactId>com.firstlinecode.sand.server.platform</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.sand.server</groupId>
 			<artifactId>com.firstlinecode.sand.server.stream</artifactId>
 		</dependency>
 		<dependency>
@@ -119,6 +123,10 @@
 		<dependency>
 			<groupId>com.firstlinecode.sand.server.lite</groupId>
 			<artifactId>com.firstlinecode.sand.server.lite.concentrator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.sand.server</groupId>
+			<artifactId>com.firstlinecode.sand.server.emulator.modes</artifactId>
 		</dependency>
 	</dependencies>
 	

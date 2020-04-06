@@ -888,7 +888,12 @@
 				<version>${granite.cluster.version}</version>
 			</dependency>
 
-			<!-- sand plugin-->
+			<!-- sand plugins -->
+			<dependency>
+				<groupId>com.firstlinecode.sand.server</groupId>
+				<artifactId>com.firstlinecode.sand.server.platform</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.sand.server</groupId>
 				<artifactId>com.firstlinecode.sand.server.stream</artifactId>
@@ -914,6 +919,11 @@
 				<artifactId>com.firstlinecode.sand.server.lite.concentrator</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.sand.server</groupId>
+			<artifactId>com.firstlinecode.sand.server.emulator.modes</artifactId>
+			<version>${sand.version}</version>
+		</dependency>
 
 			<!-- gem plugins -->
 			<dependency>

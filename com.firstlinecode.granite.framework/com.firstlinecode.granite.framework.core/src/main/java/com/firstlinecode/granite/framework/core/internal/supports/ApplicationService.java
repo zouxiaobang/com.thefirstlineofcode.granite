@@ -3,6 +3,7 @@ package com.firstlinecode.granite.framework.core.internal.supports;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -385,15 +386,15 @@ public class ApplicationService implements IComponentCollector, IApplicationComp
 		
 	}
 	
-	private Object getComponent(String id, Class<?> intf) {
+	private Object getComponent(String id, Class<?> type) {
 		Enhancer enhancer = new Enhancer();
 		
-        enhancer.setSuperclass(intf);
-        enhancer.setCallback(new LazyLoadComponentInvocationHandler(id));
-        enhancer.setUseFactory(false);
-        enhancer.setClassLoader(new CompositeClassLoader(
-        		new ClassLoader[] {intf.getClassLoader(), this.getClass().getClassLoader()}));
-        
+		enhancer.setSuperclass(type);
+		enhancer.setCallback(new LazyLoadComponentInvocationHandler(id));
+		enhancer.setUseFactory(false);
+		enhancer.setClassLoader(new CompositeClassLoader(
+        		new ClassLoader[] {type.getClassLoader(), this.getClass().getClassLoader()}));
+		
 		return enhancer.create();
 	}
 	
@@ -435,7 +436,13 @@ public class ApplicationService implements IComponentCollector, IApplicationComp
 			if (component == null)
 				throw new IllegalStateException(String.format("Null dependency '%s'.", id));
 			
-			return method.invoke(component, args);
+			if (Proxy.isProxyClass(component.getClass())) {
+				return Proxy.getInvocationHandler(component).invoke(component, method, args);
+			} else if (net.sf.cglib.proxy.Proxy.isProxyClass(component.getClass())) {
+				return net.sf.cglib.proxy.Proxy.getInvocationHandler(component).invoke(component, method, args);				
+			} else {
+				return method.invoke(component, args);				
+			}
 		}
 
 		private Object getComponent() throws CreationException {
