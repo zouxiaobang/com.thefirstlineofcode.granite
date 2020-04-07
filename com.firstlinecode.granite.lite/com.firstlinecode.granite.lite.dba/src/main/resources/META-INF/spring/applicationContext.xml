@@ -10,7 +10,7 @@
 				http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi-1.2.xsd">
 		<context:component-scan  base-package="com.firstlinecode.granite.lite.dba"/>
 		
-		<bean id="lite.txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 				<property name="dataSource" ref="dataSource"/>
 		</bean>
 		
@@ -21,12 +21,12 @@
 				<property name="password" value="" />
 		</bean>
 		
-		<bean id="lite.sqlSessionFactory" class="com.firstlinecode.granite.framework.supports.mybatis.SqlSessionFactoryBean">
+		<bean id="sqlSessionFactory" class="com.firstlinecode.granite.framework.supports.mybatis.SqlSessionFactoryBean">
 				<property name="dataSource" ref="dataSource" />
 				<property name="configLocation" value="osgibundlejar:/META-INF/mybatis/configuration.xml" />
 		</bean>
 		
 		<osgi:service ref="dataSource" interface="javax.sql.DataSource" ranking="1"/>
-		<osgi:service ref="lite.sqlSessionFactory" interface="org.apache.ibatis.session.SqlSessionFactory" ranking="1"/>
-		<osgi:service ref="lite.txManager" interface="org.springframework.jdbc.datasource.DataSourceTransactionManager" ranking="1"/>
+		<osgi:service ref="sqlSessionFactory" interface="org.apache.ibatis.session.SqlSessionFactory" ranking="1"/>
+		<osgi:service ref="txManager" interface="org.springframework.jdbc.datasource.DataSourceTransactionManager" ranking="1"/>
 </beans>

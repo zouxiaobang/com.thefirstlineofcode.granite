@@ -24,16 +24,19 @@ public class ComponentBeanDefinitionParser extends AbstractSingleBeanDefinitionP
 		
 		if (!element.hasAttribute(COMPONENT_ID)) {
 			parserContext.getReaderContext().error(
-					"granite:component must has a 'component-id' attribute.", element);
+					"granite:component must have a 'component-id' attribute.", element);
 		}
-		
-		builder.addPropertyValue(COMPONENT_PROP, element.getAttribute(COMPONENT_ID));
 		
 		if (!element.hasAttribute(REF)) {
 			parserContext.getReaderContext().error(
-					"granite:component must has a 'ref' attribute.", element);
+					"granite:component must have a 'ref' attribute.", element);
 		}
 		
+		if (element.getAttributes().getLength() != 2) {
+			parserContext.getReaderContext().error("Invalid granite:component definition. Bad grammer.", element);
+		}
+		
+		builder.addPropertyValue(COMPONENT_PROP, element.getAttribute(COMPONENT_ID));		
 		builder.addPropertyValue(TARGET_BEAN_NAME_PROP, element.getAttribute(REF));
 	}
 	
