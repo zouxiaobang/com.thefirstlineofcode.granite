@@ -258,6 +258,10 @@ public class ApplicationService implements IComponentCollector, IApplicationComp
 			((IDataObjectFactoryAware)object).setDataObjectFactory(dataObjectFactory);
 		}
 		
+		if (object instanceof IApplicationComponentServiceAware) {
+			((IApplicationComponentServiceAware)object).setApplicationComponentService(this);
+		}
+		
 		if (object instanceof IInitializable) {
 			((IInitializable)object).init();
 		}
