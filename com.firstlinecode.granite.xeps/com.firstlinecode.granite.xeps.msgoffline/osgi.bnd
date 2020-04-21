@@ -4,6 +4,6 @@
 
 Granite-Disco-Providers: com.firstlinecode.granite.xeps.msgoffline.DiscoProvider
 Granite-Event-Listeners: event=com.firstlinecode.granite.framework.im.ResourceAvailabledEvent;\
- event-listener=com.firstlinecode.granite.xeps.msgoffline.ResourceAvailabledEventListener,\
+ event-listener=com.firstlinecode.granite.xeps.msgoffline.ResourceAvailabledListener,\
  event=com.firstlinecode.granite.framework.im.OfflineMessageEvent;\
  event-listener=com.firstlinecode.granite.xeps.msgoffline.OfflineMessageListener

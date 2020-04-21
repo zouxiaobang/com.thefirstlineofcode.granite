@@ -14,7 +14,7 @@ import com.firstlinecode.granite.framework.im.IOfflineMessageStore;
 import com.firstlinecode.granite.framework.im.OfflineMessage;
 import com.firstlinecode.granite.framework.im.ResourceAvailabledEvent;
 
-public class ResourceAvailabledEventListener implements IConfigurationAware,
+public class ResourceAvailabledListener implements IConfigurationAware,
 			IEventListener<ResourceAvailabledEvent> {
 	private static final String CONFIGURATION_KEY_DISABLED = "disabled";
 	
