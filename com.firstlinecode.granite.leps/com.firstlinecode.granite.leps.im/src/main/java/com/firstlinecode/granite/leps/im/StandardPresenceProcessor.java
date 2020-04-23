@@ -13,8 +13,8 @@ import com.firstlinecode.basalt.protocol.im.stanza.Presence.Type;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.auth.IAuthenticator;
 import com.firstlinecode.granite.framework.core.commons.utils.StanzaCloner;
-import com.firstlinecode.granite.framework.core.event.IEventService;
-import com.firstlinecode.granite.framework.core.event.IEventServiceAware;
+import com.firstlinecode.granite.framework.core.event.IEventProducer;
+import com.firstlinecode.granite.framework.core.event.IEventProducerAware;
 import com.firstlinecode.granite.framework.im.IResource;
 import com.firstlinecode.granite.framework.im.IResourcesRegister;
 import com.firstlinecode.granite.framework.im.IResourcesService;
@@ -25,7 +25,7 @@ import com.firstlinecode.granite.framework.im.Subscription.State;
 import com.firstlinecode.granite.framework.processing.IPresenceProcessor;
 import com.firstlinecode.granite.framework.processing.IProcessingContext;
 
-public class StandardPresenceProcessor implements IPresenceProcessor, IEventServiceAware {
+public class StandardPresenceProcessor implements IPresenceProcessor, IEventProducerAware {
 	@Dependency("authenticator")
 	private IAuthenticator authenticator;
 	
@@ -38,7 +38,7 @@ public class StandardPresenceProcessor implements IPresenceProcessor, IEventServ
 	@Dependency("subscription.service")
 	private ISubscriptionService subscriptionService;
 	
-	private IEventService eventService;
+	private IEventProducer eventProducer;
 
 	@Override
 	public boolean process(IProcessingContext context, Presence presence) {
@@ -116,7 +116,7 @@ public class StandardPresenceProcessor implements IPresenceProcessor, IEventServ
 			context.write(confirm);
 		}
 		
-		eventService.fire(new ResourceAvailabledEvent(user));
+		eventProducer.fire(new ResourceAvailabledEvent(user));
 		
 		List<Subscription> subscriptions = subscriptionService.get(user.getName());
 		for (Subscription subscription : subscriptions) {
@@ -294,8 +294,8 @@ public class StandardPresenceProcessor implements IPresenceProcessor, IEventServ
 	}
 
 	@Override
-	public void setEventService(IEventService eventService) {
-		this.eventService = eventService;
+	public void setEventProducer(IEventProducer eventProducer) {
+		this.eventProducer = eventProducer;
 	}
 
 }

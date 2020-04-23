@@ -16,13 +16,13 @@ import com.firstlinecode.basalt.oxm.translators.im.MessageTranslatorFactory;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.config.IApplicationConfiguration;
 import com.firstlinecode.granite.framework.core.config.IApplicationConfigurationAware;
-import com.firstlinecode.granite.framework.core.event.IEventService;
-import com.firstlinecode.granite.framework.core.event.IEventServiceAware;
+import com.firstlinecode.granite.framework.core.event.IEventProducer;
+import com.firstlinecode.granite.framework.core.event.IEventProducerAware;
 import com.firstlinecode.granite.framework.processing.IProcessingContext;
 import com.firstlinecode.granite.framework.processing.IXepProcessor;
 import com.firstlinecode.granite.leps.im.IChatMessageDeliverer;
 
-public class TraceableMessageProcessor implements IEventServiceAware, IXepProcessor<Message, Trace>,
+public class TraceableMessageProcessor implements IEventProducerAware, IXepProcessor<Message, Trace>,
 			IApplicationConfigurationAware {
 	@Dependency("chat.message.deliverer")
 	private IChatMessageDeliverer deliverer;
@@ -35,7 +35,7 @@ public class TraceableMessageProcessor implements IEventServiceAware, IXepProces
 	
 	private JabberId domainJid;
 	
-	private IEventService eventService;
+	private IEventProducer eventProducer;
 	
 	private IOxmFactory oxmFactory = OxmService.createMinimumOxmFactory();
 	
@@ -78,7 +78,7 @@ public class TraceableMessageProcessor implements IEventServiceAware, IXepProces
 		
 		sendServerReachedTrace(context, message.getId());
 		
-		deliverer.deliver(context, eventService, message);
+		deliverer.deliver(context, eventProducer, message);
 	}
 
 	private void sendServerReachedTrace(IProcessingContext context, String messageId) {
@@ -98,8 +98,8 @@ public class TraceableMessageProcessor implements IEventServiceAware, IXepProces
 	}
 
 	@Override
-	public void setEventService(IEventService eventService) {
-		this.eventService = eventService;
+	public void setEventProducer(IEventProducer eventProducer) {
+		this.eventProducer = eventProducer;
 	}
 
 	@Override

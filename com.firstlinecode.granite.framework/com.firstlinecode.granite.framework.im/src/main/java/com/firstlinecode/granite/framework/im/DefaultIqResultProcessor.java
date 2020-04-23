@@ -20,9 +20,9 @@ import com.firstlinecode.granite.framework.core.commons.osgi.IBundleContextAware
 import com.firstlinecode.granite.framework.core.commons.osgi.IContributionTracker;
 import com.firstlinecode.granite.framework.core.commons.osgi.OsgiUtils;
 import com.firstlinecode.granite.framework.core.commons.utils.OrderComparator;
-import com.firstlinecode.granite.framework.core.event.EventService;
-import com.firstlinecode.granite.framework.core.event.IEventService;
-import com.firstlinecode.granite.framework.core.event.IEventServiceAware;
+import com.firstlinecode.granite.framework.core.event.EventProducer;
+import com.firstlinecode.granite.framework.core.event.IEventProducer;
+import com.firstlinecode.granite.framework.core.event.IEventProducerAware;
 import com.firstlinecode.granite.framework.core.integration.IMessageChannel;
 import com.firstlinecode.granite.framework.core.supports.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
@@ -44,7 +44,7 @@ public class DefaultIqResultProcessor implements IIqResultProcessor, IBundleCont
 	@Dependency("event.message.channel")
 	private IMessageChannel eventMessageChannel;
 	
-	private IEventService eventService;
+	private IEventProducer eventProducer;
 	
 	public DefaultIqResultProcessor() {
 		bundleAndIqResultProcessors = new HashMap<>();
@@ -55,7 +55,7 @@ public class DefaultIqResultProcessor implements IIqResultProcessor, IBundleCont
 	public void init() {
 		appComponentService = OsgiUtils.getService(bundleContext, IApplicationComponentService.class);
 		
-		eventService = new EventService(eventMessageChannel);
+		eventProducer = new EventProducer(eventMessageChannel);
 		
 		OsgiUtils.trackContribution(bundleContext, KEY_GRANITE_IQ_RESULT_PROCESSORS, this);
 	}
@@ -109,8 +109,8 @@ public class DefaultIqResultProcessor implements IIqResultProcessor, IBundleCont
 		IIqResultProcessor iqResultProcessor = (IIqResultProcessor)clazz.newInstance();
 		appComponentService.inject(iqResultProcessor, bundle.getBundleContext());
 		
-		if (iqResultProcessor instanceof IEventServiceAware) {
-			((IEventServiceAware)iqResultProcessor).setEventService(eventService);
+		if (iqResultProcessor instanceof IEventProducerAware) {
+			((IEventProducerAware)iqResultProcessor).setEventProducer(eventProducer);
 		}
 
 		return iqResultProcessor;

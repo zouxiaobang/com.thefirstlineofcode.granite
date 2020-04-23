@@ -39,9 +39,9 @@ import com.firstlinecode.granite.framework.core.config.IApplicationConfiguration
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
-import com.firstlinecode.granite.framework.core.event.EventService;
-import com.firstlinecode.granite.framework.core.event.IEventService;
-import com.firstlinecode.granite.framework.core.event.IEventServiceAware;
+import com.firstlinecode.granite.framework.core.event.EventProducer;
+import com.firstlinecode.granite.framework.core.event.IEventProducer;
+import com.firstlinecode.granite.framework.core.event.IEventProducerAware;
 import com.firstlinecode.granite.framework.core.integration.IMessage;
 import com.firstlinecode.granite.framework.core.integration.IMessageChannel;
 import com.firstlinecode.granite.framework.core.supports.IApplicationComponentService;
@@ -90,7 +90,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 	@Dependency("authenticator")
 	private IAuthenticator authenticator;
 	
-	private IEventService eventService;
+	private IEventProducer eventProducer;
 	
 	private JabberId domain;
 	private JabberId[] domainAliases;
@@ -104,7 +104,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 
 	@Override
 	public synchronized void init() {
-		eventService = new EventService(eventMessageChannel);
+		eventProducer = new EventProducer(eventMessageChannel);
 		OsgiUtils.trackContribution(bundleContext, KEY_GRANITE_XEP_PROCESSORS, xepProcessorsTracker);
 	}
 	
@@ -677,8 +677,8 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 		
 		appComponentService.inject(xepProcessor, baxpc.bundle.getBundleContext());
 		
-		if (xepProcessor instanceof IEventServiceAware) {
-			((IEventServiceAware)xepProcessor).setEventService(eventService);
+		if (xepProcessor instanceof IEventProducerAware) {
+			((IEventProducerAware)xepProcessor).setEventProducer(eventProducer);
 		}
 		
 		xepProcessor.process(context, (K)stanza, (V)xep);

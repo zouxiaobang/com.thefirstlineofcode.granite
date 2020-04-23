@@ -11,22 +11,22 @@ import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.auth.IAuthenticator;
 import com.firstlinecode.granite.framework.core.config.IApplicationConfiguration;
 import com.firstlinecode.granite.framework.core.config.IApplicationConfigurationAware;
-import com.firstlinecode.granite.framework.core.event.IEventService;
-import com.firstlinecode.granite.framework.core.event.IEventServiceAware;
+import com.firstlinecode.granite.framework.core.event.IEventProducer;
+import com.firstlinecode.granite.framework.core.event.IEventProducerAware;
 import com.firstlinecode.granite.framework.im.IResource;
 import com.firstlinecode.granite.framework.im.IResourcesService;
 import com.firstlinecode.granite.framework.im.OfflineMessageEvent;
 import com.firstlinecode.granite.framework.processing.IMessageProcessor;
 import com.firstlinecode.granite.framework.processing.IProcessingContext;
 
-public class StandardMessageProcessor implements IMessageProcessor, IEventServiceAware, IApplicationConfigurationAware {
+public class StandardMessageProcessor implements IMessageProcessor, IEventProducerAware, IApplicationConfigurationAware {
 	@Dependency("authenticator")
 	private IAuthenticator authenticator;
 	
 	@Dependency("resources.service")
 	private IResourcesService resourcesService;
 	
-	private IEventService eventService;
+	private IEventProducer eventProducer;
 	
 	private String domain;
 
@@ -80,11 +80,11 @@ public class StandardMessageProcessor implements IMessageProcessor, IEventServic
 		
 		IResource[] resources = resourcesService.getResources(to);
 		if (resources.length == 0) {
-			eventService.fire(new OfflineMessageEvent(context.getJid(), message.getTo(), message));
+			eventProducer.fire(new OfflineMessageEvent(context.getJid(), message.getTo(), message));
 		} else {
 			IResource[] chosen = chooseTargets(resources);
 			if (chosen == null || chosen.length == 0) {
-				eventService.fire(new OfflineMessageEvent(context.getJid(), message.getTo(), message));
+				eventProducer.fire(new OfflineMessageEvent(context.getJid(), message.getTo(), message));
 			} else {
 				for (IResource resource : chosen) {
 					context.write(resource.getJid(), message);
@@ -122,8 +122,8 @@ public class StandardMessageProcessor implements IMessageProcessor, IEventServic
 	}
 
 	@Override
-	public void setEventService(IEventService eventService) {
-		this.eventService = eventService;
+	public void setEventProducer(IEventProducer eventProducer) {
+		this.eventProducer = eventProducer;
 	}
 
 	@Override

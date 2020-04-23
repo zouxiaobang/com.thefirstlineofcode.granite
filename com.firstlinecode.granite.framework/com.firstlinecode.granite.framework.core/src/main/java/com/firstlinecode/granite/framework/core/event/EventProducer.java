@@ -3,10 +3,10 @@ package com.firstlinecode.granite.framework.core.event;
 import com.firstlinecode.granite.framework.core.integration.IMessageChannel;
 import com.firstlinecode.granite.framework.core.integration.SimpleMessage;
 
-public class EventService implements IEventService {
+public class EventProducer implements IEventProducer {
 	private IMessageChannel eventMessageChannel;
 	
-	public EventService(IMessageChannel eventMessageChannel) {
+	public EventProducer(IMessageChannel eventMessageChannel) {
 		this.eventMessageChannel = eventMessageChannel;
 	}
 

@@ -15,7 +15,7 @@ import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.auth.IAuthenticator;
 import com.firstlinecode.granite.framework.core.config.IApplicationConfiguration;
 import com.firstlinecode.granite.framework.core.config.IApplicationConfigurationAware;
-import com.firstlinecode.granite.framework.core.event.IEventService;
+import com.firstlinecode.granite.framework.core.event.IEventProducer;
 import com.firstlinecode.granite.framework.im.IResource;
 import com.firstlinecode.granite.framework.im.IResourcesService;
 import com.firstlinecode.granite.framework.im.ISubscriptionService;
@@ -92,7 +92,7 @@ public class ChatMessageDeliverer implements IApplicationConfigurationAware, ICh
 	 * @see com.firstlinecode.granite.leps.im.IChatMessageDeliverer#deliver(com.firstlinecode.granite.framework.processing.IProcessingContext, com.firstlinecode.granite.framework.core.event.IEventService, com.firstlinecode.basalt.protocol.im.stanza.Message)
 	 */
 	@Override
-	public void deliver(IProcessingContext context, IEventService eventService, Message message) {
+	public void deliver(IProcessingContext context, IEventProducer eventProducer, Message message) {
 		JabberId to = message.getTo();
 		if (to.getResource() != null) {
 			IResource resoure = resourcesService.getResource(message.getTo());
@@ -108,11 +108,11 @@ public class ChatMessageDeliverer implements IApplicationConfigurationAware, ICh
 		
 		IResource[] resources = resourcesService.getResources(to);
 		if (resources.length == 0) {
-			eventService.fire(new OfflineMessageEvent(context.getJid(), message.getTo(), message));
+			eventProducer.fire(new OfflineMessageEvent(context.getJid(), message.getTo(), message));
 		} else {
 			IResource[] chosen = chooseTargets(resources);
 			if (chosen == null || chosen.length == 0) {
-				eventService.fire(new OfflineMessageEvent(context.getJid(), message.getTo(), message));
+				eventProducer.fire(new OfflineMessageEvent(context.getJid(), message.getTo(), message));
 			} else {
 				for (IResource resource : chosen) {
 					context.write(resource.getJid(), message);
