@@ -31,11 +31,18 @@ import com.firstlinecode.granite.framework.core.commons.utils.IContributionClass
 import com.firstlinecode.granite.framework.core.config.IApplicationConfiguration;
 import com.firstlinecode.granite.framework.core.config.IApplicationConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
+import com.firstlinecode.granite.framework.core.event.IEvent;
+import com.firstlinecode.granite.framework.core.event.IEventProducer;
+import com.firstlinecode.granite.framework.core.event.IEventProducerAware;
+import com.firstlinecode.granite.framework.core.integration.IMessageChannel;
+import com.firstlinecode.granite.framework.core.integration.SimpleMessage;
+import com.firstlinecode.granite.framework.core.internal.repository.Repository;
 import com.firstlinecode.granite.framework.core.repository.CreationException;
 import com.firstlinecode.granite.framework.core.repository.IComponentCollector;
 import com.firstlinecode.granite.framework.core.repository.IComponentInfo;
 import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
+import com.firstlinecode.granite.framework.core.repository.ISingletonHolder;
 import com.firstlinecode.granite.framework.core.supports.ApplicationComponentConfigurations;
 import com.firstlinecode.granite.framework.core.supports.IApplicationComponentConfigurations;
 import com.firstlinecode.granite.framework.core.supports.IApplicationComponentService;
@@ -63,16 +70,18 @@ public class ApplicationService implements IComponentCollector, IApplicationComp
 	
 	private ContributionClassTrackHelper<AppComponent> trackHelper;
 	
-	private IApplicationConfiguration appConfiguration;
 	private BundleContext bundleContext;
+	private Repository repository;
+	private IApplicationConfiguration appConfiguration;
 	
 	private DataObjectFactory dataObjectFactory;
 	private ServiceTracker<IDataObjectFactory, IDataObjectFactory> dataObjectFactoryTracker;
 	
 	private IApplicationComponentConfigurations appComponentConfigurations;
 	
-	public ApplicationService(BundleContext bundleContext, IApplicationConfiguration appConfiguration) {
+	public ApplicationService(BundleContext bundleContext, Repository repository, IApplicationConfiguration appConfiguration) {
 		this.bundleContext = bundleContext;
+		this.repository = repository;
 		this.appConfiguration = appConfiguration;
 	}
 
@@ -258,6 +267,10 @@ public class ApplicationService implements IComponentCollector, IApplicationComp
 			((IDataObjectFactoryAware)object).setDataObjectFactory(dataObjectFactory);
 		}
 		
+		if (object instanceof IEventProducerAware) {
+			((IEventProducerAware)object).setEventProducer(createEventProducer());
+		}
+		
 		if (object instanceof IApplicationComponentServiceAware) {
 			((IApplicationComponentServiceAware)object).setApplicationComponentService(this);
 		}
@@ -267,6 +280,34 @@ public class ApplicationService implements IComponentCollector, IApplicationComp
 		}
 	}
 	
+	private IEventProducer createEventProducer() {
+		return new EventProducerProxy();
+	}
+	
+	private class EventProducerProxy implements IEventProducer {
+		private IMessageChannel anyToEventMessageChannel;
+
+		@Override
+		public void fire(IEvent event) {
+			if (anyToEventMessageChannel == null)
+				anyToEventMessageChannel = getAnyToEventMessageChannel();
+			
+			anyToEventMessageChannel.send(new SimpleMessage(event));
+		}
+		
+		private IMessageChannel getAnyToEventMessageChannel() {
+			ISingletonHolder singletonHolder = ((ISingletonHolder)repository);
+			IMessageChannel anyToEventMessnageChannel = (IMessageChannel)singletonHolder.get("cluster.any.2.event.message.channel");
+			if (anyToEventMessnageChannel == null)
+				anyToEventMessnageChannel = (IMessageChannel)singletonHolder.get("lite.any.2.event.message.channel");
+				
+			if (anyToEventMessnageChannel == null)
+				throw new RuntimeException("Can't create event producer because the event message channel is null.");
+			
+			return anyToEventMessnageChannel;				
+		}
+	}
+
 	private List<DependencyInjector> getDependencyInjectors(Class<?> clazz) {
 		List<DependencyInjector> injectors = dependencyInjectors.get(clazz);
 		

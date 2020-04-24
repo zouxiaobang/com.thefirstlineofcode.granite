@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 import com.firstlinecode.granite.framework.core.IApplication;
 import com.firstlinecode.granite.framework.core.IService;
 import com.firstlinecode.granite.framework.core.config.IApplicationConfiguration;
-import com.firstlinecode.granite.framework.core.internal.supports.ApplicationService;
 import com.firstlinecode.granite.framework.core.internal.repository.Repository;
+import com.firstlinecode.granite.framework.core.internal.supports.ApplicationService;
 import com.firstlinecode.granite.framework.core.platform.GraniteCommandProvider;
 import com.firstlinecode.granite.framework.core.repository.IServiceListener;
 import com.firstlinecode.granite.framework.core.repository.IServiceWrapper;
@@ -39,17 +39,16 @@ public class Application implements IApplication, IServiceListener {
 		services = new HashMap<>();
 		
 		this.appConfiguration = appConfiguration;
-		
-		appService = new ApplicationService(bundleContext, appConfiguration);
 	}
 
 	@Override
-	public void start() throws Exception {
-		appService.start();
-		
+	public void start() throws Exception {		
 		repository = new Repository(bundleContext, appConfiguration);
 		repository.addServiceListener(this);
 		repository.init();
+		
+		appService = new ApplicationService(bundleContext, repository, appConfiguration);
+		appService.start();	
 		
 		registerOsgiConsoleCommandProvider();
 		
