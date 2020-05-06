@@ -36,8 +36,8 @@
 		<module>com.firstlinecode.granite.leps</module>
 		<module>com.firstlinecode.granite.lite</module>
 		<module>com.firstlinecode.granite.cluster</module>
-	<!--	<module>com.firstlinecode.granite.pack</module> -->
-		<module>com.firstlinecode.granite.cluster.debug</module>
+		<module>com.firstlinecode.granite.pack</module>
+		<!-- <module>com.firstlinecode.granite.cluster.debug</module> -->
 	</modules>
 
 	

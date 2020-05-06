@@ -148,7 +148,7 @@ public abstract class AbstractOptionsTool<T extends OptionsBase> {
 			}
 			
 			if (usedOptions.contains(name)) {
-				throw new IllegalArgumentException(String.format("Reduplicated option: %s.", name));
+				throw new IllegalArgumentException(String.format("Reduplicate option: %s.", name));
 			}
 			
 			rule.getOptionSetter().setOption(options, name, value);
