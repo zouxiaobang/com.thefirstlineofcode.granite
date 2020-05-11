@@ -74,8 +74,8 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 	protected com.firstlinecode.granite.framework.processing.IMessageProcessor messageProcessor;
 	protected IIqResultProcessor iqResultProcessor;
 	
-	protected Map<ProtocolChain, BundleAndXepProcessorClass> bundleAndXepProcessorClasses;
-	protected Map<Bundle, List<Xep>> bundleAndXeps;
+	protected Map<ProtocolChain, BundleAndXepProcessorClass> bundleToXepProcessorClasses;
+	protected Map<Bundle, List<Xep>> bundleToXeps;
 	
 	private boolean stanzaErrorAttachSenderMessage;
 	private boolean relayUnknownNamespaceIq;
@@ -96,8 +96,8 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 	private JabberId[] domainAliases;
 	
 	public DefaultProtocolProcessingProcessor() {
-		bundleAndXepProcessorClasses = new HashMap<>();
-		bundleAndXeps = new HashMap<>();
+		bundleToXepProcessorClasses = new HashMap<>();
+		bundleToXeps = new HashMap<>();
 		
 		xepProcessorsTracker = new XepProcessorsContributionTracker();
 	}
@@ -142,25 +142,25 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 				
 				Class<IXepProcessor<?, ?>> processorClass = (Class<IXepProcessor<?, ?>>)clazz;
 				for (ProtocolChain protocolChain : xep.getProtocolChains()) {
-					bundleAndXepProcessorClasses.put(protocolChain, new BundleAndXepProcessorClass(bundle, processorClass));
+					bundleToXepProcessorClasses.put(protocolChain, new BundleAndXepProcessorClass(bundle, processorClass));
 				}
 				xeps.add(xep);
 			}
 			
-			bundleAndXeps.put(bundle, xeps);
+			bundleToXeps.put(bundle, xeps);
 			
 		}
 
 		@Override
 		public void lost(Bundle bundle, String contribution) throws Exception {
-			List<Xep> xeps = bundleAndXeps.remove(bundle);
+			List<Xep> xeps = bundleToXeps.remove(bundle);
 			
 			if (xeps == null || xeps.isEmpty())
 				return;
 			
 			for (Xep xep : xeps) {
 				for (ProtocolChain chain : xep.getProtocolChains()) {
-					bundleAndXepProcessorClasses.remove(chain);
+					bundleToXepProcessorClasses.remove(chain);
 				}
 			}
 		}
@@ -662,7 +662,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 	@SuppressWarnings("unchecked")
 	private <V, K extends Stanza> boolean doProcessXep(IProcessingContext context, Stanza stanza, Object xep) {
 		ProtocolChain protocolChain = getXepProtocolChain(stanza, xep);
-		BundleAndXepProcessorClass baxpc = bundleAndXepProcessorClasses.get(protocolChain);		
+		BundleAndXepProcessorClass baxpc = bundleToXepProcessorClasses.get(protocolChain);		
 		if (baxpc == null) {
 			throw new ProtocolException(new ServiceUnavailable(String.format("Unsupported protocol: %s.",
 					stanza.getObjectProtocol(stanza.getObject().getClass()))));

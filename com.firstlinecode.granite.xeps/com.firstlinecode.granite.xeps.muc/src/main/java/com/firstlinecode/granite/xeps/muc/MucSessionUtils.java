@@ -11,17 +11,17 @@ public abstract class MucSessionUtils {
 	
 	public static final String SESSION_KEY_MUC_ROOMJID_AND_NICK_MAP = "granite.session.key.muc.roomjid.and.nick.map";
 	
-	public static Map<JabberId, String> getOrCreateRoomJidAndNickMap(ISession session) {
-		Map<JabberId, String> roomJidAndNickMap = session.getAttribute(SESSION_KEY_MUC_ROOMJID_AND_NICK_MAP);
-		if (roomJidAndNickMap == null) {
-			roomJidAndNickMap = new ConcurrentHashMap<>();
+	public static Map<JabberId, String> getOrCreateRoomJidToNicks(ISession session) {
+		Map<JabberId, String> roomJidToNicks = session.getAttribute(SESSION_KEY_MUC_ROOMJID_AND_NICK_MAP);
+		if (roomJidToNicks == null) {
+			roomJidToNicks = new ConcurrentHashMap<>();
 			Map<JabberId, String> previous = session.setAttribute(SESSION_KEY_MUC_ROOMJID_AND_NICK_MAP,
-					roomJidAndNickMap);
+					roomJidToNicks);
 			if (previous != null) {
-				roomJidAndNickMap = previous;
+				roomJidToNicks = previous;
 			}
 		}
 		
-		return roomJidAndNickMap;
+		return roomJidToNicks;
 	}
 }

@@ -84,7 +84,7 @@ public abstract class LocalMessageIntegrator extends AbstractMessageReceiver imp
 		}
 		
 		public void run() {
-			JabberId jid = (JabberId)(message.getHeader().get(IMessage.KEY_SESSION_JID));
+			JabberId jid = (JabberId)(message.getHeaders().get(IMessage.KEY_SESSION_JID));
 			
 			if (!(message.getPayload() instanceof IEvent)) {
 				if (jid == null) {

@@ -105,7 +105,7 @@ public class MessageReceiver extends AbstractMessageReceiver implements IMessage
 		}
 		
 		public void run() {
-			JabberId jid = (JabberId)(message.getHeader().get(IMessage.KEY_SESSION_JID));
+			JabberId jid = (JabberId)(message.getHeaders().get(IMessage.KEY_SESSION_JID));
 			
 			if (!(message.getPayload() instanceof IEvent)) {
 				if (jid == null) {

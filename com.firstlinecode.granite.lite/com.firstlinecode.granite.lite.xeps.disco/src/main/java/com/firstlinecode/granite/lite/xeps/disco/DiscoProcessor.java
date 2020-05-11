@@ -42,7 +42,7 @@ public class DiscoProcessor implements IDiscoProcessor, IBundleContextAware, IIn
 
 	private BundleContext bundleContext;
 	
-	private Map<String, List<IDiscoProvider>> bundleAndDiscoProviders = new ConcurrentHashMap<>();
+	private Map<String, List<IDiscoProvider>> bundleToDiscoProviders = new ConcurrentHashMap<>();
 	
 	private IApplicationComponentService appComponentService;
 	
@@ -83,7 +83,7 @@ public class DiscoProcessor implements IDiscoProcessor, IBundleContextAware, IIn
 	private void doDiscoItems(IProcessingContext context, Iq iq, JabberId jid, String node) {
 		DiscoInfo discoInfo = new DiscoInfo();
 		boolean itemNotFound = true;
-		for (List<IDiscoProvider> discoProviders : bundleAndDiscoProviders.values()) {
+		for (List<IDiscoProvider> discoProviders : bundleToDiscoProviders.values()) {
 			for (IDiscoProvider discoProvider : discoProviders) {
 				DiscoInfo partOfDiscoInfo = discoProvider.discoInfo(context, iq, jid, node);
 				if (partOfDiscoInfo != null) {
@@ -131,7 +131,7 @@ public class DiscoProcessor implements IDiscoProcessor, IBundleContextAware, IIn
 	public void discoItems(IProcessingContext context, Iq iq, JabberId jid, String node) {
 		DiscoItems discoItems = new DiscoItems();
 		boolean itemNotFound = true;
-		for (List<IDiscoProvider> discoProviders : bundleAndDiscoProviders.values()) {
+		for (List<IDiscoProvider> discoProviders : bundleToDiscoProviders.values()) {
 			for (IDiscoProvider discoProvider : discoProviders) {
 				DiscoItems partOfDiscoItems = discoProvider.discoItems(context, iq, jid, node);
 				if (partOfDiscoItems != null) {
@@ -204,16 +204,16 @@ public class DiscoProcessor implements IDiscoProcessor, IBundleContextAware, IIn
 			}
 			
 			if (discoProviders.size() > 0) {
-				bundleAndDiscoProviders.put(bundle.getSymbolicName(), discoProviders);
+				bundleToDiscoProviders.put(bundle.getSymbolicName(), discoProviders);
 			}
 		}
 
 		@Override
 		public void lost(Bundle bundle, String contribution) throws Exception {
-			List<IDiscoProvider> discoProviders = bundleAndDiscoProviders.get(bundle.getSymbolicName());
+			List<IDiscoProvider> discoProviders = bundleToDiscoProviders.get(bundle.getSymbolicName());
 			
 			if (discoProviders != null)
-				bundleAndDiscoProviders.remove(bundle.getSymbolicName());
+				bundleToDiscoProviders.remove(bundle.getSymbolicName());
 		}
 		
 	}

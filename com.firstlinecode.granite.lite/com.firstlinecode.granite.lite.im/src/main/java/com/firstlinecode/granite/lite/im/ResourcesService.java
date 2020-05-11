@@ -16,11 +16,11 @@ import com.firstlinecode.granite.framework.im.ResourceRegistrationException;
 
 @Component
 public class ResourcesService implements IResourcesService, IResourcesRegister {
-	private ConcurrentMap<String, Resources> bareIdAndResources = new ConcurrentHashMap<>();
+	private ConcurrentMap<String, Resources> bareIdToResources = new ConcurrentHashMap<>();
 	
 	@Override
 	public IResource[] getResources(JabberId jid) {
-		Resources resources = bareIdAndResources.get(jid.getBareIdString());
+		Resources resources = bareIdToResources.get(jid.getBareIdString());
 		if (resources == null)
 			return new IResource[0];
 		
@@ -44,7 +44,7 @@ public class ResourcesService implements IResourcesService, IResourcesRegister {
 	public void unregister(JabberId jid) throws ResourceRegistrationException  {
 		checkFullJid(jid);
 		
-		Resources resources = bareIdAndResources.get(jid.getBareIdString());
+		Resources resources = bareIdToResources.get(jid.getBareIdString());
 		if (resources != null) {
 			resources.unregister(jid);
 		}
@@ -73,10 +73,10 @@ public class ResourcesService implements IResourcesService, IResourcesRegister {
 
 	private Resources getResourcesByJid(JabberId jid) {
 		String bareId = jid.getBareIdString();
-		Resources resources = bareIdAndResources.get(bareId);
+		Resources resources = bareIdToResources.get(bareId);
 		if (resources == null) {
 			resources = new Resources(bareId);
-			Resources oldResources = bareIdAndResources.putIfAbsent(bareId, resources);
+			Resources oldResources = bareIdToResources.putIfAbsent(bareId, resources);
 			if (oldResources != null)
 				resources = oldResources;
 		}
@@ -86,7 +86,7 @@ public class ResourcesService implements IResourcesService, IResourcesRegister {
 	
 	private Resource getResourceByJid(JabberId jid) {
 		String bareId = jid.getBareIdString();
-		Resources resources = bareIdAndResources.get(bareId);
+		Resources resources = bareIdToResources.get(bareId);
 		if (resources == null) {
 			return null;
 		}
@@ -207,7 +207,7 @@ public class ResourcesService implements IResourcesService, IResourcesRegister {
 					}
 					
 					if (resources.size() == 0) {
-						ResourcesService.this.bareIdAndResources.remove(bareId);
+						ResourcesService.this.bareIdToResources.remove(bareId);
 						removed = true;
 					}
 					

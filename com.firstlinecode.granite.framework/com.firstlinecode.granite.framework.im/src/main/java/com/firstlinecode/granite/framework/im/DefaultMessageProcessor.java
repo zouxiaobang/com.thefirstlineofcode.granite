@@ -33,7 +33,7 @@ public class DefaultMessageProcessor implements IMessageProcessor, IBundleContex
 	private static final String KEY_GRANITE_MESSAGE_PROCESSORS = "Granite-Message-Processors";
 	
 	private BundleContext bundleContext;
-	private Map<Bundle, List<IMessageProcessor>> bundleAndmessageProcessors;
+	private Map<Bundle, List<IMessageProcessor>> bundleTomessageProcessors;
 	private volatile List<IMessageProcessor> sortedMessageProcessors;
 	
 	private IApplicationComponentService appComponentService;
@@ -44,7 +44,7 @@ public class DefaultMessageProcessor implements IMessageProcessor, IBundleContex
 	private IEventProducer eventProducer;
 	
 	public DefaultMessageProcessor() {
-		bundleAndmessageProcessors = new HashMap<>();
+		bundleTomessageProcessors = new HashMap<>();
 		sortedMessageProcessors = new ArrayList<>();
 	}
 	
@@ -81,14 +81,14 @@ public class DefaultMessageProcessor implements IMessageProcessor, IBundleContex
 			messageProcessors.add(registerMessageProcessor(bundle, st.nextToken()));
 		}
 		
-		bundleAndmessageProcessors.put(bundle, messageProcessors);
+		bundleTomessageProcessors.put(bundle, messageProcessors);
 		sortedMessageProcessors = sortMessageProcessors(getAllProcessors());
 	}
 
 	private Collection<IMessageProcessor> getAllProcessors() {
 		Collection<IMessageProcessor> allProcessors = new ArrayList<>();
 		
-		for (List<IMessageProcessor> processors : bundleAndmessageProcessors.values()) {
+		for (List<IMessageProcessor> processors : bundleTomessageProcessors.values()) {
 			allProcessors.addAll(processors);
 		}
 		
@@ -122,7 +122,7 @@ public class DefaultMessageProcessor implements IMessageProcessor, IBundleContex
 
 	@Override
 	public void lost(Bundle bundle, String contribution) throws Exception {
-		bundleAndmessageProcessors.remove(bundle);
+		bundleTomessageProcessors.remove(bundle);
 		sortMessageProcessors(getAllProcessors());
 	}
 

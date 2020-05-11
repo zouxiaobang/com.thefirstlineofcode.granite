@@ -54,13 +54,13 @@ public class Parsing2ProcessingMessageReceiver extends LocalMessageIntegrator im
 
 		@Override
 		public void close() {
-			Map<Object, Object> header = new HashMap<>();
-			header.put(IMessage.KEY_SESSION_JID, session.getJid());
-			header.put(IMessage.KEY_MESSAGE_TARGET, session.getJid());
+			Map<Object, Object> headers = new HashMap<>();
+			headers.put(IMessage.KEY_SESSION_JID, session.getJid());
+			headers.put(IMessage.KEY_MESSAGE_TARGET, session.getJid());
 			
-			IMessage message = new SimpleMessage(header, new Stream(true));
+			IMessage message = new SimpleMessage(headers, new Stream(true));
 			
-			messageChannel.send(new SimpleMessage(header, message));
+			messageChannel.send(new SimpleMessage(headers, message));
 		}
 
 		@Override
@@ -73,11 +73,11 @@ public class Parsing2ProcessingMessageReceiver extends LocalMessageIntegrator im
 		}
 		
 		private IMessage createMessage(JabberId target, Object message) {
-			Map<Object, Object> header = new HashMap<>();
-			header.put(IMessage.KEY_SESSION_JID, session.getJid());
-			header.put(IMessage.KEY_MESSAGE_TARGET, target);
+			Map<Object, Object> headers = new HashMap<>();
+			headers.put(IMessage.KEY_SESSION_JID, session.getJid());
+			headers.put(IMessage.KEY_MESSAGE_TARGET, target);
 			
-			return new SimpleMessage(header, message);
+			return new SimpleMessage(headers, message);
 		}
 
 		@Override

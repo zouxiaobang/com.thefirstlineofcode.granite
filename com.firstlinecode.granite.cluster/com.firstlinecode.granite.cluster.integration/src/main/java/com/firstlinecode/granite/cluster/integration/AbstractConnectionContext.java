@@ -76,10 +76,10 @@ public abstract class AbstractConnectionContext implements IConnectionContext {
 		if (IMessage.class.isAssignableFrom(message.getClass()))
 			return (IMessage)message;
 		
-		Map<Object, Object> header = new HashMap<>();
-		header.put(IMessage.KEY_SESSION_JID, session.getJid());
+		Map<Object, Object> headers = new HashMap<>();
+		headers.put(IMessage.KEY_SESSION_JID, session.getJid());
 		
-		return new SimpleMessage(header, message);
+		return new SimpleMessage(headers, message);
 	}
 	
 }

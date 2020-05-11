@@ -84,9 +84,9 @@ public class ComponentAcceptMessageProcessor implements IComponentMessageProcess
 		
 		JabberId jid = context.getAttribute(StreamConstants.KEY_SESSION_JID);
 		if (jid != null) {
-			Map<Object, Object> header = new HashMap<>();
-			header.put(IMessage.KEY_SESSION_JID, jid);
-			IMessage out = new SimpleMessage(header, message.getPayload());
+			Map<Object, Object> headers = new HashMap<>();
+			headers.put(IMessage.KEY_SESSION_JID, jid);
+			IMessage out = new SimpleMessage(headers, message.getPayload());
 			
 			messageChannel.send(out);
 		} else {

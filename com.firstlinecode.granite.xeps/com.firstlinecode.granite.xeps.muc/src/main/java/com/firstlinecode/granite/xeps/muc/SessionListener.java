@@ -18,8 +18,8 @@ public class SessionListener implements ISessionListener {
 
 	@Override
 	public void sessionClosing(IConnectionContext context, JabberId sessionJid) {
-		Map<JabberId, String> roomJidAndNickMap = MucSessionUtils.getOrCreateRoomJidAndNickMap(context);
-		for (Entry<JabberId, String> roomJidAndNick : roomJidAndNickMap.entrySet()) {
+		Map<JabberId, String> roomJidToNicks = MucSessionUtils.getOrCreateRoomJidToNicks(context);
+		for (Entry<JabberId, String> roomJidAndNick : roomJidToNicks.entrySet()) {
 			mucProtocolsProcessor.exitRoom((IProcessingContext)context, roomJidAndNick.getKey(), roomJidAndNick.getValue());
 		}
 	}

@@ -46,8 +46,8 @@ public class DefaultEventProcessor implements IMessageProcessor, IBundleContextA
 	protected BundleContext bundleContext;
 	
 	protected Map<String, IEventListener<?>> eventListeners;
-	protected Map<Class<? extends IEvent>, List<OrderId>> eventAndListenerIds;
-	protected Map<Bundle, List<OrderId>> bundleAndListenerIds;
+	protected Map<Class<? extends IEvent>, List<OrderId>> eventToListenerIds;
+	protected Map<Bundle, List<OrderId>> bundleToListenerIds;
 	
 	private IContributionTracker eventListenersTracker;
 	
@@ -57,8 +57,8 @@ public class DefaultEventProcessor implements IMessageProcessor, IBundleContextA
 	
 	public DefaultEventProcessor() {
 		eventListeners = new ConcurrentHashMap<>();
-		eventAndListenerIds = new ConcurrentHashMap<>();
-		bundleAndListenerIds = new ConcurrentHashMap<>();
+		eventToListenerIds = new ConcurrentHashMap<>();
+		bundleToListenerIds = new ConcurrentHashMap<>();
 		
 		eventListenersTracker = new EventListenersContributionTracker();
 	}
@@ -75,7 +75,7 @@ public class DefaultEventProcessor implements IMessageProcessor, IBundleContextA
 	
 	@SuppressWarnings("unchecked")
 	private <E extends IEvent> void processEvent(IConnectionContext context, IEvent event) {
-		List<OrderId> ids = eventAndListenerIds.get(event.getClass());
+		List<OrderId> ids = eventToListenerIds.get(event.getClass());
 		if (ids == null || ids.size() == 0)
 			return;
 		
@@ -99,28 +99,28 @@ public class DefaultEventProcessor implements IMessageProcessor, IBundleContextA
 		
 		@Override
 		public void write(Stanza stanza) {
-			Map<Object, Object> header = new HashMap<>();
-			header.put(IMessage.KEY_SESSION_JID, serverJid);
+			Map<Object, Object> headers = new HashMap<>();
+			headers.put(IMessage.KEY_SESSION_JID, serverJid);
 			
-			connectionContext.write(new SimpleMessage(header, stanza));
+			connectionContext.write(new SimpleMessage(headers, stanza));
 		}
 
 		@Override
 		public void write(JabberId target, Stanza stanza) {
-			Map<Object, Object> header = new HashMap<>();
-			header.put(IMessage.KEY_SESSION_JID, serverJid);
-			header.put(IMessage.KEY_MESSAGE_TARGET, target);
+			Map<Object, Object> headers = new HashMap<>();
+			headers.put(IMessage.KEY_SESSION_JID, serverJid);
+			headers.put(IMessage.KEY_MESSAGE_TARGET, target);
 			
-			connectionContext.write(new SimpleMessage(header, stanza));
+			connectionContext.write(new SimpleMessage(headers, stanza));
 		}
 
 		@Override
 		public void write(JabberId target, String message) {
-			Map<Object, Object> header = new HashMap<>();
-			header.put(IMessage.KEY_SESSION_JID, serverJid);
-			header.put(IMessage.KEY_MESSAGE_TARGET, target);
+			Map<Object, Object> headers = new HashMap<>();
+			headers.put(IMessage.KEY_SESSION_JID, serverJid);
+			headers.put(IMessage.KEY_MESSAGE_TARGET, target);
 			
-			connectionContext.write(new SimpleMessage(header, message));
+			connectionContext.write(new SimpleMessage(headers, message));
 		}
 	}
 
@@ -180,22 +180,22 @@ public class DefaultEventProcessor implements IMessageProcessor, IBundleContextA
 				
 				OrderId id = new OrderId(uniqueIdString, OrderComparator.getAcceptableOrder(eventListener));
 				eventListeners.put(uniqueIdString, eventListener);
-				List<OrderId> idsListenToEvent = eventAndListenerIds.get(eventClass);
+				List<OrderId> idsListenToEvent = eventToListenerIds.get(eventClass);
 				if (idsListenToEvent == null) {
 					idsListenToEvent = new ArrayList<>();
-					eventAndListenerIds.put((Class<? extends IEvent>)eventClass, idsListenToEvent);
+					eventToListenerIds.put((Class<? extends IEvent>)eventClass, idsListenToEvent);
 				}
 				
 				idsListenToEvent.add(id);
 			}
 			
-			bundleAndListenerIds.put(bundle, listenerIds);
+			bundleToListenerIds.put(bundle, listenerIds);
 		}
 
 		@Override
 		public synchronized void lost(Bundle bundle, String contribution) throws Exception {
-			List<OrderId> listenerIds = bundleAndListenerIds.remove(bundle);
-			for (List<OrderId> idsListenToEvent : eventAndListenerIds.values()) {
+			List<OrderId> listenerIds = bundleToListenerIds.remove(bundle);
+			for (List<OrderId> idsListenToEvent : eventToListenerIds.values()) {
 				for (OrderId id : listenerIds) {
 					if (idsListenToEvent.contains(id)) {
 						idsListenToEvent.remove(id);

@@ -36,7 +36,7 @@ public class DefaultIqResultProcessor implements IIqResultProcessor, IBundleCont
 	private static final String KEY_GRANITE_IQ_RESULT_PROCESSORS = "Granite-Iq-Result-Processors";
 	
 	private BundleContext bundleContext;
-	private Map<Bundle, List<IIqResultProcessor>> bundleAndIqResultProcessors;
+	private Map<Bundle, List<IIqResultProcessor>> bundleToIqResultProcessors;
 	private volatile List<IIqResultProcessor> sortedIqResultProcessors;
 	
 	private IApplicationComponentService appComponentService;
@@ -47,7 +47,7 @@ public class DefaultIqResultProcessor implements IIqResultProcessor, IBundleCont
 	private IEventProducer eventProducer;
 	
 	public DefaultIqResultProcessor() {
-		bundleAndIqResultProcessors = new HashMap<>();
+		bundleToIqResultProcessors = new HashMap<>();
 		sortedIqResultProcessors = new ArrayList<>();
 	}
 	
@@ -94,7 +94,7 @@ public class DefaultIqResultProcessor implements IIqResultProcessor, IBundleCont
 			iqResultProcessors.add(registerIqResultProcessor(bundle, st.nextToken()));
 		}
 		
-		bundleAndIqResultProcessors.put(bundle, iqResultProcessors);
+		bundleToIqResultProcessors.put(bundle, iqResultProcessors);
 		sortedIqResultProcessors = sortIqResultProcessors(getAllProcessors());
 	}
 	
@@ -119,7 +119,7 @@ public class DefaultIqResultProcessor implements IIqResultProcessor, IBundleCont
 	private Collection<IIqResultProcessor> getAllProcessors() {
 		Collection<IIqResultProcessor> allProcessors = new ArrayList<>();
 		
-		for (List<IIqResultProcessor> processors : bundleAndIqResultProcessors.values()) {
+		for (List<IIqResultProcessor> processors : bundleToIqResultProcessors.values()) {
 			allProcessors.addAll(processors);
 		}
 		
@@ -128,7 +128,7 @@ public class DefaultIqResultProcessor implements IIqResultProcessor, IBundleCont
 
 	@Override
 	public void lost(Bundle bundle, String contribution) throws Exception {
-		bundleAndIqResultProcessors.remove(bundle);
+		bundleToIqResultProcessors.remove(bundle);
 		sortedIqResultProcessors = sortIqResultProcessors(getAllProcessors());
 	}
 

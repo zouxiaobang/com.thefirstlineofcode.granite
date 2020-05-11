@@ -24,7 +24,7 @@ public class Routing2StreamMessageChannel implements IMessageChannel {
 
 	@Override
 	public void send(IMessage message) {
-		JabberId target = (JabberId)message.getHeader().get(IMessage.KEY_MESSAGE_TARGET);
+		JabberId target = (JabberId)message.getHeaders().get(IMessage.KEY_MESSAGE_TARGET);
 		if (target != null) {
 			Object payload = message.getPayload();
 			if (payload instanceof Stanza) {

@@ -29,7 +29,7 @@ public class ContributionClassTrackHelper<T extends Annotation> implements ICont
 	private Class<T> annotation;
 	private IContributionClassTracker<T> tracker;
 	
-	private Map<String, List<ContributionClass<T>>> bundleAndContributionClasses;
+	private Map<String, List<ContributionClass<T>>> bundleToContributionClasses;
 	
 	public ContributionClassTrackHelper(BundleContext bundleContext, String contributionKey,
 			String contributionScanPathsKey, Class<T> annotation,
@@ -40,7 +40,7 @@ public class ContributionClassTrackHelper<T extends Annotation> implements ICont
 		this.annotation = annotation;
 		this.tracker = tracker;
 		
-		bundleAndContributionClasses = new HashMap<>();
+		bundleToContributionClasses = new HashMap<>();
 	}
 	
 	public void track() {
@@ -116,7 +116,7 @@ public class ContributionClassTrackHelper<T extends Annotation> implements ICont
 			}
 		}
 		
-		bundleAndContributionClasses.put(bundle.getSymbolicName(), contributionClasses);
+		bundleToContributionClasses.put(bundle.getSymbolicName(), contributionClasses);
 		
 		for (ContributionClass<T> cc : contributionClasses) {
 			tracker.found(cc);
@@ -125,7 +125,7 @@ public class ContributionClassTrackHelper<T extends Annotation> implements ICont
 
 	@Override
 	public void lost(Bundle bundle, String contribution) throws Exception {
-		List<ContributionClass<T>> contributionClasses = bundleAndContributionClasses.remove(bundle.getSymbolicName());
+		List<ContributionClass<T>> contributionClasses = bundleToContributionClasses.remove(bundle.getSymbolicName());
 		
 		if (contributionClasses == null || contributionClasses.size() == 0)
 			return;

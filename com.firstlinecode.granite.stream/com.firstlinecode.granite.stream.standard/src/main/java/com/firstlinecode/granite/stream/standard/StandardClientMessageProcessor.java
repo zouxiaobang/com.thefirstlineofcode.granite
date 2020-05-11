@@ -103,7 +103,7 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 	
 	protected ISessionListener sessionListenerDelegate;
 	
-	private Map<String, List<ISessionListener>> bundleAndSessionListeners;
+	private Map<String, List<ISessionListener>> bundleToSessionListeners;
 	
 	private volatile ISessionListener[] sessionListeners;
 	
@@ -118,7 +118,7 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 		translatingFactory.register(StreamError.class, new StreamErrorTranslatorFactory());
 		translatingFactory.register(StanzaError.class, new StanzaErrorTranslatorFactory());
 		
-		bundleAndSessionListeners = new HashMap<>();
+		bundleToSessionListeners = new HashMap<>();
 		sessionListenerDelegate = new SessionListenerDelegate();
 	}
 	
@@ -190,7 +190,7 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 				return sessionListeners;
 			
 			List<ISessionListener> allBundlesSessionListeners = new ArrayList<>();
-			for (List<ISessionListener> bundleSessionListeners : bundleAndSessionListeners.values()) {
+			for (List<ISessionListener> bundleSessionListeners : bundleToSessionListeners.values()) {
 				allBundlesSessionListeners.addAll(bundleSessionListeners);
 			}
 			
@@ -209,9 +209,9 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 				
 		JabberId jid = context.getAttribute(StreamConstants.KEY_SESSION_JID);
 		if (jid != null) {
-			Map<Object, Object> header = new HashMap<>();
-			header.put(IMessage.KEY_SESSION_JID, jid);
-			IMessage out = new SimpleMessage(header, message.getPayload());
+			Map<Object, Object> headers = new HashMap<>();
+			headers.put(IMessage.KEY_SESSION_JID, jid);
+			IMessage out = new SimpleMessage(headers, message.getPayload());
 			
 			messageChannel.send(out);
 		} else {
@@ -457,7 +457,7 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 			}
 			
 			synchronized (StandardClientMessageProcessor.this) {
-				bundleAndSessionListeners.put(bundle.getSymbolicName(), sessionListeners);
+				bundleToSessionListeners.put(bundle.getSymbolicName(), sessionListeners);
 				sessionListeners = null;
 			}
 		}
@@ -465,7 +465,7 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 		@Override
 		public void lost(Bundle bundle, String contribution) throws Exception {
 			synchronized (StandardClientMessageProcessor.this) {
-				bundleAndSessionListeners.remove(bundle.getSymbolicName());
+				bundleToSessionListeners.remove(bundle.getSymbolicName());
 				sessionListeners = null;
 			}
 		}

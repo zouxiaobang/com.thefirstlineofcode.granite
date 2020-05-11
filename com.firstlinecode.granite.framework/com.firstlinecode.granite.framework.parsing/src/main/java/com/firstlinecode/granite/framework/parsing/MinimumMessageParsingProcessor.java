@@ -73,7 +73,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IBundl
 	
 	protected IParsingFactory parsingFactory;
 	protected BundleContext bundleContext;
-	protected Map<Bundle, List<ProtocolChain>> bundleAndProtocolChains;
+	protected Map<Bundle, List<ProtocolChain>> bundleToProtocolChains;
 	
 	private boolean stanzaErrorAttachSenderMessage;
 	
@@ -82,7 +82,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IBundl
 	private String parsersContributionKey;
 	private String preprocessorsContributionKey;
 	
-	private Map<Bundle, List<IPipePreprocessor>> bundleAndPreprocessors;
+	private Map<Bundle, List<IPipePreprocessor>> bundleToPreprocessors;
 	private List<IPipePreprocessor> preprocessors;
 	
 	private IApplicationComponentService appComponentService;
@@ -91,8 +91,8 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IBundl
 		this.parsersContributionKey = parsersContributionKey;
 		this.preprocessorsContributionKey = preprocessorsContributionKey;
 		parsingFactory = OxmService.createParsingFactory();
-		bundleAndProtocolChains = new HashMap<>();
-		bundleAndPreprocessors = new HashMap<>();
+		bundleToProtocolChains = new HashMap<>();
+		bundleToPreprocessors = new HashMap<>();
 		preprocessors = new CopyOnWriteArrayList<>();
 	}
 	
@@ -150,13 +150,13 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IBundl
 				preprocessors.add(preprocessor);
 			}
 			
-			bundleAndPreprocessors.put(bundle, preprocessors);
+			bundleToPreprocessors.put(bundle, preprocessors);
 			MinimumMessageParsingProcessor.this.preprocessors.addAll(preprocessors);
 		}
 
 		@Override
 		public void lost(Bundle bundle, String contribution) throws Exception {
-			List<IPipePreprocessor> preprocessors = bundleAndPreprocessors.remove(bundle);
+			List<IPipePreprocessor> preprocessors = bundleToPreprocessors.remove(bundle);
 			MinimumMessageParsingProcessor.this.preprocessors.removeAll(preprocessors);
 		}
 		
@@ -234,12 +234,12 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IBundl
 				protocolChains.add(protocolChain);
 			}
 			
-			bundleAndProtocolChains.put(bundle, protocolChains);
+			bundleToProtocolChains.put(bundle, protocolChains);
 		}
 
 		@Override
 		public void lost(Bundle bundle, String contribution) throws Exception {
-			List<ProtocolChain> protocolChains = bundleAndProtocolChains.remove(bundle);
+			List<ProtocolChain> protocolChains = bundleToProtocolChains.remove(bundle);
 			
 			if (protocolChains != null) {
 				for (ProtocolChain protocolChain : protocolChains) {
@@ -325,7 +325,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IBundl
 		
 		if (out == null && logger.isWarnEnabled()) {
 			logger.warn("Ignored message. Session JID: {}. Message: {}.",
-					message.getHeader().get(IMessage.KEY_SESSION_JID),message.getPayload());
+					message.getHeaders().get(IMessage.KEY_SESSION_JID),message.getPayload());
 			return;
 		}
 		

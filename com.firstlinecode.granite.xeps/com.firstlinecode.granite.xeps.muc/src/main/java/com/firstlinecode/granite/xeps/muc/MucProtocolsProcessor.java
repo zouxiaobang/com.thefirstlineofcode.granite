@@ -350,8 +350,8 @@ public class MucProtocolsProcessor implements IApplicationConfigurationAware,
 		
 		JabberId roomJid = presence.getTo().getBareId();
 		if (roomService.exists(roomJid)) {
-			Map<JabberId, String> roomJidAndNickMap = MucSessionUtils.getOrCreateRoomJidAndNickMap(context);
-			String oldNick = roomJidAndNickMap.get(roomJid);
+			Map<JabberId, String> roomJidToNicks = MucSessionUtils.getOrCreateRoomJidToNicks(context);
+			String oldNick = roomJidToNicks.get(roomJid);
 			if (oldNick == null) {
 				processEnterRoom(context, presence, muc);
 			} else{
@@ -377,11 +377,11 @@ public class MucProtocolsProcessor implements IApplicationConfigurationAware,
 		
 		IRoomSession roomSession = roomService.getRoomSession(roomJid);
 		
-		Map<JabberId, String> roomJidAndNickMap = MucSessionUtils.getOrCreateRoomJidAndNickMap(context);
-		String oldNick = roomJidAndNickMap.get(roomJid);
+		Map<JabberId, String> roomJidToNicks = MucSessionUtils.getOrCreateRoomJidToNicks(context);
+		String oldNick = roomJidToNicks.get(roomJid);
 		
 		roomSession.changeNick(sessionJid, nick);
-		roomJidAndNickMap.put(roomJid, nick);
+		roomJidToNicks.put(roomJid, nick);
 		
 		
 		updateNickPresenceBroadcast(context, roomSession, oldNick, nick);
@@ -422,8 +422,8 @@ public class MucProtocolsProcessor implements IApplicationConfigurationAware,
 			throw new ProtocolException(new ItemNotFound());
 		}
 		
-		Map<JabberId, String> roomJidAndNickMap = MucSessionUtils.getOrCreateRoomJidAndNickMap(context);
-		String oldNick = roomJidAndNickMap.get(roomJid);
+		Map<JabberId, String> roomJidToNicks = MucSessionUtils.getOrCreateRoomJidToNicks(context);
+		String oldNick = roomJidToNicks.get(roomJid);
 		if (oldNick == null) {
 			// new occupant enters a room
 			if (muc == null) {
@@ -708,8 +708,8 @@ public class MucProtocolsProcessor implements IApplicationConfigurationAware,
 			roomSession.enter(context.getJid(), nick);
 		}
 		
-		Map<JabberId, String> roomJidAndNickMap = MucSessionUtils.getOrCreateRoomJidAndNickMap(context);
-		roomJidAndNickMap.put(roomJid, nick);
+		Map<JabberId, String> roomJidToNicks = MucSessionUtils.getOrCreateRoomJidToNicks(context);
+		roomJidToNicks.put(roomJid, nick);
 	}
 
 	protected boolean isNickLockedDown(JabberId newOccupantJid, String nick) {
@@ -1126,8 +1126,8 @@ public class MucProtocolsProcessor implements IApplicationConfigurationAware,
 	}
 	
 	private String getRoomNick(IProcessingContext context, JabberId roomJid) {
-		Map<JabberId, String> roomJidAndNickMap = MucSessionUtils.getOrCreateRoomJidAndNickMap(context);
-		String nick = roomJidAndNickMap.get(roomJid);
+		Map<JabberId, String> roomJidToNicks = MucSessionUtils.getOrCreateRoomJidToNicks(context);
+		String nick = roomJidToNicks.get(roomJid);
 		
 		if (nick == null) {
 			throw new ProtocolException(new Forbidden());
@@ -1209,8 +1209,8 @@ public class MucProtocolsProcessor implements IApplicationConfigurationAware,
 			
 			exitRoom(context, roomJid, nick);
 		} else {
-			Map<JabberId, String> roomJidAndNickMap = MucSessionUtils.getOrCreateRoomJidAndNickMap(context);
-			String oldNick = roomJidAndNickMap.get(roomJid);
+			Map<JabberId, String> roomJidToNicks = MucSessionUtils.getOrCreateRoomJidToNicks(context);
+			String oldNick = roomJidToNicks.get(roomJid);
 			if (oldNick == null) {
 				processEnterRoom(context, presence, null);
 			} else{
@@ -1239,8 +1239,8 @@ public class MucProtocolsProcessor implements IApplicationConfigurationAware,
 		Occupant exitOccupant = roomSession.getOccupant(nick);
 		
 		roomSession.exit(sessionJid);
-		Map<JabberId, String> roomJidAndNickMap = MucSessionUtils.getOrCreateRoomJidAndNickMap(context);
-		roomJidAndNickMap.remove(roomJid);
+		Map<JabberId, String> roomJidToNicks = MucSessionUtils.getOrCreateRoomJidToNicks(context);
+		roomJidToNicks.remove(roomJid);
 		
 		PresenceBroadcast presenceBroadcast = roomSession.getRoom().getRoomConfig().getPresenceBroadcast();
 		WhoIs whoIs = roomSession.getRoom().getRoomConfig().getWhoIs();

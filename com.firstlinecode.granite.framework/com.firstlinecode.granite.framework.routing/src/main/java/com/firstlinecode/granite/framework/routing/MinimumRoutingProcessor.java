@@ -62,8 +62,8 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IBundleContex
 	protected ITranslatingFactory translatingFactory;
 	protected BundleContext bundleContext;
 	
-	private Map<Bundle, List<Class<?>>> bundleAndClasses;
-	private Map<Bundle, List<IPipePostprocessor>> bundleAndPostprocessors;
+	private Map<Bundle, List<Class<?>>> bundleToClasses;
+	private Map<Bundle, List<IPipePostprocessor>> bundleToPostprocessors;
 	private List<IPipePostprocessor> postprocessors;
 	
 	private String domain;
@@ -77,7 +77,7 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IBundleContex
 		this.translatorsContributionKey = translatorsContributionKey;
 		this.postprocessorsContributionKey = postprocessorsContributionKey;
 		translatingFactory = OxmService.createTranslatingFactory();
-		bundleAndClasses = new HashMap<>();
+		bundleToClasses = new HashMap<>();
 		postprocessors = new CopyOnWriteArrayList<>();
 	}
 	
@@ -125,13 +125,13 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IBundleContex
 				postprocessors.add(postprocessor);
 			}
 			
-			bundleAndPostprocessors.put(bundle, postprocessors);
+			bundleToPostprocessors.put(bundle, postprocessors);
 			MinimumRoutingProcessor.this.postprocessors.addAll(postprocessors);
 		}
 
 		@Override
 		public void lost(Bundle bundle, String contribution) throws Exception {
-			List<IPipePostprocessor> postprocessors = bundleAndPostprocessors.remove(bundle);
+			List<IPipePostprocessor> postprocessors = bundleToPostprocessors.remove(bundle);
 			MinimumRoutingProcessor.this.postprocessors.removeAll(postprocessors);
 		}
 		
@@ -205,7 +205,7 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IBundleContex
 				classes.add(clazz);
 			}
 			
-			bundleAndClasses.put(bundle, classes);
+			bundleToClasses.put(bundle, classes);
 		}
 		
 		private Protocol parseProtocol(String sProtocol) {
@@ -234,7 +234,7 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IBundleContex
 
 		@Override
 		public void lost(Bundle bundle, String contribution) throws Exception {
-			List<Class<?>> classes = bundleAndClasses.remove(bundle);
+			List<Class<?>> classes = bundleToClasses.remove(bundle);
 			
 			if (classes != null) {
 				for (Class<?> clazz : classes) {
@@ -246,12 +246,12 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IBundleContex
 	
 	@Override
 	public void process(IConnectionContext context, IMessage message) {
-		JabberId sessionJid = (JabberId)message.getHeader().get(IMessage.KEY_SESSION_JID);
+		JabberId sessionJid = (JabberId)message.getHeaders().get(IMessage.KEY_SESSION_JID);
 		
 		try {
 			Object payload = message.getPayload();
 			
-			JabberId target = (JabberId)message.getHeader().get(IMessage.KEY_MESSAGE_TARGET);
+			JabberId target = (JabberId)message.getHeaders().get(IMessage.KEY_MESSAGE_TARGET);
 			
 			if (target == null && (payload instanceof Stanza)) {
 				target = ((Stanza)payload).getTo();
@@ -273,11 +273,11 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IBundleContex
 
 	private void routeToTarget(IConnectionContext context, JabberId sessionJid,
 			JabberId target, Object out) {
-		Map<Object, Object> header = new HashMap<>();
-		header.put(IMessage.KEY_SESSION_JID, sessionJid);
-		header.put(IMessage.KEY_MESSAGE_TARGET, target);
+		Map<Object, Object> headers = new HashMap<>();
+		headers.put(IMessage.KEY_SESSION_JID, sessionJid);
+		headers.put(IMessage.KEY_MESSAGE_TARGET, target);
 		
-		IMessage message = new SimpleMessage(header, out);
+		IMessage message = new SimpleMessage(headers, out);
 		
 		for (IPipePostprocessor postprocessor : postprocessors) {
 			message = postprocessor.beforeRouting(message);
@@ -287,13 +287,13 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IBundleContex
 			}
 		}
 		
-		header = message.getHeader();
-		if (header.get(IMessage.KEY_SESSION_JID) == null) {
-			header.put(IMessage.KEY_SESSION_JID, sessionJid);
+		headers = message.getHeaders();
+		if (headers.get(IMessage.KEY_SESSION_JID) == null) {
+			headers.put(IMessage.KEY_SESSION_JID, sessionJid);
 		}
 		
-		if (header.get(IMessage.KEY_MESSAGE_TARGET) == null) {
-			header.put(IMessage.KEY_MESSAGE_TARGET, target);
+		if (headers.get(IMessage.KEY_MESSAGE_TARGET) == null) {
+			headers.put(IMessage.KEY_MESSAGE_TARGET, target);
 		}
 		
 		out = message.getPayload();
@@ -310,7 +310,7 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IBundleContex
 			out = translatingFactory.translate(out);
 		}
 		
-		message = new SimpleMessage(header, out);
+		message = new SimpleMessage(headers, out);
 		
 		if (logger.isTraceEnabled()) {
 			logger.trace("Routing message. Session ID: {}. Target: {}, Message: {}.",

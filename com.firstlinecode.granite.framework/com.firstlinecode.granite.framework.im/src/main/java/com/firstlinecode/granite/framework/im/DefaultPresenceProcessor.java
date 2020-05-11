@@ -33,7 +33,7 @@ public class DefaultPresenceProcessor implements IPresenceProcessor, IBundleCont
 	private static final String KEY_GRANITE_PRESENCE_PROCESSORS = "Granite-Presence-Processors";
 	
 	private BundleContext bundleContext;
-	private Map<Bundle, List<IPresenceProcessor>> bundleAndPresenceProcessors;
+	private Map<Bundle, List<IPresenceProcessor>> bundleToPresenceProcessors;
 	private volatile List<IPresenceProcessor> sortedPresenceProcessors;
 	
 	private IApplicationComponentService appComponentService;
@@ -44,7 +44,7 @@ public class DefaultPresenceProcessor implements IPresenceProcessor, IBundleCont
 	private IEventProducer eventProducer;
 	
 	public DefaultPresenceProcessor() {
-		bundleAndPresenceProcessors = new HashMap<>();
+		bundleToPresenceProcessors = new HashMap<>();
 		sortedPresenceProcessors = new ArrayList<>();
 	}
 	
@@ -84,7 +84,7 @@ public class DefaultPresenceProcessor implements IPresenceProcessor, IBundleCont
 			presenceProcessors.add(registerPresenceProcessor(bundle, st.nextToken()));
 		}
 		
-		bundleAndPresenceProcessors.put(bundle, presenceProcessors);
+		bundleToPresenceProcessors.put(bundle, presenceProcessors);
 		sortedPresenceProcessors = sortPresenceProcessors(getAllProcessors());
 	}
 	
@@ -109,7 +109,7 @@ public class DefaultPresenceProcessor implements IPresenceProcessor, IBundleCont
 	private Collection<IPresenceProcessor> getAllProcessors() {
 		Collection<IPresenceProcessor> allProcessors = new ArrayList<>();
 		
-		for (List<IPresenceProcessor> processors : bundleAndPresenceProcessors.values()) {
+		for (List<IPresenceProcessor> processors : bundleToPresenceProcessors.values()) {
 			allProcessors.addAll(processors);
 		}
 		
@@ -118,7 +118,7 @@ public class DefaultPresenceProcessor implements IPresenceProcessor, IBundleCont
 
 	@Override
 	public void lost(Bundle bundle, String contribution) throws Exception {
-		bundleAndPresenceProcessors.remove(bundle);
+		bundleToPresenceProcessors.remove(bundle);
 		sortedPresenceProcessors = sortPresenceProcessors(getAllProcessors());
 	}
 

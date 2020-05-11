@@ -185,11 +185,11 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>,
 	}
 
 	private void scanBundle(Bundle bundle) {
-		Dictionary<String, String> header = bundle.getHeaders();
-		if (header == null)
+		Dictionary<String, String> headers = bundle.getHeaders();
+		if (headers == null)
 			return;
 		
-		String sMapperLocations = header.get(KEY_GRANITE_MYBATIS_MAPPER_LOCATIONS);
+		String sMapperLocations = headers.get(KEY_GRANITE_MYBATIS_MAPPER_LOCATIONS);
 		if (sMapperLocations != null) {
 			Resource[] resources = scanMappers(bundle, sMapperLocations);
 			
@@ -198,7 +198,7 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>,
 			}
 		}
 		
-		String sDataObjects = header.get(KEY_GRANITE_MYBATIS_DATA_OBJECTS);
+		String sDataObjects = headers.get(KEY_GRANITE_MYBATIS_DATA_OBJECTS);
 		if (sDataObjects != null) {
 			NamedTypeAlias[] namedTypeAliases = scanTypeAliases(bundle, sDataObjects);
 			
@@ -207,7 +207,7 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>,
 			}
 		}
 		
-		String sTypeHandlers = header.get(KEY_GRANITE_MYBATIS_TYPE_HANDLERS);
+		String sTypeHandlers = headers.get(KEY_GRANITE_MYBATIS_TYPE_HANDLERS);
 		if (sTypeHandlers != null) {
 			Class<?>[] typeHandlers = scanTypeHandlers(bundle, sTypeHandlers);
 			

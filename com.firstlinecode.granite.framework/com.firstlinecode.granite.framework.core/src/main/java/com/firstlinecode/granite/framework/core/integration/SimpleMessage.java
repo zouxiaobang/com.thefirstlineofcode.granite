@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 
 public class SimpleMessage implements IMessage {
-	protected Map<Object, Object> header;
+	protected Map<Object, Object> headers;
 	protected Object payload;
 	
 	public SimpleMessage() {
@@ -15,22 +15,22 @@ public class SimpleMessage implements IMessage {
 		this(null, payload);
 	}
 	
-	public SimpleMessage(Map<Object, Object> header, Object payload) {
-		this.header = header;
+	public SimpleMessage(Map<Object, Object> headers, Object payload) {
+		this.headers = headers;
 		this.payload = payload;
 	}
 	
-	public void setHeader(Map<Object, Object> header) {
-		this.header = header;
+	public void setHeaders(Map<Object, Object> headers) {
+		this.headers = headers;
 	}
 
 	@Override
-	public Map<Object, Object> getHeader() {
-		if (header == null) {
-			header = Collections.emptyMap();
+	public Map<Object, Object> getHeaders() {
+		if (headers == null) {
+			headers = Collections.emptyMap();
 		}
 		
-		return Collections.unmodifiableMap(header);
+		return Collections.unmodifiableMap(headers);
 	}
 	
 	public void setPayload(Object payload) {

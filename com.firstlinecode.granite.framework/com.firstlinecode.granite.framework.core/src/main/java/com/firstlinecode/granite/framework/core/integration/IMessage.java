@@ -8,6 +8,6 @@ public interface IMessage {
 	public static final String KEY_SESSION_JID = (String)ISession.KEY_SESSION_JID;
 	public static final String KEY_MESSAGE_TARGET = "granite.message.target";
 	
-	Map<Object, Object> getHeader();
+	Map<Object, Object> getHeaders();
 	Object getPayload();
 }

@@ -75,18 +75,18 @@ public abstract class AbstractConnectionContext implements IConnectionContext {
 	}
 	
 	protected IMessage createMessage(Object message) {
-		Map<Object, Object> header = new HashMap<>();
-		header.put(IMessage.KEY_SESSION_JID, session.getJid());
+		Map<Object, Object> headers = new HashMap<>();
+		headers.put(IMessage.KEY_SESSION_JID, session.getJid());
 		
-		return new SimpleMessage(header, message);
+		return new SimpleMessage(headers, message);
 	}
 	
 	@Override
 	public void close() {
-		Map<Object, Object> header = new HashMap<>();
-		header.put(IMessage.KEY_SESSION_JID, session.getJid());
+		Map<Object, Object> headers = new HashMap<>();
+		headers.put(IMessage.KEY_SESSION_JID, session.getJid());
 		
-		messageChannel.send(new SimpleMessage(header, getStreamCloseMessage()));
+		messageChannel.send(new SimpleMessage(headers, getStreamCloseMessage()));
 	}
 	
 	public static class MessageOutConnectionContext extends AbstractConnectionContext {
@@ -96,11 +96,11 @@ public abstract class AbstractConnectionContext implements IConnectionContext {
 
 		@Override
 		protected Object getStreamCloseMessage() {
-			Map<Object, Object> header = new HashMap<>();
-			header.put(IMessage.KEY_SESSION_JID, session.getJid());
-			header.put(IMessage.KEY_MESSAGE_TARGET, session.getJid());
+			Map<Object, Object> headers = new HashMap<>();
+			headers.put(IMessage.KEY_SESSION_JID, session.getJid());
+			headers.put(IMessage.KEY_MESSAGE_TARGET, session.getJid());
 			
-			return new SimpleMessage(header, new Stream(true));
+			return new SimpleMessage(headers, new Stream(true));
 		}
 
 		@Override
@@ -121,11 +121,11 @@ public abstract class AbstractConnectionContext implements IConnectionContext {
 		}
 		
 		protected IMessage createMessage(JabberId target, Object message) {
-			Map<Object, Object> header = new HashMap<>();
-			header.put(IMessage.KEY_SESSION_JID, session.getJid());
-			header.put(IMessage.KEY_MESSAGE_TARGET, target);
+			Map<Object, Object> headers = new HashMap<>();
+			headers.put(IMessage.KEY_SESSION_JID, session.getJid());
+			headers.put(IMessage.KEY_MESSAGE_TARGET, target);
 			
-			return new SimpleMessage(header, message);
+			return new SimpleMessage(headers, message);
 		}
 
 		@Override

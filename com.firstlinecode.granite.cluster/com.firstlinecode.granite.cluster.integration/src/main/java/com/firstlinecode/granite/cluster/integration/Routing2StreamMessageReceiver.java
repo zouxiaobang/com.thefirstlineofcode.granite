@@ -48,7 +48,7 @@ public class Routing2StreamMessageReceiver extends AbstractMessageReceiver imple
 
 		@Override
 		public boolean apply(UUID nodeId, IMessage message) {
-			JabberId jid = (JabberId)(message.getHeader().get(IMessage.KEY_MESSAGE_TARGET));
+			JabberId jid = (JabberId)(message.getHeaders().get(IMessage.KEY_MESSAGE_TARGET));
 			
 			if (jid == null) {
 				logger.warn("Null message target. Message: {}.", message.getPayload());

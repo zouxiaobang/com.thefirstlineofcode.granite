@@ -67,7 +67,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 	
 	protected BundleContext bundleContext;
 	
-	protected Map<ProtocolChain, BundleAndXepProcessorClass> bundleAndXepProcessorClasses;
+	protected Map<ProtocolChain, BundleAndXepProcessorClass> bundleToXepProcessorClasses;
 	protected Map<Bundle, List<Xep>> bundleAndXeps;
 	
 	private boolean stanzaErrorAttachSenderMessage;
@@ -86,7 +86,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 	private IAuthenticator authenticator;
 	
 	public DefaultProtocolProcessingProcessor() {
-		bundleAndXepProcessorClasses = new HashMap<>();
+		bundleToXepProcessorClasses = new HashMap<>();
 		bundleAndXeps = new HashMap<>();
 		
 		xepProcessorsTracker = new XepProcessorsContributionTracker();
@@ -131,7 +131,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 				
 				Class<IXepProcessor<?, ?>> processorClass = (Class<IXepProcessor<?, ?>>)clazz;
 				for (ProtocolChain protocolChain : xep.getProtocolChains()) {
-					bundleAndXepProcessorClasses.put(protocolChain, new BundleAndXepProcessorClass(bundle, processorClass));
+					bundleToXepProcessorClasses.put(protocolChain, new BundleAndXepProcessorClass(bundle, processorClass));
 				}
 				xeps.add(xep);
 			}
@@ -146,7 +146,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 			
 			for (Xep xep : xeps) {
 				for (ProtocolChain chain : xep.getProtocolChains()) {
-					bundleAndXepProcessorClasses.remove(chain);
+					bundleToXepProcessorClasses.remove(chain);
 				}
 			}
 		}
@@ -468,7 +468,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 	private <V, K extends Stanza> void doProcessXep(IProcessingContext context, Stanza stanza) {
 		ProtocolChain protocolChain = getFirstProtocolChain(stanza);
 		
-		BundleAndXepProcessorClass baxpc = bundleAndXepProcessorClasses.get(protocolChain);
+		BundleAndXepProcessorClass baxpc = bundleToXepProcessorClasses.get(protocolChain);
 		if (baxpc == null) {
 			if (isUnknownMessageDeliverable(stanza.getTo())) {
 				deliverToClientProcessor.process(context, stanza, stanza.getObjects());

@@ -20,7 +20,7 @@ public class RoutingMessageChannel extends com.firstlinecode.granite.lite.integr
 	
 	@Override
 	public void send(IMessage message) {
-		JabberId target = (JabberId)message.getHeader().get(IMessage.KEY_MESSAGE_TARGET);
+		JabberId target = (JabberId)message.getHeaders().get(IMessage.KEY_MESSAGE_TARGET);
 		if (isToClient(target)) {
 			getRoutingToStreamIntegrator().put(message);
 		} else {

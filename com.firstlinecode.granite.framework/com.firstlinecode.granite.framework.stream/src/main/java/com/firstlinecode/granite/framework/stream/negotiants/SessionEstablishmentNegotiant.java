@@ -141,10 +141,10 @@ public class SessionEstablishmentNegotiant extends AbstractNegotiant {
 	private void fireSessionEstablishedEvent(IConnectionContext context, JabberId jid) {
 		SessionEstablishedEvent event = new SessionEstablishedEvent(context.getJid().toString(), jid);
 		
-		Map<Object, Object> header = new HashMap<>();
-		header.put(IMessage.KEY_SESSION_JID, jid);
+		Map<Object, Object> headers = new HashMap<>();
+		headers.put(IMessage.KEY_SESSION_JID, jid);
 		
-		eventMessageChannel.send(new SimpleMessage(header, event));
+		eventMessageChannel.send(new SimpleMessage(headers, event));
 	}
 
 }
