@@ -89,7 +89,7 @@ public class MessageReceiver extends AbstractMessageReceiver implements IMessage
 				}
 			}
 			
-		}, String.format("Granite lite Message Receiver[%s]", pipePosition));
+		}, String.format("Granite Lite Message Receiver[%s]", pipePosition));
 		messageReaderThread.start();
 	}
 	
