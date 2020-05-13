@@ -215,7 +215,7 @@ public class Starter implements Serializable {
 
 	private void startConsoleThread() {
 		consoleThread = new ConsoleThread();
-		new Thread(consoleThread).start();
+		new Thread(consoleThread, "Management Node Console Thread").start();
 	}
 	
 	private class ConsoleThread implements Runnable {
@@ -324,7 +324,7 @@ public class Starter implements Serializable {
 	}
 
 	private void startJettyServer(Options options) throws Exception {
-		Thread httpServerThread = new Thread(new HttpServerThread(options));
+		Thread httpServerThread = new Thread(new HttpServerThread(options), "Management Node HTTP Server Thread");
 		httpServerThread.start();
 	}
 	

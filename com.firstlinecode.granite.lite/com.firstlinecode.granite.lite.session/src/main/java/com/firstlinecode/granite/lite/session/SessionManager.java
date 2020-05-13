@@ -31,7 +31,7 @@ public class SessionManager implements ISessionManager, IConfigurationAware {
 	private int sessionCallbackCheckInterval;
 	
 	public SessionManager() {
-		callbackThread = new Thread(new CallbackRunnable());
+		callbackThread = new Thread(new CallbackRunnable(), "Granite Session Callback Thread");
 		callbackThread.start();
 	}
 	
