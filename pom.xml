@@ -911,6 +911,11 @@
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.sand.server</groupId>
+				<artifactId>com.firstlinecode.sand.server.lite.ibdr</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.sand.server</groupId>
 				<artifactId>com.firstlinecode.sand.server.concentrator</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
@@ -919,9 +924,19 @@
 				<artifactId>com.firstlinecode.sand.server.lite.concentrator</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.sand.server.lite</groupId>
+				<artifactId>com.firstlinecode.sand.server.lite.ibdr</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server</groupId>
 			<artifactId>com.firstlinecode.sand.server.emulators.modes</artifactId>
+			<version>${sand.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.sand.demo</groupId>
+			<artifactId>com.firstlinecode.sand.demo.server</artifactId>
 			<version>${sand.version}</version>
 		</dependency>
 

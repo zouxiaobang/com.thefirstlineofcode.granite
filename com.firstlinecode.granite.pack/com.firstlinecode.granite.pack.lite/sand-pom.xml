@@ -89,12 +89,12 @@
 			<artifactId>com.firstlinecode.sand.server.stream</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.firstlinecode.sand.server</groupId>
-			<artifactId>com.firstlinecode.sand.server.ibdr</artifactId>
+			<groupId>com.firstlinecode.sand.server.lite</groupId>
+			<artifactId>com.firstlinecode.sand.server.lite.device</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server.lite</groupId>
-			<artifactId>com.firstlinecode.sand.server.lite.device</artifactId>
+			<artifactId>com.firstlinecode.sand.server.lite.ibdr</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server</groupId>
@@ -107,6 +107,10 @@
 		<dependency>
 			<groupId>com.firstlinecode.sand.server</groupId>
 			<artifactId>com.firstlinecode.sand.server.emulators.modes</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.sand.demo</groupId>
+			<artifactId>com.firstlinecode.sand.demo.server</artifactId>
 		</dependency>
 	</dependencies>
 	
