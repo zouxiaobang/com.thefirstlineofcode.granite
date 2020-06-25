@@ -19,7 +19,7 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 public class Updater {
-	private static final String GRANITE_SUB_SYSTEM_PREFIX = "granite.";
+	private static final String GRANITE_SUBSYSTEM_PREFIX = "granite.";
 	private static final String SAND_SUBSYSTEM_PREFIX = "sand.";
 	
 	private static final String GRANITE_PROJECT_PACKAGE_PREFIX = "com.firstlinecode.granite.";
@@ -28,6 +28,8 @@ public class Updater {
 	private static final String FILE_NAME_SUBSYSTEMS = "subsystems.ini";
 	private static final String FILE_NAME_BUNDLEINFOS = "bundleinfos.ini";
 
+	private static final String DIRECTORY_NAME_DOT_GIT = ".git";
+	
 	private static final String[] GRANITE_SUBSYSTEM_NAMES = new String[] {
 			"granite.framework",
 			"granite.im",
@@ -67,7 +69,7 @@ public class Updater {
 		
 		String[] modules = options.getModules();
 		if (modules == null)
-			modules = getModules();
+			modules = getSubsystems();
 		
 		List<String> updatedBundles = new ArrayList<>();
 		for (String module : modules) {
@@ -75,9 +77,9 @@ public class Updater {
 				updateSubsystem(module, clean, updatedBundles);
 			} else {
 				if (!module.startsWith(GRANITE_PROJECT_PACKAGE_PREFIX) && !module.startsWith(options.getSandProjectName())) {
-					if (module.startsWith("granite.")) {
+					if (module.startsWith(GRANITE_SUBSYSTEM_PREFIX)) {
 						module = GRANITE_PROJECT_PACKAGE_PREFIX + module.substring(8);						
-					} else if (module.startsWith("sand.")) {
+					} else if (module.startsWith(SAND_SUBSYSTEM_PREFIX)) {
 						module = options.getSandProjectName() + '.' + module.substring(5);
 					} else {
 						throw new IllegalArgumentException(String.format("Illegal module name '%s'", module));
@@ -105,7 +107,7 @@ public class Updater {
 		System.out.println(String.format("Bundles %s updated.", bundles.toString()));
 	}
 
-	private String[] getModules() {
+	private String[] getSubsystems() {
 		if (options.getSandProjectDirPath() == null) {			
 			return GRANITE_SUBSYSTEM_NAMES;
 		} else {
@@ -124,7 +126,7 @@ public class Updater {
 	}
 	
 	private void updateBundle(String bundle, boolean clean, List<String> updatedBundles) {
-		if (bundle.startsWith(GRANITE_SUB_SYSTEM_PREFIX)) {
+		if (bundle.startsWith(GRANITE_SUBSYSTEM_PREFIX)) {
 			bundle = GRANITE_PROJECT_PACKAGE_PREFIX + bundle.substring(8);
 		} else if (bundle.startsWith(SAND_SUBSYSTEM_PREFIX)) {
 			bundle = options.getSandProjectName() + '.' + bundle.substring(5);			
@@ -178,7 +180,7 @@ public class Updater {
 		String subsystemFullName = null;
 		File subsystemProjectDir = null;
 		
-		if (subsystem.startsWith(GRANITE_SUB_SYSTEM_PREFIX)) {
+		if (subsystem.startsWith(GRANITE_SUBSYSTEM_PREFIX)) {
 			subsystemFullName = GRANITE_PROJECT_PACKAGE_PREFIX + subsystem.substring(8);
 			subsystemProjectDir = new File(options.getGraniteProjectDirPath(), subsystemFullName);
 		} else if (subsystem.startsWith(SAND_SUBSYSTEM_PREFIX)) {
@@ -437,10 +439,10 @@ public class Updater {
 	}
 
 	private void collectCacheData(File currentDir, String subsystem) {
-		if (".git".equals(currentDir.getName()))
+		if (DIRECTORY_NAME_DOT_GIT.equals(currentDir.getName()))
 			return;
 		
-		if (isGraniteArtifactProject(currentDir)) {
+		if (isArtifactProject(currentDir)) {
 			BundleInfo bundleInfo = bundleInfos.get(currentDir.getName());
 			bundleInfo.projectDirPath = currentDir.getPath();
 			
@@ -461,7 +463,7 @@ public class Updater {
 		}
 		
 		for (File file : currentDir.listFiles()) {
-			if (file.isDirectory()) {
+			if (file.isDirectory() && !DIRECTORY_NAME_DOT_GIT.equals(file.getName())) {
 				collectCacheData(file, subsystem == null ? getSubsystem(file) : subsystem);
 			}
 		}
@@ -469,7 +471,7 @@ public class Updater {
 
 	private String getSubsystem(File file) {
 		String fileName = file.getName();
-		for (String subsystemName : getModules()) {
+		for (String subsystemName : getSubsystems()) {
 			if (fileName.endsWith("." + subsystemName)) {
 				return subsystemName;
 			}
@@ -478,7 +480,7 @@ public class Updater {
 		return null;
 	}
 
-	private boolean isGraniteArtifactProject(File dir) {
+	private boolean isArtifactProject(File dir) {
 		boolean pomFound = false;
 		boolean srcFound = false;
 		
@@ -509,6 +511,9 @@ public class Updater {
 	}
 	
 	private boolean isSandArtifact(String pluginFileName) {
+		if (options.getSandProjectName() == null)
+			return false;
+		
 		return pluginFileName.startsWith(options.getSandProjectName() + '.');
 	}
 
@@ -521,7 +526,7 @@ public class Updater {
 	}
 	
 	private boolean isSubsystem(String module) {
-		for (String subsystemName : getModules()) {
+		for (String subsystemName : getSubsystems()) {
 			if (subsystemName.equals(module))
 				return true;
 		}

@@ -126,11 +126,15 @@
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server</groupId>
+			<artifactId>com.firstlinecode.sand.server.operator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.sand.server</groupId>
 			<artifactId>com.firstlinecode.sand.server.emulators.modes</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.demo</groupId>
-			<artifactId>com.firstlinecode.sand.demo.server</artifactId>
+			<artifactId>com.firstlinecode.sand.demo.lite.server</artifactId>
 		</dependency>
 	</dependencies>
 	
