@@ -10,17 +10,17 @@ Granite-Message-Processors: com.firstlinecode.granite.leps.im.StandardMessagePro
 
 Granite-Xep-Processors: xep=iq->query|jabber:iq:roster;\
  class=com.firstlinecode.granite.leps.im.roster.RosterProcessor,\
- xep=iq->subscribe|urn:lep:subscription;\
+ xep=iq->subscribe|urn:leps:subscription;\
  class=com.firstlinecode.granite.leps.im.subscription.SubscribeProcessor,\
- xep=iq->subscribed|urn:lep:subscription;\
+ xep=iq->subscribed|urn:leps:subscription;\
  class=com.firstlinecode.granite.leps.im.subscription.SubscribedProcessor,\
- xep=iq->unsubscribe|urn:lep:subscription;\
+ xep=iq->unsubscribe|urn:leps:subscription;\
  class=com.firstlinecode.granite.leps.im.subscription.UnsubscribeProcessor,\
- xep=iq->unsubscribed|urn:lep:subscription;\
+ xep=iq->unsubscribed|urn:leps:subscription;\
  class=com.firstlinecode.granite.leps.im.subscription.UnsubscribedProcessor,\
- xep=message->trace|urn:lep:traceable;\
+ xep=message->trace|urn:leps:traceable;\
  class=com.firstlinecode.granite.leps.im.traceable.TraceableMessageProcessor,\
- xep=iq->trace|urn:lep:traceable;\
+ xep=iq->trace|urn:leps:traceable;\
  class=com.firstlinecode.granite.leps.im.traceable.TraceProcessor
 
 Granite-Iq-Result-Processors: com.firstlinecode.granite.leps.im.subscription.AcknowledgementProcessor

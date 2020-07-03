@@ -3,18 +3,18 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.firstlinecode.granite.lite.xeps.msgoffline.OfflineMessageMapper">
 	<insert id="insert" parameterType="OfflineMessage">
-		INSERT INTO OFFLINE_MESSAGE(id, message_id, message, jid) VALUES(#{id}, #{messageId}, #{message}, #{jid, typeHandler=JabberIdTypeHandler})
+		INSERT INTO OFFLINE_MESSAGES(id, message_id, message, jid) VALUES(#{id}, #{messageId}, #{message}, #{jid, typeHandler=JabberIdTypeHandler})
 	</insert>
 	
 	<select id="selectByJid" resultType="OfflineMessage">
-		SELECT * FROM OFFLINE_MESSAGE WHERE jid=#{0, typeHandler=JabberIdTypeHandler} LIMIT #{1} OFFSET #{2}
+		SELECT * FROM OFFLINE_MESSAGES WHERE jid=#{0, typeHandler=JabberIdTypeHandler} LIMIT #{1} OFFSET #{2}
     </select>
     
 	<select id="selectCountByJid" resultType="int">
-		SELECT COUNT(*) FROM OFFLINE_MESSAGE WHERE jid=#{0, typeHandler=JabberIdTypeHandler}
+		SELECT COUNT(*) FROM OFFLINE_MESSAGES WHERE jid=#{0, typeHandler=JabberIdTypeHandler}
     </select>
     
     <delete id="deleteByJidAndMessageId">
-        DELETE FROM OFFLINE_MESSAGE WHERE jid=#{0, typeHandler=JabberIdTypeHandler} AND message_id=#{1}
+        DELETE FROM OFFLINE_MESSAGES WHERE jid=#{0, typeHandler=JabberIdTypeHandler} AND message_id=#{1}
     </delete>
 </mapper>

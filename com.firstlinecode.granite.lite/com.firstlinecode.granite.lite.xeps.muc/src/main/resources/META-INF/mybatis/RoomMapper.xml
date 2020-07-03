@@ -3,14 +3,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.firstlinecode.granite.lite.xeps.muc.RoomMapper">
 	<select id="selectCountByJid" resultType="int">
-		SELECT count(*) FROM ROOM WHERE room_jid = #{0}
+		SELECT count(*) FROM ROOMS WHERE room_jid = #{0}
 	</select>
 	
 	<select id="selectCount" resultType="int">
 		SELECT
 			count(*)
-		FROM ROOM R
-			LEFT OUTER JOIN ROOM_CONFIG RC ON
+		FROM ROOMS R
+			LEFT OUTER JOIN ROOM_CONFIGS RC ON
 				R.id = RC.room_id
 		WHERE
 			RC.public_room = TRUE
@@ -20,8 +20,8 @@
 		SELECT
 			R.room_jid AS r_room_jid,
 			RC.room_name AS rc_room_name
-		FROM ROOM R
-			LEFT OUTER JOIN ROOM_CONFIG RC ON
+		FROM ROOMS R
+			LEFT OUTER JOIN ROOM_CONFIGS RC ON
 				R.id = RC.room_id
 		WHERE
 			RC.public_room = TRUE
@@ -68,12 +68,12 @@
 			RCGML.moderator AS rcgml_moderator,
 			RCGML.participant AS rcgml_participant,
 			RCGML.visitor AS rcgml_visitor
-		FROM ROOM R
-			LEFT OUTER JOIN ROOM_CONFIG RC ON
+		FROM ROOMS R
+			LEFT OUTER JOIN ROOM_CONFIGS RC ON
 				R.id = RC.room_id
-			LEFT OUTER JOIN ROOM_CONFIG_PRESENCE_BROADCAST RCPB ON
+			LEFT OUTER JOIN ROOM_CONFIG_PRESENCE_BROADCASTS RCPB ON
 				RC.id = RCPB.room_config_id
-			LEFT OUTER JOIN ROOM_CONFIG_GET_MEMBER_LIST RCGML ON
+			LEFT OUTER JOIN ROOM_CONFIG_GET_MEMBER_LISTS RCGML ON
 				RC.id = RCGML.room_config_id
 		WHERE
 			R.room_jid = #{0}
@@ -127,19 +127,19 @@
 	</resultMap>
 	
 	<select id="selectAffiliatedUsersByRoomId" resultMap="affiliatedUserResultMap">
-		SELECT * FROM ROOM_AFFILIATED_USER WHERE room_id = #{0}
+		SELECT * FROM ROOM_AFFILIATED_USERS WHERE room_id = #{0}
 	</select>
     
 	<insert id="updateLocked">
-		UPDATE ROOM SET locked=#{1} WHERE room_jid=#{0}
+		UPDATE ROOMS SET locked=#{1} WHERE room_jid=#{0}
 	</insert>
 	
 	<insert id="insert" parameterType="Room">
-		INSERT INTO ROOM(id, room_jid, creator) VALUES(#{id}, #{roomJid, typeHandler=JabberIdTypeHandler}, #{creator, typeHandler=JabberIdTypeHandler})
+		INSERT INTO ROOMS(id, room_jid, creator) VALUES(#{id}, #{roomJid, typeHandler=JabberIdTypeHandler}, #{creator, typeHandler=JabberIdTypeHandler})
 	</insert>
 	
 	<insert id="insertRoomConfig" parameterType="RoomConfig">
-		INSERT INTO ROOM_CONFIG(id, room_id, room_name, room_desc, lang, enable_logging, change_subject, allow_invites, allow_pm,
+		INSERT INTO ROOM_CONFIGS(id, room_id, room_name, room_desc, lang, enable_logging, change_subject, allow_invites, allow_pm,
 			max_users, public_room, persistent_room, moderated_room, members_only, password_protected_room, room_secret,
 			who_is, max_history_fetch, pub_sub) VALUES(#{id}, #{roomId}, #{roomName}, #{roomDesc}, #{lang}, #{enableLogging},
 			#{changeSubject}, #{allowInvites}, #{allowPm, typeHandler=EnumTypeHandler}, #{maxUsers}, #{publicRoom},
@@ -148,19 +148,19 @@
 	</insert>
 	
 	<insert id="insertRoomConfigPresenceBroadcast" parameterType="PresenceBroadcast">
-		INSERT INTO ROOM_CONFIG_PRESENCE_BROADCAST(id, room_config_id, moderator, participant, visitor) VALUES(#{id}, #{roomConfigId}, #{moderator}, #{participant}, #{visitor})
+		INSERT INTO ROOM_CONFIG_PRESENCE_BROADCASTS(id, room_config_id, moderator, participant, visitor) VALUES(#{id}, #{roomConfigId}, #{moderator}, #{participant}, #{visitor})
 	</insert>
 	
 	<insert id="insertRoomConfigGetMemberList" parameterType="GetMemberList">
-		INSERT INTO ROOM_CONFIG_GET_MEMBER_LIST(id, room_config_id, moderator, participant, visitor) VALUES(#{id}, #{roomConfigId}, #{moderator}, #{participant}, #{visitor})
+		INSERT INTO ROOM_CONFIG_GET_MEMBER_LISTS(id, room_config_id, moderator, participant, visitor) VALUES(#{id}, #{roomConfigId}, #{moderator}, #{participant}, #{visitor})
 	</insert>
 	
 	<insert id="insertRoomAffiliatedUser" parameterType="AffiliatedUser">
-		INSERT INTO ROOM_AFFILIATED_USER(id, room_id, jid, affiliation, role, nick) VALUES(#{id}, #{roomId}, #{jid, typeHandler=JabberIdTypeHandler}, #{affiliation, typeHandler=EnumTypeHandler}, #{role, typeHandler=EnumTypeHandler}, #{nick})
+		INSERT INTO ROOM_AFFILIATED_USERS(id, room_id, jid, affiliation, role, nick) VALUES(#{id}, #{roomId}, #{jid, typeHandler=JabberIdTypeHandler}, #{affiliation, typeHandler=EnumTypeHandler}, #{role, typeHandler=EnumTypeHandler}, #{nick})
 	</insert>
 	
 	<insert id="updateRoomConfig" parameterType="RoomConfig">
-		UPDATE ROOM_CONFIG SET
+		UPDATE ROOM_CONFIGS SET
 			room_name=#{roomName},
 			room_desc=#{roomDesc},
 			lang=#{lang},
@@ -185,7 +185,7 @@
 	</insert>
 	
 	<insert id="updateRoomAffiliatedUser" parameterType="AffiliatedUser">
-		UPDATE ROOM_AFFILIATED_USER SET
+		UPDATE ROOM_AFFILIATED_USERS SET
 			affiliation=#{affiliation, typeHandler=EnumTypeHandler},
 			role=#{role, typeHandler=EnumTypeHandler},
 			nick=#{nick}
@@ -194,7 +194,7 @@
 	</insert>
 	
 	<insert id="updateRoomConfigPresenceBroadcast" parameterType="PresenceBroadcast">
-		UPDATE ROOM_CONFIG_PRESENCE_BROADCAST SET
+		UPDATE ROOM_CONFIG_PRESENCE_BROADCASTS SET
 			moderator=#{moderator},
 			participant=#{participant},
 			visitor=#{visitor}
@@ -203,7 +203,7 @@
 	</insert>
 	
 	<insert id="updateRoomConfigGetMemberList" parameterType="GetMemberList">
-		UPDATE ROOM_CONFIG_GET_MEMBER_LIST SET
+		UPDATE ROOM_CONFIG_GET_MEMBER_LISTS SET
 			moderator=#{moderator},
 			participant=#{participant},
 			visitor=#{visitor}
@@ -212,14 +212,14 @@
 	</insert>
 	
 	<insert id="insertRoomSubjectHistory" parameterType="Subject">
-		INSERT INTO ROOM_SUBJECT_HISTORY(id, room_id, subject, create_time) VALUES(#{id}, #{roomId}, #{subject}, #{createTime})
+		INSERT INTO ROOM_SUBJECT_HISTORIES(id, room_id, subject, create_time) VALUES(#{id}, #{roomId}, #{subject}, #{createTime})
 	</insert>
 	
 	<select id="selectAffiliatedUserJidByNick" resultMap="affiliatedUserJidResultMap">
 		SELECT
 			RAU.jid
-		FROM ROOM_AFFILIATED_USER RAU
-			LEFT OUTER JOIN ROOM R ON
+		FROM ROOM_AFFILIATED_USERS RAU
+			LEFT OUTER JOIN ROOMS R ON
 				RAU.room_id = R.id
 		WHERE R.room_jid = #{0, typeHandler=JabberIdTypeHandler} AND RAU.nick = #{1}
 	</select>

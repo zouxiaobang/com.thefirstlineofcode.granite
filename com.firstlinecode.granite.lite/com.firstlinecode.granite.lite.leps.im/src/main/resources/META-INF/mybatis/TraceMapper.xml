@@ -3,11 +3,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.firstlinecode.granite.lite.leps.im.traceable.TraceMapper">
 	<insert id="insert" parameterType="MsgTrace">
-		INSERT INTO MSG_TRACE(id, jid, message_id, status, from_jid, stamp) VALUES(#{id}, #{jid, typeHandler=JabberIdTypeHandler}, #{messageId}, #{status, typeHandler=org.apache.ibatis.type.EnumTypeHandler}, #{from, typeHandler=JabberIdTypeHandler}, #{stamp})
+		INSERT INTO MSG_TRACES(id, jid, message_id, status, from_jid, stamp) VALUES(#{id}, #{jid, typeHandler=JabberIdTypeHandler}, #{messageId}, #{status, typeHandler=org.apache.ibatis.type.EnumTypeHandler}, #{from, typeHandler=JabberIdTypeHandler}, #{stamp})
 	</insert>
 	
 	<select id="selectByJid" resultMap="msgTraceResultMap">
-		SELECT * FROM MSG_TRACE WHERE jid=#{0, typeHandler=JabberIdTypeHandler} LIMIT #{1} OFFSET #{2}
+		SELECT * FROM MSG_TRACES WHERE jid=#{0, typeHandler=JabberIdTypeHandler} LIMIT #{1} OFFSET #{2}
     </select>
     
     <resultMap id="msgTraceResultMap" type="MsgTrace">
@@ -16,10 +16,10 @@
 	</resultMap>
     
 	<select id="selectCountByJid" resultType="int">
-		SELECT COUNT(*) FROM MSG_TRACE WHERE jid=#{0, typeHandler=JabberIdTypeHandler}
+		SELECT COUNT(*) FROM MSG_TRACES WHERE jid=#{0, typeHandler=JabberIdTypeHandler}
     </select>
     
     <delete id="deleteByJidAndMessageId">
-        DELETE FROM MSG_TRACE WHERE jid=#{0, typeHandler=JabberIdTypeHandler} AND message_id=#{1}
+        DELETE FROM MSG_TRACES WHERE jid=#{0, typeHandler=JabberIdTypeHandler} AND message_id=#{1}
     </delete>
 </mapper>
