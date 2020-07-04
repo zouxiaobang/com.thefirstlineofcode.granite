@@ -114,7 +114,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.demo</groupId>
-			<artifactId>com.firstlinecode.sand.demo.lite.server</artifactId>
+			<artifactId>com.firstlinecode.sand.demo.server.lite</artifactId>
 		</dependency>
 	</dependencies>
 	
@@ -142,7 +142,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.demo</groupId>
-			<artifactId>com.firstlinecode.sand.demo.server</artifactId>
+			<artifactId>com.firstlinecode.sand.demo.server.lite</artifactId>
 		</dependency>
 	</dependencies>
 	

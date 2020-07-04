@@ -18,7 +18,7 @@ public class Options {
 	private boolean offline;
 	
 	public enum Protocol {
-		LEP,
+		LEPS,
 		STANDARD,
 		SAND
 	}

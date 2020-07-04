@@ -94,7 +94,7 @@ public class Packer {
 	private void copyDependencies() {
 		if (options.getProtocol() == Options.Protocol.STANDARD) {
 			Main.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fstandard-pom.xml", "dependency:copy-dependencies");
-		} else if (options.getProtocol() == Options.Protocol.LEP) {
+		} else if (options.getProtocol() == Options.Protocol.LEPS) {
 			Main.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fleps-pom.xml", "dependency:copy-dependencies");
 		} else {
 			Main.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fsand-pom.xml", "dependency:copy-dependencies");			

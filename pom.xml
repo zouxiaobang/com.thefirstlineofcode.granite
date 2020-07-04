@@ -941,7 +941,12 @@
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.demo</groupId>
-			<artifactId>com.firstlinecode.sand.demo.lite.server</artifactId>
+			<artifactId>com.firstlinecode.sand.demo.server.lite</artifactId>
+			<version>${sand.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.sand.demo</groupId>
+			<artifactId>com.firstlinecode.sand.demo.server.demo</artifactId>
 			<version>${sand.version}</version>
 		</dependency>
 
