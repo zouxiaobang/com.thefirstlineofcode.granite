@@ -58,7 +58,7 @@ public class ConfigManager implements IConfigManager {
 		
 		@Override
 		public int hashCode() {
-			return parentPath.hashCode() + configFileName.hashCode();
+			return 7 + 31 * parentPath.hashCode() + configFileName.hashCode();
 		}
 	}
 
