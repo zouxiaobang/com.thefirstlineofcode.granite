@@ -11,7 +11,7 @@
     </select>
     
 	<select id="selectCountByUserAndContact" resultType="int">
-		SELECT COUNT(*) FROM SUBSCRIPTIONS WHERE SUBSCRIPTIONS.user=#{0} AND contact=#{1}
+		SELECT count(*) FROM SUBSCRIPTIONS WHERE SUBSCRIPTIONS.user=#{0} AND contact=#{1}
     </select>
     
     <insert id="insert" parameterType="Subscription">

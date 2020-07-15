@@ -9,6 +9,7 @@ import ch.qos.logback.core.spi.FilterReply;
 
 public class LogFilter extends TurboFilter {
 	private final static String GRANITE_LIBRARIES_NAMESPACE = "com.firstlinecode.granite.";
+	private final static String SAND_LIBRARIES_NAMESPACE = "com.firstlinecode.sand.";
 	private final static String PROPERTY_NAME_LOG_ENABLE_THIRDPARTIES = "granite.log.enable.thirdparties";
 	
 	private static boolean enableThirdParties = false;
@@ -33,7 +34,8 @@ public class LogFilter extends TurboFilter {
 		if (enableThirdParties)
 			return FilterReply.NEUTRAL;
 		
-		if (logger.getName().startsWith(GRANITE_LIBRARIES_NAMESPACE)) {
+		if (logger.getName().startsWith(GRANITE_LIBRARIES_NAMESPACE) ||
+				logger.getName().startsWith(SAND_LIBRARIES_NAMESPACE)) {
 			return FilterReply.NEUTRAL;
 		}
 		

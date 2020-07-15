@@ -16,7 +16,7 @@
 	</resultMap>
     
 	<select id="selectCountByJid" resultType="int">
-		SELECT COUNT(*) FROM MSG_TRACES WHERE jid=#{0, typeHandler=JabberIdTypeHandler}
+		SELECT count(*) FROM MSG_TRACES WHERE jid=#{0, typeHandler=JabberIdTypeHandler}
     </select>
     
     <delete id="deleteByJidAndMessageId">

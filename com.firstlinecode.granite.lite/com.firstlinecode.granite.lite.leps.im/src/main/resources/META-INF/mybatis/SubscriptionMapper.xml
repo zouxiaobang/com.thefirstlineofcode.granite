@@ -11,7 +11,7 @@
     </select>
     
 	<select id="selectCountByUserAndContact" resultType="int">
-		SELECT COUNT(*) FROM SUBSCRIPTIONS WHERE SUBSCRIPTIONS.user=#{0} AND contact=#{1}
+		SELECT count(*) FROM SUBSCRIPTIONS WHERE SUBSCRIPTIONS.user=#{0} AND contact=#{1}
     </select>
     
     <insert id="insert" parameterType="Subscription">
@@ -55,6 +55,6 @@
     </insert>
     
     <select id="selectNotificationCountById" resultType="int">
-        SELECT COUNT(*) FROM SUBSCRIPTION_NOTIFICATIONS WHERE notification_id=#{0}
+        SELECT count(*) FROM SUBSCRIPTION_NOTIFICATIONS WHERE notification_id=#{0}
     </select>
 </mapper>

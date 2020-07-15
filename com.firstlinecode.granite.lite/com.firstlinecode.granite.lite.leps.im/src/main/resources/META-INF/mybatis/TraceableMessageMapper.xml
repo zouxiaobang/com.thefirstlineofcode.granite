@@ -11,7 +11,7 @@
     </select>
     
 	<select id="selectCountByJid" resultType="int">
-		SELECT COUNT(*) FROM TRACEABLE_MESSAGES WHERE jid=#{0, typeHandler=JabberIdTypeHandler}
+		SELECT count(*) FROM TRACEABLE_MESSAGES WHERE jid=#{0, typeHandler=JabberIdTypeHandler}
     </select>
     
     <delete id="deleteByJidAndMessageId">
