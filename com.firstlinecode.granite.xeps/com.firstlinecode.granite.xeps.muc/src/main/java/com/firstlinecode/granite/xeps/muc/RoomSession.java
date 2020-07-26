@@ -134,7 +134,7 @@ public class RoomSession implements IRoomSession {
 		history.getObjects().add(addresses);
 		history.getObjectProtocols().put(Addresses.class, Addresses.PROTOCOL);
 		
-		history.setFrom(new JabberId(roomJid.getName(), roomJid.getDomain(), nick));
+		history.setFrom(new JabberId(roomJid.getNode(), roomJid.getDomain(), nick));
 		
 		runtimeInstance.addToDiscussionHistory(history);
 	}

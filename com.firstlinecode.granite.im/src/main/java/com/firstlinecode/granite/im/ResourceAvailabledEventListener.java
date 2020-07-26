@@ -20,7 +20,7 @@ public class ResourceAvailabledEventListener implements IEventListener<ResourceA
 	@Override
 	public void process(IEventContext context, ResourceAvailabledEvent event) {
 		JabberId user = event.getJid();
-		List<SubscriptionNotification> notifications = subscriptionService.getNotificationsByUser(user.getName());
+		List<SubscriptionNotification> notifications = subscriptionService.getNotificationsByUser(user.getNode());
 		
 		for (SubscriptionNotification notification : notifications) {
 			Presence subscription = new Presence();

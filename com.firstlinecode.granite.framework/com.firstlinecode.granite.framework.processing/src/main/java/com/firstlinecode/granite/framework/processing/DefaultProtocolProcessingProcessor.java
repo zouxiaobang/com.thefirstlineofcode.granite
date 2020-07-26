@@ -510,7 +510,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 		if (!isServerReceipt(iq))
 			return false;
 		
-		String userName = iq.getTo().getName();
+		String userName = iq.getTo().getNode();
 		if (userName == null)
 			return false;
 		

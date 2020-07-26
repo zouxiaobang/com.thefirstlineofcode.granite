@@ -123,7 +123,7 @@ public class SubscriptionService implements ISubscriptionService {
 	
 	private SubscriptionChange handleOutboundSubscription(JabberId user, JabberId contact,
 			SubscriptionType subscriptionType) {
-		Subscription subscription = get(user.getName(), contact.getBareIdString());
+		Subscription subscription = get(user.getNode(), contact.getBareIdString());
 		if (subscription == null) {
 			throw new ProtocolException(new InternalServerError("null subscription state. roster set first"));
 		}
@@ -135,7 +135,7 @@ public class SubscriptionService implements ISubscriptionService {
 			return null;
 		
 		subscription.setState(newState);
-		updateState(user.getName(), contact.getBareIdString(), newState);
+		updateState(user.getNode(), contact.getBareIdString(), newState);
 		
 		SubscriptionChange change = new SubscriptionChange();
 		change.oldState = oldState;
@@ -146,12 +146,12 @@ public class SubscriptionService implements ISubscriptionService {
 
 	private SubscriptionChange handleInboundSubscription(JabberId user, JabberId contact, SubscriptionType subscriptionType) {
 		boolean subscriptionExist = true;
-		Subscription subscription = get(user.getName(), contact.getBareIdString());
+		Subscription subscription = get(user.getNode(), contact.getBareIdString());
 		
 		if (subscription == null) {
 			subscriptionExist = false;
 			subscription = new D_Subscription();
-			subscription.setUser(user.getName());
+			subscription.setUser(user.getNode());
 			subscription.setContact(contact.getBareIdString());
 			subscription.setState(Subscription.State.NONE);
 		}
@@ -164,7 +164,7 @@ public class SubscriptionService implements ISubscriptionService {
 		
 		subscription.setState(newState);
 		if (subscriptionExist) {
-			updateState(user.getName(), contact.getBareIdString(), newState);
+			updateState(user.getNode(), contact.getBareIdString(), newState);
 		} else {
 			add(subscription);
 		}

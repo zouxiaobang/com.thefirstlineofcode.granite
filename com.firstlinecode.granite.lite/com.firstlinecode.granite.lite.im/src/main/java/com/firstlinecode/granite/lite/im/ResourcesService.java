@@ -35,7 +35,7 @@ public class ResourcesService implements IResourcesService, IResourcesRegister {
 	}
 	
 	private void checkFullJid(JabberId jid) {
-		if (jid.getName() == null || jid.getResource() == null) {
+		if (jid.getNode() == null || jid.getResource() == null) {
 			throw new IllegalArgumentException("Need a full JID.");
 		}
 	}

@@ -498,11 +498,11 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 		if (!deliverUnknownMessage)
 			return false;
 		
-		if (to == null || to.getName() == null)
+		if (to == null || to.getNode() == null)
 			return false;
 		
 		if (isToDomain(to)) {
-			return authenticator.exists(to.getName());
+			return authenticator.exists(to.getNode());
 		}
 		
 		return false;

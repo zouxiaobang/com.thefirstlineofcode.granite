@@ -46,10 +46,10 @@ public class ImClientDiscoProvider implements IDiscoProvider, IApplicationConfig
 	}
 
 	private DiscoInfo discoAccountInfo(IProcessingContext context, Iq iq, JabberId jid) {
-		if (!authenticator.exists(jid.getName()))
+		if (!authenticator.exists(jid.getNode()))
 			return null;
 		
-		Subscription subscription = subscriptionService.get(context.getJid().getName(), jid.getBareIdString());
+		Subscription subscription = subscriptionService.get(context.getJid().getNode(), jid.getBareIdString());
 		if (subscription == null || (subscription.getState() != Subscription.State.FROM &&
 				subscription.getState() != Subscription.State.BOTH))
 			return null;
@@ -73,10 +73,10 @@ public class ImClientDiscoProvider implements IDiscoProvider, IApplicationConfig
 	}
 
 	private DiscoItems discoAvailableResources(IProcessingContext context, Iq iq, JabberId jid) {
-		if (!authenticator.exists(jid.getName()))
+		if (!authenticator.exists(jid.getNode()))
 			return null;
 		
-		Subscription subscription = subscriptionService.get(context.getJid().getName(), jid.getBareIdString());
+		Subscription subscription = subscriptionService.get(context.getJid().getNode(), jid.getBareIdString());
 		if (subscription.getState() != Subscription.State.FROM &&
 				subscription.getState() != Subscription.State.BOTH)
 			return null;

@@ -85,7 +85,7 @@ public class LepSubscriptionService implements ILepSubscriptionService, IDataObj
 	}
 	
 	private SubscriptionChange handleOutboundSubscription(JabberId user, JabberId contact, SubscriptionType subscriptionType) {
-		Subscription subscription = get(user.getName(), contact.getBareIdString());
+		Subscription subscription = get(user.getNode(), contact.getBareIdString());
 		if (subscription == null) {
 			throw new ProtocolException(new InternalServerError("Null subscription state. Roster set first."));
 		}
@@ -95,7 +95,7 @@ public class LepSubscriptionService implements ILepSubscriptionService, IDataObj
 		
 		if (newState != oldState) {
 			subscription.setState(newState);
-			updateState(user.getName(), contact.getBareIdString(), newState);
+			updateState(user.getNode(), contact.getBareIdString(), newState);
 		}
 		
 		return new SubscriptionChange(oldState, subscription);
@@ -163,12 +163,12 @@ public class LepSubscriptionService implements ILepSubscriptionService, IDataObj
 
 	private SubscriptionChange handleInboundSubscription(JabberId user, JabberId contact, SubscriptionType subscriptionType) {
 		boolean subscriptionExist = true;
-		Subscription subscription = get(user.getName(), contact.getBareIdString());
+		Subscription subscription = get(user.getNode(), contact.getBareIdString());
 		
 		if (subscription == null) {
 			subscriptionExist = false;
 			subscription = dataObjectFactory.create(Subscription.class);
-			subscription.setUser(user.getName());
+			subscription.setUser(user.getNode());
 			subscription.setContact(contact.getBareIdString());
 			subscription.setState(Subscription.State.NONE);
 		}
@@ -182,7 +182,7 @@ public class LepSubscriptionService implements ILepSubscriptionService, IDataObj
 		
 		subscription.setState(newState);
 		if (subscriptionExist) {
-			updateState(user.getName(), contact.getBareIdString(), newState);
+			updateState(user.getNode(), contact.getBareIdString(), newState);
 		} else {
 			add(subscription);
 		}
@@ -298,8 +298,8 @@ public class LepSubscriptionService implements ILepSubscriptionService, IDataObj
 
 	@Override
 	public void updateStates(JabberId user, JabberId contact, Subscription.State state) {
-		getMapper().updateState(user.getName(), contact.getBareIdString(), state);
-		getMapper().updateState(contact.getName(), user.getBareIdString(), state);
+		getMapper().updateState(user.getNode(), contact.getBareIdString(), state);
+		getMapper().updateState(contact.getNode(), user.getBareIdString(), state);
 	}
 
 	@Override

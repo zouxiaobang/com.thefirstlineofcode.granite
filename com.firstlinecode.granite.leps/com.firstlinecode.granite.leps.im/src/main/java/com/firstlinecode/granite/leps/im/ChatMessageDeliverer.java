@@ -59,7 +59,7 @@ public class ChatMessageDeliverer implements IApplicationConfigurationAware, ICh
 			return false;
 		}
 		
-		if (!authenticator.exists(stanza.getTo().getName())) {
+		if (!authenticator.exists(stanza.getTo().getNode())) {
 			throw new ProtocolException(new NotAuthorized());
 		}
 		
@@ -72,7 +72,7 @@ public class ChatMessageDeliverer implements IApplicationConfigurationAware, ICh
 	}
 
 	private boolean isSubscribed(JabberId from, JabberId to) {
-		String user = from.getName();
+		String user = from.getNode();
 		String contact = to.getBareIdString();
 		Subscription subscription = subscriptionService.get(user, contact);
 		

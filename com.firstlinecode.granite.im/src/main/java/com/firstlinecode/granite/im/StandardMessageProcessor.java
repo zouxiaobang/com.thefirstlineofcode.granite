@@ -47,7 +47,7 @@ public class StandardMessageProcessor implements IMessageProcessor, IEventProduc
 			throw new ProtocolException(new BadRequest("Sending a message to yourself."));
 		}
 		
-		if (!isToDomain(message.getTo()) && !authenticator.exists(message.getTo().getName())) {
+		if (!isToDomain(message.getTo()) && !authenticator.exists(message.getTo().getNode())) {
 			return false;
 		}
 		

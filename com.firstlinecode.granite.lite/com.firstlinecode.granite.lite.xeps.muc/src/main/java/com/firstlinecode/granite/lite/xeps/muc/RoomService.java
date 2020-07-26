@@ -193,8 +193,8 @@ public class RoomService implements IRoomService, IDataObjectFactoryAware {
 
 	private void addOrUpdateOwners(Room room) {
 		for (JabberId owner : room.getRoomConfig().getOwners()) {
-			if (!authenticator.exists(owner.getName())) {
-				throw new ProtocolException(new ItemNotFound("%s isn't a valid user.", owner.getName()));
+			if (!authenticator.exists(owner.getNode())) {
+				throw new ProtocolException(new ItemNotFound("%s isn't a valid node.", owner.getNode()));
 			}
 			
 			D_AffiliatedUser pAffiliatedUser = dataObjectFactory.create(AffiliatedUser.class);
@@ -219,8 +219,8 @@ public class RoomService implements IRoomService, IDataObjectFactoryAware {
 
 	private void addOrUpdateAdmins(Room room) {
 		for (JabberId admin : room.getRoomConfig().getAdmins()) {
-			if (!authenticator.exists(admin.getName())) {
-				throw new ProtocolException(new ItemNotFound("%s isn't a valid user", admin.getName()));
+			if (!authenticator.exists(admin.getNode())) {
+				throw new ProtocolException(new ItemNotFound("%s isn't a valid node", admin.getNode()));
 			}
 			
 			D_AffiliatedUser pAffiliatedUser = dataObjectFactory.create(AffiliatedUser.class);

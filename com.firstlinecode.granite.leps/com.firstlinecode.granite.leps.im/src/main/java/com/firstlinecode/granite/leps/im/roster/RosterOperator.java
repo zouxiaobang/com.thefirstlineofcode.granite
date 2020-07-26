@@ -146,13 +146,13 @@ public class RosterOperator implements IApplicationConfigurationAware, IDataObje
 		Item item = roster.getItems()[0];
 		String contact = item.getJid().getBareIdString();
 		
-		if (!subscriptionService.exists(userJid.getName(), contact)) {
-			rosterAdd(userJid.getName(), contact, item.getName(), item.getGroups());
+		if (!subscriptionService.exists(userJid.getNode(), contact)) {
+			rosterAdd(userJid.getNode(), contact, item.getName(), item.getGroups());
 		} else {
-			rosterUpdate(userJid.getName(), contact, item.getName(), item.getGroups());
+			rosterUpdate(userJid.getNode(), contact, item.getName(), item.getGroups());
 		}
 		
-		rosterPush(context, userJid.getName(), contact);
+		rosterPush(context, userJid.getNode(), contact);
 	}
 	
 	private void rosterAdd(String user, String contact, String nickname, List<String> groups) {
@@ -182,7 +182,7 @@ public class RosterOperator implements IApplicationConfigurationAware, IDataObje
 	}
 	
 	public void rosterGet(IConnectionContext context, JabberId userJid, String requestId) {
-		List<Subscription> subscriptions = subscriptionService.get(userJid.getName());
+		List<Subscription> subscriptions = subscriptionService.get(userJid.getNode());
 		
 		Roster roster = new Roster();
 		for (Subscription subscription : subscriptions) {

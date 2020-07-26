@@ -118,7 +118,7 @@ public class StandardPresenceProcessor implements IPresenceProcessor, IEventProd
 		
 		eventProducer.fire(new ResourceAvailabledEvent(user));
 		
-		List<Subscription> subscriptions = subscriptionService.get(user.getName());
+		List<Subscription> subscriptions = subscriptionService.get(user.getNode());
 		for (Subscription subscription : subscriptions) {
 			boolean toState = isToState(subscription);
 			boolean fromState = isFromState(subscription);
@@ -237,7 +237,7 @@ public class StandardPresenceProcessor implements IPresenceProcessor, IEventProd
 			throw new ProtocolException(new InternalServerError("Can't set resource's broadcast presence.", e));
 		}
 		
-		List<Subscription> subscriptions = subscriptionService.get(user.getName());
+		List<Subscription> subscriptions = subscriptionService.get(user.getNode());
 		for (Subscription subscription : subscriptions) {
 			boolean fromState = isFromState(subscription);
 			
@@ -290,7 +290,7 @@ public class StandardPresenceProcessor implements IPresenceProcessor, IEventProd
 	}
 
 	protected boolean isInstantMessagingUser(JabberId jid) {
-		return authenticator.exists(jid.getName());
+		return authenticator.exists(jid.getNode());
 	}
 
 	@Override

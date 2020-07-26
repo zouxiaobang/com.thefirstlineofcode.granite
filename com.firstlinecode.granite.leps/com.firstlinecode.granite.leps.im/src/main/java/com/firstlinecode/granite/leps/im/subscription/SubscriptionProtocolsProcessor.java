@@ -115,8 +115,8 @@ public class SubscriptionProtocolsProcessor implements IApplicationConfiguration
 			return false;
 		}
 		
-		Subscription userSubscription = subscriptionService.get(user.getName(), contact.getBareIdString());
-		Subscription contactSubscription = subscriptionService.get(contact.getName(), user.getBareIdString());
+		Subscription userSubscription = subscriptionService.get(user.getNode(), contact.getBareIdString());
+		Subscription contactSubscription = subscriptionService.get(contact.getNode(), user.getBareIdString());
 		
 		if (userSubscription.getState() != Subscription.State.BOTH ||
 				contactSubscription.getState() != Subscription.State.BOTH) {
@@ -127,11 +127,11 @@ public class SubscriptionProtocolsProcessor implements IApplicationConfiguration
 		
 		deliverSubscriptionToContact(context, user, contact, SubscriptionType.UNSUBSCRIBE, null);
 		
-		userSubscription = subscriptionService.get(user.getName(), contact.getBareIdString());
-		rosterPushIfChanged(context, user.getName(), Subscription.State.BOTH, userSubscription);
+		userSubscription = subscriptionService.get(user.getNode(), contact.getBareIdString());
+		rosterPushIfChanged(context, user.getNode(), Subscription.State.BOTH, userSubscription);
 		
-		contactSubscription = subscriptionService.get(contact.getName(), user.getBareIdString());
-		rosterPushIfChanged(context, contact.getName(), Subscription.State.BOTH, contactSubscription);
+		contactSubscription = subscriptionService.get(contact.getNode(), user.getBareIdString());
+		rosterPushIfChanged(context, contact.getNode(), Subscription.State.BOTH, contactSubscription);
 		
 		sendReply(context, iq);
 		
@@ -167,8 +167,8 @@ public class SubscriptionProtocolsProcessor implements IApplicationConfiguration
 			return false;
 		}
 		
-		Subscription userSubscription = subscriptionService.get(user.getName(), contact.getBareIdString());
-		Subscription contactSubscription = subscriptionService.get(contact.getName(), user.getBareIdString());
+		Subscription userSubscription = subscriptionService.get(user.getNode(), contact.getBareIdString());
+		Subscription contactSubscription = subscriptionService.get(contact.getNode(), user.getBareIdString());
 		
 		if ((userSubscription.getState() != Subscription.State.NONE_PENDING_IN &&
 				userSubscription.getState() != Subscription.State.NONE_PENDING_IN_OUT) ||
@@ -181,11 +181,11 @@ public class SubscriptionProtocolsProcessor implements IApplicationConfiguration
 		
 		deliverSubscriptionToContact(context, user, contact, SubscriptionType.SUBSCRIBED, null);
 		
-		userSubscription = subscriptionService.get(user.getName(), contact.getBareIdString());
-		rosterPushIfChanged(context, user.getName(), Subscription.State.NONE_PENDING_IN, userSubscription);
+		userSubscription = subscriptionService.get(user.getNode(), contact.getBareIdString());
+		rosterPushIfChanged(context, user.getNode(), Subscription.State.NONE_PENDING_IN, userSubscription);
 		
-		contactSubscription = subscriptionService.get(contact.getName(), user.getBareIdString());
-		rosterPushIfChanged(context, contact.getName(), Subscription.State.NONE_PENDING_OUT, contactSubscription);
+		contactSubscription = subscriptionService.get(contact.getNode(), user.getBareIdString());
+		rosterPushIfChanged(context, contact.getNode(), Subscription.State.NONE_PENDING_OUT, contactSubscription);
 		
 		sendReply(context, iq);
 		
@@ -199,8 +199,8 @@ public class SubscriptionProtocolsProcessor implements IApplicationConfiguration
 			JabberId contact, SubscriptionType type, String additionMessage) {
 		SubscriptionChanges changes = subscriptionService.handleSubscription(user, contact, type);
 		
-		rosterPushIfChanged(context, user.getName(), changes.getOldUserSubscriptionState(), changes.getUserSubscription());
-		rosterPushIfChanged(context, contact.getName(), changes.getOldContactSubscriptionState(), changes.getContactSubscription());
+		rosterPushIfChanged(context, user.getNode(), changes.getOldUserSubscriptionState(), changes.getUserSubscription());
+		rosterPushIfChanged(context, contact.getNode(), changes.getOldContactSubscriptionState(), changes.getContactSubscription());
 		
 		deliverInboundSubscription(context, changes.getOldContactSubscriptionState(),
 				changes.getContactSubscription(), user, contact, type, additionMessage);
@@ -302,7 +302,7 @@ public class SubscriptionProtocolsProcessor implements IApplicationConfiguration
 	private void deliverSubscriptionToContact(IConnectionContext context, JabberId user,
 			JabberId contact, SubscriptionType subscriptionType, String additionMessage) {
 		String notificationId = Stanza.generateId(LepSubscriptionNotification.SUBSCRIPTION_NOTIFICATION_ID_PREFIX);
-		saveNotification(notificationId, contact.getName(), user.getBareIdString(), subscriptionType, additionMessage);
+		saveNotification(notificationId, contact.getNode(), user.getBareIdString(), subscriptionType, additionMessage);
 		
 		IResource[] resources = resourcesService.getResources(contact);
 		for (IResource resource : resources) {
@@ -412,7 +412,7 @@ public class SubscriptionProtocolsProcessor implements IApplicationConfiguration
 	}
 
 	private void rosterSetIfNotExist(IConnectionContext context, JabberId user, JabberId contact) {
-		Subscription subscription = subscriptionService.get(user.getName(), contact.getBareIdString());
+		Subscription subscription = subscriptionService.get(user.getNode(), contact.getBareIdString());
 		if (subscription == null) {
 			Item item = new Item();
 			item.setJid(contact);

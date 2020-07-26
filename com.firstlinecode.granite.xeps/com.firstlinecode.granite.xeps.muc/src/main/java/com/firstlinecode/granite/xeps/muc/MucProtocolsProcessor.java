@@ -522,7 +522,7 @@ public class MucProtocolsProcessor implements IApplicationConfigurationAware,
 		Role occupantRole = occupant.getRole();
 		JabberId roomJid = roomSession.getRoom().getRoomJid();
 		JabberId sessionJid = context.getJid();
-		JabberId occupantJid = new JabberId(roomJid.getName(), roomJid.getDomain(), occupant.getNick());
+		JabberId occupantJid = new JabberId(roomJid.getNode(), roomJid.getDomain(), occupant.getNick());
 		PresenceBroadcast presenceBroadcast = roomSession.getRoom().getRoomConfig().getPresenceBroadcast();
 		WhoIs whoIs = roomSession.getRoom().getRoomConfig().getWhoIs();
 		for (Occupant existingOccupant : roomSession.getOccupants()) {
@@ -581,7 +581,7 @@ public class MucProtocolsProcessor implements IApplicationConfigurationAware,
 		Role occupantRole = occupant.getRole();
 		JabberId roomJid = roomSession.getRoom().getRoomJid();
 		JabberId sessionJid = context.getJid();
-		JabberId occupantJid = new JabberId(roomJid.getName(), roomJid.getDomain(), occupant.getNick());
+		JabberId occupantJid = new JabberId(roomJid.getNode(), roomJid.getDomain(), occupant.getNick());
 		
 		Item item = new Item();
 		item.setAffiliation(occupantAffiliation);
@@ -627,7 +627,7 @@ public class MucProtocolsProcessor implements IApplicationConfigurationAware,
 		JabberId newOccupantSessionJid = context.getJid();
 		
 		for (Occupant existingOccupant : roomSession.getOccupants()) {
-			JabberId existingOccupantJid = new JabberId(roomJid.getName(), roomJid.getDomain(), existingOccupant.getNick());
+			JabberId existingOccupantJid = new JabberId(roomJid.getNode(), roomJid.getDomain(), existingOccupant.getNick());
 			for (JabberId existingOccupantSessionJid : existingOccupant.getJids()) {
 				if (existingOccupantSessionJid.equals(newOccupantSessionJid))
 					continue;
@@ -719,7 +719,7 @@ public class MucProtocolsProcessor implements IApplicationConfigurationAware,
 	}
 
 	private void checkRoomJid(JabberId jid) {
-		if (jid == null || jid.getName() == null) {
+		if (jid == null || jid.getNode() == null) {
 			throw new ProtocolException(new JidMalformed("Invalid room JID."));
 		}
 		
@@ -1097,7 +1097,7 @@ public class MucProtocolsProcessor implements IApplicationConfigurationAware,
 			throw new ProtocolException(new Forbidden());
 		}
 		
-		message.setFrom(new JabberId(roomJid.getName(), roomJid.getDomain(), nick));
+		message.setFrom(new JabberId(roomJid.getNode(), roomJid.getDomain(), nick));
 		roomSession.setSubject(message);
 		
 		subjectBroadcast(context, message);
@@ -1148,7 +1148,7 @@ public class MucProtocolsProcessor implements IApplicationConfigurationAware,
 			for (JabberId contactOccupantJid : occupant.getJids()) {
 				Message toContact = StanzaCloner.clone(message);
 				
-				toContact.setFrom(new JabberId(roomJid.getName(), roomJid.getDomain(), nick));
+				toContact.setFrom(new JabberId(roomJid.getNode(), roomJid.getDomain(), nick));
 				toContact.setTo(contactOccupantJid);
 				
 				context.write(toContact);
@@ -1177,7 +1177,7 @@ public class MucProtocolsProcessor implements IApplicationConfigurationAware,
 		for (JabberId contactOccupantJid : occupant.getJids()) {
 			Message toContact = StanzaCloner.clone(message);
 			
-			toContact.setFrom(new JabberId(roomJid.getName(), roomJid.getDomain(), nick));
+			toContact.setFrom(new JabberId(roomJid.getNode(), roomJid.getDomain(), nick));
 			toContact.setTo(contactOccupantJid);
 			
 			context.write(toContact);
@@ -1234,7 +1234,7 @@ public class MucProtocolsProcessor implements IApplicationConfigurationAware,
 
 	public void exitRoom(IProcessingContext context, JabberId roomJid, String nick) {
 		JabberId sessionJid = context.getJid();
-		JabberId exitOccupantJid = new JabberId(roomJid.getName(), roomJid.getDomain(), nick);
+		JabberId exitOccupantJid = new JabberId(roomJid.getNode(), roomJid.getDomain(), nick);
 		IRoomSession roomSession = roomService.getRoomSession(roomJid);
 		Occupant exitOccupant = roomSession.getOccupant(nick);
 		
@@ -1271,7 +1271,7 @@ public class MucProtocolsProcessor implements IApplicationConfigurationAware,
 	
 	private Presence createExitRoomPresence(JabberId roomJid, String nick, Affiliation affiliation,
 			JabberId senderFullJid, JabberId targetSessionJid, boolean shouldSendFullJid) {
-		JabberId occupantJid = new JabberId(roomJid.getName(), roomJid.getDomain(), nick);
+		JabberId occupantJid = new JabberId(roomJid.getNode(), roomJid.getDomain(), nick);
 		Item item = new Item();
 		item.setAffiliation(affiliation);
 		item.setRole(Role.NONE);
@@ -1352,7 +1352,7 @@ public class MucProtocolsProcessor implements IApplicationConfigurationAware,
 				
 				Presence notification = new Presence(Presence.Type.UNAVAILABLE);
 				JabberId roomJid = roomSession.getRoom().getRoomJid();
-				notification.setFrom(new JabberId(roomJid.getDomain(), roomJid.getName(), kickedNick));
+				notification.setFrom(new JabberId(roomJid.getDomain(), roomJid.getNode(), kickedNick));
 				notification.setTo(sessionJid);
 				notification.setObject(mucUser);
 				
@@ -1384,7 +1384,7 @@ public class MucProtocolsProcessor implements IApplicationConfigurationAware,
 		mucUser.getStatuses().add(new Status(307));
 		
 		Presence notification = new Presence(Presence.Type.UNAVAILABLE);
-		notification.setFrom(new JabberId(roomJid.getDomain(), roomJid.getName(), kickedNick));
+		notification.setFrom(new JabberId(roomJid.getDomain(), roomJid.getNode(), kickedNick));
 		notification.setTo(kickedSessionJid);
 		notification.setObject(mucUser);
 		

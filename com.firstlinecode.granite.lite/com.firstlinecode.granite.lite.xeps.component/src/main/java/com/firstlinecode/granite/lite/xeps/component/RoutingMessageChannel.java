@@ -29,7 +29,7 @@ public class RoutingMessageChannel extends com.firstlinecode.granite.lite.integr
 	}
 
 	private boolean isToClient(JabberId to) {
-		if (to.getName() == null)
+		if (to.getNode() == null)
 			return false;
 		
 		if (domainName.equals(to.getDomain()))

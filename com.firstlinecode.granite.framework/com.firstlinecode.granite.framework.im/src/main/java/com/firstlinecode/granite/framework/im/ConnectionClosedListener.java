@@ -34,7 +34,7 @@ public class ConnectionClosedListener implements IEventListener<ConnectionClosed
 			return;
 		
 		if (broadcastPresence != null && broadcastPresence.getType() != Presence.Type.UNAVAILABLE) {
-			List<Subscription> subscriptions = subscriptionService.get(user.getName());
+			List<Subscription> subscriptions = subscriptionService.get(user.getNode());
 			for (Subscription subscription : subscriptions) {
 				boolean fromState = isFromState(subscription);
 				

@@ -43,7 +43,7 @@ public class InitialStreamNegotiant extends AbstractNegotiant {
 			}
 			
 			JabberId componentJid = initialStream.getTo();
-			if (componentJid == null || !componentJid.isBareId() || componentJid.getName() != null) {
+			if (componentJid == null || !componentJid.isBareId() || componentJid.getNode() != null) {
 				throw new ProtocolException(new HostUnknown());
 			}
 			

@@ -69,8 +69,8 @@ public class SubscriptionProcessor implements IPresenceProcessor, IApplicationCo
 		SubscriptionChanges changes = subscriptionService.handleSubscription(user, contact,
 				presenceTypeToSubscriptionType(presence.getType()));
 		
-		rosterPushIfChanged(context, user.getName(), changes.getOldUserSubscriptionState(), changes.getUserSubscription());
-		rosterPushIfChanged(context, contact.getName(), changes.getOldContactSubscriptionState(), changes.getContactSubscription());
+		rosterPushIfChanged(context, user.getNode(), changes.getOldUserSubscriptionState(), changes.getUserSubscription());
+		rosterPushIfChanged(context, contact.getNode(), changes.getOldContactSubscriptionState(), changes.getContactSubscription());
 		
 		deliverInboundSubscription(context, changes.getOldContactSubscriptionState(),
 				changes.getContactSubscription(), presence);
@@ -120,7 +120,7 @@ public class SubscriptionProcessor implements IPresenceProcessor, IApplicationCo
 
 	private boolean processAcknowledgement(JabberId user, JabberId contact, Presence presence) {
 		List<SubscriptionNotification> notifications = subscriptionService.getNotificationsByUserAndContact(
-				user.getName(), contact.getBareIdString());
+				user.getNode(), contact.getBareIdString());
 		
 		for (SubscriptionNotification notification : notifications) {
 			if (isAcknowledgement(presence, notification.getSubscriptionType())) {
@@ -243,7 +243,7 @@ public class SubscriptionProcessor implements IPresenceProcessor, IApplicationCo
 	
 	private void deliverSubscriptionToContact(IConnectionContext context, Presence presence) {
 		SubscriptionType SubscriptionType = presenceTypeToSubscriptionType(presence.getType());
-		saveNotification(presence.getTo().getName(), context.getJid().getBareIdString(), SubscriptionType);
+		saveNotification(presence.getTo().getNode(), context.getJid().getBareIdString(), SubscriptionType);
 		
 		IResource[] resources = resourcesService.getResources(presence.getTo());
 		JabberId user = JabberId.parse(context.getJid().getBareIdString());
@@ -332,7 +332,7 @@ public class SubscriptionProcessor implements IPresenceProcessor, IApplicationCo
 	}
 
 	private void rosterSetIfNotExist(IConnectionContext context, JabberId user, JabberId contact) {
-		Subscription subscription = subscriptionService.get(user.getName(), contact.getBareIdString());
+		Subscription subscription = subscriptionService.get(user.getNode(), contact.getBareIdString());
 		if (subscription == null) {
 			Item item = new Item();
 			item.setJid(contact);
