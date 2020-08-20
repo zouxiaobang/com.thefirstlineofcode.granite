@@ -35,8 +35,7 @@ import com.firstlinecode.granite.lite.integration.AbstractConnectionContext.Stri
 	alias={
 		"lite.parsing.2.processing.message.receiver",
 		"lite.any.2.event.message.receiver",
-		"lite.event.2.routing.message.receiver",
-		"lite.processing.2.routing.message.receiver"
+		"lite.any.2.routing.message.receiver"
 	}
 )
 public class MessageReceiver extends AbstractMessageReceiver implements IMessageIntegrator, IConfigurationAware,
@@ -176,11 +175,9 @@ public class MessageReceiver extends AbstractMessageReceiver implements IMessage
 			return new ObjectOutConnectionContext(session, messageChannel);
 		} else if (Constants.PIPE_POSITION_LITE_PARSING_2_PROCESSING.equals(pipePosition)) {
 			return new ProcessingContext(session, messageChannel);
-		} else if (Constants.PIPE_POSITION_LITE_PROCESSING_2_ROUTING.equals(pipePosition)) {
+		} else if (Constants.PIPE_POSITION_LITE_ANY_2_ROUTING.equals(pipePosition)) {
 			return new MessageOutConnectionContext(session, messageChannel);
 		} else if (Constants.PIPE_POSITION_LITE_ANY_2_EVENT.equals(pipePosition)) {
-			return new MessageOutConnectionContext(session, messageChannel);
-		} else if (Constants.PIPE_POSITION_LITE_EVENT_2_ROUTING.equals(pipePosition)) {
 			return new MessageOutConnectionContext(session, messageChannel);
 		} else if (Constants.PIPE_POSITION_LITE_ROUTING_2_STREAM.equals(pipePosition)) {
 			return new StringOutConnectionContext(session, messageChannel);

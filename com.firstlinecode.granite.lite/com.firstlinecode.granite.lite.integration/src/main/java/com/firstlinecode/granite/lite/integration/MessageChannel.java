@@ -15,8 +15,7 @@ import com.firstlinecode.granite.framework.core.repository.IComponentIdAware;
 	alias={
 			"lite.parsing.2.processing.message.channel",
 			"lite.any.2.event.message.channel",
-			"lite.event.2.routing.message.channel",
-			"lite.processing.2.routing.message.channel",
+			"lite.any.2.routing.message.channel",
 			"lite.routing.2.stream.message.channel"
 		}
 )
