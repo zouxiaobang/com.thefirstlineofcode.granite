@@ -130,7 +130,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server</groupId>
-			<artifactId>com.firstlinecode.sand.server.emulators.modes</artifactId>
+			<artifactId>com.firstlinecode.sand.server.emulators.models</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.demo</groupId>
