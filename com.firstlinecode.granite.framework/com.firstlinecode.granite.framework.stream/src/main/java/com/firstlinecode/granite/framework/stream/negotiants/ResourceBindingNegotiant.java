@@ -26,7 +26,7 @@ import com.firstlinecode.granite.framework.stream.StreamConstants;
 
 public class ResourceBindingNegotiant extends AbstractNegotiant {
 
-	private static IOxmFactory oxmFactory = OxmService.createStreamOxmFactory();
+	protected static IOxmFactory oxmFactory = OxmService.createStreamOxmFactory();
 	
 	static {
 		oxmFactory.register(ProtocolChain.first(Iq.PROTOCOL),
@@ -40,8 +40,8 @@ public class ResourceBindingNegotiant extends AbstractNegotiant {
 		oxmFactory.register(Bind.class, new BindTranslatorFactory());
 	}
 	
-	private ISessionManager sessionManager;
-	private String domainName;
+	protected ISessionManager sessionManager;
+	protected String domainName;
 	
 	public ResourceBindingNegotiant(String domainName, ISessionManager sessionManager) {
 		this.domainName = domainName;
@@ -82,7 +82,7 @@ public class ResourceBindingNegotiant extends AbstractNegotiant {
 		return true;
 	}
 
-	private JabberId generatedByServer(String authorizationId) {
+	protected JabberId generatedByServer(String authorizationId) {
 		JabberId jid = null;
 		for (int i = 0; i < 10; i++) {
 			String resource = Long.toHexString(UUID.randomUUID().getLeastSignificantBits()).substring(4, 12);
@@ -102,7 +102,7 @@ public class ResourceBindingNegotiant extends AbstractNegotiant {
 		return jid;
 	}
 
-	private JabberId specifiedByClient(String authorizationId, String resource) {
+	protected JabberId specifiedByClient(String authorizationId, String resource) {
 		JabberId jid;
 		try {
 			jid = JabberId.parse(String.format("%s@%s/%s", authorizationId, domainName, resource));
