@@ -1,0 +1,5 @@
+Import-Template: org.springframework.*;version="[4.3.9,5)",
+ com.mongodb.*;version="[3.5.0,4)"
+Excluded-Exports: com.firstlinecode.granite.cluster.dba.internal.*
+Excluded-Imports: com.firstlinecode.granite.cluster.dba.*
+Bundle-Activator: ${bundle.namespace}.internal.Activator

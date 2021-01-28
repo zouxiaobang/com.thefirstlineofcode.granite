@@ -1,0 +1,8 @@
+#-----------------------------------------------------------------
+# Use this file to add customized Bnd instructions for the bundle
+#-----------------------------------------------------------------
+
+Granite-Xep-Processors: xep=iq->query|http://jabber.org/protocol/disco#info;\
+ class=com.firstlinecode.granite.xeps.disco.DiscoInfoProcessor,\
+ xep=iq->query|http://jabber.org/protocol/disco#items;\
+ class=com.firstlinecode.granite.xeps.disco.DiscoItemsProcessor

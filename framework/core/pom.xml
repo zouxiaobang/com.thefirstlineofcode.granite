@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+        <groupId>com.firstlinecode.granite</groupId>
+        <artifactId>framework</artifactId>
+        <version>0.2.1.RELEASE</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    
+	<properties>
+		<bundle.symbolicName>com.firstlinecode.granite.framework.core</bundle.symbolicName>
+		<bundle.namespace>com.fistlinecode.granite.framework.core</bundle.namespace>
+	</properties>
+	
+	<groupId>com.firstlinecode.granite.framework</groupId>
+	<artifactId>granite-framework-core</artifactId>
+	<name>Granite framework core library</name>
+	<packaging>bundle</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.platform</groupId>
+			<artifactId>org.eclipse.osgi</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+		<dependency>
+    		<groupId>net.sourceforge.cglib</groupId>
+    		<artifactId>com.springsource.net.sf.cglib</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.basalt</groupId>
+			<artifactId>basalt-xmpp-core</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>

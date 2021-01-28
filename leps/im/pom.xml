@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>com.firstlinecode.granite</groupId>
+		<artifactId>leps</artifactId>
+		<version>0.2.1.RELEASE</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	
+	<properties>
+		<bundle.symbolicName>com.firstlinecode.granite.leps.im</bundle.symbolicName>
+		<bundle.namespace>com.firstlinecode.granite.leps.im</bundle.namespace>
+	</properties>
+	
+	<groupId>com.firstlinecode.granite.leps</groupId>
+	<artifactId>granite-leps-im</artifactId>
+	<name>Granite LEPs IM</name>
+	<packaging>bundle</packaging>
+	
+	<dependencies>
+		<dependency>
+			<groupId>com.firstlinecode.granite.framework</groupId>
+			<artifactId>granite-framework-processing</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.framework</groupId>
+			<artifactId>granite-framework-im</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.basalt.leps</groupId>
+			<artifactId>basalt-leps-im</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>

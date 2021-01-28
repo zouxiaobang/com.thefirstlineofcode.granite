@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+		http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.firstlinecode.granite</groupId>
+		<artifactId>com.firstlinecode.granite</artifactId>
+		<version>0.2.1.RELEASE</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<groupId>com.firstlinecode.granite</groupId>
+	<artifactId>com.firstlinecode.granite.lite</artifactId>
+	<packaging>pom</packaging>
+	<name>XMPP Server Lite Plugins</name>
+
+	<modules>
+		<module>com.firstlinecode.granite.lite.dba</module>
+		<module>com.firstlinecode.granite.lite.auth</module>
+		<module>com.firstlinecode.granite.lite.session</module>
+		<module>com.firstlinecode.granite.lite.integration</module>
+		<module>com.firstlinecode.granite.lite.im</module>
+		<module>com.firstlinecode.granite.lite.xeps.disco</module>
+		<module>com.firstlinecode.granite.lite.xeps.muc</module>
+		<module>com.firstlinecode.granite.lite.xeps.ibr</module>
+		<module>com.firstlinecode.granite.lite.xeps.msgoffline</module>
+		<module>com.firstlinecode.granite.lite.xeps.component</module>
+		<module>com.firstlinecode.granite.lite.leps.im</module>
+	</modules>
+	
+</project>

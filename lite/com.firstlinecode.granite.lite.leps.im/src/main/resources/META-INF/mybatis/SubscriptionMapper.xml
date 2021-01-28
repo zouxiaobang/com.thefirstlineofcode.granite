@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.firstlinecode.granite.lite.leps.im.subscription.SubscriptionMapper">
+	<select id="selectByUser" resultType="Subscription">
+		SELECT * FROM SUBSCRIPTIONS WHERE SUBSCRIPTIONS.user=#{0}
+    </select>
+    
+	<select id="selectByUserAndContact" resultType="Subscription">
+		SELECT * FROM SUBSCRIPTIONS WHERE SUBSCRIPTIONS.user=#{0} AND contact=#{1}
+    </select>
+    
+	<select id="selectCountByUserAndContact" resultType="int">
+		SELECT count(*) FROM SUBSCRIPTIONS WHERE SUBSCRIPTIONS.user=#{0} AND contact=#{1}
+    </select>
+    
+    <insert id="insert" parameterType="Subscription">
+        INSERT INTO SUBSCRIPTIONS(id, user, contact, name, state, groups) VALUES(#{id}, #{user}, #{contact}, #{name}, #{state, typeHandler=EnumTypeHandler}, #{groups})
+    </insert>
+    
+    <insert id="updateNameAndGroups">
+        UPDATE SUBSCRIPTIONS SET name=#{2}, groups=#{3} WHERE SUBSCRIPTIONs.user=#{0} AND contact=#{1}
+    </insert>
+    
+    <insert id="updateState">
+        UPDATE SUBSCRIPTIONS SET state=#{2, typeHandler=org.apache.ibatis.type.EnumTypeHandler} WHERE SUBSCRIPTIONS.user=#{0} AND contact=#{1}
+    </insert>
+    
+    <insert id="insertNotification" parameterType="LepSubscriptionNotification">
+        INSERT INTO SUBSCRIPTION_NOTIFICATIONS(id, notification_id, user, contact, subscription_type, additional_message) VALUES(#{id}, #{notificationId}, #{user}, #{contact}, #{subscriptionType, typeHandler=EnumTypeHandler}, #{additionalMessage})
+    </insert>
+    
+    <select id="selectNotificationById" resultType="LepSubscriptionNotification">
+		SELECT * FROM SUBSCRIPTION_NOTIFICATIONS WHERE notification_id=#{0}
+    </select>
+
+    <select id="selectNotificationsByUser" resultType="LepSubscriptionNotification">
+		SELECT * FROM SUBSCRIPTION_NOTIFICATIONS WHERE SUBSCRIPTION_NOTIFICATIONS.user=#{0}
+    </select>
+    
+    <select id="selectNotificationsByUserAndContact" resultType="LepSubscriptionNotification">
+		SELECT * FROM SUBSCRIPTION_NOTIFICATIONS WHERE SUBSCRIPTION_NOTIFICATIONS.user=#{0} AND contact=#{1}
+    </select>
+    
+    <delete id="deleteNotificationById">
+        DELETE FROM SUBSCRIPTION_NOTIFICATIONS WHERE notification_id=#{0}
+    </delete>
+    
+    <delete id="deleteNotification" parameterType="LepSubscriptionNotification">
+        DELETE FROM SUBSCRIPTION_NOTIFICATIONS WHERE SUBSCRIPTION_NOTIFICATIONS.user=#{user} AND contact=#{contact} AND subscription_type=#{subscriptionType, typeHandler=EnumTypeHandler}
+    </delete>
+    
+    <insert id="updateNotification" parameterType="LepSubscriptionNotification">
+        UPDATE SUBSCRIPTION_NOTIFICATIONS SET additional_message=#{additionalMessage} WHERE SUBSCRIPTION_NOTIFICATIONS.user=#{user} AND contact=#{contact} AND subscription_type=#{subscriptionType, typeHandler=EnumTypeHandler}
+    </insert>
+    
+    <select id="selectNotificationCountById" resultType="int">
+        SELECT count(*) FROM SUBSCRIPTION_NOTIFICATIONS WHERE notification_id=#{0}
+    </select>
+</mapper>

@@ -1,0 +1,8 @@
+#-----------------------------------------------------------------
+# Use this file to add customized Bnd instructions for the bundle
+#-----------------------------------------------------------------
+
+Granite-Component-Scan: true
+Export-Package: com.firstlinecode.granite.xeps.component.stream.accept,\
+ com.firstlinecode.granite.xeps.component.stream.accept.negotiants
+ 
