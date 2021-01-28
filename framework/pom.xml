@@ -1,0 +1,30 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+		http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.firstlinecode.granite</groupId>
+		<artifactId>com.firstlinecode.granite</artifactId>
+		<version>0.2.1.RELEASE</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<groupId>com.firstlinecode.granite</groupId>
+	<artifactId>framework</artifactId>
+	<packaging>pom</packaging>
+	<name>XMPP Server Framework</name>
+
+	<modules>
+		<module>core</module>
+		<module>supports</module>
+		<module>stream</module>
+		<module>parsing</module>
+		<module>processing</module>
+		<module>event</module>
+		<module>routing</module>
+		<module>im</module>
+	</modules>
+
+</project>

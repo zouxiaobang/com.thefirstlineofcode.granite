@@ -29,15 +29,15 @@
 	</properties>
 
 	<modules>
-		<module>com.firstlinecode.granite.framework</module>
-		<module>com.firstlinecode.granite.stream</module>
-		<module>com.firstlinecode.granite.im</module>
-		<module>com.firstlinecode.granite.xeps</module>
-		<module>com.firstlinecode.granite.leps</module>
-		<module>com.firstlinecode.granite.lite</module>
-		<module>com.firstlinecode.granite.cluster</module>
-		<module>com.firstlinecode.granite.pack</module>
-		<!-- <module>com.firstlinecode.granite.cluster.debug</module> -->
+		<module>framework</module>
+		<module>stream</module>
+		<module>im</module>
+		<module>leps</module>
+		<module>xeps</module>
+		<!--<module>lite</module>
+		<module>cluster</module>
+		<module>pack</module> -->
+		<!-- <module>cluste-debug</module> -->
 	</modules>
 
 	
@@ -661,309 +661,309 @@
 			<!-- basalt xmpp core libraries -->
 			<dependency>
         			<groupId>com.firstlinecode.basalt</groupId>
-        			<artifactId>com.firstlinecode.basalt.protocol</artifactId>
+        			<artifactId>basalt-xmpp-core</artifactId>
         			<version>${basalt.version}</version>
       			</dependency>
 			<dependency>
         			<groupId>com.firstlinecode.basalt</groupId>
-        			<artifactId>com.firstlinecode.basalt.oxm</artifactId>
+        			<artifactId>basalt-oxm</artifactId>
         			<version>${basalt.version}</version>
       			</dependency>
 
 			<!-- basalt xmpp im library -->
 			<dependency>
         			<groupId>com.firstlinecode.basalt</groupId>
-        			<artifactId>com.firstlinecode.basalt.protocol.im</artifactId>
+        			<artifactId>basalt-xmpp-im</artifactId>
         			<version>${basalt.version}</version>
       			</dependency>
 
 			<!-- basalt xeps libraries -->
 			<dependency>
         			<groupId>com.firstlinecode.basalt.xeps</groupId>
-        			<artifactId>com.firstlinecode.basalt.xeps.disco</artifactId>
+        			<artifactId>basalt-xeps-disco</artifactId>
         			<version>${basalt.version}</version>
       			</dependency>
 			<dependency>
         			<groupId>com.firstlinecode.basalt.xeps</groupId>
-        			<artifactId>com.firstlinecode.basalt.xeps.ping</artifactId>
+        			<artifactId>basalt-xeps-ping</artifactId>
         			<version>${basalt.version}</version>
       			</dependency>
 			<dependency>
         			<groupId>com.firstlinecode.basalt.xeps</groupId>
-        			<artifactId>com.firstlinecode.basalt.xeps.delay</artifactId>
+        			<artifactId>basalt-xeps-delay</artifactId>
         			<version>${basalt.version}</version>
       			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.basalt.xeps</groupId>
-				<artifactId>com.firstlinecode.basalt.xeps.ibr</artifactId>
+				<artifactId>basalt-xeps-ibr</artifactId>
         			<version>${basalt.version}</version>
 			</dependency>
 			<dependency>
         			<groupId>com.firstlinecode.basalt.xeps</groupId>
-        			<artifactId>com.firstlinecode.basalt.xeps.muc</artifactId>
+        			<artifactId>basalt-xeps-muc</artifactId>
         			<version>${basalt.xeps.version}</version>
       			</dependency>
 
 			<!-- basalt leps libraries -->
 			<dependency>
 				<groupId>com.firstlinecode.basalt.leps</groupId>
-				<artifactId>com.firstlinecode.basalt.leps.im</artifactId>
+				<artifactId>basalt-leps-im</artifactId>
 				<version>${basalt.leps.version}</version>
 			</dependency>
 			
 			<!-- granite framework libraries -->
 			<dependency>
         		<groupId>com.firstlinecode.granite.framework</groupId>
-        		<artifactId>com.firstlinecode.granite.framework.core</artifactId>
+        		<artifactId>granite-framework-core</artifactId>
         		<version>${granite.framework.version}</version>
       		</dependency>
 			<dependency>
         			<groupId>com.firstlinecode.granite.framework</groupId>
-        			<artifactId>com.firstlinecode.granite.framework.stream</artifactId>
+        			<artifactId>granite-framework-stream</artifactId>
         			<version>${granite.framework.version}</version>
       			</dependency>
 			<dependency>
         			<groupId>com.firstlinecode.granite.framework</groupId>
-        			<artifactId>com.firstlinecode.granite.framework.parsing</artifactId>
+        			<artifactId>granite-framework-parsing</artifactId>
         			<version>${granite.framework.version}</version>
       			</dependency>
 			<dependency>
         			<groupId>com.firstlinecode.granite.framework</groupId>
-        			<artifactId>com.firstlinecode.granite.framework.processing</artifactId>
+        			<artifactId>granite-framework-processing</artifactId>
         			<version>${granite.framework.version}</version>
       		</dependency>
 			<dependency>
         			<groupId>com.firstlinecode.granite.framework</groupId>
-        			<artifactId>com.firstlinecode.granite.framework.event</artifactId>
+        			<artifactId>granite-framework-event</artifactId>
         			<version>${granite.framework.version}</version>
       		</dependency>
 			<dependency>
         			<groupId>com.firstlinecode.granite.framework</groupId>
-        			<artifactId>com.firstlinecode.granite.framework.routing</artifactId>
+        			<artifactId>granite-framework-routing</artifactId>
         			<version>${granite.framework.version}</version>
       		</dependency>
 			<dependency>
         			<groupId>com.firstlinecode.granite.framework.supports</groupId>
-        			<artifactId>com.firstlinecode.granite.framework.supports.spring</artifactId>
+        			<artifactId>granite-framework-supports-spring</artifactId>
         			<version>${granite.framework.version}</version>
       			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.framework.supports</groupId>
-        			<artifactId>com.firstlinecode.granite.framework.supports.mybatis</artifactId>
+				<artifactId>granite-frameworks-supports-mybatis</artifactId>
         			<version>${granite.framework.version}</version>
       			</dependency>
 			<dependency>
         			<groupId>com.firstlinecode.granite.framework</groupId>
-        			<artifactId>com.firstlinecode.granite.framework.im</artifactId>
+        			<artifactId>granite-framework-im</artifactId>
         			<version>${granite.framework.version}</version>
       			</dependency>
 
 			<!-- granite xmpp im libraries -->
 			<dependency>
         			<groupId>com.firstlinecode.granite</groupId>
-        			<artifactId>com.firstlinecode.granite.im</artifactId>
+        			<artifactId>granite-im</artifactId>
         			<version>${granite.im.version}</version>
       			</dependency>
 			<dependency>
         			<groupId>com.firstlinecode.granite.stream</groupId>
-        			<artifactId>com.firstlinecode.granite.stream.standard</artifactId>
+        			<artifactId>granite-stream-standard</artifactId>
         			<version>${granite.stream.version}</version>
       			</dependency>
 
 			<!-- granite xeps libraries -->
 			<dependency>
         			<groupId>com.firstlinecode.granite.xeps</groupId>
-        			<artifactId>com.firstlinecode.granite.xeps.disco</artifactId>
+        			<artifactId>granite-xeps-disco</artifactId>
         			<version>${granite.xeps.version}</version>
       		</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.xeps</groupId>
-				<artifactId>com.firstlinecode.granite.xeps.ibr</artifactId>
+				<artifactId>granite-xeps-ibr</artifactId>
         		<version>${granite.xeps.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.xeps</groupId>
-				<artifactId>com.firstlinecode.granite.xeps.ping</artifactId>
+				<artifactId>granite-xeps-ping</artifactId>
         		<version>${granite.xeps.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.xeps</groupId>
-				<artifactId>com.firstlinecode.granite.xeps.msgoffline</artifactId>
+				<artifactId>granite-xeps-msgoffline</artifactId>
         		<version>${granite.xeps.version}</version>
 			</dependency>
 			<dependency>
         			<groupId>com.firstlinecode.granite.xeps</groupId>
-        			<artifactId>com.firstlinecode.granite.xeps.muc</artifactId>
+        			<artifactId>granite-xeps-muc</artifactId>
         			<version>${granite.xeps.version}</version>
       			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.xeps.component</groupId>
-				<artifactId>com.firstlinecode.granite.xeps.component.stream</artifactId>
+				<artifactId>granite-xeps-component-stream</artifactId>
 				<version>${granite.xeps.component.version}</version>
 			</dependency>
 
 			<!-- granite leps libraries -->
 			<dependency>
 				<groupId>com.firstlinecode.granite.leps</groupId>
-				<artifactId>com.firstlinecode.granite.leps.im</artifactId>
+				<artifactId>granite-leps-im</artifactId>
 				<version>${granite.leps.version}</version>
 			</dependency>
 			
 			<!-- granite lite libraries -->
 			<dependency>
 				<groupId>com.firstlinecode.granite.lite</groupId>
-				<artifactId>com.firstlinecode.granite.lite.dba</artifactId>
+				<artifactId>granite-lite-dba</artifactId>
 				<version>${granite.lite.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.lite</groupId>
-				<artifactId>com.firstlinecode.granite.lite.integration</artifactId>
+				<artifactId>granite-lite-integration</artifactId>
 				<version>${granite.lite.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.lite</groupId>
-				<artifactId>com.firstlinecode.granite.lite.session</artifactId>
+				<artifactId>granite-lite-session</artifactId>
 				<version>${granite.lite.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.lite</groupId>
-				<artifactId>com.firstlinecode.granite.lite.auth</artifactId>
+				<artifactId>granite-lite-auth</artifactId>
 				<version>${granite.lite.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.lite</groupId>
-				<artifactId>com.firstlinecode.granite.lite.im</artifactId>
+				<artifactId>granite-lite-im</artifactId>
 				<version>${granite.lite.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.lite</groupId>
-				<artifactId>com.firstlinecode.granite.lite.xeps.disco</artifactId>
+				<artifactId>granite-lite-xeps-disco</artifactId>
 				<version>${granite.lite.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.lite</groupId>
-				<artifactId>com.firstlinecode.granite.lite.xeps.ibr</artifactId>
+				<artifactId>granite-lite-xeps-ibr</artifactId>
 				<version>${granite.lite.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.lite</groupId>
-				<artifactId>com.firstlinecode.granite.lite.xeps.msgoffline</artifactId>
+				<artifactId>granite-lite-xeps-msgoffline</artifactId>
 				<version>${granite.lite.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.lite</groupId>
-				<artifactId>com.firstlinecode.granite.lite.xeps.muc</artifactId>
+				<artifactId>granite-lite-xeps-muc</artifactId>
 				<version>${granite.lite.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.lite</groupId>
-				<artifactId>com.firstlinecode.granite.lite.leps.im</artifactId>
+				<artifactId>granite-lite-leps-im</artifactId>
 				<version>${granite.lite.version}</version>
 			</dependency>			
 			
 			<!-- granite cluster libraries -->
 			<dependency>
 				<groupId>com.firstlinecode.granite.cluster.node</groupId>
-				<artifactId>com.firstlinecode.granite.cluster.node.commons</artifactId>
+				<artifactId>granite-cluster-node-commons</artifactId>
 				<version>${granite.cluster.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.cluster</groupId>
-				<artifactId>com.firstlinecode.granite.cluster.dba</artifactId>
+				<artifactId>granite-cluster-dba</artifactId>
 				<version>${granite.cluster.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.cluster</groupId>
-				<artifactId>com.firstlinecode.granite.cluster.integration</artifactId>
+				<artifactId>granite-cluster-integration</artifactId>
 				<version>${granite.cluster.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.cluster</groupId>
-				<artifactId>com.firstlinecode.granite.cluster.session</artifactId>
+				<artifactId>granite-cluster-session</artifactId>
 				<version>${granite.cluster.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.cluster</groupId>
-				<artifactId>com.firstlinecode.granite.cluster.auth</artifactId>
+				<artifactId>granite-cluster-auth</artifactId>
 				<version>${granite.cluster.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.cluster</groupId>
-				<artifactId>com.firstlinecode.granite.cluster.xeps.ibr</artifactId>
+				<artifactId>granite-cluster-xeps-ibr</artifactId>
 				<version>${granite.cluster.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.cluster</groupId>
-				<artifactId>com.firstlinecode.granite.cluster.im</artifactId>
+				<artifactId>granite-cluster-im</artifactId>
 				<version>${granite.cluster.version}</version>
 			</dependency>
 
 			<!-- sand plugins -->
 			<dependency>
 				<groupId>com.firstlinecode.sand.server</groupId>
-				<artifactId>com.firstlinecode.sand.server.platform</artifactId>
+				<artifactId>sand-server-platform</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.sand.server</groupId>
-				<artifactId>com.firstlinecode.sand.server.stream</artifactId>
+				<artifactId>sand-server-stream</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.sand.server.lite</groupId>
-				<artifactId>com.firstlinecode.sand.server.lite.device</artifactId>
+				<artifactId>sand-server-lite-device</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.sand.server</groupId>
-				<artifactId>com.firstlinecode.sand.server.ibdr</artifactId>
+				<artifactId>sand-server-ibdr</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.sand.server</groupId>
-				<artifactId>com.firstlinecode.sand.server.lite.ibdr</artifactId>
+				<artifactId>sand-server-lite-ibdr</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.sand.server</groupId>
-				<artifactId>com.firstlinecode.sand.server.concentrator</artifactId>
+				<artifactId>sand-server-concentrator</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.sand.server.lite</groupId>
-				<artifactId>com.firstlinecode.sand.server.lite.concentrator</artifactId>
+				<artifactId>sand-server-lite-concentrator</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.sand.server.lite</groupId>
-				<artifactId>com.firstlinecode.sand.server.lite.ibdr</artifactId>
+				<artifactId>sand-server-lite-ibdr</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server</groupId>
-			<artifactId>com.firstlinecode.sand.server.emulators.models</artifactId>
+			<artifactId>sand-server-emulators-models</artifactId>
 			<version>${sand.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server</groupId>
-			<artifactId>com.firstlinecode.sand.server.operator</artifactId>
+			<artifactId>sand-server-operator</artifactId>
 			<version>${sand.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.demo</groupId>
-			<artifactId>com.firstlinecode.sand.demo.server.lite</artifactId>
+			<artifactId>sand-demo-server-lite</artifactId>
 			<version>${sand.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.demo</groupId>
-			<artifactId>com.firstlinecode.sand.demo.server.demo</artifactId>
+			<artifactId>sand-demo-server-demo</artifactId>
 			<version>${sand.version}</version>
 		</dependency>
 
 			<!-- gem plugins -->
 			<dependency>
 				<groupId>com.firstlinecode.gem.server</groupId>
-				<artifactId>com.firstlinecode.gem.server.bxmpp</artifactId>
+				<artifactId>gem-server-bxmpp</artifactId>
 				<version>${gem.version}</version>
 				<optional>true</optional>
 			</dependency>
