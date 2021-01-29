@@ -19,7 +19,7 @@
 	
 	<groupId>com.firstlinecode.granite.lite</groupId>
 	<artifactId>granite-lite-xeps-msgoffline</artifactId>
-	<name>Granite lite XEPs msgoffline</name>
+	<name>Granite lite XEPs msgoffline implementation</name>
 
 	<dependencies>
 		<dependency>

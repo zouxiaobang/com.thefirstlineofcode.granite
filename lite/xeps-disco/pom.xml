@@ -19,7 +19,7 @@
 	
 	<groupId>com.firstlinecode.granite.lite</groupId>
 	<artifactId>granite-lite-xeps-disco</artifactId>
-	<name>Granite lite XEPs disco</name>
+	<name>Granite lite XEPs disco implementation</name>
 	<packaging>bundle</packaging>
 
 	<dependencies>

@@ -19,7 +19,7 @@
 	
 	<groupId>com.firstlinecode.granite.leps</groupId>
 	<artifactId>granite-leps-im</artifactId>
-	<name>Granite LEPs IM</name>
+	<name>Granite LEPs IM implementation</name>
 	<packaging>bundle</packaging>
 	
 	<dependencies>
