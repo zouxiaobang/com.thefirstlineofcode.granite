@@ -15,7 +15,7 @@
 	<artifactId>supports</artifactId>
 	<packaging>pom</packaging>
 	<version>0.2.1.RELEASE</version>
-	<name>XMPP Server Framework Supports Modules</name>
+	<name>XMPP server framework supports modules</name>
 
 	<modules>
 		<module>spring</module>

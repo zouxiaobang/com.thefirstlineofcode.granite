@@ -7,33 +7,32 @@
 	
 	<parent>
         <groupId>com.firstlinecode.granite</groupId>
-        <artifactId>com.firstlinecode.granite.cluster</artifactId>
+        <artifactId>cluster</artifactId>
         <version>0.2.1.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 	
     <properties>
-		<bundle.symbolicName>com.firstlinecode.granite.cluster.session</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.cluster.session</bundle.namespace>
+		<bundle.symbolicName>com.firstlinecode.granite.cluster.xeps.ibr</bundle.symbolicName>
+		<bundle.namespace>com.firstlinecode.granite.cluster.xeps.ibr</bundle.namespace>
 	</properties>
 	
 	<groupId>com.firstlinecode.granite.cluster</groupId>
-	<artifactId>com.firstlinecode.granite.cluster.session</artifactId>
+	<artifactId>granite-cluster-xeps-ibr</artifactId>
 	<name>${bundle.symbolicName}</name>
-	<packaging>bundle</packaging>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
-			<artifactId>com.firstlinecode.granite.framework.core</artifactId>
+			<artifactId>granite-framework-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.xeps</groupId>
+			<artifactId>granite-xeps-ibr</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.cluster</groupId>
-			<artifactId>com.firstlinecode.granite.cluster.integration</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.cache</groupId>
-			<artifactId>cache-api</artifactId>
+			<artifactId>granite-cluster-dba</artifactId>
 		</dependency>
 	</dependencies>
 

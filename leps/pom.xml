@@ -14,7 +14,7 @@
 	<groupId>com.firstlinecode.granite</groupId>
 	<artifactId>leps</artifactId>
 	<packaging>pom</packaging>
-	<name>LEP Plugins</name>
+	<name>LEPs plugins</name>
 
 	<modules>
 		<module>im</module>

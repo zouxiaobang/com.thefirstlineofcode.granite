@@ -7,7 +7,7 @@
 	
 	<parent>
         <groupId>com.firstlinecode.granite</groupId>
-        <artifactId>com.firstlinecode.granite.cluster</artifactId>
+        <artifactId>cluster</artifactId>
         <version>0.2.1.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -18,8 +18,8 @@
 	</properties>
 	
 	<groupId>com.firstlinecode.granite.cluster</groupId>
-	<artifactId>com.firstlinecode.granite.cluster.dba</artifactId>
-	<name>${bundle.symbolicName}</name>
+	<artifactId>granite-cluster-dba</artifactId>
+	<name>Granite cluster DBA implementation</name>
 
 	<dependencies>
 		<dependency>
@@ -28,7 +28,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework.supports</groupId>
-			<artifactId>com.firstlinecode.granite.framework.supports.spring</artifactId>
+			<artifactId>granite-framework-supports-spring</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.mongodb</groupId>

@@ -11,18 +11,18 @@
 	</parent>
 
 	<groupId>com.firstlinecode.granite</groupId>
-	<artifactId>com.firstlinecode.granite.cluster</artifactId>
+	<artifactId>cluster</artifactId>
 	<packaging>pom</packaging>
-	<name>XMPP Server Deploy Cluster Plugins and Tools</name>
+	<name>XMPP server deploy cluster plugins and tools</name>
 
 	<modules>
-		<module>com.firstlinecode.granite.cluster.node</module>
-		<module>com.firstlinecode.granite.cluster.session</module>
-		<module>com.firstlinecode.granite.cluster.integration</module>
-		<module>com.firstlinecode.granite.cluster.dba</module>
-		<module>com.firstlinecode.granite.cluster.auth</module>
-		<module>com.firstlinecode.granite.cluster.xeps.ibr</module>
-		<module>com.firstlinecode.granite.cluster.im</module>
+		<module>node</module>
+		<module>session</module>
+		<module>integration</module>
+		<module>dba</module>
+		<module>auth</module>
+		<module>xeps-ibr</module>
+		<module>im</module>
 	</modules>
 	
 </project>

@@ -14,7 +14,7 @@
 	<groupId>com.firstlinecode.granite</groupId>
 	<artifactId>granite-stream</artifactId>
 	<packaging>pom</packaging>
-	<name>XMPP Stream Plugins</name>
+	<name>XMPP stream plugins</name>
 
 	<modules>
 		<module>standard</module>

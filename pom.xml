@@ -8,7 +8,7 @@
 	<artifactId>com.firstlinecode.granite</artifactId>
 	<packaging>pom</packaging>
 	<version>0.2.1.RELEASE</version>
-	<name>Granite XMPP Server</name>
+	<name>Granite XMPP server</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,8 +35,8 @@
 		<module>leps</module>
 		<module>xeps</module>
 		<module>lite</module>
-		<!--<module>cluster</module>
-		<module>pack</module>
+		<module>cluster</module>
+		<!-- <module>pack</module>
 		<module>cluste-debug</module> -->
 	</modules>
 

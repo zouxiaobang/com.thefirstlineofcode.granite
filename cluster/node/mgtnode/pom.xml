@@ -7,25 +7,28 @@
 	
 	<parent>
         <groupId>com.firstlinecode.granite.cluster</groupId>
-        <artifactId>com.firstlinecode.granite.cluster.node</artifactId>
+        <artifactId>node</artifactId>
         <version>0.2.1.RELEASE</version>
-	<relativePath>../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     
 	<properties>
-		<bundle.symbolicName>com.firstlinecode.granite.cluster.node.appnode</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.cluster.node.appnode</bundle.namespace>
-		<jar.finalName>appnode-${project.version}</jar.finalName>
+		<bundle.symbolicName>com.firstlinecode.granite.cluster.node.mgtnode</bundle.symbolicName>
+		<bundle.namespace>com.firstlinecode.granite.cluster.node.mgtnode</bundle.namespace>
 	</properties>
 	
 	<groupId>com.firstlinecode.granite.cluster.node</groupId>
-	<artifactId>com.firstlinecode.granite.cluster.node.appnode</artifactId>
-	<name>${bundle.symbolicName}</name>
+	<artifactId>granite-cluster-node-mgtnode</artifactId>
+	<name>Granite deploy cluster mgtnode implementation</name>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.firstlinecode.granite.cluster.node</groupId>
-			<artifactId>com.firstlinecode.granite.cluster.node.commons</artifactId>
+			<artifactId>granite-cluster-node-commons</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.ignite</groupId>
@@ -38,24 +41,24 @@
 	</dependencies>
 	
 	<build>
-		<finalName>granite-cluster-appnode-${project.version}</finalName>
+		<finalName>granite-cluster-mgtnode-${project.version}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.4</version>
 				<configuration>
-					<finalName>granite-cluster-appnode-${project.version}</finalName>
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>com.firstlinecode.granite.cluster.node.appnode.Main</mainClass>
+							<mainClass>com.firstlinecode.granite.cluster.node.mgtnode.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>3.0.0</version>
 				<configuration>

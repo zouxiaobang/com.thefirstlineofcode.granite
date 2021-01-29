@@ -7,7 +7,7 @@
 	
 	<parent>
         <groupId>com.firstlinecode.granite.cluster</groupId>
-        <artifactId>com.firstlinecode.granite.cluster.node</artifactId>
+        <artifactId>node</artifactId>
         <version>0.2.1.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -18,8 +18,8 @@
 	</properties>
 	
 	<groupId>com.firstlinecode.granite.cluster.node</groupId>
-	<artifactId>com.firstlinecode.granite.cluster.node.commons</artifactId>
-	<name>${bundle.symbolicName}</name>
+	<artifactId>granite-cluster-node-commons</artifactId>
+	<name>Granite deploy cluster commons library</name>
 	<packaging>bundle</packaging>
 
 	<dependencies>

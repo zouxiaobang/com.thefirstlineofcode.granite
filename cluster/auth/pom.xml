@@ -7,7 +7,7 @@
 	
 	<parent>
         <groupId>com.firstlinecode.granite</groupId>
-        <artifactId>com.firstlinecode.granite.cluster</artifactId>
+        <artifactId>cluster</artifactId>
         <version>0.2.1.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -18,13 +18,13 @@
 	</properties>
 	
 	<groupId>com.firstlinecode.granite.cluster</groupId>
-	<artifactId>com.firstlinecode.granite.cluster.auth</artifactId>
-	<name>${bundle.symbolicName}</name>
+	<artifactId>granite-cluster-auth</artifactId>
+	<name>Granite cluster auth implementation</name>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.firstlinecode.granite.cluster</groupId>
-			<artifactId>com.firstlinecode.granite.cluster.dba</artifactId>
+			<artifactId>granite-cluster-dba</artifactId>
 		</dependency>
 	</dependencies>
 

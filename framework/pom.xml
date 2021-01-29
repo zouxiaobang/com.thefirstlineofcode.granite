@@ -14,7 +14,7 @@
 	<groupId>com.firstlinecode.granite</groupId>
 	<artifactId>framework</artifactId>
 	<packaging>pom</packaging>
-	<name>XMPP Server Framework</name>
+	<name>XMPP server framework</name>
 
 	<modules>
 		<module>core</module>

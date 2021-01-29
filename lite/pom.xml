@@ -13,7 +13,7 @@
 	<groupId>com.firstlinecode.granite</groupId>
 	<artifactId>lite</artifactId>
 	<packaging>pom</packaging>
-	<name>XMPP Server Lite Plugins</name>
+	<name>XMPP server deploy lite Plugins</name>
 
 	<modules>
 		<module>dba</module>

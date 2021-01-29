@@ -5,19 +5,19 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.firstlinecode.granite</groupId>
-		<artifactId>com.firstlinecode.granite.cluster</artifactId>
+		<artifactId>cluster</artifactId>
 		<version>0.2.1.RELEASE</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<groupId>com.firstlinecode.granite.cluster</groupId>
-	<artifactId>com.firstlinecode.granite.cluster.node</artifactId>
+	<artifactId>node</artifactId>
 	<packaging>pom</packaging>
-	<name>Granite Cluster Nodes</name>
+	<name>Granite cluster node plugins</name>
 
 	<modules>
-		<module>com.firstlinecode.granite.cluster.node.commons</module>
-		<module>com.firstlinecode.granite.cluster.node.mgtnode</module>
-		<module>com.firstlinecode.granite.cluster.node.appnode</module>
+		<module>commons</module>
+		<module>mgtnode</module>
+		<module>appnode</module>
 	</modules>
 </project>

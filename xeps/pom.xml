@@ -14,7 +14,7 @@
 	<groupId>com.firstlinecode.granite</groupId>
 	<artifactId>xeps</artifactId>
 	<packaging>pom</packaging>
-	<name>XEP Plugins</name>
+	<name>XEPs plugins</name>
 
 	<modules>
 		<module>ping</module>

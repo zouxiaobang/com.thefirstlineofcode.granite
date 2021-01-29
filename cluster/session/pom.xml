@@ -7,36 +7,29 @@
 	
 	<parent>
         <groupId>com.firstlinecode.granite</groupId>
-        <artifactId>com.firstlinecode.granite.cluster</artifactId>
+        <artifactId>cluster</artifactId>
         <version>0.2.1.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 	
     <properties>
-		<bundle.symbolicName>com.firstlinecode.granite.cluster.im</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.cluster.im</bundle.namespace>
+		<bundle.symbolicName>com.firstlinecode.granite.cluster.session</bundle.symbolicName>
+		<bundle.namespace>com.firstlinecode.granite.cluster.session</bundle.namespace>
 	</properties>
 	
 	<groupId>com.firstlinecode.granite.cluster</groupId>
-	<artifactId>com.firstlinecode.granite.cluster.im</artifactId>
+	<artifactId>granite-cluster-session</artifactId>
 	<name>${bundle.symbolicName}</name>
+	<packaging>bundle</packaging>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.apache.ignite</groupId>
-			<artifactId>ignite-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.firstlinecode.granite.framework.supports</groupId>
-			<artifactId>com.firstlinecode.granite.framework.supports.spring</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.firstlinecode.granite</groupId>
-			<artifactId>com.firstlinecode.granite.im</artifactId>
+			<groupId>com.firstlinecode.granite.framework</groupId>
+			<artifactId>granite-framework-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.cluster</groupId>
-			<artifactId>com.firstlinecode.granite.cluster.dba</artifactId>
+			<artifactId>granite-cluster-integration</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>javax.cache</groupId>
