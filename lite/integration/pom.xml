@@ -7,7 +7,7 @@
 	
 	<parent>
         <groupId>com.firstlinecode.granite</groupId>
-        <artifactId>com.firstlinecode.granite.lite</artifactId>
+        <artifactId>lite</artifactId>
         <version>0.2.1.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>	
@@ -18,18 +18,18 @@
 	</properties>
 	
 	<groupId>com.firstlinecode.granite.lite</groupId>
-	<artifactId>com.firstlinecode.granite.lite.integration</artifactId>
-	<name>${bundle.symbolicName}</name>
+	<artifactId>granite-lite-integration</artifactId>
+	<name>Granite lite integration implementation</name>
 	<packaging>bundle</packaging>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
-			<artifactId>com.firstlinecode.granite.framework.processing</artifactId>
+			<artifactId>granite-framework-processing</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.stream</groupId>
-			<artifactId>com.firstlinecode.granite.stream.standard</artifactId>
+			<artifactId>granite-stream-standard</artifactId>
 		</dependency>
 	</dependencies>
 

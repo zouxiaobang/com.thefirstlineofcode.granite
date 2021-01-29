@@ -7,32 +7,28 @@
 	
     <parent>
         <groupId>com.firstlinecode.granite</groupId>
-        <artifactId>com.firstlinecode.granite.lite</artifactId>
+        <artifactId>lite</artifactId>
         <version>0.2.1.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     
 	<properties>
-		<bundle.symbolicName>com.firstlinecode.granite.lite.xeps.msgoffline</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.lite.xeps.msgoffline</bundle.namespace>
+		<bundle.symbolicName>com.firstlinecode.granite.lite.im</bundle.symbolicName>
+		<bundle.namespace>com.firstlinecode.granite.lite.im</bundle.namespace>
 	</properties>
 	
 	<groupId>com.firstlinecode.granite.lite</groupId>
-	<artifactId>com.firstlinecode.granite.lite.xeps.msgoffline</artifactId>
-	<name>${bundle.symbolicName}</name>
+	<artifactId>granite-lite-im</artifactId>
+	<name>Granite lite IM implementation</name>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework.supports</groupId>
-			<artifactId>com.firstlinecode.granite.framework.supports.mybatis</artifactId>
+			<artifactId>granite-framework-supports-mybatis</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.firstlinecode.granite.framework</groupId>
-			<artifactId>com.firstlinecode.granite.framework.im</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.firstlinecode.basalt.xeps</groupId>
-			<artifactId>com.firstlinecode.basalt.xeps.delay</artifactId>
+			<groupId>com.firstlinecode.granite</groupId>
+			<artifactId>granite-im</artifactId>
 		</dependency>
 	</dependencies>
 

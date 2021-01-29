@@ -5,30 +5,34 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	
-	<parent>
+    <parent>
         <groupId>com.firstlinecode.granite</groupId>
-        <artifactId>com.firstlinecode.granite.lite</artifactId>
+        <artifactId>lite</artifactId>
         <version>0.2.1.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     
 	<properties>
-		<bundle.symbolicName>com.firstlinecode.granite.lite.xeps.ibr</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.lite.xeps.ibr</bundle.namespace>
+		<bundle.symbolicName>com.firstlinecode.granite.lite.xeps.muc</bundle.symbolicName>
+		<bundle.namespace>com.firstlinecode.granite.lite.xeps.muc</bundle.namespace>
 	</properties>
 	
 	<groupId>com.firstlinecode.granite.lite</groupId>
-	<artifactId>com.firstlinecode.granite.lite.xeps.ibr</artifactId>
-	<name>${bundle.symbolicName}</name>
+	<artifactId>granite-lite-xeps-muc</artifactId>
+	<name>Granite lite XEPs MUC implementation</name>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework.supports</groupId>
-			<artifactId>com.firstlinecode.granite.framework.supports.mybatis</artifactId>
+			<artifactId>granite-framework-supports-mybatis</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.xeps</groupId>
-			<artifactId>com.firstlinecode.granite.xeps.ibr</artifactId>
+			<artifactId>granite-xeps-disco</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.xeps</groupId>
+			<artifactId>granite-xeps-muc</artifactId>
 		</dependency>
 	</dependencies>
 

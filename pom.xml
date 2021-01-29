@@ -35,9 +35,9 @@
 		<module>leps</module>
 		<module>xeps</module>
 		<module>lite</module>
-		<module>cluster</module>
+		<!--<module>cluster</module>
 		<module>pack</module>
-		<!-- <module>cluste-debug</module> -->
+		<module>cluste-debug</module> -->
 	</modules>
 
 	
@@ -749,7 +749,7 @@
       			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.framework.supports</groupId>
-				<artifactId>granite-frameworks-supports-mybatis</artifactId>
+				<artifactId>granite-framework-supports-mybatis</artifactId>
         			<version>${granite.framework.version}</version>
       			</dependency>
 			<dependency>

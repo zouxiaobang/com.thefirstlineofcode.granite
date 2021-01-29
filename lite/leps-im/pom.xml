@@ -7,32 +7,32 @@
 	
     <parent>
         <groupId>com.firstlinecode.granite</groupId>
-        <artifactId>com.firstlinecode.granite.lite</artifactId>
+        <artifactId>lite</artifactId>
         <version>0.2.1.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     
 	<properties>
-		<bundle.symbolicName>com.firstlinecode.granite.lite.xeps.muc</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.lite.xeps.muc</bundle.namespace>
+		<bundle.symbolicName>com.firstlinecode.granite.lite.leps.im</bundle.symbolicName>
+		<bundle.namespace>com.firstlinecode.granite.lite.leps.im</bundle.namespace>
 	</properties>
 	
 	<groupId>com.firstlinecode.granite.lite</groupId>
-	<artifactId>com.firstlinecode.granite.lite.xeps.muc</artifactId>
-	<name>${bundle.symbolicName}</name>
+	<artifactId>granite-lite-leps-im</artifactId>
+	<name>Granite lite LEPs IM implementation</name>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework.supports</groupId>
-			<artifactId>com.firstlinecode.granite.framework.supports.mybatis</artifactId>
+			<artifactId>granite-framework-supports-mybatis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.leps</groupId>
+			<artifactId>granite-leps-im</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.xeps</groupId>
-			<artifactId>com.firstlinecode.granite.xeps.disco</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.firstlinecode.granite.xeps</groupId>
-			<artifactId>com.firstlinecode.granite.xeps.muc</artifactId>
+			<artifactId>granite-xeps-disco</artifactId>
 		</dependency>
 	</dependencies>
 

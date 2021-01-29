@@ -11,22 +11,22 @@
 	</parent>
 
 	<groupId>com.firstlinecode.granite</groupId>
-	<artifactId>com.firstlinecode.granite.lite</artifactId>
+	<artifactId>lite</artifactId>
 	<packaging>pom</packaging>
 	<name>XMPP Server Lite Plugins</name>
 
 	<modules>
-		<module>com.firstlinecode.granite.lite.dba</module>
-		<module>com.firstlinecode.granite.lite.auth</module>
-		<module>com.firstlinecode.granite.lite.session</module>
-		<module>com.firstlinecode.granite.lite.integration</module>
-		<module>com.firstlinecode.granite.lite.im</module>
-		<module>com.firstlinecode.granite.lite.xeps.disco</module>
-		<module>com.firstlinecode.granite.lite.xeps.muc</module>
-		<module>com.firstlinecode.granite.lite.xeps.ibr</module>
-		<module>com.firstlinecode.granite.lite.xeps.msgoffline</module>
-		<module>com.firstlinecode.granite.lite.xeps.component</module>
-		<module>com.firstlinecode.granite.lite.leps.im</module>
+		<module>dba</module>
+		<module>auth</module>
+		<module>session</module>
+		<module>integration</module>
+		<module>im</module>
+		<module>xeps-disco</module>
+		<module>xeps-muc</module>
+		<module>xeps-ibr</module>
+		<module>xeps-msgoffline</module>
+		<module>xeps-component</module>
+		<module>leps-im</module>
 	</modules>
 	
 </project>

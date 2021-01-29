@@ -7,25 +7,24 @@
 	
 	<parent>
         <groupId>com.firstlinecode.granite</groupId>
-        <artifactId>com.firstlinecode.granite.lite</artifactId>
+        <artifactId>lite</artifactId>
         <version>0.2.1.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-	
-    <properties>
-		<bundle.symbolicName>com.firstlinecode.granite.lite.session</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.lite.session</bundle.namespace>
+    
+	<properties>
+		<bundle.symbolicName>com.firstlinecode.granite.lite.auth</bundle.symbolicName>
+		<bundle.namespace>com.firstlinecode.granite.lite.auth</bundle.namespace>
 	</properties>
 	
 	<groupId>com.firstlinecode.granite.lite</groupId>
-	<artifactId>com.firstlinecode.granite.lite.session</artifactId>
-	<name>${bundle.symbolicName}</name>
-	<packaging>bundle</packaging>
+	<artifactId>auth</artifactId>
+	<name>Granite lite auth implementation</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.firstlinecode.granite.framework</groupId>
-			<artifactId>com.firstlinecode.granite.framework.core</artifactId>
+			<groupId>com.firstlinecode.granite.framework.supports</groupId>
+			<artifactId>granite-framework-supports-mybatis</artifactId>
 		</dependency>
 	</dependencies>
 

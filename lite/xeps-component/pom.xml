@@ -7,7 +7,7 @@
 	
 	<parent>
         <groupId>com.firstlinecode.granite</groupId>
-        <artifactId>com.firstlinecode.granite.lite</artifactId>
+        <artifactId>lite</artifactId>
         <version>0.2.1.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>	
@@ -18,19 +18,19 @@
 	</properties>
 	
 	<groupId>com.firstlinecode.granite.lite</groupId>
-	<artifactId>com.firstlinecode.granite.lite.xeps.component</artifactId>
-	<name>${bundle.symbolicName}</name>
+	<artifactId>granite-lite-xeps-component</artifactId>
+	<name>Granite lite XEPs component implementation</name>
 	<packaging>bundle</packaging>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>com.firstlinecode.granite.lite.integration</artifactId>
+			<artifactId>granite-lite-integration</artifactId>
 			<version>0.2.1.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.xeps.component</groupId>
-			<artifactId>com.firstlinecode.granite.xeps.component.stream</artifactId>
+			<artifactId>granite-xeps-component-stream</artifactId>
 		</dependency>
 	</dependencies>
 
