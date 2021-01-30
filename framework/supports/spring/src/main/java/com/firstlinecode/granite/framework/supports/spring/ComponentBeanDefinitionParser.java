@@ -8,7 +8,7 @@ import org.w3c.dom.Element;
 
 public class ComponentBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 	private static final String COMPONENT_ID = "component-id";
-	private static final String COMPONENT_PROP = "componentId";
+	private static final String COMPONENT_ID_PROP = "componentId";
 	private static final String REF = "ref";
 	private static final String TARGET_BEAN_NAME_PROP = "targetBeanName";
 	
@@ -36,7 +36,7 @@ public class ComponentBeanDefinitionParser extends AbstractSingleBeanDefinitionP
 			parserContext.getReaderContext().error("Invalid granite:component definition. Bad grammer.", element);
 		}
 		
-		builder.addPropertyValue(COMPONENT_PROP, element.getAttribute(COMPONENT_ID));		
+		builder.addPropertyValue(COMPONENT_ID_PROP, element.getAttribute(COMPONENT_ID));		
 		builder.addPropertyValue(TARGET_BEAN_NAME_PROP, element.getAttribute(REF));
 	}
 	

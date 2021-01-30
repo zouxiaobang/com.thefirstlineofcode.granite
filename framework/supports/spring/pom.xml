@@ -11,12 +11,6 @@
         <version>0.2.1.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    
-	<properties>
-		<bundle.symbolicName>com.firstlinecode.granite.framework.supports.spring</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.framework.supports.spring</bundle.namespace>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 	
 	<groupId>com.firstlinecode.granite.framework.supports</groupId>
 	<artifactId>granite-framework-supports-spring</artifactId>

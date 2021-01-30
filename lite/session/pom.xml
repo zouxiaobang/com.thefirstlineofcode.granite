@@ -12,11 +12,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 	
-    <properties>
-		<bundle.symbolicName>com.firstlinecode.granite.lite.session</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.lite.session</bundle.namespace>
-	</properties>
-	
 	<groupId>com.firstlinecode.granite.lite</groupId>
 	<artifactId>granite-lite-session</artifactId>
 	<name>Granite lite session implementation</name>

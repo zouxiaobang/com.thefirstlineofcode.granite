@@ -11,11 +11,6 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
-	<properties>
-		<bundle.symbolicName>com.firstlinecode.granite.stream.standard</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.stream.standard</bundle.namespace>
-	</properties>
-	
 	<groupId>com.firstlinecode.granite.stream</groupId>
 	<artifactId>granite-stream-standard</artifactId>
 	<name>Granite stream standard implementation</name>

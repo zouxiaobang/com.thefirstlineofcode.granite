@@ -11,11 +11,6 @@
         <version>0.2.1.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    
-	<properties>
-		<bundle.symbolicName>com.firstlinecode.granite.xeps.muc</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.xeps.muc</bundle.namespace>
-	</properties>
 	
 	<groupId>com.firstlinecode.granite.xeps</groupId>
 	<artifactId>granite-xeps-muc</artifactId>

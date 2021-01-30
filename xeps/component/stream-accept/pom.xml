@@ -11,11 +11,6 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
-	<properties>
-		<bundle.symbolicName>com.firstlinecode.granite.xeps.component.stream.accept</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.xeps.component.stream.accept</bundle.namespace>
-	</properties>
-	
 	<groupId>com.firstlinecode.granite.xeps.component</groupId>
 	<artifactId>granite-xeps-component-stream-accept</artifactId>
 	<name>XEPs component stream accept implementation</name>

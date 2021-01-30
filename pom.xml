@@ -36,8 +36,8 @@
 		<module>xeps</module>
 		<module>lite</module>
 		<module>cluster</module>
-		<!-- <module>pack</module>
-		<module>cluste-debug</module> -->
+		<module>pack</module>
+		<module>cluster-debug</module>
 	</modules>
 
 	

@@ -12,11 +12,6 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
-	<properties>
-		<bundle.symbolicName>com.firstlinecode.granite.im</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.im</bundle.namespace>
-	</properties>
-	
 	<groupId>com.firstlinecode.granite</groupId>
 	<artifactId>granite-im</artifactId>
 	<name>Granite XMPP IM implementation</name>

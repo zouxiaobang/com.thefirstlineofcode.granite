@@ -12,11 +12,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     
-	<properties>
-		<bundle.symbolicName>com.firstlinecode.granite.cluster.dba</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.cluster.dba</bundle.namespace>
-	</properties>
-	
 	<groupId>com.firstlinecode.granite.cluster</groupId>
 	<artifactId>granite-cluster-dba</artifactId>
 	<name>Granite cluster DBA implementation</name>

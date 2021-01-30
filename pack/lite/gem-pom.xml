@@ -7,18 +7,18 @@
 	
 	<parent>
 		<groupId>com.firstlinecode.granite</groupId>
-		<artifactId>com.firstlinecode.granite</artifactId>
+		<artifactId>pack</artifactId>
 		<version>0.2.1.RELEASE</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
 	<groupId>com.firstlinecode.granite.pack.lite</groupId>
-	<artifactId>com.firstlinecode.granite.pack.lite.gem</artifactId>
+	<artifactId>gem</artifactId>
 	
 	<dependencies>
 		<dependency>
 			<groupId>com.firstlinecode.gem.server</groupId>
-			<artifactId>com.firstlinecode.gem.server.bxmpp</artifactId>
+			<artifactId>gem-server-bxmpp</artifactId>
 		</dependency>
 	</dependencies>
 

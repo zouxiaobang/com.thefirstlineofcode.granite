@@ -12,13 +12,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     
-	<properties>
-		<bundle.symbolicName>com.firstlinecode.granite.lite.auth</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.lite.auth</bundle.namespace>
-	</properties>
-	
 	<groupId>com.firstlinecode.granite.lite</groupId>
-	<artifactId>auth</artifactId>
+	<artifactId>granite-lite-auth</artifactId>
 	<name>Granite lite auth implementation</name>
 
 	<dependencies>

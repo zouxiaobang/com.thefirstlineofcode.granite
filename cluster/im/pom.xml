@@ -12,11 +12,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 	
-    <properties>
-		<bundle.symbolicName>com.firstlinecode.granite.cluster.im</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.cluster.im</bundle.namespace>
-	</properties>
-	
 	<groupId>com.firstlinecode.granite.cluster</groupId>
 	<artifactId>granite-cluster-im</artifactId>
 	<name>Granite cluster IM implementation</name>

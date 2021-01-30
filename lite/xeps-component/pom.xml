@@ -10,12 +10,7 @@
         <artifactId>lite</artifactId>
         <version>0.2.1.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
-    </parent>	
-	
-    <properties>
-		<bundle.symbolicName>com.firstlinecode.granite.lite.xeps.component</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.lite.xeps.component</bundle.namespace>
-	</properties>
+    </parent>
 	
 	<groupId>com.firstlinecode.granite.lite</groupId>
 	<artifactId>granite-lite-xeps-component</artifactId>

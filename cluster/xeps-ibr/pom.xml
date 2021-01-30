@@ -12,14 +12,9 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 	
-    <properties>
-		<bundle.symbolicName>com.firstlinecode.granite.cluster.xeps.ibr</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.cluster.xeps.ibr</bundle.namespace>
-	</properties>
-	
 	<groupId>com.firstlinecode.granite.cluster</groupId>
 	<artifactId>granite-cluster-xeps-ibr</artifactId>
-	<name>${bundle.symbolicName}</name>
+	<name>Granite deploy cluster IBR implementation</name>
 
 	<dependencies>
 		<dependency>

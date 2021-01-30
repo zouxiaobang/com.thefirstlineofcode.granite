@@ -11,11 +11,6 @@
         <version>0.2.1.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    
-	<properties>
-		<bundle.symbolicName>com.firstlinecode.granite.framework.event</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.framework.event</bundle.namespace>
-	</properties>
 	
 	<groupId>com.firstlinecode.granite.framework</groupId>
 	<artifactId>granite-framework-event</artifactId>

@@ -7,13 +7,13 @@
 	
 	<parent>
 		<groupId>com.firstlinecode.granite</groupId>
-		<artifactId>com.firstlinecode.granite.pack</artifactId>
+		<artifactId>pack</artifactId>
 		<version>0.2.1.RELEASE</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
-	<groupId>com.firstlinecode.granite.pack.lite</groupId>
-	<artifactId>com.firstlinecode.granite.pack.lite.sand</artifactId>
+	<groupId>com.firstlinecode.granite.pack</groupId>
+	<artifactId>granite-pack-lite</artifactId>
 	
 	<dependencies>
 		<dependency>
@@ -42,79 +42,99 @@
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
-			<artifactId>com.firstlinecode.granite.framework.parsing</artifactId>
+			<artifactId>granite-framework-parsing</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
-			<artifactId>com.firstlinecode.granite.framework.routing</artifactId>
+			<artifactId>granite-framework-routing</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
-			<artifactId>com.firstlinecode.granite.framework.event</artifactId>
+			<artifactId>granite-framework-event</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.xeps</groupId>
+			<artifactId>granite-xeps-ping</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.xeps</groupId>
+			<artifactId>granite-xeps-msgoffline</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>com.firstlinecode.granite.lite.dba</artifactId>
+			<artifactId>granite-lite-dba</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>com.firstlinecode.granite.lite.session</artifactId>
+			<artifactId>granite-lite-auth</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>com.firstlinecode.granite.lite.integration</artifactId>
+			<artifactId>granite-lite-session</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>com.firstlinecode.granite.lite.auth</artifactId>
+			<artifactId>granite-lite-integration</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>com.firstlinecode.granite.lite.xeps.ibr</artifactId>
+			<artifactId>granite-lite-im</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>com.firstlinecode.granite.lite.im</artifactId>
+			<artifactId>granite-lite-leps-im</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>com.firstlinecode.granite.lite.xeps.disco</artifactId>
+			<artifactId>granite-lite-xeps-disco</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.lite</groupId>
+			<artifactId>granite-lite-xeps-muc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.lite</groupId>
+			<artifactId>granite-lite-xeps-msgoffline</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.lite</groupId>
+			<artifactId>granite-lite-xeps-ibr</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server</groupId>
-			<artifactId>com.firstlinecode.sand.server.platform</artifactId>
+			<artifactId>sand-server-platform</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server</groupId>
-			<artifactId>com.firstlinecode.sand.server.stream</artifactId>
+			<artifactId>sand-server-stream</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server.lite</groupId>
-			<artifactId>com.firstlinecode.sand.server.lite.device</artifactId>
+			<artifactId>sand-server-lite-device</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server.lite</groupId>
-			<artifactId>com.firstlinecode.sand.server.lite.ibdr</artifactId>
+			<artifactId>sand-server-lite-ibdr</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server</groupId>
-			<artifactId>com.firstlinecode.sand.server.concentrator</artifactId>
+			<artifactId>sand-server-concentrator</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server.lite</groupId>
-			<artifactId>com.firstlinecode.sand.server.lite.concentrator</artifactId>
+			<artifactId>sand-server-lite-concentrator</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server</groupId>
-			<artifactId>com.firstlinecode.sand.server.operator</artifactId>
+			<artifactId>sand-server-operator</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server</groupId>
-			<artifactId>com.firstlinecode.sand.server.emulators.models</artifactId>
+			<artifactId>sand-server-emulators-models</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.demo</groupId>
-			<artifactId>com.firstlinecode.sand.demo.server.lite</artifactId>
+			<artifactId>sand-demo-server-lite</artifactId>
 		</dependency>
 	</dependencies>
 	
@@ -127,7 +147,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.firstlinecode.granite.lite.pack.Main</mainClass>
+							<mainClass>com.firstlinecode.granite.pack.lite.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -136,4 +156,3 @@
 	</build>
 
 </project>
-

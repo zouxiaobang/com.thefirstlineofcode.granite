@@ -12,11 +12,6 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
-	<properties>
-		<bundle.symbolicName>com.firstlinecode.granite.leps.im</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.leps.im</bundle.namespace>
-	</properties>
-	
 	<groupId>com.firstlinecode.granite.leps</groupId>
 	<artifactId>granite-leps-im</artifactId>
 	<name>Granite LEPs IM implementation</name>

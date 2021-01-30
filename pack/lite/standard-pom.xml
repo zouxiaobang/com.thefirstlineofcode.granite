@@ -7,13 +7,13 @@
 	
 	<parent>
 		<groupId>com.firstlinecode.granite</groupId>
-		<artifactId>com.firstlinecode.granite</artifactId>
+		<artifactId>pack</artifactId>
 		<version>0.2.1.RELEASE</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
 	<groupId>com.firstlinecode.granite.pack.lite</groupId>
-	<artifactId>com.firstlinecode.granite.pack.lite.leps</artifactId>
+	<artifactId>standard</artifactId>
 	
 	<dependencies>
 		<dependency>
@@ -42,59 +42,59 @@
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
-			<artifactId>com.firstlinecode.granite.framework.parsing</artifactId>
+			<artifactId>granite-framework-parsing</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
-			<artifactId>com.firstlinecode.granite.framework.routing</artifactId>
+			<artifactId>granite-framework-routing</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
-			<artifactId>com.firstlinecode.granite.framework.event</artifactId>
+			<artifactId>granite-framework-event</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.xeps</groupId>
-			<artifactId>com.firstlinecode.granite.xeps.ping</artifactId>
+			<artifactId>granite-xeps-ping</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.xeps</groupId>
-			<artifactId>com.firstlinecode.granite.xeps.msgoffline</artifactId>
+			<artifactId>granite-xeps-msgoffline</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>com.firstlinecode.granite.lite.dba</artifactId>
+			<artifactId>granite-lite-dba</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>com.firstlinecode.granite.lite.auth</artifactId>
+			<artifactId>granite-lite-session</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>com.firstlinecode.granite.lite.session</artifactId>
+			<artifactId>granite-lite-integration</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>com.firstlinecode.granite.lite.integration</artifactId>
+			<artifactId>granite-lite-auth</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>com.firstlinecode.granite.lite.leps.im</artifactId>
+			<artifactId>granite-lite-im</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>com.firstlinecode.granite.lite.xeps.disco</artifactId>
+			<artifactId>granite-lite-xeps-disco</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>com.firstlinecode.granite.lite.xeps.muc</artifactId>
+			<artifactId>granite-lite-xeps-muc</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>com.firstlinecode.granite.lite.xeps.msgoffline</artifactId>
+			<artifactId>granite-lite-xeps-msgoffline</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>com.firstlinecode.granite.lite.xeps.ibr</artifactId>
+			<artifactId>granite-lite-xeps-ibr</artifactId>
 		</dependency>
 	</dependencies>
 	

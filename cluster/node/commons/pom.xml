@@ -11,11 +11,6 @@
         <version>0.2.1.RELEASE</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    
-	<properties>
-		<bundle.symbolicName>com.firstlinecode.granite.cluster.node.commons</bundle.symbolicName>
-		<bundle.namespace>com.firstlinecode.granite.cluster.node.commons</bundle.namespace>
-	</properties>
 	
 	<groupId>com.firstlinecode.granite.cluster.node</groupId>
 	<artifactId>granite-cluster-node-commons</artifactId>

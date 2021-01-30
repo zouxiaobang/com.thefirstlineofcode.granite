@@ -13,22 +13,23 @@ import org.apache.mina.filter.codec.ProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolDecoderException;
 import org.apache.mina.filter.codec.ProtocolEncoder;
 import org.apache.mina.filter.executor.ExecutorFilter;
+import org.apache.mina.filter.executor.OrderedThreadPoolExecutor;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.firstlinecode.basalt.oxm.IOxmFactory;
+import com.firstlinecode.basalt.oxm.OxmService;
+import com.firstlinecode.basalt.oxm.binary.IBinaryXmppProtocolConverter;
+import com.firstlinecode.basalt.oxm.preprocessing.IMessagePreprocessor;
 import com.firstlinecode.basalt.protocol.Constants;
 import com.firstlinecode.basalt.protocol.core.JabberId;
 import com.firstlinecode.basalt.protocol.core.stanza.error.BadRequest;
 import com.firstlinecode.basalt.protocol.core.stream.Stream;
 import com.firstlinecode.basalt.protocol.core.stream.error.ConnectionTimeout;
 import com.firstlinecode.basalt.protocol.core.stream.error.InvalidXml;
-import com.firstlinecode.basalt.oxm.IOxmFactory;
-import com.firstlinecode.basalt.oxm.OxmService;
-import com.firstlinecode.basalt.oxm.binary.IBinaryXmppProtocolConverter;
-import com.firstlinecode.basalt.oxm.preprocessing.IMessagePreprocessor;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.commons.osgi.IBundleContextAware;
@@ -135,13 +136,21 @@ public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMe
 			decoder = new MessageDecoder();
 		}
 		acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(encoder, decoder));
-		acceptor.getFilterChain().addLast("exceutor", new ExecutorFilter(16, numberOfProcessors * 16));
+		acceptor.getFilterChain().addLast("exceutor", createExecutorFilter());
 		
 		acceptor.setHandler(this);
 		acceptor.getSessionConfig().setIdleTime(IdleStatus.READER_IDLE, connectionTimeout);
 		acceptor.bind(getInetSocketAddress());
 		
 		logger.info("Socket message receiver has binded on port {}.", port);
+	}
+
+	private ExecutorFilter createExecutorFilter() {
+		ExecutorFilter executorFilter = new ExecutorFilter();
+		OrderedThreadPoolExecutor executor = (OrderedThreadPoolExecutor)executorFilter.getExecutor();
+		executor.setMaximumPoolSize(numberOfProcessors * 16);
+		executor.setCorePoolSize(16);
+		return executorFilter;
 	}
 
 	protected InetSocketAddress getInetSocketAddress() {

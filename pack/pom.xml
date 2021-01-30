@@ -11,13 +11,13 @@
 	</parent>
 
 	<groupId>com.firstlinecode.granite</groupId>
-	<artifactId>com.firstlinecode.granite.pack</artifactId>
+	<artifactId>pack</artifactId>
 	<packaging>pom</packaging>
-	<name>Granite Pack Tools</name>
+	<name>Granite pack tools</name>
 
 	<modules>
-		<module>com.firstlinecode.granite.pack.lite</module>
-		<module>com.firstlinecode.granite.pack.cluster.mgtnode</module>
+		<module>lite</module>
+		<!--<module>cluster-mgtnode</module>-->
 	</modules>
 	
 </project>
