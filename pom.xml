@@ -278,11 +278,11 @@
 	</profiles>
 
 	<pluginRepositories>
-		<!--<pluginRepository>
+		<pluginRepository>
                         <id>jcenter</id>
                         <name>JCenter Repository</name>
                         <url>https://jcenter.bintray.com/</url>
-		</pluginRepository> -->
+		</pluginRepository>
 		<pluginRepository>
 			<id>central</id>
 			<name>Maven Central Repository</name>
