@@ -14,6 +14,7 @@
 	
 	<groupId>com.firstlinecode.granite.pack</groupId>
 	<artifactId>granite-pack-lite</artifactId>
+	<name>Granite deploy lite packer</name>
 	
 	<dependencies>
 		<dependency>

@@ -7,13 +7,13 @@
 	
 	<parent>
 		<groupId>com.firstlinecode.granite</groupId>
-		<artifactId>com.firstlinecode.granite.pack</artifactId>
+		<artifactId>pack</artifactId>
 		<version>0.2.1.RELEASE</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
 	<groupId>com.firstlinecode.granite.pack.cluster.mgtnode</groupId>
-	<artifactId>com.firstlinecode.granite.pack.cluster.mgtnode.repository</artifactId>
+	<artifactId>granite-pack-cluster-mgtnode-repository</artifactId>
 	
 	<dependencies>
 		<dependency>
@@ -54,51 +54,51 @@
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
-			<artifactId>com.firstlinecode.granite.framework.parsing</artifactId>
+			<artifactId>granite-framework-parsing</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
-			<artifactId>com.firstlinecode.granite.framework.processing</artifactId>
+			<artifactId>granite-framework-processing</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
-			<artifactId>com.firstlinecode.granite.framework.event</artifactId>
+			<artifactId>granite-framework-event</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
-			<artifactId>com.firstlinecode.granite.framework.routing</artifactId>
+			<artifactId>granite-framework-routing</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.xeps</groupId>
-			<artifactId>com.firstlinecode.granite.xeps.ibr</artifactId>
+			<artifactId>granite-xeps-ibr</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.xeps</groupId>
-			<artifactId>com.firstlinecode.granite.xeps.ping</artifactId>
+			<artifactId>granite-xeps-ping</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.cluster</groupId>
-			<artifactId>com.firstlinecode.granite.cluster.session</artifactId>
+			<artifactId>granite-cluster-session</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.cluster</groupId>
-			<artifactId>com.firstlinecode.granite.cluster.integration</artifactId>
+			<artifactId>granite-cluster-integration</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.cluster</groupId>
-			<artifactId>com.firstlinecode.granite.cluster.dba</artifactId>
+			<artifactId>granite-cluster-dba</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.cluster</groupId>
-			<artifactId>com.firstlinecode.granite.cluster.auth</artifactId>
+			<artifactId>granite-cluster-auth</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.cluster</groupId>
-			<artifactId>com.firstlinecode.granite.cluster.xeps.ibr</artifactId>
+			<artifactId>granite-cluster-xeps-ibr</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.cluster</groupId>
-			<artifactId>com.firstlinecode.granite.cluster.im</artifactId>
+			<artifactId>granite-cluster-im</artifactId>
 		</dependency>
 	</dependencies>
 	

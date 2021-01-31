@@ -4,35 +4,33 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>com.firstlinecode.granite</groupId>
-		<artifactId>com.firstlinecode.granite</artifactId>
+		<artifactId>pack</artifactId>
 		<version>0.2.1.RELEASE</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
-	<groupId>com.firstlinecode.granite.pack.cluster</groupId>
-	<artifactId>com.firstlinecode.granite.pack.cluster.gem</artifactId>
-	
-	<dependencies>
-		<dependency>
-			<groupId>com.firstlinecode.gem.server</groupId>
-			<artifactId>com.firstlinecode.gem.server.bxmpp</artifactId>
-		</dependency>
-	</dependencies>
+	<groupId>com.firstlinecode.granite.pack</groupId>
+	<artifactId>granite-pack-cluster-mgtnode</artifactId>
+	<name>Granite deploy cluster mgtnode packer</name>
 	
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.0.1</version>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
 				<configuration>
-					<outputDirectory>${project.build.directory}/dependencies</outputDirectory>
+					<archive>
+						<manifest>
+							<mainClass>com.firstlinecode.granite.pack.cluster.mgtnode.Main</mainClass>
+						</manifest>
+					</archive>
 				</configuration>
 			</plugin>
 		</plugins>
+	</build>
 
-	</build>	
 </project>
