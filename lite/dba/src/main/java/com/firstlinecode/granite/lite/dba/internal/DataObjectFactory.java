@@ -101,7 +101,7 @@ public class DataObjectFactory implements IDataObjectFactory {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	private <K, V extends K> V doCreate(Class<K> clazz) throws InstantiationException, IllegalAccessException {
 		DataObjectMapping objectMapping = objectMappings.get(clazz);
 		if (objectMapping == null) {

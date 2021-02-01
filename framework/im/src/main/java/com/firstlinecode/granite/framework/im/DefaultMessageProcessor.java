@@ -95,6 +95,7 @@ public class DefaultMessageProcessor implements IMessageProcessor, IBundleContex
 		return allProcessors;
 	}
 
+	@SuppressWarnings("deprecation")
 	private IMessageProcessor registerMessageProcessor(Bundle bundle, String contribution) throws ClassNotFoundException,
 			InstantiationException, IllegalAccessException {
 		Class<?> clazz = bundle.loadClass(contribution);

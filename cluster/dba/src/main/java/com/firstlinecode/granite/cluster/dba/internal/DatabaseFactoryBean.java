@@ -141,6 +141,7 @@ public class DatabaseFactoryBean implements BundleContextAware, FactoryBean<Mong
 			this.database = database;
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public void found(Bundle bundle, String contribution) throws Exception {
 			Class<?> clazz = null;

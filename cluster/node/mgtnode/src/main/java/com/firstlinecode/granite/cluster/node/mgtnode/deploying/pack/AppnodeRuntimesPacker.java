@@ -244,6 +244,7 @@ public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
 		return (dependedModules == null || dependedModules.length == 0) ? null : dependedModules;
 	}
 
+	@SuppressWarnings("deprecation")
 	private IPackConfigurator getConfigurator(String sConfigurator) {
 		if (sConfigurator == null)
 			return null;

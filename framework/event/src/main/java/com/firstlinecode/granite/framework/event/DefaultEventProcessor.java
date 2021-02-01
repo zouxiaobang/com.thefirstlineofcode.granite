@@ -131,7 +131,7 @@ public class DefaultEventProcessor implements IMessageProcessor, IBundleContextA
 	
 	private class EventListenersContributionTracker implements IContributionTracker {
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings({ "unchecked", "deprecation" })
 		@Override
 		public synchronized void found(Bundle bundle, String contribution) throws Exception {
 			StringTokenizer tokenizer = new StringTokenizer(contribution, SEPARATOR_COMPONENTS);

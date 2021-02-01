@@ -98,6 +98,7 @@ public class DefaultIqResultProcessor implements IIqResultProcessor, IBundleCont
 		sortedIqResultProcessors = sortIqResultProcessors(getAllProcessors());
 	}
 	
+	@SuppressWarnings("deprecation")
 	private IIqResultProcessor registerIqResultProcessor(Bundle bundle, String contribution) throws ClassNotFoundException,
 			InstantiationException, IllegalAccessException {
 		Class<?> clazz = bundle.loadClass(contribution);

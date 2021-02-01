@@ -659,7 +659,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 		return true;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	private <V, K extends Stanza> boolean doProcessXep(IProcessingContext context, Stanza stanza, Object xep) {
 		ProtocolChain protocolChain = getXepProtocolChain(stanza, xep);
 		BundleAndXepProcessorClass baxpc = bundleToXepProcessorClasses.get(protocolChain);		

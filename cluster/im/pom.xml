@@ -26,6 +26,10 @@
 			<artifactId>granite-framework-supports-spring</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>jsr250-api</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.firstlinecode.granite</groupId>
 			<artifactId>granite-im</artifactId>
 		</dependency>

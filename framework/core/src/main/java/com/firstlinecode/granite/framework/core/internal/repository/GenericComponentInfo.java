@@ -26,6 +26,7 @@ public final class GenericComponentInfo extends AbstractComponentInfo implements
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public Object doCreate() throws CreationException {
 		try {

@@ -429,6 +429,7 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 	
 	private class SessionListenersContributionTracker implements IContributionTracker {
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public void found(Bundle bundle, String contribution) throws Exception {
 			StringTokenizer st = new StringTokenizer(contribution, ",");

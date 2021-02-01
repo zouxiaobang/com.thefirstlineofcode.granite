@@ -88,6 +88,7 @@ public class DefaultPresenceProcessor implements IPresenceProcessor, IBundleCont
 		sortedPresenceProcessors = sortPresenceProcessors(getAllProcessors());
 	}
 	
+	@SuppressWarnings("deprecation")
 	private IPresenceProcessor registerPresenceProcessor(Bundle bundle, String contribution) throws ClassNotFoundException,
 			InstantiationException, IllegalAccessException {
 		Class<?> clazz = bundle.loadClass(contribution);

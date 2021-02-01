@@ -12,6 +12,16 @@ import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.firstlinecode.basalt.oxm.OxmService;
+import com.firstlinecode.basalt.oxm.annotation.AnnotatedParserFactory;
+import com.firstlinecode.basalt.oxm.convention.NamingConventionParserFactory;
+import com.firstlinecode.basalt.oxm.parsers.SimpleObjectParserFactory;
+import com.firstlinecode.basalt.oxm.parsers.core.stanza.IqParserFactory;
+import com.firstlinecode.basalt.oxm.parsers.error.ErrorParserFactory;
+import com.firstlinecode.basalt.oxm.parsers.error.StanzaErrorDetailsParserFactory;
+import com.firstlinecode.basalt.oxm.parsing.FlawedProtocolObject;
+import com.firstlinecode.basalt.oxm.parsing.IParserFactory;
+import com.firstlinecode.basalt.oxm.parsing.IParsingFactory;
 import com.firstlinecode.basalt.protocol.core.IError;
 import com.firstlinecode.basalt.protocol.core.Protocol;
 import com.firstlinecode.basalt.protocol.core.ProtocolChain;
@@ -24,16 +34,6 @@ import com.firstlinecode.basalt.protocol.core.stream.error.InternalServerError;
 import com.firstlinecode.basalt.protocol.core.stream.error.InvalidFrom;
 import com.firstlinecode.basalt.protocol.core.stream.error.StreamError;
 import com.firstlinecode.basalt.protocol.im.stanza.Message;
-import com.firstlinecode.basalt.oxm.OxmService;
-import com.firstlinecode.basalt.oxm.annotation.AnnotatedParserFactory;
-import com.firstlinecode.basalt.oxm.convention.NamingConventionParserFactory;
-import com.firstlinecode.basalt.oxm.parsers.SimpleObjectParserFactory;
-import com.firstlinecode.basalt.oxm.parsers.core.stanza.IqParserFactory;
-import com.firstlinecode.basalt.oxm.parsers.error.ErrorParserFactory;
-import com.firstlinecode.basalt.oxm.parsers.error.StanzaErrorDetailsParserFactory;
-import com.firstlinecode.basalt.oxm.parsing.FlawedProtocolObject;
-import com.firstlinecode.basalt.oxm.parsing.IParserFactory;
-import com.firstlinecode.basalt.oxm.parsing.IParsingFactory;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.commons.osgi.IBundleContextAware;
 import com.firstlinecode.granite.framework.core.commons.osgi.IContributionTracker;
@@ -46,8 +46,8 @@ import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
 import com.firstlinecode.granite.framework.core.integration.IMessage;
 import com.firstlinecode.granite.framework.core.integration.IMessageProcessor;
-import com.firstlinecode.granite.framework.core.supports.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
+import com.firstlinecode.granite.framework.core.supports.IApplicationComponentService;
 
 @Component("minimum.message.parsing.processor")
 public class MinimumMessageParsingProcessor implements IMessageProcessor, IBundleContextAware,
@@ -129,6 +129,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IBundl
 	
 	private class PreprocessorsTracker implements IContributionTracker {
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public void found(Bundle bundle, String contribution) throws Exception {
 			StringTokenizer tokenizer = new StringTokenizer(contribution, SEPARATOR_PREPROCESSORS);
@@ -143,7 +144,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IBundl
 							preprocessorClass.getName(), IPipePreprocessor.class.getName()));
 				}
 				
-				IPipePreprocessor preprocessor = (IPipePreprocessor)preprocessorClass.newInstance();
+				IPipePreprocessor preprocessor = ((IPipePreprocessor)preprocessorClass.newInstance());
 				
 				appComponentService.inject(preprocessor, bundleContext);
 				
@@ -164,7 +165,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IBundl
 	
 	private class ParsersTracker implements IContributionTracker {
 
-		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 		@Override
 		public void found(Bundle bundle, String contribution) throws Exception {
 			StringTokenizer tokenizer = new StringTokenizer(contribution, SEPARATOR_PARSERS);
