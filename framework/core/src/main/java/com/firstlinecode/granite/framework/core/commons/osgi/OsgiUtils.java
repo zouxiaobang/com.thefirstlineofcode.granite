@@ -197,7 +197,6 @@ public class OsgiUtils {
         }
     }
 
-    @SuppressWarnings("deprecation")
 	public static <T> T createInstance(Bundle bundle, String className) throws ClassNotFoundException, InstantiationException,
             IllegalAccessException {
         @SuppressWarnings("unchecked")

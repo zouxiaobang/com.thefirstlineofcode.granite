@@ -142,7 +142,7 @@ public class ApplicationService implements IComponentCollector, IApplicationComp
 	private class DataObjectFactory implements IDataObjectFactory {
 		private volatile IDataObjectFactory impl;
 
-		@SuppressWarnings({ "unchecked", "deprecation" })
+		@SuppressWarnings("unchecked")
 		@Override
 		public <K, V extends K> V create(Class<K> clazz) {
 			if (impl == null) {
@@ -380,7 +380,6 @@ public class ApplicationService implements IComponentCollector, IApplicationComp
 			this.componentId = componentId;
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		public void inject(Object object) {
 			Object component = null;
@@ -619,7 +618,6 @@ public class ApplicationService implements IComponentCollector, IApplicationComp
 			}
 		}
 
-		@SuppressWarnings("deprecation")
 		private Object doCreate() throws InstantiationException, IllegalAccessException {
 			Object component = type.newInstance();
 			inject(component, bundleContext);

@@ -20,7 +20,6 @@ public class FieldDependencyInfo extends AbstractDependencyInfo {
 		return String.format("Field Dependency[%s, %s, %s]", id, type, field);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void injectComponent(Object parent, Object component) {
 		boolean accessible = field.isAccessible();

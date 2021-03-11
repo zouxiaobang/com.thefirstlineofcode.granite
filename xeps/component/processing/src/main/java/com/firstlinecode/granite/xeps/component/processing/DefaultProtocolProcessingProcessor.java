@@ -464,7 +464,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 		throw new ProtocolException(new FeatureNotImplemented("feature delivering xep isn't implemented yet"));
 	}
 
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings("unchecked")
 	private <V, K extends Stanza> void doProcessXep(IProcessingContext context, Stanza stanza) {
 		ProtocolChain protocolChain = getFirstProtocolChain(stanza);
 		

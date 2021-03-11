@@ -129,7 +129,6 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IBundl
 	
 	private class PreprocessorsTracker implements IContributionTracker {
 
-		@SuppressWarnings("deprecation")
 		@Override
 		public void found(Bundle bundle, String contribution) throws Exception {
 			StringTokenizer tokenizer = new StringTokenizer(contribution, SEPARATOR_PREPROCESSORS);
@@ -165,7 +164,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IBundl
 	
 	private class ParsersTracker implements IContributionTracker {
 
-		@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		@Override
 		public void found(Bundle bundle, String contribution) throws Exception {
 			StringTokenizer tokenizer = new StringTokenizer(contribution, SEPARATOR_PARSERS);

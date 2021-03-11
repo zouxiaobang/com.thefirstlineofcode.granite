@@ -21,7 +21,7 @@ public class ListFieldDependencyInfo extends AbstractDependencyInfo {
 		return String.format("List Field Dependency[%s, %s, %s]", id, type, field);
 	}
 	
-	@SuppressWarnings({ "rawtypes", "deprecation" })
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void injectComponent(Object parent, Object component) {
 		boolean accessible = field.isAccessible();
