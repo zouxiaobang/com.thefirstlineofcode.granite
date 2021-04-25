@@ -25,6 +25,7 @@ public class MessageEncoder extends ProtocolEncoderAdapter {
 			} else {
 				out.write(IoBuffer.wrap(((String)message).getBytes(Constants.DEFAULT_CHARSET)));
 			}
+			out.flush();
 		}
 	}
 

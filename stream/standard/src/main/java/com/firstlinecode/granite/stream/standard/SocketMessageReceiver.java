@@ -126,7 +126,7 @@ public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMe
 			acceptor.getFilterChain().addLast("logger", new LoggingFilter());
 		}
 		
-		ProtocolEncoder encoder = new MessageEncoder();
+		ProtocolEncoder encoder;
 		ProtocolDecoder decoder;
 		if (bxmppProtocolConverter != null) {
 			encoder = new MessageEncoder(bxmppProtocolConverter);
@@ -243,8 +243,8 @@ public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMe
 	
 	@Override
 	public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Session idle[{}, {}].", session, status);
+		if (logger.isTraceEnabled()) {
+			logger.trace("Session idle[{}, {}].", session, status);
 		}
 		
 		session.write(STRING_CONNECTION_TIMEOUT).await(500);
@@ -257,16 +257,16 @@ public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMe
 	
 	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Message received[{}, {}].", session, message);
+		if (logger.isTraceEnabled()) {
+			logger.trace("Message received[{}, {}].", session, message);
 		}
 		messageProcessor.process(new SocketConnectionContext(session, localNodeIdProvider.getLocalNodeId()), new SimpleMessage(message));
 	}
 	
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Message sent[{}, {}].", session, message);
+		if (logger.isTraceEnabled()) {
+			logger.trace("Message sent[{}, {}].", session, message);
 		}
 	}
 	

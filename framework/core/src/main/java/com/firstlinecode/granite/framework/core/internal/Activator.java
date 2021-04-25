@@ -29,7 +29,7 @@ public class Activator implements BundleActivator {
 		
 		System.setProperty("granite.app.home", appConfiguration.getAppHome());
 		System.setProperty("granite.config.dir", appConfiguration.getConfigDir());
-		System.setProperty("granite.log.dir", appConfiguration.getConfigDir() + "/log");
+		System.setProperty("granite.logs.dirs", appConfiguration.getConfigDir() + "/logs");
 		configureLog(appConfiguration.getLogConfigurationFile(), appConfiguration.getApplicationNamespaces());
 		
 		System.setProperty("java.net.preferIPv4Stack", "true");
@@ -76,8 +76,10 @@ public class Activator implements BundleActivator {
 				configureSystemLogFile(lc, "logback_debug.xml");
 			} else if ("trace".equals(logLevel)) {
 				configureSystemLogFile(lc, "logback_trace.xml");
-			} else {
+			} else if ("info".equals(logLevel)) {
 				configureSystemLogFile(lc, "logback.xml");
+			} else {
+				throw new IllegalArgumentException("Unknown log level option. Only 'info', 'debug' or 'trace' is supported.");
 			}
 		} else {
 			configureSystemLogFile(lc, "logback.xml");

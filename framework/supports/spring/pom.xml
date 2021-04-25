@@ -25,7 +25,11 @@
 		<dependency>
 			<groupId>org.eclipse.gemini.blueprint</groupId>
 			<artifactId>gemini-blueprint-extender</artifactId>
-		</dependency>	
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.gemini.blueprint</groupId>
+			<artifactId>gemini-blueprint-extensions</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.eclipse.gemini.blueprint</groupId>
 			<artifactId>gemini-blueprint-core</artifactId>

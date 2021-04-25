@@ -429,7 +429,18 @@
 						<artifactId>org.eclipse.gemini.blueprint.io</artifactId>
 					</exclusion>
 				</exclusions>
-			</dependency>	
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.gemini.blueprint</groupId>
+				<artifactId>gemini-blueprint-extensions</artifactId>
+				<version>2.1.0.RELEASE</version>
+				<exclusions>
+					<exclusion>
+						<groupId>javax.inject</groupId>
+						<artifactId>javax.inject</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>			
 			<dependency>
 				<groupId>org.eclipse.gemini.blueprint</groupId>
 				<artifactId>gemini-blueprint-core</artifactId>

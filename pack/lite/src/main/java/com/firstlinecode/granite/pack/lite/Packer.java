@@ -20,6 +20,8 @@ public class Packer {
 	private static final String NAME_PREFIX_OSGI_BUNDLE = "org.eclipse.osgi-";
 	private static final String NAME_PREFIX_ECLIPSE_COMMON_BUNDLE = "org.eclipse.equinox.common-";
 	private static final String NAME_PREFIX_ECLIPSE_UPDATE_BUNDLE = "org.eclipse.update.configurator-";
+	private static final String NAME_PREFIX_GRANITE_FRAMEWORK_CORE = "granite-framework-core-";
+	
 	
 	private Options options;
 	
@@ -150,6 +152,13 @@ public class Packer {
 				eclipseUpdateBundleName = bundle.getName();
 			} else if (bundle.getName().startsWith(NAME_PREFIX_OSGI_BUNDLE)) {
 				continue;
+			} else if (bundle.getName().startsWith(NAME_PREFIX_GRANITE_FRAMEWORK_CORE)) {
+				bundlesReference.
+				append(",\\").
+				append("\r\n").
+				append("reference:file:plugins/").
+				append(bundle.getName()).
+				append("@3:start");
 			} else {
 				bundlesReference.
 					append(",\\").
@@ -193,7 +202,7 @@ public class Packer {
 		
 		return content.toString();
 	}
-
+	
 	private void writeBundleToZip(ZipOutputStream zos, File bundle) throws IOException {
 		if (bundle.getName().startsWith(NAME_PREFIX_OSGI_BUNDLE)) {
 			writeFileToZip(zos, options.getAppName() + "/" + bundle.getName(), bundle);
