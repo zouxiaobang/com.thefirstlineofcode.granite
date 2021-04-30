@@ -29,7 +29,7 @@ public class Activator implements BundleActivator {
 		
 		System.setProperty("granite.app.home", appConfiguration.getAppHome());
 		System.setProperty("granite.config.dir", appConfiguration.getConfigDir());
-		System.setProperty("granite.logs.dirs", appConfiguration.getConfigDir() + "/logs");
+		System.setProperty("granite.logs.dir", appConfiguration.getConfigDir() + "/logs");
 		configureLog(appConfiguration.getLogConfigurationFile(), appConfiguration.getApplicationNamespaces());
 		
 		System.setProperty("java.net.preferIPv4Stack", "true");
