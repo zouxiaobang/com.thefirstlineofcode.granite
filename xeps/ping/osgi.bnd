@@ -1,8 +1,0 @@
-#-----------------------------------------------------------------
-# Use this file to add customized Bnd instructions for the bundle
-#-----------------------------------------------------------------
-
-Granite-Xep-Processors: xep=iq->ping|urn:xmpp:ping;\
- class=com.firstlinecode.granite.xeps.ping.PingProcessor
-Granite-Component-Xep-Processors: xep=iq->ping|urn:xmpp:ping;\
- class=com.firstlinecode.granite.xeps.ping.PingProcessor
