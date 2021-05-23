@@ -7,7 +7,7 @@ import java.net.URL;
 import java.util.Arrays;
 
 public class Main {
-	private static final String DEFAULT_VERSION = "0.2.1.RELEASE";
+	private static final String DEFAULT_VERSION = "1.0.0.SNAPSHOT";
 	private static final String NAME_PREFIX_APP = "granite-lite-";
 	private static final String DEFAULT_SAND_PROJECT_NAME = "com.firstlinecode.sand";
 	

@@ -1,23 +1,9 @@
 package com.firstlinecode.granite.framework.core.commons.utils;
 
 import java.lang.annotation.Annotation;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
 
-
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-
-import com.firstlinecode.granite.framework.core.commons.osgi.IContributionTracker;
-import com.firstlinecode.granite.framework.core.commons.osgi.OsgiUtils;
-
-public class ContributionClassTrackHelper<T extends Annotation> implements IContributionTracker {
-	private static final String VALUE_ENABLE_CONTRIBUTION_SCAN = "true";
+public class ContributionClassTrackHelper<T extends Annotation> /*implements IContributionTracker*/ {
+/*	private static final String VALUE_ENABLE_CONTRIBUTION_SCAN = "true";
 	private static final char SEPARATOR_CLASS_NAME = '.';
 	private static final char SEPARATOR_PATH = '/';
 	private static final String SEPARATOR_PARAMETER_VALUE = ";";
@@ -103,7 +89,7 @@ public class ContributionClassTrackHelper<T extends Annotation> implements ICont
 					
 					T contributionAnnotation = clazz.getAnnotation(annotation);
 					if (contributionAnnotation != null) {
-						ContributionClass<T> cc = new ContributionClass<>(bundle.getBundleContext(), clazz, contributionAnnotation);
+						ContributionClass<T> cc = new ContributionClass<>(bundle.getPluginWrapper(), clazz, contributionAnnotation);
 						cc.setAnnotation(contributionAnnotation);
 						cc.setType(clazz);
 						
@@ -133,5 +119,5 @@ public class ContributionClassTrackHelper<T extends Annotation> implements ICont
 		for (ContributionClass<T> cc : contributionClasses) {
 			tracker.lost(cc);
 		}
-	}
+	}*/
 }

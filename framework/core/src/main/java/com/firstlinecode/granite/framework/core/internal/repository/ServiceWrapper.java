@@ -1,30 +1,29 @@
 package com.firstlinecode.granite.framework.core.internal.repository;
 
 import com.firstlinecode.granite.framework.core.IService;
-import com.firstlinecode.granite.framework.core.commons.osgi.IBundleContextAware;
-import com.firstlinecode.granite.framework.core.config.IApplicationConfiguration;
-import com.firstlinecode.granite.framework.core.config.IApplicationConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IConfigurationManager;
+import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
+import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
 import com.firstlinecode.granite.framework.core.repository.CreationException;
 import com.firstlinecode.granite.framework.core.repository.IComponentIdAware;
 import com.firstlinecode.granite.framework.core.repository.IComponentInfo;
 import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.repository.IServiceWrapper;
-import com.firstlinecode.granite.framework.core.repository.ISingletonHolder;
+import com.firstlinecode.granite.framework.core.repository.ISingletonComponentHolder;
 import com.firstlinecode.granite.framework.core.repository.ServiceCreationException;
 
 public class ServiceWrapper implements IServiceWrapper {
-	private IApplicationConfiguration appConfiguration;
+	private IServerConfiguration serverConfiguration;
 	private IConfigurationManager configurationManager;
 	private IComponentInfo componentInfo;
-	private ISingletonHolder singletonHolder;
+	private ISingletonComponentHolder singletonHolder;
 	
-	public ServiceWrapper(IApplicationConfiguration appConfiguration, IConfigurationManager configurationManager,
-			ISingletonHolder singletonHolder, IComponentInfo componentInfo) {
-		this.appConfiguration = appConfiguration;
+	public ServiceWrapper(IServerConfiguration serverConfiguration, IConfigurationManager configurationManager,
+			ISingletonComponentHolder singletonHolder, IComponentInfo componentInfo) {
+		this.serverConfiguration = serverConfiguration;
 		this.configurationManager = configurationManager;
 		this.singletonHolder = singletonHolder;
 		
@@ -73,12 +72,8 @@ public class ServiceWrapper implements IServiceWrapper {
 			}
 		}
 		
-		if (component instanceof IBundleContextAware) {
-			((IBundleContextAware)component).setBundleContext(componentInfo.getBundleContext());
-		}
-		
-		if (component instanceof IApplicationConfigurationAware) {
-			((IApplicationConfigurationAware)component).setApplicationConfiguration(appConfiguration);
+		if (component instanceof IServerConfigurationAware) {
+			((IServerConfigurationAware)component).setApplicationConfiguration(serverConfiguration);
 		}
 		
 		if (component instanceof IConfigurationAware) {

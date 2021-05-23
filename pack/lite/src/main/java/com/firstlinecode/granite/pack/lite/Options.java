@@ -7,7 +7,6 @@ public class Options {
 	private boolean cleanUpdate;
 	private String version;
 	private String[] modules;
-	private String appName;
 	private String targetDirPath;
 	private String graniteProjectDirPath;
 	private String sandProjectName;
@@ -16,6 +15,7 @@ public class Options {
 	private Protocol protocol;
 	private boolean commerical;
 	private boolean offline;
+	private String appName;
 	
 	public enum Protocol {
 		LEPS,
@@ -71,14 +71,6 @@ public class Options {
 
 	public void setModules(String[] bundles) {
 		this.modules = bundles;
-	}
-
-	public String getAppName() {
-		return appName;
-	}
-
-	public void setAppName(String appName) {
-		this.appName = appName;
 	}
 
 	public String getTargetDirPath() {
@@ -155,6 +147,14 @@ public class Options {
 
 	public void setOffline(boolean offline) {
 		this.offline = offline;
+	}
+
+	public String getAppName() {
+		return appName;
+	}
+
+	public void setAppName(String appName) {
+		this.appName = appName;
 	}
 	
 }

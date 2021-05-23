@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import com.firstlinecode.granite.framework.core.repository.AbstractDependencyInfo;
 import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
 
-
 public class ListFieldDependencyInfo extends AbstractDependencyInfo {
 	private Field field;
 

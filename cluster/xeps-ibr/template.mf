@@ -1,5 +1,0 @@
-Import-Template: org.springframework.*;version="[4.3.9,5)",
- com.mongodb.*;version="[3.5.0,4)",
- org.bson.*;version="[3.5.0,4)"
-Excluded-Exports: com.firstlinecode.granite.cluster.xeps.ibr.internal.*
-Excluded-Imports: com.firstlinecode.granite.cluster.xeps.ibr.*

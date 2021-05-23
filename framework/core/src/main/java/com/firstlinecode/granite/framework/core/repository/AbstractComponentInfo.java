@@ -3,20 +3,16 @@ package com.firstlinecode.granite.framework.core.repository;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.osgi.framework.BundleContext;
-
 public abstract class AbstractComponentInfo extends GenericRepositoryWare implements IComponentInfo {
 	protected List<IDependencyInfo> dependencies;
-	protected BundleContext bundleContext;
 	protected boolean singleton;
 	protected volatile Object instance;
 	private Object singletonLock = new Object();
 
-	public AbstractComponentInfo(String id, Class<?> type, BundleContext bundleContext, boolean singleton) {
+	public AbstractComponentInfo(String id, Class<?> type, boolean singleton) {
 		super(id, type);
 		
 		dependencies = new ArrayList<>();
-		this.bundleContext = bundleContext;
 		this.singleton = singleton;
 	}
 	
@@ -43,11 +39,6 @@ public abstract class AbstractComponentInfo extends GenericRepositoryWare implem
 		}
 		
 		return true;
-	}
-	
-	@Override
-	public BundleContext getBundleContext() {
-		return bundleContext;
 	}
 	
 	@Override

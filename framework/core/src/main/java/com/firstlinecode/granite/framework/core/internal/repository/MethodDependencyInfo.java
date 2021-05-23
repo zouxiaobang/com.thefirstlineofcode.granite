@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import com.firstlinecode.granite.framework.core.repository.AbstractDependencyInfo;
 import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
 
-
 public class MethodDependencyInfo extends AbstractDependencyInfo {
 	private Method method;
 	

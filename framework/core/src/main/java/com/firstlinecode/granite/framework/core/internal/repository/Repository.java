@@ -1,81 +1,66 @@
 package com.firstlinecode.granite.framework.core.internal.repository;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.Reader;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Dictionary;
+import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.Constants;
-import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.firstlinecode.granite.framework.core.IService;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
-import com.firstlinecode.granite.framework.core.commons.osgi.OsgiUtils;
-import com.firstlinecode.granite.framework.core.commons.utils.ContributionClass;
-import com.firstlinecode.granite.framework.core.commons.utils.ContributionClassTrackHelper;
-import com.firstlinecode.granite.framework.core.commons.utils.IContributionClassTracker;
 import com.firstlinecode.granite.framework.core.commons.utils.IoUtils;
-import com.firstlinecode.granite.framework.core.config.IApplicationConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationManager;
+import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.internal.config.LocalFileConfigurationManager;
-import com.firstlinecode.granite.framework.core.repository.IComponentCollector;
 import com.firstlinecode.granite.framework.core.repository.IComponentInfo;
-import com.firstlinecode.granite.framework.core.repository.IComponentQueryer;
 import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
-import com.firstlinecode.granite.framework.core.repository.IDestroyable;
 import com.firstlinecode.granite.framework.core.repository.IRepository;
 import com.firstlinecode.granite.framework.core.repository.IServiceListener;
 import com.firstlinecode.granite.framework.core.repository.IServiceWrapper;
-import com.firstlinecode.granite.framework.core.repository.ISingletonHolder;
+import com.firstlinecode.granite.framework.core.repository.ISingletonComponentHolder;
 
-public class Repository implements IRepository, IContributionClassTracker<Component>,
-			IComponentCollector, IComponentQueryer, ISingletonHolder {
-	private static final String KEY_GRANITE_COMPONENT_SCAN = "Granite-Component-Scan";
-	private static final String KEY_GRANITE_COMPONENT_SCAN_PATHS = "Granite-Component-Scan-Paths";
-	
+public class Repository implements IRepository, ISingletonComponentHolder {
+	private static final String CLASS_FILE_EXTENSION_NAME = ".class";
+
+	private static final String JAR_FILE_EXTENSION_NAME = ".jar";
+
 	private static final Logger logger = LoggerFactory.getLogger(Repository.class);
 	
-	private BundleContext bundleContext;
-	private List<IServiceListener> serviceListeners;
+	public static final String GRANITE_LIBRARY_NAME_PREFIX = "granite-";
+	public static final String SAND_LIBRARY_NAME_PREFIX = "sand-";
 	
-	private IApplicationConfiguration appConfiguration;
-	
+	private IServiceListener serviceListener;
+	private IServerConfiguration serverConfiguration;	
 	private Map<String, String[]> componentBindings;
-	
-	private Map<String, IComponentInfo> components;
-	
-	private List<String> availableServices;
-	
-	private IConfigurationManager configurationManager;
-	
-	private ContributionClassTrackHelper<Component> trackHelper;
-	
 	private Map<String, Object> singletons;
 	
-	private ServiceRegistration<IComponentCollector> srComponentCollector;
-	private ServiceRegistration<IRepository> srRepository;
+	private Map<String, IComponentInfo> components;
+	private List<String> availableServices;
+	private IConfigurationManager configurationManager;
 	
-	public Repository(BundleContext bundleContext, IApplicationConfiguration appConfiguration) {
-		this.bundleContext = bundleContext;
-		this.appConfiguration = appConfiguration;
-		
-		serviceListeners = new ArrayList<>();
-		
+	public Repository(IServerConfiguration serverConfiguration) {
+		this.serverConfiguration = serverConfiguration;
 		componentBindings = new HashMap<>();
 		
 		components = new HashMap<>();
@@ -88,42 +73,121 @@ public class Repository implements IRepository, IContributionClassTracker<Compon
 	public void init() {
 		readComponentBindings();
 		createConfigurationManager();
+		loadComponents();
+		processAvailableServices();
+	}
+	
+	private void loadComponents() {
+		File libsDir = new File(serverConfiguration.getSystemLibsDir());
+		if (!libsDir.exists() || !libsDir.isDirectory())
+			throw new IllegalArgumentException(String.format("Can't determine system libraries directory. %s doesn't exist or isn't a directory.", libsDir));
 		
-		trackHelper = new ContributionClassTrackHelper<>(bundleContext,
-				KEY_GRANITE_COMPONENT_SCAN, KEY_GRANITE_COMPONENT_SCAN_PATHS,
-					Component.class, this);
-		trackHelper.track();
-		
-		exportOsgiServices();
+		loadCoreComponents(libsDir);
+		loadCustomizedComponents(libsDir);
 	}
 
-	private void exportOsgiServices() {
-		Dictionary<String, Object> properties = new Hashtable<>();
-		properties.put(Constants.SERVICE_INTENTS, IRepository.GRANITE_FRAMEWORK_COMPONENT_COLLECTOR);
-		srComponentCollector = bundleContext.registerService(IComponentCollector.class, this, properties);
-		
-		srRepository = bundleContext.registerService(IRepository.class, this, null);
-	}
-
-	private void createConfigurationManager() {
-		String symbolicName = appConfiguration.getConfigurationManagerBundleSymbolicName();
-		String className = appConfiguration.getConfigurationManagerClass();
-		if (symbolicName != null && className != null) {
-			for (Bundle bundle : bundleContext.getBundles()) {
-				if (bundle.getSymbolicName().equals(symbolicName) && bundle.getState() != Bundle.ACTIVE) {
-					try {
-						bundle.start();
-						configurationManager = OsgiUtils.createInstance(bundle, className);
-					} catch (Exception e) {
-						throw new RuntimeException(e);
-					}
-					
-					break;
-				}
-			}
-		} else {
-			configurationManager = new LocalFileConfigurationManager(appConfiguration.getConfigDir());
+	private void loadCustomizedComponents(File libsDir) {
+		if (serverConfiguration.getCustomizedLibraries() == null ||
+				serverConfiguration.getCustomizedLibraries().length == 0) {
+			if (logger.isInfoEnabled())
+				logger.info("No customized libraries found.");
+			return;
 		}
+		
+		for (String library: serverConfiguration.getCustomizedLibraries()) {
+			File libraryFile = getLibraryFile(libsDir, library);
+			loadComponentsFromLibrary(libraryFile);			
+		}
+		
+		if (logger.isInfoEnabled()) {
+			logger.info("Components has loaded from customized libraries.");
+		}
+
+	}
+
+	private File getLibraryFile(File libsDir, String library) {
+		for (File child : libsDir.listFiles()) {
+			if (!child.isFile())
+				continue;
+			
+			String path = child.getPath();
+			if (path.startsWith(library) && path.endsWith(JAR_FILE_EXTENSION_NAME)) {
+				if (logger.isInfoEnabled())
+					logger.info("Cutomized library {} has be found. The library file name is {}.", library, path);
+				
+				return child;
+			}
+		}
+		
+		if (logger.isWarnEnabled())
+			logger.warn("Customized library {} hasn't be found. Please check your server configuration.");
+		
+		return null;
+	}
+
+	private void loadCoreComponents(File libsDir) {
+		File[] coreLibraryFiles = libsDir.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return (name.startsWith(GRANITE_LIBRARY_NAME_PREFIX) ||
+						name.startsWith(SAND_LIBRARY_NAME_PREFIX)) &&
+						name.endsWith(JAR_FILE_EXTENSION_NAME);
+			}
+		});
+		
+		for (File libraryFile : coreLibraryFiles) {
+			loadComponentsFromLibrary(libraryFile);
+		}
+		if (logger.isInfoEnabled()) {
+			logger.info("Components has loaded from core libraries.");
+		}
+	}
+	
+	private void loadComponentsFromLibrary(File libraryFile) {
+		Set<String> classNames = new HashSet<>();
+		JarFile jarFile = null;
+		try {
+			jarFile = new JarFile(libraryFile);
+			Enumeration<JarEntry> enumeration = jarFile.entries();
+			while (enumeration.hasMoreElements()) {
+				JarEntry entry = enumeration.nextElement();
+				String entryName = entry.getName();
+				if (!entryName.endsWith(CLASS_FILE_EXTENSION_NAME))
+					continue;
+				
+				String className = entryName.replaceAll("/", ".").substring(0, entryName.length() - 6);
+				classNames.add(className);
+			}
+			
+			classNames.forEach((sClass) -> {
+				try {
+					Class<?> clazz = Class.forName(sClass);
+					Annotation[] annotations = clazz.getAnnotations();
+					for (Annotation annotation : annotations) {
+						if (annotation instanceof Component) {
+							found(clazz, (Component)annotation);
+						}
+							
+					}
+				} catch (ClassNotFoundException e) {
+					if (logger.isWarnEnabled())
+						logger.warn("Can't load class[name: {}] from system library.", sClass, e);
+				}
+			});
+		} catch (IOException e) {
+			throw new RuntimeException(String.format("Failed to load components from library file %s.", libraryFile.getPath()), e);
+		} finally {
+			if (jarFile != null)
+				try {
+					jarFile.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
+	}
+	
+	private void createConfigurationManager() {
+		configurationManager = new LocalFileConfigurationManager(serverConfiguration.getConfigurationDir());
 		
 		if (configurationManager == null) {
 			throw new RuntimeException("Null configuration manager.");
@@ -135,11 +199,11 @@ public class Repository implements IRepository, IContributionClassTracker<Compon
 		Reader reader = null;
 		
 		try {
-			reader = new BufferedReader(new FileReader(appConfiguration.getComponentBindingProfile()));
+			reader = new BufferedReader(new FileReader(serverConfiguration.getComponentBindingProfile()));
 			properties.load(reader);
 		} catch (Exception e) {
 			throw new RuntimeException(String.format("Can't read component binding profile: %s.",
-					appConfiguration.getComponentBindingProfile()), e);
+					serverConfiguration.getComponentBindingProfile()), e);
 		} finally {
 			IoUtils.closeIO(reader);
 		}
@@ -161,39 +225,28 @@ public class Repository implements IRepository, IContributionClassTracker<Compon
 	}
 	
 	@Override
-	public void destroy() {
-		srRepository.unregister();
-		srComponentCollector.unregister();
-		
-		trackHelper.stopTrack();
+	public void setServiceListener(IServiceListener serviceListener) {
+		this.serviceListener = serviceListener;
 	}
 	
 	@Override
-	public void addServiceListener(IServiceListener listener) {
-		serviceListeners.add(listener);
-	}
-	
-	@Override
-	public void removeServiceListener(IServiceListener listener) {
-		serviceListeners.remove(listener);
+	public void removeServiceListener() {	
+		serviceListener = null;
 	}
 
-	@Override
-	public synchronized void found(ContributionClass<Component> cc) {
-		BundleContext bundleContext = cc.getBundleContext();
-		Class<?> clazz = cc.getType();
-		Component componentAnnotation = cc.getAnnotation();
+	public void found(Class<?> type, Component componentAnnotation) {
 		if (componentAnnotation != null) {
-			IComponentInfo componentInfo = new GenericComponentInfo(componentAnnotation.value(), clazz, bundleContext);
+			IComponentInfo componentInfo = new GenericComponentInfo(componentAnnotation.value(), type);
 			
 			if (components.containsKey(componentInfo.getId())) {
-				throw new RuntimeException(String.format("Component id[%s] has already existed.",
+				throw new RuntimeException(String.format("Reduplicated component. Component which's id is %s has already existed.",
 						componentInfo.getId()));
 			}
 			
-			logger.debug("Component {} found.", componentInfo);
+			if (logger.isDebugEnabled())
+				logger.debug("Component {} has found.", componentInfo.getId());
 			
-			scanDependencies(clazz, componentInfo);
+			scanDependencies(type, componentInfo);
 			
 			componentFound(componentInfo);
 			
@@ -225,15 +278,11 @@ public class Repository implements IRepository, IContributionClassTracker<Compon
 		return aliasComponents;
 	}
 
-	private void processAvailables(IComponentInfo componentInfo) {
-		if (componentInfo.isService() && !availableServices.contains(componentInfo.getId())) {
-			availableServiceFound(componentInfo);
-		} else {
-			for (IComponentInfo component : components.values()) {
-				if (component.isService() && component.isAvailable() &&
-						!availableServices.contains(component.getId())) {
-					availableServiceFound(component);
-				}
+	private void processAvailableServices() {
+		for (IComponentInfo component : components.values()) {
+			if (component.isService() && component.isAvailable() &&
+					!availableServices.contains(component.getId())) {
+				availableServiceFound(component);
 			}
 		}
 	}
@@ -243,11 +292,9 @@ public class Repository implements IRepository, IContributionClassTracker<Compon
 		
 		logger.info("Service {} is available.", componentInfo);
 		
-		IServiceWrapper serviceWrapper = new ServiceWrapper(appConfiguration, configurationManager,
+		IServiceWrapper serviceWrapper = new ServiceWrapper(serverConfiguration, configurationManager,
 				this, componentInfo);
-		for (IServiceListener listener : serviceListeners) {
-			listener.available(serviceWrapper);
-		}
+		serviceListener.available(serviceWrapper);
 	}
 
 	private void bindDependencies(IComponentInfo newComponent) {
@@ -432,83 +479,14 @@ public class Repository implements IRepository, IContributionClassTracker<Compon
 		
 		return false;
 	}
-	
-	@Override
-	public void lost(ContributionClass<Component> cc) {
-		String id = cc.getAnnotation().value();
-		componentLost(id);
-		
-		String[] alias = cc.getAnnotation().alias();
-		for (int i = 0; i < alias.length; i++) {
-			componentLost(alias[i]);
-		}
-	}
-	
-	private void unbindDependencies(IComponentInfo componentInfo) {
-		for (IComponentInfo component : components.values()) {
-			for (IDependencyInfo dependency : component.getDependencies()) {
-				for (IComponentInfo bindedComponent : dependency.getBindedComponents()) {
-					if (bindedComponent.equals(componentInfo)) {
-						dependency.removeBindedComponent(componentInfo);
-						break;
-					}
-				}
-			}
-		}
-	}
 
-	private void unavailableServiceFound(String serviceId) {
-		availableServices.remove(serviceId);
-		
-		for (IServiceListener listener : serviceListeners) {
-			listener.unavailable(serviceId);
-		}
-	}
-
-	@Override
-	public synchronized void componentFound(IComponentInfo componentInfo) {
+	public void componentFound(IComponentInfo componentInfo) {
 		bindDependencies(componentInfo);
-		
 		components.put(componentInfo.getId(), componentInfo);
-		
-		if (componentInfo.isAvailable()) {
-			processAvailables(componentInfo);
-		}
 	}
 
 	@Override
-	public synchronized void componentLost(String componentId) {
-		IComponentInfo component = components.get(componentId);
-		if (component.isService()) {
-			if (availableServices.contains(componentId)) {
-				unavailableServiceFound(componentId);
-			}
-		} else {
-			unbindDependencies(component);
-			
-			// find all unavailable services and remove them from available services list
-			List<String> unavailables = new ArrayList<>();
-			for (String serviceId : availableServices) {
-				IComponentInfo service = components.get(serviceId);
-				if (!service.isAvailable()) {
-					unavailables.add(serviceId);
-				}
-			}
-			
-			for (String serviceId : unavailables) {
-				unavailableServiceFound(serviceId);
-			}
-		}
-		
-		if (component instanceof IDestroyable) {
-			((IDestroyable)component).destroy();
-		}
-		
-		components.remove(componentId);
-	}
-
-	@Override
-	public synchronized IComponentInfo[] getServices() {
+	public IComponentInfo[] getServices() {
 		List<IComponentInfo> services = new ArrayList<>();
 		
 		for (IComponentInfo ci : components.values()) {
@@ -521,12 +499,21 @@ public class Repository implements IRepository, IContributionClassTracker<Compon
 	}
 
 	@Override
-	public synchronized IComponentInfo getService(String serviceId) {
+	public IComponentInfo getService(String serviceId) {
 		if (serviceId == null)
 			throw new RuntimeException("Null service id.");
 		
-		for (IComponentInfo ci : getServices()) {
-			if (serviceId.equals(ci.getId()))
+		IComponentInfo service = getComponent(serviceId);
+		if (service instanceof IService)
+			return service;
+		
+		return null;
+	}
+	
+	@Override
+	public IComponentInfo getComponent(String componentId) {
+		for (IComponentInfo ci : getComponents()) {
+			if (componentId.equals(ci.getId()))
 				return ci;
 		}
 		
@@ -534,7 +521,7 @@ public class Repository implements IRepository, IContributionClassTracker<Compon
 	}
 
 	@Override
-	public synchronized IComponentInfo[] getComponents() {
+	public IComponentInfo[] getComponents() {
 		return components.values().toArray(new IComponentInfo[components.size()]);
 	}
 

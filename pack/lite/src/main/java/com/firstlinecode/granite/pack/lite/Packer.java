@@ -6,22 +6,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class Packer {
-	private static final String CONFIGURATION_DIR = "/configuration/com.firstlinecode.granite/";
+	public static final String CONFIGURATION_DIR = "configuration";
 	public static final String COMPONENT_BINDING_LITE_CONFIG_FILE = "component-binding-lite.ini";
 	private static final String SAND_COMPONENT_BINDING_LITE_CONFIG_FILE = "sand-component-binding-lite.ini";
-	private static final String APPLICATION_CONFIG_FILE = "application.ini";
-	private static final String SAND_APPLICATION_CONFIG_FILE = "sand-application.ini";
-	private static final String NAME_PREFIX_OSGI_BUNDLE = "org.eclipse.osgi-";
-	private static final String NAME_PREFIX_ECLIPSE_COMMON_BUNDLE = "org.eclipse.equinox.common-";
-	private static final String NAME_PREFIX_ECLIPSE_UPDATE_BUNDLE = "org.eclipse.update.configurator-";
-	private static final String NAME_PREFIX_GRANITE_FRAMEWORK_CORE = "granite-framework-core-";
-	
+	private static final String SERVER_CONFIG_FILE = "server.ini";
+	private static final String SAND_SERVER_CONFIG_FILE = "sand-server.ini";
 	
 	private Options options;
 	
@@ -31,32 +28,37 @@ public class Packer {
 	
 	public void pack() {
 		File dependencyDir = new File(options.getTargetDirPath(), "dependency");
-		deleteDependencies(dependencyDir);
+		deleteDependenciesDirectory(dependencyDir);
 		
 		copyDependencies();
 		
-		File zip = new File(options.getTargetDirPath(), options.getAppName() + ".zip");
+		String zipName = options.getAppName() + ".zip";
+		File zip = new File(options.getTargetDirPath(), zipName);
 		if (zip.exists()) {
-			System.out.println(String.format("Zip file %s has existed. delete it...", zip.getPath()));
+			System.out.println(String.format("Zip file %s has existed. delete it...", zipName));
 			if (!zip.delete())
-				throw new RuntimeException(String.format("Can't delete file %s.", zip.getPath()));
+				throw new RuntimeException(String.format("Can't delete file %s.", zipName));
 		}
 		
 		System.out.println(String.format("Create zip file %s...", zip.getName()));
-		File[] bundles = dependencyDir.listFiles();
+		
 		ZipOutputStream zos = null;
 		try {
+			File basicServerZip = getBasicServerZip();
 			zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zip)));
 			
-			for (File bundle : bundles) {
-				writeBundleToZip(zos, bundle);
-			}
+			copyBasicServerToZip(basicServerZip, zos);
 			
-			writeConfigIniFileToZip(zos, bundles);
+			File[] plugins = dependencyDir.listFiles();
+			if (plugins != null && plugins.length > 0) {
+				for (File plugin : plugins) {
+					writeToPlugins(zos, plugin);
+				}
+			}
 			
 			writeGraniteConfigFilesToZip(options.getTargetDirPath(), zos);
 			
-			System.out.println(String.format("Zip file %s has created.", zip.getName()));
+			System.out.println(String.format("Zip file %s has created.", zipName));
 		} catch (Exception e) {
 			throw new RuntimeException("Can't create granite lite package.", e);
 		} finally {
@@ -70,7 +72,88 @@ public class Packer {
 		}
 	}
 
-	private void deleteDependencies(File dependencyDir) {
+	private void copyBasicServerToZip(File basicServerZip, ZipOutputStream zos) {		
+		ZipInputStream zis = null;
+		try {
+			zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(basicServerZip)));
+			ZipEntry entry = null;
+			while ((entry = zis.getNextEntry()) != null) {
+				writeEntryToZip(zis, zos, entry);
+			}
+		} catch (IOException e) {
+			throw new RuntimeException("Can't copy basic server to zip file.", e);
+		} finally {
+			if (zis != null)
+				try {
+					zis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
+	}
+
+	private void writeEntryToZip(ZipInputStream zis, ZipOutputStream zos, ZipEntry inEntry) throws IOException {
+		ZipEntry outEntry = getOutEntry(inEntry);
+		zos.putNextEntry(outEntry);
+		
+		int buffSize = 2048;
+		byte[] buff = new byte[buffSize];
+		int length = 0;
+		while ((length = zis.read(buff, 0, buffSize)) != -1) {
+			zos.write(buff, 0, length);			
+		}
+	}
+
+	private ZipEntry getOutEntry(ZipEntry inEntry) {
+		ZipEntry outEntry = new ZipEntry(inEntry);
+		
+		Field nameField = null;
+		Boolean oldAccessiable = null;
+		try {			
+			nameField = ZipEntry.class.getDeclaredField("name");
+			oldAccessiable = nameField.isAccessible();
+			nameField.setAccessible(true);
+			nameField.set(outEntry, getOutEntryName(inEntry.getName()));			
+		} catch (Exception e) {
+			throw new RuntimeException("Can't change zip entry's name.", e);
+		} finally {
+			if (oldAccessiable != null) {
+				nameField.setAccessible(oldAccessiable);
+			}
+		}
+		
+		return outEntry;
+	}
+
+	private String getOutEntryName(String name) {
+		int slashIndex = name.indexOf('/', 1);
+		if (slashIndex == -1)
+			throw new IllegalArgumentException("Can't find two slash");
+		
+		return String.format("%s/%s", options.getAppName(), name.substring(slashIndex + 1));
+	}
+
+	private File getBasicServerZip() {
+		File serverDir = new File(options.getGraniteProjectDirPath(), "server");
+		if (!serverDir.exists() || !serverDir.isDirectory())
+			throw new RuntimeException("Can't determine granite server directory.");
+		
+		File serverTargetDir = new File(serverDir, "target");
+		Main.runMvn(serverDir, options.isOffline(), "clean", "package");
+		
+		if (!serverTargetDir.exists() || !serverTargetDir.isDirectory()) {
+			throw new RuntimeException("Can't determine target directory of Granite Server project.");
+		}
+		
+		for (File file : serverTargetDir.listFiles()) {
+			if (file.getName().endsWith(".zip"))
+				return file;
+		}
+		
+		throw new IllegalStateException("Server zip can't be found. Maybe you should build the server project first.");
+	}
+
+	private void deleteDependenciesDirectory(File dependencyDir) {
 		if (dependencyDir.exists()) {
 			System.out.println(String.format("Dependency directory %s has existed. Delete it...", dependencyDir.getPath()));
 			
@@ -113,17 +196,17 @@ public class Packer {
 		
 		for (File configFile : configFilesDir.listFiles()) {
 			if (options.getProtocol() != Options.Protocol.SAND) {
-				if (SAND_APPLICATION_CONFIG_FILE.equals(configFile.getName()) ||
+				if (SAND_SERVER_CONFIG_FILE.equals(configFile.getName()) ||
 						SAND_COMPONENT_BINDING_LITE_CONFIG_FILE.equals(configFile.getName()))
 					continue;
 				
-				writeFileToZip(zos, options.getAppName() + CONFIGURATION_DIR + configFile.getName(), configFile);
+				writeFileToZip(zos, String.format("/%s/%s/%s", options.getAppName(), CONFIGURATION_DIR, configFile.getName()), configFile);
 			} else {
-				if (APPLICATION_CONFIG_FILE.equals(configFile.getName()) ||
+				if (SERVER_CONFIG_FILE.equals(configFile.getName()) ||
 						COMPONENT_BINDING_LITE_CONFIG_FILE.equals(configFile.getName())) {
 					continue;
-				} else if (configFile.getName().equals(SAND_APPLICATION_CONFIG_FILE)) {					
-					writeFileToZip(zos, options.getAppName() + CONFIGURATION_DIR + APPLICATION_CONFIG_FILE, configFile);					
+				} else if (configFile.getName().equals(SAND_SERVER_CONFIG_FILE)) {					
+					writeFileToZip(zos, options.getAppName() + CONFIGURATION_DIR + SERVER_CONFIG_FILE, configFile);					
 				} else {
 					writeFileToZip(zos, options.getAppName() + CONFIGURATION_DIR + configFile.getName(), configFile);					
 				}
@@ -131,84 +214,9 @@ public class Packer {
 
 		}
 	}
-
-	private void writeConfigIniFileToZip(ZipOutputStream zos, File[] bundles) throws IOException {
-		try {
-			zos.putNextEntry(new ZipEntry(options.getAppName() + "/configuration/config.ini"));
-			zos.write(generateConfigIniFileContent(bundles).getBytes());
-		} finally {
-			zos.closeEntry();
-		}
-	}
-
-	private String generateConfigIniFileContent(File[] bundles) {
-		String eclipseCommonBundleName = null;
-		String eclipseUpdateBundleName = null;
-		StringBuilder bundlesReference = new StringBuilder();
-		for (File bundle : bundles) {
-			if (eclipseCommonBundleName == null && bundle.getName().startsWith(NAME_PREFIX_ECLIPSE_COMMON_BUNDLE)) {
-				eclipseCommonBundleName = bundle.getName();
-			} else if (eclipseUpdateBundleName == null && bundle.getName().startsWith(NAME_PREFIX_ECLIPSE_UPDATE_BUNDLE)) {
-				eclipseUpdateBundleName = bundle.getName();
-			} else if (bundle.getName().startsWith(NAME_PREFIX_OSGI_BUNDLE)) {
-				continue;
-			} else if (bundle.getName().startsWith(NAME_PREFIX_GRANITE_FRAMEWORK_CORE)) {
-				bundlesReference.
-				append(",\\").
-				append("\r\n").
-				append("reference:file:plugins/").
-				append(bundle.getName()).
-				append("@3:start");
-			} else {
-				bundlesReference.
-					append(",\\").
-					append("\r\n").
-					append("reference:file:plugins/").
-					append(bundle.getName()).
-					append("@start");
-			}
-		}
-		
-		if (eclipseCommonBundleName == null || eclipseUpdateBundleName == null) {
-			throw new RuntimeException("Eclipse common bundle or eclipse update bundle could not be found.");
-		}
-		
-		StringBuilder content = new StringBuilder();
-		content.
-			append("osgi.bundles=\\").
-			append("\r\n").
-			append("reference:file:plugins/").
-			append(eclipseCommonBundleName).append("@2:start").
-			append(",\\").
-			append("\r\n").
-			append("reference:file:plugins/").
-			append(eclipseUpdateBundleName).append("@3:start").
-			append(bundlesReference.toString());
-		
-		content.
-			append("\r\n").
-			append("eclipse.ignoreApp=true");
-		
-		content.
-			append("\r\n").
-			append("osgi.bundles.defaultStartLevel=4");
-		
-		// XPathFactory uses com.sun.org.apache.xpath.internal.jaxp.XPathFactoryImpl(in JDK) as default XPathFactory implementation
-		content.
-			append("\r\n").
-			append("org.osgi.framework.bootdelegation=com.sun.org.apache.xpath.internal.jaxp");
-		
-		content.append("\r\n");
-		
-		return content.toString();
-	}
 	
-	private void writeBundleToZip(ZipOutputStream zos, File bundle) throws IOException {
-		if (bundle.getName().startsWith(NAME_PREFIX_OSGI_BUNDLE)) {
-			writeFileToZip(zos, options.getAppName() + "/" + bundle.getName(), bundle);
-		} else {
-			writeFileToZip(zos, options.getAppName() + "/plugins/" + bundle.getName(), bundle);
-		}
+	private void writeToPlugins(ZipOutputStream zos, File plugin) throws IOException {
+		writeFileToZip(zos, options.getAppName() + "/plugins/" + plugin.getName(), plugin);
 		
 	}
 	

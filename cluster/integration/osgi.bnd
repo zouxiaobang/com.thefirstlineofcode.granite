@@ -1,7 +1,0 @@
-#-----------------------------------------------------------------
-# Use this file to add customized Bnd instructions for the bundle
-#-----------------------------------------------------------------
-
-Bundle-Activator: com.firstlinecode.granite.cluster.integration.internal.Activator
-
-Granite-Component-Scan: true

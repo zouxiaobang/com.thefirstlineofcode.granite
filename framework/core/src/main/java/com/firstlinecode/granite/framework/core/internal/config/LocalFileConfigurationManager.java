@@ -17,6 +17,7 @@ import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationManager;
 import com.firstlinecode.granite.framework.core.config.PropertiesConfiguration;
 
+
 public class LocalFileConfigurationManager implements IConfigurationManager {
 	private static final String CONFIGURATION_FILE = "components.ini";
 	private static final Logger logger = LoggerFactory.getLogger(LocalFileConfigurationManager.class);

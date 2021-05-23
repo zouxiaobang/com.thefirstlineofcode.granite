@@ -10,28 +10,19 @@ import ch.qos.logback.core.spi.FilterReply;
 public class LogFilter extends TurboFilter {
 	private final static String GRANITE_LIBRARIES_NAMESPACE = "com.firstlinecode.granite.";
 	private final static String SAND_LIBRARIES_NAMESPACE = "com.firstlinecode.sand.";
-	private final static String PROPERTY_NAME_LOG_ENABLE_THIRDPARTIES = "granite.log.enable.thirdparties";
 	
-	private static boolean enableThirdParties = false;
-	
+	private boolean enableThirdpartyLogs = false;
 	private String[] applicationNamespaces;
 	
-	static {
-		String pEnableThirdParties = System.getProperty(PROPERTY_NAME_LOG_ENABLE_THIRDPARTIES);
-		
-		if (Boolean.valueOf(pEnableThirdParties)) {
-			enableThirdParties = true;
-		}
-	}
-	
-	public LogFilter(String[] applicationNamespaces) {
+	public LogFilter(String[] applicationNamespaces, boolean enableThirdpartyLogs) {
 		this.applicationNamespaces = applicationNamespaces;
+		this.enableThirdpartyLogs = enableThirdpartyLogs;
 	}
 	
 	@Override
 	public FilterReply decide(Marker marker, Logger logger, Level level,
 			String format, Object[] params, Throwable t) {
-		if (enableThirdParties)
+		if (enableThirdpartyLogs)
 			return FilterReply.NEUTRAL;
 		
 		if (logger.getName().startsWith(GRANITE_LIBRARIES_NAMESPACE) ||

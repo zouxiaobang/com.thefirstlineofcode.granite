@@ -1,21 +1,7 @@
 package com.firstlinecode.granite.framework.core.platform;
 
-import java.util.Stack;
-
-import org.eclipse.osgi.framework.console.CommandInterpreter;
-import org.eclipse.osgi.framework.console.CommandProvider;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleEvent;
-import org.osgi.framework.BundleException;
-import org.osgi.framework.BundleListener;
-
-import com.firstlinecode.granite.framework.core.repository.IComponentInfo;
-import com.firstlinecode.granite.framework.core.repository.IComponentQueryer;
-import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
-
-public class GraniteCommandProvider implements CommandProvider {
-	private static final String PARAM_CLOSE = "close";
+public class GraniteCommandProvider/* implements CommandProvider*/ {
+/*	private static final String PARAM_CLOSE = "close";
 
 	private static final String PARAM_COMPONENTS = "components";
 
@@ -261,5 +247,5 @@ public class GraniteCommandProvider implements CommandProvider {
 		
 		interpreter.print(sb);
 	}
-
+*/
 }
