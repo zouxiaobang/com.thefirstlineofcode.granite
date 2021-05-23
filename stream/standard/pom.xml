@@ -7,14 +7,13 @@
 	<parent>
 		<groupId>com.firstlinecode.granite</groupId>
 		<artifactId>granite-stream</artifactId>
-		<version>1.0.0.SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
 	<groupId>com.firstlinecode.granite.stream</groupId>
 	<artifactId>granite-stream-standard</artifactId>
 	<name>Granite stream standard implementation</name>
-	<packaging>bundle</packaging>
 	
 	<dependencies>
 		<dependency>

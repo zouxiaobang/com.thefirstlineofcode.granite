@@ -155,7 +155,7 @@
         			<artifactId>jcl-over-slf4j</artifactId>
         			<version>1.6.4</version>
       			</dependency>
-      			<dependency>
+			<dependency>
 				<groupId>org.bouncycastle</groupId>
 				<artifactId>bcprov-jdk15on</artifactId>
 				<version>1.49</version>
@@ -179,15 +179,15 @@
 			</dependency>
 			<!-- Baslat libraries -->
 			<dependency>
-        			<groupId>com.firstlinecode.basalt</groupId>
-        			<artifactId>basalt-xmpp-core</artifactId>
-        			<version>${basalt.version}</version>
-      			</dependency>
-      			<dependency>
-        			<groupId>com.firstlinecode.basalt</groupId>
-        			<artifactId>basalt-oxm</artifactId>
-        			<version>${basalt.version}</version>
-      			</dependency>
+				<groupId>com.firstlinecode.basalt</groupId>
+				<artifactId>basalt-xmpp-core</artifactId>
+				<version>${basalt.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.basalt</groupId>
+				<artifactId>basalt-oxm</artifactId>
+				<version>${basalt.version}</version>
+			</dependency>
 			<!-- Granite Libraries -->
 			<dependency>
         			<groupId>com.firstlinecode.granite.framework</groupId>
