@@ -1,63 +1,12 @@
 package com.firstlinecode.granite.stream.standard;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-
-import org.apache.mina.core.buffer.IoBuffer;
-import org.apache.mina.core.buffer.SimpleBufferAllocator;
-import org.apache.mina.core.service.IoHandlerAdapter;
-import org.apache.mina.core.session.IdleStatus;
-import org.apache.mina.core.session.IoSession;
-import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.mina.filter.codec.ProtocolDecoder;
-import org.apache.mina.filter.codec.ProtocolDecoderException;
-import org.apache.mina.filter.codec.ProtocolEncoder;
-import org.apache.mina.filter.executor.ExecutorFilter;
-import org.apache.mina.filter.executor.OrderedThreadPoolExecutor;
-import org.apache.mina.filter.logging.LoggingFilter;
-import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
-import org.osgi.framework.BundleContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.firstlinecode.basalt.oxm.IOxmFactory;
-import com.firstlinecode.basalt.oxm.OxmService;
-import com.firstlinecode.basalt.oxm.binary.IBinaryXmppProtocolConverter;
-import com.firstlinecode.basalt.oxm.preprocessing.IMessagePreprocessor;
-import com.firstlinecode.basalt.protocol.Constants;
-import com.firstlinecode.basalt.protocol.core.JabberId;
-import com.firstlinecode.basalt.protocol.core.stanza.error.BadRequest;
-import com.firstlinecode.basalt.protocol.core.stream.Stream;
-import com.firstlinecode.basalt.protocol.core.stream.error.ConnectionTimeout;
-import com.firstlinecode.basalt.protocol.core.stream.error.InvalidXml;
 import com.firstlinecode.granite.framework.core.annotations.Component;
-import com.firstlinecode.granite.framework.core.annotations.Dependency;
-import com.firstlinecode.granite.framework.core.commons.osgi.IBundleContextAware;
-import com.firstlinecode.granite.framework.core.commons.osgi.OsgiUtils;
-import com.firstlinecode.granite.framework.core.config.IApplicationConfiguration;
-import com.firstlinecode.granite.framework.core.config.IApplicationConfigurationAware;
-import com.firstlinecode.granite.framework.core.config.IConfiguration;
-import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
-import com.firstlinecode.granite.framework.core.connection.IClientConnectionContext;
-import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
-import com.firstlinecode.granite.framework.core.integration.IClientMessageProcessor;
-import com.firstlinecode.granite.framework.core.integration.IMessageProcessor;
-import com.firstlinecode.granite.framework.core.integration.SimpleMessage;
-import com.firstlinecode.granite.framework.core.repository.IInitializable;
-import com.firstlinecode.granite.framework.core.routing.ILocalNodeIdProvider;
-import com.firstlinecode.granite.framework.core.routing.IRouter;
-import com.firstlinecode.granite.framework.core.session.ISession;
-import com.firstlinecode.granite.framework.core.session.ISessionManager;
-import com.firstlinecode.granite.framework.stream.IClientMessageReceiver;
-import com.firstlinecode.granite.framework.stream.StreamConstants;
-import com.firstlinecode.granite.stream.standard.codec.MessageDecoder;
-import com.firstlinecode.granite.stream.standard.codec.MessageEncoder;
 
 @Component("socket.message.receiver")
-public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMessageReceiver,
+public class SocketMessageReceiver /*extends IoHandlerAdapter implements IClientMessageReceiver,
 			IApplicationConfigurationAware, IConfigurationAware, IBundleContextAware,
-				IInitializable {
-	private static final String DIR_NAME_SECURITY = "/security";
+				IInitializable*/ {
+/*	private static final String DIR_NAME_SECURITY = "/security";
 
 	private static final Logger logger = LoggerFactory.getLogger(SocketMessageReceiver.class);
 	
@@ -338,6 +287,6 @@ public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMe
 				messageFormat = Constants.NAMESPACE_XML;
 			}
 		}
-	}
+	}*/
 	
 }

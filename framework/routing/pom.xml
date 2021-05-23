@@ -13,18 +13,10 @@
     </parent>
 	
 	<groupId>com.firstlinecode.granite.framework</groupId>
-	<artifactId>granite-framework-stream</artifactId>
-	<name>Granite framework stream module</name>
+	<artifactId>granite-framework-routing</artifactId>
+	<name>Granite framework routing module</name>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-jdk15on</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcpkix-jdk15on</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.basalt</groupId>
 			<artifactId>basalt-oxm</artifactId>

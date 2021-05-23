@@ -155,16 +155,53 @@
         			<artifactId>jcl-over-slf4j</artifactId>
         			<version>1.6.4</version>
       			</dependency>
+      			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcprov-jdk15on</artifactId>
+				<version>1.49</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcpkix-jdk15on</artifactId>
+				<version>1.49</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.mina</groupId>
+				<artifactId>mina-core</artifactId>
+				<version>2.0.7</version>
+				<type>jar</type>
+				<exclusions>
+					<exclusion>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-api</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
 			<!-- Baslat libraries -->
 			<dependency>
         			<groupId>com.firstlinecode.basalt</groupId>
         			<artifactId>basalt-xmpp-core</artifactId>
         			<version>${basalt.version}</version>
       			</dependency>
+      			<dependency>
+        			<groupId>com.firstlinecode.basalt</groupId>
+        			<artifactId>basalt-oxm</artifactId>
+        			<version>${basalt.version}</version>
+      			</dependency>
 			<!-- Granite Libraries -->
 			<dependency>
         			<groupId>com.firstlinecode.granite.framework</groupId>
         			<artifactId>granite-framework-core</artifactId>
+        			<version>${granite.version}</version>
+      			</dependency>
+			<dependency>
+        			<groupId>com.firstlinecode.granite.framework</groupId>
+        			<artifactId>granite-framework-stream</artifactId>
+        			<version>${granite.version}</version>
+      			</dependency>
+			<dependency>
+        			<groupId>com.firstlinecode.granite.framework</groupId>
+        			<artifactId>granite-framework-processing</artifactId>
         			<version>${granite.version}</version>
       			</dependency>
 		</dependencies>
