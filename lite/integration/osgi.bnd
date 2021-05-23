@@ -1,7 +1,0 @@
-#-----------------------------------------------------------------
-# Use this file to add customized Bnd instructions for the bundle
-#-----------------------------------------------------------------
-
-Granite-Component-Scan: true
-Granite-Service-Exporter: com.firstlinecode.granite.lite.integration.ServiceExporter
-Granite-Service-Importer: com.firstlinecode.granite.lite.integration.ServiceImporter
