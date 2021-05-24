@@ -3,7 +3,7 @@ package com.firstlinecode.granite.framework.processing.internal;
 import com.firstlinecode.granite.framework.core.IService;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
-import com.firstlinecode.granite.framework.core.integration.IMessageReceiver;
+import com.firstlinecode.granite.framework.core.pipe.IMessageReceiver;
 
 @Component("processing.service")
 public class ProcessingService implements IService {

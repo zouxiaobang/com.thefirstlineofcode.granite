@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.framework.core.integration;
+package com.firstlinecode.granite.framework.core.pipe;
 
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.session.ISessionManager;

@@ -3,7 +3,7 @@ package com.firstlinecode.granite.framework.parsing.internal;
 import com.firstlinecode.granite.framework.core.IService;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
-import com.firstlinecode.granite.framework.core.integration.IMessageReceiver;
+import com.firstlinecode.granite.framework.core.pipe.IMessageReceiver;
 
 @Component("parsing.service")
 public class ParsingService implements IService {

@@ -7,7 +7,7 @@ import org.apache.mina.filter.ssl.SslFilter;
 
 import com.firstlinecode.basalt.protocol.core.JabberId;
 import com.firstlinecode.granite.framework.core.connection.IClientConnectionContext;
-import com.firstlinecode.granite.framework.core.integration.IMessage;
+import com.firstlinecode.granite.framework.core.pipe.IMessage;
 import com.firstlinecode.granite.framework.core.session.ValueWrapper;
 import com.firstlinecode.granite.framework.stream.security.TlsEnvironment;
 

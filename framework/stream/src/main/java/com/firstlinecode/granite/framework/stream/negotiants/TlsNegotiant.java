@@ -17,7 +17,7 @@ import com.firstlinecode.basalt.oxm.annotation.AnnotatedParserFactory;
 import com.firstlinecode.basalt.oxm.parsers.core.stream.tls.StartTlsParser;
 import com.firstlinecode.basalt.oxm.translators.SimpleObjectTranslatorFactory;
 import com.firstlinecode.granite.framework.core.connection.IClientConnectionContext;
-import com.firstlinecode.granite.framework.core.integration.IMessage;
+import com.firstlinecode.granite.framework.core.pipe.IMessage;
 
 public class TlsNegotiant extends InitialStreamNegotiant {
 	private static final Logger logger = LoggerFactory.getLogger(TlsNegotiant.class);

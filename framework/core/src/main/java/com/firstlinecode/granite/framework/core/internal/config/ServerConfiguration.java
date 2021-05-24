@@ -18,11 +18,10 @@ public class ServerConfiguration implements IServerConfiguration {
 	private static final String DIRECTORY_NAME_CONFIGURATION = "configuration";
 	private static final String DIRECTORY_NAME_LIBS = "libs";
 	private static final String DIRECTORY_NAME_PLUGINS = "plugins";
+	private static final String NAME_SERVER_CONFIG_FILE = "server.ini";
 
 	private static final Logger logger = LoggerFactory.getLogger(ServerConfiguration.class);
-	
-	private static final String NAME_SERVER_CONFIG_FILE = "server.ini";
-	
+		
 	private String domainName = "localhost";
 	private String[] domainAliasNames = new String[0];
 	private String messageFormat = Constants.MESSAGE_FORMAT_XML;

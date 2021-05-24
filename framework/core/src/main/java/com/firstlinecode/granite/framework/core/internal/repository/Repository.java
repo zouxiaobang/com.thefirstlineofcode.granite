@@ -32,6 +32,7 @@ import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.commons.utils.IoUtils;
 import com.firstlinecode.granite.framework.core.config.IConfigurationManager;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
+import com.firstlinecode.granite.framework.core.integration.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.internal.config.LocalFileConfigurationManager;
 import com.firstlinecode.granite.framework.core.repository.IComponentInfo;
 import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
@@ -42,13 +43,11 @@ import com.firstlinecode.granite.framework.core.repository.ISingletonComponentHo
 
 public class Repository implements IRepository, ISingletonComponentHolder {
 	private static final String CLASS_FILE_EXTENSION_NAME = ".class";
-
 	private static final String JAR_FILE_EXTENSION_NAME = ".jar";
-
-	private static final Logger logger = LoggerFactory.getLogger(Repository.class);
-	
 	public static final String GRANITE_LIBRARY_NAME_PREFIX = "granite-";
 	public static final String SAND_LIBRARY_NAME_PREFIX = "sand-";
+
+	private static final Logger logger = LoggerFactory.getLogger(Repository.class);
 	
 	private IServiceListener serviceListener;
 	private IServerConfiguration serverConfiguration;	
@@ -58,9 +57,12 @@ public class Repository implements IRepository, ISingletonComponentHolder {
 	private Map<String, IComponentInfo> components;
 	private List<String> availableServices;
 	private IConfigurationManager configurationManager;
+	private IApplicationComponentService applicationComponentService;
 	
-	public Repository(IServerConfiguration serverConfiguration) {
+	public Repository(IServerConfiguration serverConfiguration, IApplicationComponentService applicationComponentService) {
 		this.serverConfiguration = serverConfiguration;
+		this.applicationComponentService = applicationComponentService;
+		
 		componentBindings = new HashMap<>();
 		
 		components = new HashMap<>();
@@ -293,7 +295,7 @@ public class Repository implements IRepository, ISingletonComponentHolder {
 		logger.info("Service {} is available.", componentInfo);
 		
 		IServiceWrapper serviceWrapper = new ServiceWrapper(serverConfiguration, configurationManager,
-				this, componentInfo);
+				this, applicationComponentService, componentInfo);
 		serviceListener.available(serviceWrapper);
 	}
 

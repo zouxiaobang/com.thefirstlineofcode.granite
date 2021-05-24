@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import com.firstlinecode.granite.framework.core.IServer;
 import com.firstlinecode.granite.framework.core.IServerContext;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
+import com.firstlinecode.granite.framework.core.internal.integration.ApplicationComponentConfigurations;
+import com.firstlinecode.granite.framework.core.internal.integration.ApplicationComponentService;
 import com.firstlinecode.granite.framework.core.internal.repository.Repository;
 import com.firstlinecode.granite.framework.core.repository.IRepository;
 import com.firstlinecode.granite.framework.core.repository.IServiceListener;
@@ -18,6 +20,7 @@ public class Server implements IServer, IServiceListener {
 	private IServerConfiguration serverConfiguration;
 	private PluginManager pluginManager;
 	
+	private ApplicationComponentService appComponentService;
 	private IRepository repository;
 		
 	public Server(IServerConfiguration serverConfiguration, PluginManager pluginManager) {
@@ -30,23 +33,29 @@ public class Server implements IServer, IServiceListener {
 		/*pluginManager.loadPlugins();
 		pluginManager.startPlugins();*/
 		
-		repository = new Repository(serverConfiguration);
+		appComponentService = new ApplicationComponentService(pluginManager, readAppComponentConfigurations());
+		appComponentService.start();
+		
+		repository = new Repository(serverConfiguration, appComponentService);
 		repository.init();
 		
 		logger.info("Granite Server has Started");
 	}
 
+	private ApplicationComponentConfigurations readAppComponentConfigurations() {
+		return new ApplicationComponentConfigurations(serverConfiguration.getConfigurationDir());
+	}
+
 	@Override
 	public void stop() throws Exception {
-/*		pluginManager.stopPlugins();
-		pluginManager.unloadPlugins();*/
+		appComponentService.stop();
 		
 		logger.info("Granite Server has stopped.");
 	}
 
 	@Override
 	public IServerContext getContext() {
-		return new ServerContext(serverConfiguration, repository, pluginManager);
+		return new ServerContext(serverConfiguration, repository, appComponentService);
 	}
 
 	@Override

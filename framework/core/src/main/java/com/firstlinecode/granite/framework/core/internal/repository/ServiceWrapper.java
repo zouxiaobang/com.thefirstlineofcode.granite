@@ -6,6 +6,8 @@ import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IConfigurationManager;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
+import com.firstlinecode.granite.framework.core.integration.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.integration.IApplicationComponentServiceAware;
 import com.firstlinecode.granite.framework.core.repository.CreationException;
 import com.firstlinecode.granite.framework.core.repository.IComponentIdAware;
 import com.firstlinecode.granite.framework.core.repository.IComponentInfo;
@@ -20,12 +22,15 @@ public class ServiceWrapper implements IServiceWrapper {
 	private IConfigurationManager configurationManager;
 	private IComponentInfo componentInfo;
 	private ISingletonComponentHolder singletonHolder;
+	private IApplicationComponentService appComponentService;
 	
 	public ServiceWrapper(IServerConfiguration serverConfiguration, IConfigurationManager configurationManager,
-			ISingletonComponentHolder singletonHolder, IComponentInfo componentInfo) {
+			ISingletonComponentHolder singletonHolder,IApplicationComponentService appComponentService,
+				IComponentInfo componentInfo) {
 		this.serverConfiguration = serverConfiguration;
 		this.configurationManager = configurationManager;
 		this.singletonHolder = singletonHolder;
+		this.appComponentService = appComponentService;
 		
 		if (!componentInfo.isService()) {
 			throw new IllegalArgumentException(String.format("Component(id: %s) should be a service.",
@@ -73,7 +78,7 @@ public class ServiceWrapper implements IServiceWrapper {
 		}
 		
 		if (component instanceof IServerConfigurationAware) {
-			((IServerConfigurationAware)component).setApplicationConfiguration(serverConfiguration);
+			((IServerConfigurationAware)component).setServerConfiguration(serverConfiguration);
 		}
 		
 		if (component instanceof IConfigurationAware) {
@@ -83,6 +88,10 @@ public class ServiceWrapper implements IServiceWrapper {
 		
 		if (component instanceof IComponentIdAware) {
 			((IComponentIdAware)component).setComponentId(componentInfo.getId());
+		}
+		
+		if (component instanceof IApplicationComponentServiceAware) {
+			((IApplicationComponentServiceAware)component).setApplicationComponentService(appComponentService);
 		}
 		
 		if (component instanceof IInitializable) {

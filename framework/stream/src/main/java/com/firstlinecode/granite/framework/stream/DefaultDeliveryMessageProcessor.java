@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
-import com.firstlinecode.granite.framework.core.integration.IMessage;
-import com.firstlinecode.granite.framework.core.integration.IMessageProcessor;
+import com.firstlinecode.granite.framework.core.pipe.IMessage;
+import com.firstlinecode.granite.framework.core.pipe.IMessageProcessor;
 
 @Component("default.delivery.message.processor")
 public class DefaultDeliveryMessageProcessor implements IMessageProcessor {

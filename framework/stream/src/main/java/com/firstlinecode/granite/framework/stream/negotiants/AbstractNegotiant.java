@@ -3,7 +3,7 @@ package com.firstlinecode.granite.framework.stream.negotiants;
 import com.firstlinecode.basalt.protocol.core.stream.Stream;
 import com.firstlinecode.basalt.oxm.IOxmFactory;
 import com.firstlinecode.granite.framework.core.connection.IClientConnectionContext;
-import com.firstlinecode.granite.framework.core.integration.IMessage;
+import com.firstlinecode.granite.framework.core.pipe.IMessage;
 import com.firstlinecode.granite.framework.stream.IStreamNegotiant;
 
 public abstract class AbstractNegotiant implements IStreamNegotiant {

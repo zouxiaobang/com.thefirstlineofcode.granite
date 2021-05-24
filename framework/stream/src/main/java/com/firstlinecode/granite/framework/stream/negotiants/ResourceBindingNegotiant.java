@@ -20,7 +20,7 @@ import com.firstlinecode.basalt.oxm.parsers.core.stream.BindParser;
 import com.firstlinecode.basalt.oxm.translators.core.stanza.IqTranslatorFactory;
 import com.firstlinecode.basalt.oxm.translators.core.stream.BindTranslatorFactory;
 import com.firstlinecode.granite.framework.core.connection.IClientConnectionContext;
-import com.firstlinecode.granite.framework.core.integration.IMessage;
+import com.firstlinecode.granite.framework.core.pipe.IMessage;
 import com.firstlinecode.granite.framework.core.session.ISessionManager;
 import com.firstlinecode.granite.framework.stream.StreamConstants;
 
