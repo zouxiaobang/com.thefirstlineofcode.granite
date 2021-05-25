@@ -14,7 +14,7 @@
 	
 	<groupId>com.firstlinecode.granite.framework</groupId>
 	<artifactId>granite-framework-routing</artifactId>
-	<name>Granite framework routing module</name>
+	<name>Granite framework routing pipe stage</name>
 
 	<dependencies>
 		<dependency>

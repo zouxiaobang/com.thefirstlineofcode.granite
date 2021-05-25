@@ -66,7 +66,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 		loadContributedPreprocessors();
 	}
 	
-	private void loadContributedPreprocessors() {
+	protected void loadContributedPreprocessors() {
 		List<Class<? extends IPipePreprocessor>> preprocessorClasses = appComponentService.getExtensionClasses(IPipePreprocessor.class);
 		if (preprocessorClasses == null || preprocessorClasses.size() == 0) {
 			if (logger.isDebugEnabled())
@@ -82,7 +82,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 	}
 
 	@SuppressWarnings("rawtypes")
-	private void loadContributedProtocolParsers() {
+	protected void loadContributedProtocolParsers() {
 		List<Class<? extends IProtocolParserFactory>> parserFactoryClasses = appComponentService.getExtensionClasses(IProtocolParserFactory.class);
 		if (parserFactoryClasses == null || parserFactoryClasses.size() == 0) {
 			if (logger.isDebugEnabled())
@@ -93,33 +93,29 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 		
 		for (Class<? extends IProtocolParserFactory> parserFactoryClass : parserFactoryClasses) {
 			IProtocolParserFactory<?> parserFactory = appComponentService.createExtension(parserFactoryClass);
-			ProtocolChain protocolChain = parserFactory.getProtocolChain();
-			IParser<?> parser = parserFactory.createParser();
-			parsingFactory.register(protocolChain, createParserFactory(protocolChain, parser));
+			parsingFactory.register(parserFactory.getProtocolChain(), createParserFactoryAdapter(parserFactory));
 		}
 	}
 	
-	private <T> IParserFactory<T> createParserFactory(ProtocolChain protocolChain, IParser<T> parser) {
-		return new ExistingInstanceParserFactory<>(protocolChain, parser);
+	private <T> IParserFactory<T> createParserFactoryAdapter(IProtocolParserFactory<T> original) {
+		return new ParserFactoryAdapter<>(original);
 	}
 
-	private class ExistingInstanceParserFactory<T> implements IParserFactory<T> {
-		private ProtocolChain protocolChain;
-		private IParser<T> parser;
+	private class ParserFactoryAdapter<T> implements IParserFactory<T> {
+		private IProtocolParserFactory<T> original;
 		
-		public ExistingInstanceParserFactory(ProtocolChain protocolChain, IParser<T> parser) {
-			this.protocolChain = protocolChain;
-			this.parser = parser;
+		public ParserFactoryAdapter(IProtocolParserFactory<T> original) {
+			this.original = original;
 		}
 
 		@Override
 		public Protocol getProtocol() {
-			return protocolChain.get(protocolChain.size() - 1);
+			return original.getProtocolChain().get(original.getProtocolChain().size() - 1);
 		}
 
 		@Override
 		public IParser<T> create() {
-			return parser;
+			return original.createParser();
 		}
 		
 	}

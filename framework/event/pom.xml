@@ -14,7 +14,7 @@
 	
 	<groupId>com.firstlinecode.granite.framework</groupId>
 	<artifactId>granite-framework-event</artifactId>
-	<name>Granite framework event module</name>
+	<name>Granite framework event service</name>
 
 	<dependencies>
 		<dependency>

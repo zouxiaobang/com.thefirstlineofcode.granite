@@ -14,7 +14,7 @@
 	
 	<groupId>com.firstlinecode.granite.framework</groupId>
 	<artifactId>granite-framework-parsing</artifactId>
-	<name>Granite framework parsing module</name>
+	<name>Granite framework parsing pipe stage</name>
 
 	<dependencies>
 		<dependency>

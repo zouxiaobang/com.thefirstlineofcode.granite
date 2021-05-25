@@ -14,17 +14,17 @@
 	
 	<groupId>com.firstlinecode.granite.framework</groupId>
 	<artifactId>granite-framework-processing</artifactId>
-	<name>Granite framwork processing module</name>
+	<name>Granite framwork processing pipe stage</name>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
 			<artifactId>granite-framework-core</artifactId>
 		</dependency>
-		<!--<dependency>
-			<groupId>com.firstlinecode.granite.framework.supports</groupId>
-			<artifactId>granite-framework-supports-spring</artifactId>
-		</dependency>-->
+		<dependency>
+			<groupId>com.firstlinecode.basalt</groupId>
+			<artifactId>basalt-oxm</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

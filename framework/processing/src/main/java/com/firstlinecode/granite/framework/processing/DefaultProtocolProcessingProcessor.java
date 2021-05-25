@@ -1,38 +1,66 @@
 package com.firstlinecode.granite.framework.processing;
 
+import java.lang.reflect.UndeclaredThrowableException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.firstlinecode.basalt.oxm.parsing.FlawedProtocolObject;
+import com.firstlinecode.basalt.protocol.core.IError;
+import com.firstlinecode.basalt.protocol.core.JabberId;
+import com.firstlinecode.basalt.protocol.core.Protocol;
+import com.firstlinecode.basalt.protocol.core.ProtocolChain;
+import com.firstlinecode.basalt.protocol.core.ProtocolException;
+import com.firstlinecode.basalt.protocol.core.stanza.Iq;
+import com.firstlinecode.basalt.protocol.core.stanza.Stanza;
+import com.firstlinecode.basalt.protocol.core.stanza.error.BadRequest;
+import com.firstlinecode.basalt.protocol.core.stanza.error.FeatureNotImplemented;
+import com.firstlinecode.basalt.protocol.core.stanza.error.NotAllowed;
+import com.firstlinecode.basalt.protocol.core.stanza.error.ServiceUnavailable;
+import com.firstlinecode.basalt.protocol.core.stanza.error.StanzaError;
+import com.firstlinecode.basalt.protocol.core.stream.error.StreamError;
+import com.firstlinecode.basalt.protocol.im.stanza.Message;
+import com.firstlinecode.basalt.protocol.im.stanza.Presence;
 import com.firstlinecode.granite.framework.core.annotations.Component;
+import com.firstlinecode.granite.framework.core.annotations.Dependency;
+import com.firstlinecode.granite.framework.core.auth.IAuthenticator;
+import com.firstlinecode.granite.framework.core.commons.utils.CommonUtils;
+import com.firstlinecode.granite.framework.core.config.IConfiguration;
+import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
+import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
+import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
+import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
+import com.firstlinecode.granite.framework.core.event.EventProducer;
+import com.firstlinecode.granite.framework.core.event.IEventProducer;
+import com.firstlinecode.granite.framework.core.event.IEventProducerAware;
+import com.firstlinecode.granite.framework.core.integration.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.pipe.IMessage;
+import com.firstlinecode.granite.framework.core.pipe.IMessageChannel;
+import com.firstlinecode.granite.framework.core.repository.IInitializable;
+import com.firstlinecode.granite.framework.core.session.ValueWrapper;
 
 @Component("default.protocol.processing.processor")
-public class DefaultProtocolProcessingProcessor /*implements com.firstlinecode.granite.framework.core.integration.IMessageProcessor,
-		IConfigurationAware, IBundleContextAware, IInitializable, IApplicationConfigurationAware*/ {
+public class DefaultProtocolProcessingProcessor implements com.firstlinecode.granite.framework.core.pipe.IMessageProcessor,
+		IConfigurationAware, IInitializable, IServerConfigurationAware {
 	
-	/*private static final Logger logger = LoggerFactory.getLogger(DefaultProtocolProcessingProcessor.class);
+	private static final Logger logger = LoggerFactory.getLogger(DefaultProtocolProcessingProcessor.class);
 	
 	private static final String CONFIGURATION_KEY_STANZA_ERROR_ATTACH_SENDER_MESSAGE = "stanza.error.attach.sender.message";
 	private static final String CONFIGURATION_KEY_RELAY_UNKNOWN_NAMESPACE_IQ = "relay.unknown.namespace.iq";
-	
-	private static final String STANZA_TYPE_PRESENCE = "presence";
-	private static final String STANZA_TYPE_MESSAGE = "message";
-	private static final String STANZA_TYPE_IQ = "iq";
-	private static final String PROPERTY_NAME_CLASS = "class";
-	private static final String PROPERTY_NAME_XEP = "xep";
-	private static final String KEY_GRANITE_XEP_PROCESSORS = "Granite-Xep-Processors";
-	private static final String SEPARATOR_OF_COMPONENTS = ",";
-	private static final String SEPARATOR_OF_LOCALNAME_NAMESPACE = "|";
-	
-	protected BundleContext bundleContext;
 	
 	protected IPresenceProcessor presenceProcessor;
 	protected com.firstlinecode.granite.framework.processing.IMessageProcessor messageProcessor;
 	protected IIqResultProcessor iqResultProcessor;
 	
-	protected Map<ProtocolChain, BundleAndXepProcessorClass> bundleToXepProcessorClasses;
-	protected Map<Bundle, List<Xep>> bundleToXeps;
+	protected Map<ProtocolChain, IXepProcessor<?, ?>> singletonProcessores;
+	protected Map<ProtocolChain, IXepProcessorFactory<?, ?>> xepProcessorFactories;
 	
 	private boolean stanzaErrorAttachSenderMessage;
 	private boolean relayUnknownNamespaceIq;
-	
-	private IContributionTracker xepProcessorsTracker;
 	
 	private IApplicationComponentService appComponentService;
 	
@@ -48,152 +76,24 @@ public class DefaultProtocolProcessingProcessor /*implements com.firstlinecode.g
 	private JabberId[] domainAliases;
 	
 	public DefaultProtocolProcessingProcessor() {
-		bundleToXepProcessorClasses = new HashMap<>();
-		bundleToXeps = new HashMap<>();
-		
-		xepProcessorsTracker = new XepProcessorsContributionTracker();
+		xepProcessorFactories = new HashMap<>();
 	}
 
 	@Override
 	public synchronized void init() {
 		eventProducer = new EventProducer(eventMessageChannel);
-		OsgiUtils.trackContribution(bundleContext, KEY_GRANITE_XEP_PROCESSORS, xepProcessorsTracker);
+		loadContributedXepProcessors();
 	}
 	
-	@SuppressWarnings("unchecked")
-	private class XepProcessorsContributionTracker implements IContributionTracker {
-
-		@Override
-		public void found(Bundle bundle, String contribution) throws Exception {
-			StringTokenizer tokenizer = new StringTokenizer(contribution, SEPARATOR_OF_COMPONENTS);
-			
-			List<Xep> xeps = new ArrayList<>();
-			while (tokenizer.hasMoreTokens()) {
-				String processosrString = tokenizer.nextToken();
-				
-				Map<String, String> properties = CommonUtils.parsePropertiesString(processosrString,
-						new String[] {PROPERTY_NAME_XEP, PROPERTY_NAME_CLASS});
-				String sXep = properties.get(PROPERTY_NAME_XEP);
-				if (sXep == null) {
-					throw new IllegalArgumentException("Null xep[register processor].");
-				}
-				
-				Xep xep= parseXep(bundle, sXep);
-				
-				String sClass = properties.get(PROPERTY_NAME_CLASS);
-				if (sClass == null) {
-					throw new IllegalArgumentException("Null class[register processor].");
-				}
-				
-				Class<?> clazz = bundle.loadClass(sClass);
-				
-				if (!(IXepProcessor.class.isAssignableFrom(clazz))) {
-					throw new IllegalArgumentException(String.format("%s must implement %s[register processor].",
-							sClass, IXepProcessor.class));
-				}
-				
-				Class<IXepProcessor<?, ?>> processorClass = (Class<IXepProcessor<?, ?>>)clazz;
-				for (ProtocolChain protocolChain : xep.getProtocolChains()) {
-					bundleToXepProcessorClasses.put(protocolChain, new BundleAndXepProcessorClass(bundle, processorClass));
-				}
-				xeps.add(xep);
-			}
-			
-			bundleToXeps.put(bundle, xeps);
-			
-		}
-
-		@Override
-		public void lost(Bundle bundle, String contribution) throws Exception {
-			List<Xep> xeps = bundleToXeps.remove(bundle);
-			
-			if (xeps == null || xeps.isEmpty())
-				return;
-			
-			for (Xep xep : xeps) {
-				for (ProtocolChain chain : xep.getProtocolChains()) {
-					bundleToXepProcessorClasses.remove(chain);
-				}
-			}
-		}
-		
-	}
-	
-	private class BundleAndXepProcessorClass {
-		public Bundle bundle;
-		public Class<IXepProcessor<?, ?>> xepProcessorClass;
-		
-		public BundleAndXepProcessorClass(Bundle bundle, Class<IXepProcessor<?, ?>> xepProcessorClass) {
-			this.bundle = bundle;
-			this.xepProcessorClass = xepProcessorClass;
+	@SuppressWarnings("rawtypes")
+	protected void loadContributedXepProcessors() {
+		for (Class<? extends IXepProcessorFactory> processorFactoryClass : appComponentService.
+				getExtensionClasses(IXepProcessorFactory.class)) {
+			IXepProcessorFactory<?, ?> processorFactory = appComponentService.createExtension(processorFactoryClass);
+			xepProcessorFactories.put(processorFactory.getProtocolChain(), processorFactory);
 		}
 	}
 
-	private Xep parseXep(Bundle bundle, String sXep) {
-		int separatorIndex = sXep.indexOf("->");
-		if (separatorIndex == -1 || separatorIndex == sXep.length() - 2) {
-			throw new IllegalArgumentException(String.format("Invalid xep name %s[register processor].", sXep));
-		}
-		
-		String sStanzaType = sXep.substring(0, separatorIndex);
-		Xep.StanzaType stanzaType = getStanzaType(sStanzaType);
-		
-		if (stanzaType == null)
-			throw new IllegalArgumentException(String.format("Unknown stanza type %s[register processor].", sStanzaType));
-		
-		String sProtocols = sXep.substring(separatorIndex + 2);
-		List<Protocol> protocols = parseProtocols(sProtocols);
-		
-		return new Xep(stanzaType, protocols);
-	}
-
-	private Xep.StanzaType getStanzaType(String sStanzaType) {
-		Xep.StanzaType stanzaType = null;
-		
-		if (STANZA_TYPE_IQ.equals(sStanzaType)) {
-			stanzaType = Xep.StanzaType.IQ;
-		} else if (STANZA_TYPE_MESSAGE.equals(sStanzaType)) {
-			stanzaType = Xep.StanzaType.MESSAGE;
-		} else if (STANZA_TYPE_PRESENCE.equals(sStanzaType)) {
-			stanzaType = Xep.StanzaType.PRESENCE;
-		}
-		
-		return stanzaType;
-	}
-
-	private List<Protocol> parseProtocols(String sProtocols) {
-		StringTokenizer tokenizer = new StringTokenizer(sProtocols, "&");
-		
-		List<Protocol> protocols = new ArrayList<>();
-		while (tokenizer.hasMoreTokens()) {
-			String sProtocol = tokenizer.nextToken();
-	 		String localName;
-			String namespace;
-			
-			int seperator = sProtocol.indexOf(SEPARATOR_OF_LOCALNAME_NAMESPACE);
-			if (seperator == -1) {
-				throw new IllegalArgumentException(String.format("Invalid protocol[%s].", sProtocol));
-			}
-			
-			localName = sProtocol.substring(0, seperator).trim();
-			namespace = sProtocol.substring(seperator + 1, sProtocol.length()).trim();
-			
-			if (localName.length() == 0 || namespace.length() == 0) {
-				throw new IllegalArgumentException(String.format("Invalid protocol[%s].", sProtocol));
-			}
-			
-			protocols.add(new Protocol(namespace, localName));
-		}
-		
-		return protocols;
-	}
-
-	@Override
-	public void setBundleContext(BundleContext bundleContext) {
-		this.bundleContext = bundleContext;
-		appComponentService = OsgiUtils.getService(bundleContext, IApplicationComponentService.class);
-	}
-	
 	@Override
 	public void process(IConnectionContext context, IMessage message) {
 		try {
@@ -612,30 +512,54 @@ public class DefaultProtocolProcessingProcessor /*implements com.firstlinecode.g
 	}
 
 	@SuppressWarnings("unchecked")
-	private <V, K extends Stanza> boolean doProcessXep(IProcessingContext context, Stanza stanza, Object xep) {
+	private <K extends Stanza, V> boolean doProcessXep(IProcessingContext context, Stanza stanza, Object xep) {
 		ProtocolChain protocolChain = getXepProtocolChain(stanza, xep);
-		BundleAndXepProcessorClass baxpc = bundleToXepProcessorClasses.get(protocolChain);		
-		if (baxpc == null) {
+		
+		IXepProcessor<K, V> xepProcessor = getXepProcessor(protocolChain);
+		if (xepProcessor == null) {
 			throw new ProtocolException(new ServiceUnavailable(String.format("Unsupported protocol: %s.",
 					stanza.getObjectProtocol(stanza.getObject().getClass()))));
 		}
+
+		xepProcessor.process(context, (K)stanza, (V)xep);
 		
-		IXepProcessor<K, V> xepProcessor;
+		return true;
+	}
+
+	@SuppressWarnings("unchecked")
+	private <K extends Stanza, V> IXepProcessor<K, V> getXepProcessor(ProtocolChain protocolChain) {
+		IXepProcessor<K, V> xepProcessor = (IXepProcessor<K, V>)singletonProcessores.get(protocolChain);
+		
+		if (xepProcessor == null) {
+			xepProcessor = createXepProcessorByFactory(protocolChain);
+		}
+		
+		return xepProcessor;
+	}
+
+	@SuppressWarnings("unchecked")
+	private synchronized <V, K extends Stanza> IXepProcessor<K, V> createXepProcessorByFactory(ProtocolChain protocolChain) {
+		IXepProcessor<K, V> xepProcessor = (IXepProcessor<K, V>)singletonProcessores.get(protocolChain);
+		if (xepProcessor != null)
+			return xepProcessor;
+		
+		IXepProcessorFactory<?, ?> processorFactory = xepProcessorFactories.get(protocolChain);		
 		try {
-			xepProcessor = (IXepProcessor<K, V>)baxpc.xepProcessorClass.newInstance();
+			xepProcessor = (IXepProcessor<K, V>)processorFactory.createProcessor();
 		} catch (Exception e) {
 			throw new RuntimeException("Can't instantiate XEP processor.", e);
 		}
 		
-		appComponentService.inject(xepProcessor, baxpc.bundle.getBundleContext());
+		appComponentService.inject(xepProcessor);
 		
 		if (xepProcessor instanceof IEventProducerAware) {
 			((IEventProducerAware)xepProcessor).setEventProducer(eventProducer);
 		}
 		
-		xepProcessor.process(context, (K)stanza, (V)xep);
+		if (processorFactory.isSingleton())
+			singletonProcessores.put(protocolChain, xepProcessor);
 		
-		return true;
+		return xepProcessor;
 	}
 
 	private ProtocolChain getXepProtocolChain(Stanza stanza, Object xep) {
@@ -669,41 +593,6 @@ public class DefaultProtocolProcessingProcessor /*implements com.firstlinecode.g
 	public void setIqProcessor(IIqResultProcessor iqResultProcessor) {
 		this.iqResultProcessor = iqResultProcessor;
 	}
-	
-	private static class Xep {
-		public enum StanzaType {
-			IQ,
-			PRESENCE,
-			MESSAGE
-		}
-		
-		private StanzaType stanzaType;
-		private List<Protocol> protocols;
-		
-		public Xep(StanzaType stanzaType, List<Protocol> protocols) {
-			this.stanzaType = stanzaType;
-			this.protocols = protocols;
-		}
-		
-		public List<ProtocolChain> getProtocolChains() {
-			Protocol stanzaProtocol = null;
-			
-			if (stanzaType == StanzaType.IQ) {
-				stanzaProtocol = Iq.PROTOCOL;
-			} else if (stanzaType == StanzaType.MESSAGE) {
-				stanzaProtocol = Message.PROTOCOL;
-			} else {
-				stanzaProtocol = Presence.PROTOCOL;
-			}
-			
-			List<ProtocolChain> protocolChains = new ArrayList<>();
-			for (Protocol protocol : protocols) {
-				protocolChains.add(ProtocolChain.first(stanzaProtocol).next(protocol));
-			}
-			
-			return protocolChains;
-		}
-	}
 
 	@Override
 	public void setConfiguration(IConfiguration configuration) {
@@ -716,9 +605,9 @@ public class DefaultProtocolProcessingProcessor /*implements com.firstlinecode.g
 	}
 
 	@Override
-	public void setApplicationConfiguration(IApplicationConfiguration appConfiguration) {
-		domain = JabberId.parse(appConfiguration.getDomainName());
-		String[] sDomainAliasNames = appConfiguration.getDomainAliasNames();
+	public void setServerConfiguration(IServerConfiguration serverConfiguration) {
+		domain = JabberId.parse(serverConfiguration.getDomainName());
+		String[] sDomainAliasNames = serverConfiguration.getDomainAliasNames();
 		if (sDomainAliasNames.length != 0) {
 			domainAliases = new JabberId[sDomainAliasNames.length];
 			
@@ -728,5 +617,5 @@ public class DefaultProtocolProcessingProcessor /*implements com.firstlinecode.g
 		} else {
 			domainAliases = new JabberId[0];
 		}
-	}*/
+	}
 }

@@ -14,7 +14,7 @@
 	
 	<groupId>com.firstlinecode.granite.framework</groupId>
 	<artifactId>granite-framework-stream</artifactId>
-	<name>Granite framework stream module</name>
+	<name>Granite framework stream service</name>
 
 	<dependencies>
 		<dependency>

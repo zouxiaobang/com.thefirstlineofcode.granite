@@ -2,6 +2,7 @@ package com.firstlinecode.granite.framework.core.internal.integration;
 
 import java.util.List;
 
+import org.pf4j.PluginDescriptor;
 import org.pf4j.PluginManager;
 import org.pf4j.PluginWrapper;
 
@@ -53,24 +54,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 			throw new RuntimeException(String.format("Can't create extension which's type is %s", type.getName()), e);
 		}
 		
-		if (extension instanceof IServerConfigurationAware) {
-			((IServerConfigurationAware)extension).setServerConfiguration(serverConfiguration);
-		}
-		
-		if (extension instanceof IConfigurationAware) {
-			IConfiguration configuration = appComponentConfigurations.getConfiguration(plugin.getDescriptor().getPluginId());
-			((IConfigurationAware)extension).setConfiguration(configuration);
-		}
-		
-		if (extension instanceof IApplicationComponentServiceAware) {
-			((IApplicationComponentServiceAware)extension).setApplicationComponentService(this);
-		}
-		
-		if (extension instanceof IInitializable) {
-			((IInitializable)extension).init();
-		}
-		
-		return extension;
+		return inject(extension);
 	}
 
 	@Override
@@ -91,6 +75,34 @@ public class ApplicationComponentService implements IApplicationComponentService
 			
 			started = false;
 		}
+	}
+
+	@Override
+	public <T> T inject(T rawInstance) {
+		if (rawInstance instanceof IServerConfigurationAware) {
+			((IServerConfigurationAware)rawInstance).setServerConfiguration(serverConfiguration);
+		}
+		
+		if (rawInstance instanceof IConfigurationAware) {
+			Class<?> type = rawInstance.getClass();
+			PluginWrapper plugin = pluginManager.whichPlugin(type);
+			if (plugin == null)
+				throw new IllegalArgumentException(
+					String.format("Can't determine which plugin the extension which's class name is %s is load from.", type));
+			
+			IConfiguration configuration = appComponentConfigurations.getConfiguration(plugin.getDescriptor().getPluginId());
+			((IConfigurationAware)rawInstance).setConfiguration(configuration);
+		}
+		
+		if (rawInstance instanceof IApplicationComponentServiceAware) {
+			((IApplicationComponentServiceAware)rawInstance).setApplicationComponentService(this);
+		}
+		
+		if (rawInstance instanceof IInitializable) {
+			((IInitializable)rawInstance).init();
+		}
+		
+		return rawInstance;
 	}
 
 }
