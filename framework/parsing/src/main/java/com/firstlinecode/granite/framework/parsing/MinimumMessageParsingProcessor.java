@@ -11,8 +11,11 @@ import com.firstlinecode.basalt.oxm.parsers.core.stanza.IqParserFactory;
 import com.firstlinecode.basalt.oxm.parsers.error.ErrorParserFactory;
 import com.firstlinecode.basalt.oxm.parsers.error.StanzaErrorDetailsParserFactory;
 import com.firstlinecode.basalt.oxm.parsing.FlawedProtocolObject;
+import com.firstlinecode.basalt.oxm.parsing.IParser;
+import com.firstlinecode.basalt.oxm.parsing.IParserFactory;
 import com.firstlinecode.basalt.oxm.parsing.IParsingFactory;
 import com.firstlinecode.basalt.protocol.core.IError;
+import com.firstlinecode.basalt.protocol.core.Protocol;
 import com.firstlinecode.basalt.protocol.core.ProtocolChain;
 import com.firstlinecode.basalt.protocol.core.ProtocolException;
 import com.firstlinecode.basalt.protocol.core.stanza.Iq;
@@ -64,12 +67,60 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 	}
 	
 	private void loadContributedPreprocessors() {
-		// TODO Auto-generated method stub
+		List<Class<? extends IPipePreprocessor>> preprocessorClasses = appComponentService.getExtensionClasses(IPipePreprocessor.class);
+		if (preprocessorClasses == null || preprocessorClasses.size() == 0) {
+			if (logger.isDebugEnabled())
+				logger.debug("No extension which's extension point is {} found.", IPipePreprocessor.class.getName());
+			
+			return;
+		}
 		
+		for (Class<? extends IPipePreprocessor> preprocessorClass : preprocessorClasses) {
+			IPipePreprocessor preprocessor = appComponentService.createExtension(preprocessorClass);
+			preprocessors.add(preprocessor);
+		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void loadContributedProtocolParsers() {
-		// TODO Auto-generated method stub
+		List<Class<? extends IProtocolParserFactory>> parserFactoryClasses = appComponentService.getExtensionClasses(IProtocolParserFactory.class);
+		if (parserFactoryClasses == null || parserFactoryClasses.size() == 0) {
+			if (logger.isDebugEnabled())
+				logger.debug("No extension which's extension point is {} found.", IProtocolParserFactory.class.getName());
+			
+			return;
+		}
+		
+		for (Class<? extends IProtocolParserFactory> parserFactoryClass : parserFactoryClasses) {
+			IProtocolParserFactory<?> parserFactory = appComponentService.createExtension(parserFactoryClass);
+			ProtocolChain protocolChain = parserFactory.getProtocolChain();
+			IParser<?> parser = parserFactory.createParser();
+			parsingFactory.register(protocolChain, createParserFactory(protocolChain, parser));
+		}
+	}
+	
+	private <T> IParserFactory<T> createParserFactory(ProtocolChain protocolChain, IParser<T> parser) {
+		return new ExistingInstanceParserFactory<>(protocolChain, parser);
+	}
+
+	private class ExistingInstanceParserFactory<T> implements IParserFactory<T> {
+		private ProtocolChain protocolChain;
+		private IParser<T> parser;
+		
+		public ExistingInstanceParserFactory(ProtocolChain protocolChain, IParser<T> parser) {
+			this.protocolChain = protocolChain;
+			this.parser = parser;
+		}
+
+		@Override
+		public Protocol getProtocol() {
+			return protocolChain.get(protocolChain.size() - 1);
+		}
+
+		@Override
+		public IParser<T> create() {
+			return parser;
+		}
 		
 	}
 

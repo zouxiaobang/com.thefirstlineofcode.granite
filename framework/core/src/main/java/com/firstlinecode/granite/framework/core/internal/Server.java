@@ -33,7 +33,8 @@ public class Server implements IServer, IServiceListener {
 		/*pluginManager.loadPlugins();
 		pluginManager.startPlugins();*/
 		
-		appComponentService = new ApplicationComponentService(pluginManager, readAppComponentConfigurations());
+		appComponentService = new ApplicationComponentService(serverConfiguration, pluginManager,
+				readAppComponentConfigurations());
 		appComponentService.start();
 		
 		repository = new Repository(serverConfiguration, appComponentService);
