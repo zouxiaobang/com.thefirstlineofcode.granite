@@ -87,8 +87,16 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 	
 	@SuppressWarnings("rawtypes")
 	protected void loadContributedXepProcessors() {
-		for (Class<? extends IXepProcessorFactory> processorFactoryClass : appComponentService.
-				getExtensionClasses(IXepProcessorFactory.class)) {
+		List<Class<? extends IXepProcessorFactory>> processorFactoryClasses =
+				appComponentService.getExtensionClasses(IXepProcessorFactory.class);
+		if (processorFactoryClasses == null || processorFactoryClasses.size() == 0) {
+			if (logger.isDebugEnabled())
+				logger.debug("No extension which's extension point is {} found.", IXepProcessorFactory.class.getName());
+			
+			return;
+		}
+		
+		for (Class<? extends IXepProcessorFactory> processorFactoryClass : processorFactoryClasses) {
 			IXepProcessorFactory<?, ?> processorFactory = appComponentService.createExtension(processorFactoryClass);
 			xepProcessorFactories.put(processorFactory.getProtocolChain(), processorFactory);
 		}

@@ -1,8 +1,7 @@
-package com.firstlinecode.granite.framework.core.internal.integration;
+package com.firstlinecode.granite.framework.core.integration;
 
 import java.util.List;
 
-import org.pf4j.PluginDescriptor;
 import org.pf4j.PluginManager;
 import org.pf4j.PluginWrapper;
 
@@ -10,9 +9,8 @@ import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
-import com.firstlinecode.granite.framework.core.integration.IApplicationComponentConfigurations;
-import com.firstlinecode.granite.framework.core.integration.IApplicationComponentService;
-import com.firstlinecode.granite.framework.core.integration.IApplicationComponentServiceAware;
+import com.firstlinecode.granite.framework.core.platform.AppComponentPluginManager;
+import com.firstlinecode.granite.framework.core.platform.IPluginManagerAware;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 
 public class ApplicationComponentService implements IApplicationComponentService {
@@ -21,11 +19,16 @@ public class ApplicationComponentService implements IApplicationComponentService
 	private IApplicationComponentConfigurations appComponentConfigurations;
 	private boolean started;
 
-	public ApplicationComponentService(IServerConfiguration serverConfiguration, PluginManager pluginManager,
+	public ApplicationComponentService(IServerConfiguration serverConfiguration,
 			IApplicationComponentConfigurations appComponentConfigurations) {
 		this.serverConfiguration = serverConfiguration;
-		this.pluginManager = pluginManager;
 		this.appComponentConfigurations = appComponentConfigurations;
+		
+		pluginManager = createPluginManager();
+	}
+	
+	protected PluginManager createPluginManager() {
+		return new AppComponentPluginManager(this);
 	}
 	
 	public PluginManager getPluginManager() {
@@ -92,6 +95,10 @@ public class ApplicationComponentService implements IApplicationComponentService
 			
 			IConfiguration configuration = appComponentConfigurations.getConfiguration(plugin.getDescriptor().getPluginId());
 			((IConfigurationAware)rawInstance).setConfiguration(configuration);
+		}
+		
+		if (rawInstance instanceof IPluginManagerAware) {
+			((IPluginManagerAware)rawInstance).setPluginManager(pluginManager);
 		}
 		
 		if (rawInstance instanceof IApplicationComponentServiceAware) {

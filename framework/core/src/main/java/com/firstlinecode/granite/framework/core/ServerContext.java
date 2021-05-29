@@ -1,10 +1,9 @@
-package com.firstlinecode.granite.framework.core.internal;
+package com.firstlinecode.granite.framework.core;
 
-import com.firstlinecode.granite.framework.core.IServerContext;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
+import com.firstlinecode.granite.framework.core.integration.ApplicationComponentService;
 import com.firstlinecode.granite.framework.core.integration.IApplicationComponentConfigurations;
 import com.firstlinecode.granite.framework.core.integration.IApplicationComponentService;
-import com.firstlinecode.granite.framework.core.internal.integration.ApplicationComponentService;
 import com.firstlinecode.granite.framework.core.repository.IRepository;
 
 public class ServerContext implements IServerContext {

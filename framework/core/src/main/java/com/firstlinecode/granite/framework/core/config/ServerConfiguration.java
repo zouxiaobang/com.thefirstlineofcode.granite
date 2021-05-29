@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.framework.core.internal.config;
+package com.firstlinecode.granite.framework.core.config;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.firstlinecode.basalt.protocol.Constants;
-import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 
 
 public class ServerConfiguration implements IServerConfiguration {

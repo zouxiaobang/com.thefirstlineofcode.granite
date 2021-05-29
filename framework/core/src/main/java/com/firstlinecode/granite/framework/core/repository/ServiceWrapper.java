@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.framework.core.internal.repository;
+package com.firstlinecode.granite.framework.core.repository;
 
 import com.firstlinecode.granite.framework.core.IService;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
@@ -8,14 +8,6 @@ import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
 import com.firstlinecode.granite.framework.core.integration.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.integration.IApplicationComponentServiceAware;
-import com.firstlinecode.granite.framework.core.repository.CreationException;
-import com.firstlinecode.granite.framework.core.repository.IComponentIdAware;
-import com.firstlinecode.granite.framework.core.repository.IComponentInfo;
-import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
-import com.firstlinecode.granite.framework.core.repository.IInitializable;
-import com.firstlinecode.granite.framework.core.repository.IServiceWrapper;
-import com.firstlinecode.granite.framework.core.repository.ISingletonComponentHolder;
-import com.firstlinecode.granite.framework.core.repository.ServiceCreationException;
 
 public class ServiceWrapper implements IServiceWrapper {
 	private IServerConfiguration serverConfiguration;

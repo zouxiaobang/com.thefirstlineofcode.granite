@@ -2,15 +2,13 @@ package com.firstlinecode.granite.server;
 
 import java.net.URL;
 
-import org.pf4j.DefaultPluginManager;
-import org.pf4j.PluginManager;
 import org.slf4j.LoggerFactory;
 
+import com.firstlinecode.granite.framework.core.ConsoleThread;
 import com.firstlinecode.granite.framework.core.IServer;
+import com.firstlinecode.granite.framework.core.ServerProxy;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
-import com.firstlinecode.granite.framework.core.internal.ConsoleThread;
-import com.firstlinecode.granite.framework.core.internal.ServerProxy;
-import com.firstlinecode.granite.framework.core.internal.config.ServerConfiguration;
+import com.firstlinecode.granite.framework.core.config.ServerConfiguration;
 import com.firstlinecode.granite.framework.core.log.LogFilter;
 import com.firstlinecode.granite.framework.core.platform.IPlatform;
 import com.firstlinecode.granite.framework.core.platform.Pf4j;
@@ -46,7 +44,7 @@ public class Main {
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		
 		ServerProxy serverProxy = new ServerProxy();
-		IServer server = serverProxy.start(serverConfiguration, createPluginManager());
+		IServer server = serverProxy.start(serverConfiguration);
 		
 		if (options.isConsole()) {
 			Thread consoleThread = new Thread(new ConsoleThread(server), "Granite Server Console Thread");
@@ -101,11 +99,7 @@ public class Main {
 		
 		return new ServerConfiguration(serverHome);
 	}
-
-	private PluginManager createPluginManager() {
-		return new DefaultPluginManager();
-	}
-
+	
 	private Options parseOptions(String[] args) {
 		Options options = new Options();
 		

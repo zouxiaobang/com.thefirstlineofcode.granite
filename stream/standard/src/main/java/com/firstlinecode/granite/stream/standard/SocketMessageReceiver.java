@@ -1,12 +1,59 @@
 package com.firstlinecode.granite.stream.standard;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+
+import org.apache.mina.core.buffer.IoBuffer;
+import org.apache.mina.core.buffer.SimpleBufferAllocator;
+import org.apache.mina.core.service.IoHandlerAdapter;
+import org.apache.mina.core.session.IdleStatus;
+import org.apache.mina.core.session.IoSession;
+import org.apache.mina.filter.codec.ProtocolCodecFilter;
+import org.apache.mina.filter.codec.ProtocolDecoder;
+import org.apache.mina.filter.codec.ProtocolDecoderException;
+import org.apache.mina.filter.codec.ProtocolEncoder;
+import org.apache.mina.filter.executor.ExecutorFilter;
+import org.apache.mina.filter.executor.OrderedThreadPoolExecutor;
+import org.apache.mina.filter.logging.LoggingFilter;
+import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.firstlinecode.basalt.oxm.IOxmFactory;
+import com.firstlinecode.basalt.oxm.OxmService;
+import com.firstlinecode.basalt.oxm.binary.IBinaryXmppProtocolConverter;
+import com.firstlinecode.basalt.oxm.preprocessing.IMessagePreprocessor;
+import com.firstlinecode.basalt.protocol.Constants;
+import com.firstlinecode.basalt.protocol.core.JabberId;
+import com.firstlinecode.basalt.protocol.core.stanza.error.BadRequest;
+import com.firstlinecode.basalt.protocol.core.stream.Stream;
+import com.firstlinecode.basalt.protocol.core.stream.error.ConnectionTimeout;
+import com.firstlinecode.basalt.protocol.core.stream.error.InvalidXml;
 import com.firstlinecode.granite.framework.core.annotations.Component;
+import com.firstlinecode.granite.framework.core.annotations.Dependency;
+import com.firstlinecode.granite.framework.core.config.IConfiguration;
+import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
+import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
+import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
+import com.firstlinecode.granite.framework.core.connection.IClientConnectionContext;
+import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
+import com.firstlinecode.granite.framework.core.pipe.IClientMessageProcessor;
+import com.firstlinecode.granite.framework.core.pipe.IMessageProcessor;
+import com.firstlinecode.granite.framework.core.pipe.SimpleMessage;
+import com.firstlinecode.granite.framework.core.repository.IInitializable;
+import com.firstlinecode.granite.framework.core.routing.ILocalNodeIdProvider;
+import com.firstlinecode.granite.framework.core.routing.IRouter;
+import com.firstlinecode.granite.framework.core.session.ISession;
+import com.firstlinecode.granite.framework.core.session.ISessionManager;
+import com.firstlinecode.granite.framework.stream.IClientMessageReceiver;
+import com.firstlinecode.granite.framework.stream.StreamConstants;
+import com.firstlinecode.granite.stream.standard.codec.MessageDecoder;
+import com.firstlinecode.granite.stream.standard.codec.MessageEncoder;
 
 @Component("socket.message.receiver")
-public class SocketMessageReceiver /*extends IoHandlerAdapter implements IClientMessageReceiver,
-			IApplicationConfigurationAware, IConfigurationAware, IBundleContextAware,
-				IInitializable*/ {
-/*	private static final String DIR_NAME_SECURITY = "/security";
+public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMessageReceiver,
+			IServerConfigurationAware, IConfigurationAware, IInitializable {
+	private static final String DIR_NAME_SECURITY = "/security";
 
 	private static final Logger logger = LoggerFactory.getLogger(SocketMessageReceiver.class);
 	
@@ -40,7 +87,6 @@ public class SocketMessageReceiver /*extends IoHandlerAdapter implements IClient
 	private IRouter router;
 	private ILocalNodeIdProvider localNodeIdProvider;
 	
-	private BundleContext bundleContext;
 	private IBinaryXmppProtocolConverter bxmppProtocolConverter;
 	private IMessagePreprocessor binaryMessagePreprocessor;
 	
@@ -243,10 +289,10 @@ public class SocketMessageReceiver /*extends IoHandlerAdapter implements IClient
 	}
 
 	@Override
-	public void setApplicationConfiguration(IApplicationConfiguration appConfiguration) {
-		tlsParameter = new TlsParameter(appConfiguration.getConfigDir() + DIR_NAME_SECURITY,
-				appConfiguration.getDomainName());
-		messageFormat = appConfiguration.getMessageFormat();
+	public void setServerConfiguration(IServerConfiguration serverConfiguration) {
+		tlsParameter = new TlsParameter(serverConfiguration.getConfigurationDir() + DIR_NAME_SECURITY,
+				serverConfiguration.getDomainName());
+		messageFormat = serverConfiguration.getMessageFormat();
 	}
 
 	@Override
@@ -272,21 +318,16 @@ public class SocketMessageReceiver /*extends IoHandlerAdapter implements IClient
 	}
 
 	@Override
-	public void setBundleContext(BundleContext bundleContext) {
-		this.bundleContext = bundleContext;
-	}
-
-	@Override
 	public void init() {
 		if (Constants.MESSAGE_FORMAT_BINARY.equals(messageFormat)) {
 			bxmppProtocolConverter = OsgiUtils.getService(bundleContext, IBinaryXmppProtocolConverter.class);
-			binaryMessagePreprocessor = OsgiUtils.getService(bundleContext, IMessagePreprocessor.class, IApplicationConfiguration.APP_CONFIG_KEY_MESSAGE_FORMAT, Constants.MESSAGE_FORMAT_BINARY);
+			binaryMessagePreprocessor = OsgiUtils.getService(bundleContext, IMessagePreprocessor.class, IServerConfiguration.SERVER_CONFIG_KEY_MESSAGE_FORMAT, Constants.MESSAGE_FORMAT_BINARY);
 			
 			if (bxmppProtocolConverter == null || binaryMessagePreprocessor == null) {
 				logger.warn("Can't get BXMPP protocol converter or binary message preprocessor. Please add gem bxmpp plugins to your plugins directory. Ignore to configure message format to binary. Still use XML message format.");
 				messageFormat = Constants.NAMESPACE_XML;
 			}
 		}
-	}*/
+	}
 	
 }

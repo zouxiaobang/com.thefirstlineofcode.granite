@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.framework.core.internal.repository;
+package com.firstlinecode.granite.framework.core.repository;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -32,14 +32,8 @@ import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.commons.utils.IoUtils;
 import com.firstlinecode.granite.framework.core.config.IConfigurationManager;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
+import com.firstlinecode.granite.framework.core.config.LocalFileConfigurationManager;
 import com.firstlinecode.granite.framework.core.integration.IApplicationComponentService;
-import com.firstlinecode.granite.framework.core.internal.config.LocalFileConfigurationManager;
-import com.firstlinecode.granite.framework.core.repository.IComponentInfo;
-import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
-import com.firstlinecode.granite.framework.core.repository.IRepository;
-import com.firstlinecode.granite.framework.core.repository.IServiceListener;
-import com.firstlinecode.granite.framework.core.repository.IServiceWrapper;
-import com.firstlinecode.granite.framework.core.repository.ISingletonComponentHolder;
 
 public class Repository implements IRepository, ISingletonComponentHolder {
 	private static final String CLASS_FILE_EXTENSION_NAME = ".class";

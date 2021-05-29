@@ -1,203 +1,123 @@
 package com.firstlinecode.granite.framework.routing;
 
-public class MinimumRoutingProcessor /*implements IMessageProcessor, IBundleContextAware,
-			IInitializable, IApplicationConfigurationAware*/ {
-	/*private static final Logger logger = LoggerFactory.getLogger(MinimumRoutingProcessor.class);
-	
-	private static final String SEPARATOR_TRANSLATORS = ",";
-	private static final String PROPERTY_NAME_TYPE = "type";
-	private static final String PROPERTY_NAME_CLASS = "class";
-	private static final String PROPERTY_NAME_TRANSLATOR_FACTORY = "translator-factory";
-	private static final String PROPERTY_NAME_PROTOCOL = "protocol";
-	private static final String TYPE_SIMPLE = "simple";
-	private static final String TYPE_NAMING_CONVENTION = "naming-convention";
-	private static final String TYPE_CUSTOM = "custom";
-	private static final String SEPARATOR_OF_LOCALNAME_NAMESPACE = "|";
-	private static final String VALUE_NULL = "null";
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.firstlinecode.basalt.oxm.OxmService;
+import com.firstlinecode.basalt.oxm.parsing.FlawedProtocolObject;
+import com.firstlinecode.basalt.oxm.translating.ITranslatingFactory;
+import com.firstlinecode.basalt.oxm.translating.ITranslator;
+import com.firstlinecode.basalt.oxm.translating.ITranslatorFactory;
+import com.firstlinecode.basalt.oxm.translators.core.stanza.IqTranslatorFactory;
+import com.firstlinecode.basalt.oxm.translators.core.stream.StreamTranslatorFactory;
+import com.firstlinecode.basalt.oxm.translators.error.StanzaErrorTranslatorFactory;
+import com.firstlinecode.basalt.oxm.translators.error.StreamErrorTranslatorFactory;
+import com.firstlinecode.basalt.protocol.core.JabberId;
+import com.firstlinecode.basalt.protocol.core.ProtocolException;
+import com.firstlinecode.basalt.protocol.core.stanza.Iq;
+import com.firstlinecode.basalt.protocol.core.stanza.Stanza;
+import com.firstlinecode.basalt.protocol.core.stanza.error.InternalServerError;
+import com.firstlinecode.basalt.protocol.core.stanza.error.StanzaError;
+import com.firstlinecode.basalt.protocol.core.stream.Stream;
+import com.firstlinecode.basalt.protocol.core.stream.error.StreamError;
+import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
+import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
+import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
+import com.firstlinecode.granite.framework.core.integration.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.pipe.IMessage;
+import com.firstlinecode.granite.framework.core.pipe.IMessageProcessor;
+import com.firstlinecode.granite.framework.core.pipe.SimpleMessage;
+import com.firstlinecode.granite.framework.core.repository.IInitializable;
+
+public class MinimumRoutingProcessor implements IMessageProcessor, IInitializable,
+			IServerConfigurationAware {
+	private static final Logger logger = LoggerFactory.getLogger(MinimumRoutingProcessor.class);
 	
 	protected ITranslatingFactory translatingFactory;
-	protected BundleContext bundleContext;
 	
-	private Map<Bundle, List<Class<?>>> bundleToClasses;
-	private Map<Bundle, List<IPipePostprocessor>> bundleToPostprocessors;
 	private List<IPipePostprocessor> postprocessors;
-	
 	private String domain;
-	
-	private String translatorsContributionKey;
-	private String postprocessorsContributionKey;
 	
 	private IApplicationComponentService appComponentService;
 	
-	public MinimumRoutingProcessor(String translatorsContributionKey, String postprocessorsContributionKey) {
-		this.translatorsContributionKey = translatorsContributionKey;
-		this.postprocessorsContributionKey = postprocessorsContributionKey;
+	public MinimumRoutingProcessor() {
 		translatingFactory = OxmService.createTranslatingFactory();
-		bundleToClasses = new HashMap<>();
-		postprocessors = new CopyOnWriteArrayList<>();
+		postprocessors = new ArrayList<>();
 	}
 	
 	@Override
 	public void init() {
 		registerPredefinedTranslators();
-		trackContributedTranslators();
-		trackContributedPostprocessors();
+		loadContributedTranslators();
+		loadContributedPostprocessors();
 	}
 	
+	
+	@SuppressWarnings("rawtypes")
+	private void loadContributedTranslators() {
+		List<Class<? extends IProtocolTranslatorFactory>> translatorFactoryClasses =
+				appComponentService.getExtensionClasses(IProtocolTranslatorFactory.class);
+		if (translatorFactoryClasses == null || translatorFactoryClasses.size() == 0) {
+			if (logger.isDebugEnabled())
+				logger.debug("No extension which's extension point is {} found.", IProtocolTranslatorFactory.class.getName());
+			
+			return;
+		}
+		
+		for (Class<? extends IProtocolTranslatorFactory> translatorFactoryClass : translatorFactoryClasses) {
+			IProtocolTranslatorFactory<?> translatorFactory = appComponentService.createExtension(translatorFactoryClass);
+			translatingFactory.register(translatorFactory.getClass(), createTranslatorFactoryAdapter(translatorFactory));
+		}
+	}
+
+	private <T> TranslatorFactoryAdapter<T> createTranslatorFactoryAdapter(IProtocolTranslatorFactory<T> translatorFactory) {
+		return new TranslatorFactoryAdapter<T>(translatorFactory);
+	}
+	
+	private class TranslatorFactoryAdapter<T> implements ITranslatorFactory<T> {
+		private IProtocolTranslatorFactory<T> original;
+		
+		public TranslatorFactoryAdapter(IProtocolTranslatorFactory<T> original) {
+			this.original = original;
+		}
+
+		@Override
+		public Class<T> getType() {
+			return original.getType();
+		}
+
+		@Override
+		public ITranslator<T> create() {
+			return original.createTranslator();
+		}
+		
+	}
+
+	private void loadContributedPostprocessors() {
+		List<Class<? extends IPipePostprocessor>> postprocessorClasses = appComponentService.getExtensionClasses(IPipePostprocessor.class);
+		if (postprocessorClasses == null || postprocessorClasses.size() == 0) {
+			if (logger.isDebugEnabled())
+				logger.debug("No extension which's extension point is {} found.", IPipePostprocessor.class.getName());
+			
+			return;
+		}
+		
+		for (Class<? extends IPipePostprocessor> postprocessorClass : postprocessorClasses) {
+			IPipePostprocessor postprocessor = appComponentService.createExtension(postprocessorClass);
+			postprocessors.add(postprocessor);
+		}
+	}
+
 	protected void registerPredefinedTranslators() {
 		translatingFactory.register(Iq.class, new IqTranslatorFactory());
 		translatingFactory.register(Stream.class, new StreamTranslatorFactory());
 		translatingFactory.register(StreamError.class, new StreamErrorTranslatorFactory());
 		translatingFactory.register(StanzaError.class, new StanzaErrorTranslatorFactory());
-	}
-
-	protected void trackContributedTranslators() {
-		OsgiUtils.trackContribution(bundleContext, translatorsContributionKey, new TranslatorsTracker());
-	}
-	
-	protected void trackContributedPostprocessors() {
-		OsgiUtils.trackContribution(bundleContext, postprocessorsContributionKey, new PostprocessorTracker());
-	}
-	
-	private class PostprocessorTracker implements IContributionTracker {
-
-		@Override
-		public void found(Bundle bundle, String contribution) throws Exception {
-			StringTokenizer tokenizer = new StringTokenizer(contribution, SEPARATOR_TRANSLATORS);
-			
-			List<IPipePostprocessor> postprocessors = new ArrayList<>();
-			while (tokenizer.hasMoreTokens()) {
-				String sPostprocessorClass = tokenizer.nextToken();
-				Class<?> postprocessorClass = bundle.loadClass(sPostprocessorClass);
-				if (!IPipePostprocessor.class.isAssignableFrom(postprocessorClass)) {
-					throw new IllegalArgumentException(String.format("Pipe postprocessor %s must implement %s.",
-							postprocessorClass.getName(), IPipePostprocessor.class.getName()));
-				}
-				
-				IPipePostprocessor postprocessor = (IPipePostprocessor)postprocessorClass.newInstance();
-				
-				appComponentService.inject(postprocessor, bundleContext);
-				
-				postprocessors.add(postprocessor);
-			}
-			
-			bundleToPostprocessors.put(bundle, postprocessors);
-			MinimumRoutingProcessor.this.postprocessors.addAll(postprocessors);
-		}
-
-		@Override
-		public void lost(Bundle bundle, String contribution) throws Exception {
-			List<IPipePostprocessor> postprocessors = bundleToPostprocessors.remove(bundle);
-			MinimumRoutingProcessor.this.postprocessors.removeAll(postprocessors);
-		}
-		
-	}
-	
-	private class TranslatorsTracker implements IContributionTracker {
-		
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		@Override
-		public void found(Bundle bundle, String contribution) throws Exception {
-			StringTokenizer tokenizer = new StringTokenizer(contribution, SEPARATOR_TRANSLATORS);
-			
-			List<Class<?>> classes = new ArrayList<>();
-			while (tokenizer.hasMoreTokens()) {
-				String translaotorString = tokenizer.nextToken();
-				
-				Map<String, String> properties = CommonUtils.parsePropertiesString(translaotorString,
-						new String[] {
-							PROPERTY_NAME_CLASS,
-							PROPERTY_NAME_TYPE,
-							PROPERTY_NAME_TRANSLATOR_FACTORY,
-							PROPERTY_NAME_PROTOCOL
-						}
-				);
-				
-				String sType = properties.get(PROPERTY_NAME_TYPE);
-				if (sType == null) {
-					sType = TYPE_CUSTOM;
-				}
-				
-				Class<?> clazz;
-				ITranslatorFactory<?> translatorFactory;
-				if (TYPE_CUSTOM.equals(sType)) {
-					String sTranslatorFactory = properties.get(PROPERTY_NAME_TRANSLATOR_FACTORY);
-					if (sTranslatorFactory == null)
-						throw new IllegalArgumentException("Null translator factory[register translator].");
-					
-					Class<?> translatorFactoryClass = bundle.loadClass(sTranslatorFactory);
-					
-					if (!(ITranslatorFactory.class.isAssignableFrom(translatorFactoryClass)))
-						throw new RuntimeException(String.format("%s must implement %s[register translator].",
-								translatorFactoryClass, ITranslatorFactory.class));
-						
-					translatorFactory = (ITranslatorFactory<?>)translatorFactoryClass.newInstance();
-					clazz = translatorFactory.getType();
-				} else {
-					String sClass = properties.get(PROPERTY_NAME_CLASS);
-					if (sClass == null)
-						throw new IllegalArgumentException("Null class[register translator].");
-					
-					clazz = bundle.loadClass(sClass);
-					
-					if (TYPE_NAMING_CONVENTION.equals(sType)) {
-						translatorFactory = new NamingConventionTranslatorFactory(clazz);
-					} else {
-						String sProtocol = properties.get(PROPERTY_NAME_PROTOCOL);
-						if (sProtocol == null)
-							throw new IllegalArgumentException("Null protocol[register translator].");
-						
-						Protocol protocol = parseProtocol(sProtocol);
-						
-						if (TYPE_SIMPLE.equals(sType)) {
-							translatorFactory = new SimpleObjectTranslatorFactory(clazz, protocol);
-						} else {
-							throw new RuntimeException(String.format("Unknown translator type: %s.", sType));
-						}
-					}
-				}
-				
-				translatingFactory.register(clazz, translatorFactory);
-				classes.add(clazz);
-			}
-			
-			bundleToClasses.put(bundle, classes);
-		}
-		
-		private Protocol parseProtocol(String sProtocol) {
-			String localName;
-			String namespace;
-			
-			int seperator = sProtocol.indexOf(SEPARATOR_OF_LOCALNAME_NAMESPACE);
-			if (seperator == -1) {
-				localName = sProtocol.trim();
-				namespace = VALUE_NULL;
-			} else {
-				localName = sProtocol.substring(0, seperator).trim();
-				namespace = sProtocol.substring(seperator + 1, sProtocol.length()).trim();
-			}
-			
-			if (localName.length() == 0 || namespace.length() == 0) {
-				throw new IllegalArgumentException(String.format("Invalid protocol.", sProtocol));
-			}
-			
-			if (VALUE_NULL.equals(namespace)) {
-				namespace = null;
-			}
-			
-			return new Protocol(namespace, localName);
-		}
-
-		@Override
-		public void lost(Bundle bundle, String contribution) throws Exception {
-			List<Class<?>> classes = bundleToClasses.remove(bundle);
-			
-			if (classes != null) {
-				for (Class<?> clazz : classes) {
-					translatingFactory.unregister(clazz);
-				}
-			}
-		}
 	}
 	
 	@Override
@@ -340,14 +260,8 @@ public class MinimumRoutingProcessor /*implements IMessageProcessor, IBundleCont
 	}
 
 	@Override
-	public void setBundleContext(BundleContext bundleContext) {
-		this.bundleContext = bundleContext;
-		appComponentService = OsgiUtils.getService(bundleContext, IApplicationComponentService.class);
+	public void setServerConfiguration(IServerConfiguration serverConfiguration) {
+		this.domain = serverConfiguration.getDomainName();
 	}
-
-	@Override
-	public void setApplicationConfiguration(IApplicationConfiguration appConfiguration) {
-		this.domain = appConfiguration.getDomainName();
-	}*/
 
 }

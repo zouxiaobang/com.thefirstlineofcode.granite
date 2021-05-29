@@ -13,4 +13,9 @@ public class ResourceAvailabledEvent implements IEvent {
 	public JabberId getJid() {
 		return jid;
 	}
+	
+	@Override
+	public Object clone() {
+		return new ResourceAvailabledEvent(jid);
+	}
 }

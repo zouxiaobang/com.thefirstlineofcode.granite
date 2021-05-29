@@ -1,39 +1,31 @@
-package com.firstlinecode.granite.framework.core.internal;
+package com.firstlinecode.granite.framework.core;
 
-import org.pf4j.PluginManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.firstlinecode.granite.framework.core.IServer;
-import com.firstlinecode.granite.framework.core.IServerContext;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
-import com.firstlinecode.granite.framework.core.internal.integration.ApplicationComponentConfigurations;
-import com.firstlinecode.granite.framework.core.internal.integration.ApplicationComponentService;
-import com.firstlinecode.granite.framework.core.internal.repository.Repository;
+import com.firstlinecode.granite.framework.core.integration.ApplicationComponentConfigurations;
+import com.firstlinecode.granite.framework.core.integration.ApplicationComponentService;
 import com.firstlinecode.granite.framework.core.repository.IRepository;
 import com.firstlinecode.granite.framework.core.repository.IServiceListener;
 import com.firstlinecode.granite.framework.core.repository.IServiceWrapper;
+import com.firstlinecode.granite.framework.core.repository.Repository;
 
 public class Server implements IServer, IServiceListener {
 	private static final Logger logger = LoggerFactory.getLogger(Server.class);
 		
 	private IServerConfiguration serverConfiguration;
-	private PluginManager pluginManager;
 	
 	private ApplicationComponentService appComponentService;
 	private IRepository repository;
 		
-	public Server(IServerConfiguration serverConfiguration, PluginManager pluginManager) {
+	public Server(IServerConfiguration serverConfiguration) {
 		this.serverConfiguration = serverConfiguration;
-		this.pluginManager = pluginManager;
 	}
 
 	@Override
 	public void start() throws Exception {
-		/*pluginManager.loadPlugins();
-		pluginManager.startPlugins();*/
-		
-		appComponentService = new ApplicationComponentService(serverConfiguration, pluginManager,
+		appComponentService = new ApplicationComponentService(serverConfiguration,
 				readAppComponentConfigurations());
 		appComponentService.start();
 		

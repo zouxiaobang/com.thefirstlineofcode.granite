@@ -1,35 +1,42 @@
 package com.firstlinecode.granite.framework.event;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.firstlinecode.basalt.protocol.core.JabberId;
+import com.firstlinecode.basalt.protocol.core.stanza.Stanza;
 import com.firstlinecode.granite.framework.core.annotations.Component;
+import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
+import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
+import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
+import com.firstlinecode.granite.framework.core.event.IEvent;
+import com.firstlinecode.granite.framework.core.event.IEventContext;
+import com.firstlinecode.granite.framework.core.event.IEventListener;
+import com.firstlinecode.granite.framework.core.event.IEventListenerFactory;
+import com.firstlinecode.granite.framework.core.integration.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.integration.IApplicationComponentServiceAware;
+import com.firstlinecode.granite.framework.core.pipe.IMessage;
+import com.firstlinecode.granite.framework.core.pipe.IMessageProcessor;
+import com.firstlinecode.granite.framework.core.pipe.SimpleMessage;
+import com.firstlinecode.granite.framework.core.repository.IInitializable;
 
 @Component("default.event.processor")
-public class DefaultEventProcessor /*implements IMessageProcessor, IBundleContextAware,
-		IInitializable, IApplicationConfigurationAware*/ {
-/*	private Logger logger = LoggerFactory.getLogger(DefaultEventProcessor.class);
+public class DefaultEventProcessor implements IMessageProcessor, IInitializable,
+		IServerConfigurationAware, IApplicationComponentServiceAware {
+	private Logger logger = LoggerFactory.getLogger(DefaultEventProcessor.class);
 	
-	private static final String SEPARATOR_COMPONENTS = ",";
-	private static final String KEY_GRANITE_EVENT_LISTENERS = "Granite-Event-Listeners";
-	private static final String PROPERTY_NAME_EVENT = "event";
-	private static final String PROPERTY_NAME_EVENT_LISTENER = "event-listener";
-	
-	protected BundleContext bundleContext;
-	
-	protected Map<String, IEventListener<?>> eventListeners;
-	protected Map<Class<? extends IEvent>, List<OrderId>> eventToListenerIds;
-	protected Map<Bundle, List<OrderId>> bundleToListenerIds;
-	
-	private IContributionTracker eventListenersTracker;
+	protected Map<Class<? extends IEvent>, List<IEventListener<?>>> eventToListeners;
 	
 	private IApplicationComponentService appComponentService;
-	
 	private JabberId serverJid;
 	
 	public DefaultEventProcessor() {
-		eventListeners = new ConcurrentHashMap<>();
-		eventToListenerIds = new ConcurrentHashMap<>();
-		bundleToListenerIds = new ConcurrentHashMap<>();
-		
-		eventListenersTracker = new EventListenersContributionTracker();
+		eventToListeners = new HashMap<>();
 	}
 
 	@Override
@@ -43,15 +50,18 @@ public class DefaultEventProcessor /*implements IMessageProcessor, IBundleContex
 	}
 	
 	@SuppressWarnings("unchecked")
-	private <E extends IEvent> void processEvent(IConnectionContext context, IEvent event) {
-		List<OrderId> ids = eventToListenerIds.get(event.getClass());
-		if (ids == null || ids.size() == 0)
+	private <E extends IEvent> void processEvent(IConnectionContext context, E event) {
+		List<IEventListener<?>> listeners = eventToListeners.get(event.getClass());
+		if (listeners == null || listeners.size() == 0) {
+			if (logger.isWarnEnabled()) {
+				logger.warn("No event listener is listening to event {}.", event.getClass().getName());
+			}
+			
 			return;
+		}
 		
-		for (OrderId id : ids) {
-			IEventListener<E> listener = (IEventListener<E>)eventListeners.get(id.getId());
-			if (listener != null)
-				listener.process(getEventContext(context), (E)event);
+		for (IEventListener<?> listener : listeners) {
+			((IEventListener<E>)listener).process(getEventContext(context), (E)(event.clone()));
 		}
 	}
 
@@ -95,118 +105,37 @@ public class DefaultEventProcessor /*implements IMessageProcessor, IBundleContex
 
 	@Override
 	public void init() {
-		OsgiUtils.trackContribution(bundleContext, KEY_GRANITE_EVENT_LISTENERS, eventListenersTracker);
+		loadContributedEventListeners();
 	}
 	
-	private class EventListenersContributionTracker implements IContributionTracker {
-
-		@SuppressWarnings("unchecked")
-		@Override
-		public synchronized void found(Bundle bundle, String contribution) throws Exception {
-			StringTokenizer tokenizer = new StringTokenizer(contribution, SEPARATOR_COMPONENTS);
+	@SuppressWarnings("rawtypes")
+	private void loadContributedEventListeners() {
+		List<Class<? extends IEventListenerFactory>> listenerFactoryClasses = appComponentService.getExtensionClasses(IEventListenerFactory.class);
+		if (listenerFactoryClasses == null || listenerFactoryClasses.size() == 0) {
+			if (logger.isDebugEnabled())
+				logger.debug("No extension which's extension point is {} found.", IEventListenerFactory.class.getName());
 			
-			List<OrderId> listenerIds = new ArrayList<>();
-			int idSequence = 0;
-			while (tokenizer.hasMoreTokens()) {
-				String listenerString = tokenizer.nextToken();
-				
-				Map<String, String> properties = CommonUtils.parsePropertiesString(listenerString,
-						new String[] {PROPERTY_NAME_EVENT, PROPERTY_NAME_EVENT_LISTENER});
-				String uniqueIdString = bundle.getSymbolicName() + "_" + idSequence;
-				idSequence++;
-				String sEventClass = properties.get(PROPERTY_NAME_EVENT);
-				if (sEventClass == null) {
-					throw new IllegalArgumentException("Null event class[register event listener].");
-				}
-				
-				String sEventListenerClass = properties.get(PROPERTY_NAME_EVENT_LISTENER);
-				if (sEventListenerClass == null) {
-					throw new IllegalArgumentException("Null event listener class[register event listener].");
-				}
-				
-				Class<?> eventClass = bundle.loadClass(sEventClass);
-				
-				if (!(IEvent.class.isAssignableFrom(eventClass))) {
-					throw new IllegalArgumentException(String.format("%s must implement %s[register event listener].",
-							sEventClass, IEvent.class));
-				}
-				
-				Class<?> eventListenerClass = bundle.loadClass(sEventListenerClass);
-				
-				if (!(IEventListener.class.isAssignableFrom(eventListenerClass))) {
-					throw new IllegalArgumentException(String.format("%s must implement %s[register event listener].",
-							sEventListenerClass, IEventListener.class));
-				}
-				
-				IEventListener<?> eventListener;
-				try {
-					eventListener = (IEventListener<?>)eventListenerClass.newInstance();
-				} catch (Exception e) {
-					throw new RuntimeException("Can't instantiate event listener.", e);
-				}
-				
-				appComponentService.inject(eventListener, bundle.getBundleContext());
-				
-				OrderId id = new OrderId(uniqueIdString, OrderComparator.getAcceptableOrder(eventListener));
-				eventListeners.put(uniqueIdString, eventListener);
-				List<OrderId> idsListenToEvent = eventToListenerIds.get(eventClass);
-				if (idsListenToEvent == null) {
-					idsListenToEvent = new ArrayList<>();
-					eventToListenerIds.put((Class<? extends IEvent>)eventClass, idsListenToEvent);
-				}
-				
-				idsListenToEvent.add(id);
-			}
-			
-			bundleToListenerIds.put(bundle, listenerIds);
-		}
-
-		@Override
-		public synchronized void lost(Bundle bundle, String contribution) throws Exception {
-			List<OrderId> listenerIds = bundleToListenerIds.remove(bundle);
-			for (List<OrderId> idsListenToEvent : eventToListenerIds.values()) {
-				for (OrderId id : listenerIds) {
-					if (idsListenToEvent.contains(id)) {
-						idsListenToEvent.remove(id);
-					}
-				}
-			}
-			
-			for (OrderId id : listenerIds) {
-				eventListeners.remove(id.getId());
-			}
+			return;
 		}
 		
+		for (Class<? extends IEventListenerFactory>listenerFactoryClass : listenerFactoryClasses) {
+			IEventListenerFactory<?> listenerFactory = appComponentService.createExtension(listenerFactoryClass);
+			List<IEventListener<?>> listeners = eventToListeners.get(listenerFactory.getType());
+			if (listeners == null)
+				listeners = new ArrayList<>();
+			
+			listeners.add(listenerFactory.createListener());
+			eventToListeners.put(listenerFactory.getType(), listeners);
+		}
 	}
 	
-	private class OrderId implements IOrder {
-		private String id;
-		private int order;
-		
-		public OrderId(String id, int order) {
-			this.id = id;
-			this.order = order;
-		}
-		
-		public String getId() {
-			return id;
-		}
-		
-		@Override
-		public int getOrder() {
-			return order;
-		}
+	@Override
+	public void setServerConfiguration(IServerConfiguration serverConfiguration) {
+		serverJid = JabberId.parse(serverConfiguration.getDomainName());
 	}
 
 	@Override
-	public void setBundleContext(BundleContext bundleContext) {
-		this.bundleContext = bundleContext;
-		
-		appComponentService = OsgiUtils.getService(bundleContext, IApplicationComponentService.class);
+	public void setApplicationComponentService(IApplicationComponentService appComponentService) {
+		this.appComponentService = appComponentService;
 	}
-
-	@Override
-	public void setApplicationConfiguration(IApplicationConfiguration appConfiguration) {
-		serverJid = JabberId.parse(appConfiguration.getDomainName());
-	}*/
 }

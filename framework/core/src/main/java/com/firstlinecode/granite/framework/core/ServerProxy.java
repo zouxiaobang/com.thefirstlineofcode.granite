@@ -1,11 +1,9 @@
-package com.firstlinecode.granite.framework.core.internal;
+package com.firstlinecode.granite.framework.core;
 
 
-import org.pf4j.PluginManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.firstlinecode.granite.framework.core.IServer;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 
 public class ServerProxy {
@@ -13,8 +11,8 @@ public class ServerProxy {
 	
 	private IServer server;
 	
-	public IServer start(IServerConfiguration serverConfiguration, PluginManager pluginManager) {
-		server = new Server(serverConfiguration, pluginManager);
+	public IServer start(IServerConfiguration serverConfiguration) {
+		server = new Server(serverConfiguration);
 		try {
 			server.start();
 		} catch (Exception e) {
@@ -24,7 +22,7 @@ public class ServerProxy {
 		return server;
 	}
 	
-	public void stop(PluginManager pluginManager) {
+	public void stop() {
 		try {
 			server.stop();
 		} catch (Exception e) {

@@ -1,24 +1,23 @@
-package com.firstlinecode.granite.framework.parsing.internal;
+package com.firstlinecode.granite.framework.event;
 
 import com.firstlinecode.granite.framework.core.IService;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.pipe.IMessageReceiver;
 
-@Component("parsing.service")
-public class ParsingService implements IService {
+@Component("event.service")
+public class EventService implements IService {
+	@Dependency("event.message.receiver")
+	private IMessageReceiver eventMessageReceiver;
 	
-	@Dependency("stream.message.receiver")
-	private IMessageReceiver parsingMessageReceiver;
-
 	@Override
 	public void start() throws Exception {
-		parsingMessageReceiver.start();
+		eventMessageReceiver.start();
 	}
 
 	@Override
 	public void stop() throws Exception {
-		parsingMessageReceiver.stop();
+		eventMessageReceiver.stop();
 	}
 
 }

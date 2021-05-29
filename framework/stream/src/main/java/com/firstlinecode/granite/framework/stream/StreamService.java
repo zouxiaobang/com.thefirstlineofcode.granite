@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.framework.stream.internal;
+package com.firstlinecode.granite.framework.stream;
 
 import java.util.List;
 
@@ -8,8 +8,6 @@ import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
 import com.firstlinecode.granite.framework.core.connection.IConnectionManager;
-import com.firstlinecode.granite.framework.stream.IClientMessageReceiver;
-import com.firstlinecode.granite.framework.stream.IDeliveryMessageReceiver;
 
 @Component("stream.service")
 public class StreamService implements IService {

@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.framework.core.internal.config;
+package com.firstlinecode.granite.framework.core.config;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -12,10 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import com.firstlinecode.granite.framework.core.commons.utils.IoUtils;
 import com.firstlinecode.granite.framework.core.commons.utils.SectionalProperties;
-import com.firstlinecode.granite.framework.core.config.DummyConfiguration;
-import com.firstlinecode.granite.framework.core.config.IConfiguration;
-import com.firstlinecode.granite.framework.core.config.IConfigurationManager;
-import com.firstlinecode.granite.framework.core.config.PropertiesConfiguration;
 
 
 public class LocalFileConfigurationManager implements IConfigurationManager {

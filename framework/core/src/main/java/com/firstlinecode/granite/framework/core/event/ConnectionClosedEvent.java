@@ -37,4 +37,9 @@ public class ConnectionClosedEvent implements IEvent {
 		this.jid = jid;
 	}
 	
+	@Override
+	public Object clone() {
+		return new ConnectionClosedEvent(id, jid, streamId);
+	}
+	
 }

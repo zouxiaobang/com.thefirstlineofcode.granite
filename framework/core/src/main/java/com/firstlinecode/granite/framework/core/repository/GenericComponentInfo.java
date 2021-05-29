@@ -1,9 +1,6 @@
-package com.firstlinecode.granite.framework.core.internal.repository;
+package com.firstlinecode.granite.framework.core.repository;
 
 import com.firstlinecode.granite.framework.core.IService;
-import com.firstlinecode.granite.framework.core.repository.AbstractComponentInfo;
-import com.firstlinecode.granite.framework.core.repository.CreationException;
-import com.firstlinecode.granite.framework.core.repository.IComponentInfo;
 
 public final class GenericComponentInfo extends AbstractComponentInfo implements IComponentInfo {
 	

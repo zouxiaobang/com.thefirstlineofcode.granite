@@ -1,10 +1,8 @@
-package com.firstlinecode.granite.framework.core.internal;
+package com.firstlinecode.granite.framework.core;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import com.firstlinecode.granite.framework.core.IServer;
 
 public class ConsoleThread implements Runnable {
 	private volatile boolean stop = false;

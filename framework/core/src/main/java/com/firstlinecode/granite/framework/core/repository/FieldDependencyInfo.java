@@ -1,9 +1,6 @@
-package com.firstlinecode.granite.framework.core.internal.repository;
+package com.firstlinecode.granite.framework.core.repository;
 
 import java.lang.reflect.Field;
-
-import com.firstlinecode.granite.framework.core.repository.AbstractDependencyInfo;
-import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
 
 public class FieldDependencyInfo extends AbstractDependencyInfo {
 	private Field field;

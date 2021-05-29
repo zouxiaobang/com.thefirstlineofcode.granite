@@ -18,4 +18,9 @@ public class SessionEstablishedEvent implements IEvent {
 	public JabberId getJid() {
 		return jid;
 	}
+	
+	@Override
+	public Object clone() {
+		return new SessionEstablishedEvent(id, jid);
+	}
 }

@@ -23,4 +23,8 @@ public class ConnectionOpenedEvent implements IEvent {
 		return id;
 	}
 	
+	@Override
+	public Object clone() {
+		return new ConnectionOpenedEvent(id, ip, port);
+	}
 }

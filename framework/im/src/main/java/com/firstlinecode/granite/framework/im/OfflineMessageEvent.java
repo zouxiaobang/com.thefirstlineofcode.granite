@@ -39,4 +39,9 @@ public class OfflineMessageEvent implements IEvent {
 		this.message = message;
 	}
 	
+	@Override
+	public Object clone() {
+		return new OfflineMessageEvent(user, contact, message);
+	}
+	
 }

@@ -1,24 +1,24 @@
-package com.firstlinecode.granite.framework.processing.internal;
+package com.firstlinecode.granite.framework.routing;
 
 import com.firstlinecode.granite.framework.core.IService;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.pipe.IMessageReceiver;
 
-@Component("processing.service")
-public class ProcessingService implements IService {
-	
-	@Dependency("parsing.message.receiver")
-	private IMessageReceiver parsingMessageReceiver;
+@Component("routing.service")
+public class RoutingService implements IService {
+	@Dependency("any.message.receiver")
+	private IMessageReceiver anyMessageReceiver;
 	
 	@Override
 	public void start() throws Exception {
-		parsingMessageReceiver.start();
+		if (anyMessageReceiver != null)
+			anyMessageReceiver.start();
 	}
 
 	@Override
 	public void stop() throws Exception {
-		parsingMessageReceiver.stop();
+		if (anyMessageReceiver != null)
+			anyMessageReceiver.stop();
 	}
-
 }

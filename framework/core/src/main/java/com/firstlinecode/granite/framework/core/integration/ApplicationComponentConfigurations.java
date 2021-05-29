@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.framework.core.internal.integration;
+package com.firstlinecode.granite.framework.core.integration;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -11,7 +11,6 @@ import com.firstlinecode.granite.framework.core.commons.utils.SectionalPropertie
 import com.firstlinecode.granite.framework.core.config.DummyConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.PropertiesConfiguration;
-import com.firstlinecode.granite.framework.core.integration.IApplicationComponentConfigurations;
 
 
 public class ApplicationComponentConfigurations implements IApplicationComponentConfigurations {
