@@ -25,8 +25,12 @@
         	<artifactId>mina-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.firstlinecode.granite.framework</groupId>
-			<artifactId>granite-framework-stream</artifactId>
+			<groupId>com.firstlinecode.granite.pipes</groupId>
+			<artifactId>granite-pipes-stream</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.gem.server</groupId>
+			<artifactId>gem-server-bxmpp</artifactId>
 		</dependency>
 	</dependencies>
 	

@@ -11,9 +11,9 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.firstlinecode.basalt.protocol.Constants;
 import com.firstlinecode.basalt.oxm.preprocessing.IMessagePreprocessor;
 import com.firstlinecode.basalt.oxm.preprocessing.XmlMessagePreprocessorAdapter;
+import com.firstlinecode.basalt.protocol.Constants;
 
 public class MessageParser implements IMessageParser {
 	private Logger logger = LoggerFactory.getLogger(MessageParser.class);

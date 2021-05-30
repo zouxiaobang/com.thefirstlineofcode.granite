@@ -1,19 +1,77 @@
 package com.firstlinecode.granite.stream.standard;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.firstlinecode.basalt.oxm.OxmService;
+import com.firstlinecode.basalt.oxm.annotation.AnnotatedParserFactory;
+import com.firstlinecode.basalt.oxm.parsers.core.stream.StreamParser;
+import com.firstlinecode.basalt.oxm.parsing.IParsingFactory;
+import com.firstlinecode.basalt.oxm.translating.ITranslatingFactory;
+import com.firstlinecode.basalt.oxm.translators.core.stream.StreamTranslatorFactory;
+import com.firstlinecode.basalt.oxm.translators.error.StanzaErrorTranslatorFactory;
+import com.firstlinecode.basalt.oxm.translators.error.StreamErrorTranslatorFactory;
+import com.firstlinecode.basalt.protocol.core.JabberId;
+import com.firstlinecode.basalt.protocol.core.LangText;
+import com.firstlinecode.basalt.protocol.core.ProtocolChain;
+import com.firstlinecode.basalt.protocol.core.ProtocolException;
+import com.firstlinecode.basalt.protocol.core.stanza.error.InternalServerError;
+import com.firstlinecode.basalt.protocol.core.stanza.error.StanzaError;
+import com.firstlinecode.basalt.protocol.core.stream.Bind;
+import com.firstlinecode.basalt.protocol.core.stream.Feature;
+import com.firstlinecode.basalt.protocol.core.stream.Session;
+import com.firstlinecode.basalt.protocol.core.stream.Stream;
+import com.firstlinecode.basalt.protocol.core.stream.error.StreamError;
+import com.firstlinecode.basalt.protocol.core.stream.sasl.Mechanisms;
+import com.firstlinecode.basalt.protocol.core.stream.tls.StartTls;
 import com.firstlinecode.granite.framework.core.annotations.Component;
+import com.firstlinecode.granite.framework.core.annotations.Dependency;
+import com.firstlinecode.granite.framework.core.auth.IAuthenticator;
+import com.firstlinecode.granite.framework.core.commons.utils.CommonUtils;
+import com.firstlinecode.granite.framework.core.config.IConfiguration;
+import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
+import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
+import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
+import com.firstlinecode.granite.framework.core.connection.IClientConnectionContext;
+import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
+import com.firstlinecode.granite.framework.core.connection.IConnectionManager;
+import com.firstlinecode.granite.framework.core.connection.IConnectionManagerAware;
+import com.firstlinecode.granite.framework.core.event.ConnectionClosedEvent;
+import com.firstlinecode.granite.framework.core.event.ConnectionOpenedEvent;
+import com.firstlinecode.granite.framework.core.integration.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.integration.IApplicationComponentServiceAware;
+import com.firstlinecode.granite.framework.core.pipes.IClientMessageProcessor;
+import com.firstlinecode.granite.framework.core.pipes.IMessage;
+import com.firstlinecode.granite.framework.core.pipes.IMessageChannel;
+import com.firstlinecode.granite.framework.core.pipes.SimpleMessage;
+import com.firstlinecode.granite.framework.core.repository.IInitializable;
+import com.firstlinecode.granite.framework.core.routing.IRouter;
+import com.firstlinecode.granite.framework.core.session.ISessionListener;
+import com.firstlinecode.granite.framework.core.session.ISessionManager;
+import com.firstlinecode.granite.pipes.stream.IStreamNegotiant;
+import com.firstlinecode.granite.pipes.stream.StreamConstants;
+import com.firstlinecode.granite.pipes.stream.negotiants.InitialStreamNegotiant;
+import com.firstlinecode.granite.pipes.stream.negotiants.ResourceBindingNegotiant;
+import com.firstlinecode.granite.pipes.stream.negotiants.SaslNegotiant;
+import com.firstlinecode.granite.pipes.stream.negotiants.SessionEstablishmentNegotiant;
+import com.firstlinecode.granite.pipes.stream.negotiants.TlsNegotiant;
 
 @Component("standard.client.message.processor")
-public class StandardClientMessageProcessor /*implements IClientMessageProcessor, IConfigurationAware,
-		IApplicationConfigurationAware, IBundleContextAware, IInitializable */{
-/*	private static final Logger logger = LoggerFactory.getLogger(StandardClientMessageProcessor.class);
+public class StandardClientMessageProcessor implements IClientMessageProcessor, IConfigurationAware,
+		IServerConfigurationAware, IApplicationComponentServiceAware, IInitializable {
+	private static final Logger logger = LoggerFactory.getLogger(StandardClientMessageProcessor.class);
 	
 	private static final String CONFIGURATION_KEY_TLS_REQUIRED = "tls.required";
 	private static final String CONFIGURATION_KEY_SASL_FAILURE_RETRIES = "sasl.failure.retries";
 	private static final String CONFIGURATION_KEY_SASL_ABORT_RETRIES = "sasl.abort.retries";
 	private static final String CONFIGURATION_KEY_SASL_SUPPORTED_MECHANISMS = "sasl.supported.mechanisms";
 	
-	private static final String KEY_GRANITE_SESSION_LISTENERS = "Granite-Session-Listeners";
-
 	private static final Object KEY_NEGOTIANT = "granite.key.negotiant";
 	
 	private IConnectionManager connectionManager;
@@ -35,13 +93,9 @@ public class StandardClientMessageProcessor /*implements IClientMessageProcessor
 	protected int saslFailureRetries;
 	protected String[] saslSupportedMechanisms;
 	
-	protected BundleContext bundleContext;
-	
 	protected ISessionListener sessionListenerDelegate;
 	
-	private Map<String, List<ISessionListener>> bundleToSessionListeners;
-	
-	private volatile ISessionListener[] sessionListeners;
+	private List<ISessionListener> sessionListeners;
 	
 	private IApplicationComponentService appComponentService;
 	
@@ -54,7 +108,7 @@ public class StandardClientMessageProcessor /*implements IClientMessageProcessor
 		translatingFactory.register(StreamError.class, new StreamErrorTranslatorFactory());
 		translatingFactory.register(StanzaError.class, new StanzaErrorTranslatorFactory());
 		
-		bundleToSessionListeners = new HashMap<>();
+		sessionListeners = new ArrayList<>();
 		sessionListenerDelegate = new SessionListenerDelegate();
 	}
 	
@@ -62,11 +116,6 @@ public class StandardClientMessageProcessor /*implements IClientMessageProcessor
 
 		@Override
 		public void sessionEstablishing(IConnectionContext context, JabberId sessionJid) throws Exception {
-			ISessionListener[] sessionListeners = getSessionListeners();
-			
-			if (sessionListeners == null || sessionListeners.length == 0)
-				return;
-			
 			for (ISessionListener sessionListener : sessionListeners) {
 				sessionListener.sessionEstablishing(context, sessionJid);
 			}
@@ -74,11 +123,6 @@ public class StandardClientMessageProcessor /*implements IClientMessageProcessor
 		
 		@Override
 		public void sessionEstablished(IConnectionContext context, JabberId sessionJid) throws Exception {
-			ISessionListener[] sessionListeners = getSessionListeners();
-			
-			if (sessionListeners == null || sessionListeners.length == 0)
-				return;
-			
 			for (ISessionListener sessionListener : sessionListeners) {
 				sessionListener.sessionEstablished(context, sessionJid);
 			}
@@ -86,11 +130,6 @@ public class StandardClientMessageProcessor /*implements IClientMessageProcessor
 
 		@Override
 		public void sessionClosing(IConnectionContext context, JabberId sessionJid) throws Exception {
-			ISessionListener[] sessionListeners = getSessionListeners();
-			
-			if (sessionListeners == null || sessionListeners.length == 0)
-				return;
-			
 			for (ISessionListener sessionListener : sessionListeners) {
 				sessionListener.sessionClosing(context, sessionJid);
 			}
@@ -98,11 +137,6 @@ public class StandardClientMessageProcessor /*implements IClientMessageProcessor
 
 		@Override
 		public void sessionClosed(IConnectionContext context, JabberId sessionJid) throws Exception {
-			ISessionListener[] sessionListeners = getSessionListeners();
-			
-			if (sessionListeners == null || sessionListeners.length == 0)
-				return;
-			
 			for (ISessionListener sessionListener : sessionListeners) {
 				sessionListener.sessionClosed(context, sessionJid);
 			}
@@ -116,26 +150,6 @@ public class StandardClientMessageProcessor /*implements IClientMessageProcessor
 		
 	}
 	
-	public ISessionListener[] getSessionListeners() {
-		if (sessionListeners != null) {
-			return sessionListeners;
-		}
-		
-		synchronized (this) {
-			if (sessionListeners != null)
-				return sessionListeners;
-			
-			List<ISessionListener> allBundlesSessionListeners = new ArrayList<>();
-			for (List<ISessionListener> bundleSessionListeners : bundleToSessionListeners.values()) {
-				allBundlesSessionListeners.addAll(bundleSessionListeners);
-			}
-			
-			sessionListeners = allBundlesSessionListeners.toArray(new ISessionListener[allBundlesSessionListeners.size()]);
-			
-			return sessionListeners;
-		}
-	}
-
 	private void doProcess(IClientConnectionContext context, IMessage message) {
 		if (isCloseStreamRequest((String)message.getPayload())) {
 			context.write(translatingFactory.translate(new Stream(true)));
@@ -287,8 +301,8 @@ public class StandardClientMessageProcessor /*implements IClientMessageProcessor
 	}
 
 	@Override
-	public void setApplicationConfiguration(IApplicationConfiguration appConfiguration) {
-		hostName = appConfiguration.getDomainName();
+	public void setServerConfiguration(IServerConfiguration serverConfiguration) {
+		hostName = serverConfiguration.getDomainName();
 	}
 
 	@Override
@@ -352,65 +366,39 @@ public class StandardClientMessageProcessor /*implements IClientMessageProcessor
 	}
 
 	@Override
-	public void setBundleContext(BundleContext bundleContext) {
-		this.bundleContext = bundleContext;
-		
-	}
-
-	@Override
 	public void init() {
-		 appComponentService = OsgiUtils.getService(bundleContext, IApplicationComponentService.class);
-		OsgiUtils.trackContribution(bundleContext, KEY_GRANITE_SESSION_LISTENERS, new SessionListenersContributionTracker());
+		loadContributedSessionListeners();
 	}
 	
-	private class SessionListenersContributionTracker implements IContributionTracker {
-
-		@Override
-		public void found(Bundle bundle, String contribution) throws Exception {
-			StringTokenizer st = new StringTokenizer(contribution, ",");
-			if (st.countTokens() == 0)
-				return;
+	private void loadContributedSessionListeners() {
+		List<Class<? extends ISessionListener>> sessionListenerClasses = appComponentService.
+				getExtensionClasses(ISessionListener.class);
+		if (sessionListenerClasses == null || sessionListenerClasses.size() == 0) {
+			if (logger.isDebugEnabled())
+				logger.debug("No extension which's extension point is {} found.", ISessionListener.class.getName());
 			
-			List<ISessionListener> sessionListeners = new ArrayList<>();
-			while (st.hasMoreTokens()) {
-				String sType = st.nextToken();
-				Class<?> type = bundle.loadClass(sType);
-				
-				if (!ISessionListener.class.isAssignableFrom(type)) {
-					throw new RuntimeException(String.format("%s should implement %s interface.",
-							sType, ISessionListener.class.getName()));
-				}
-				
-				ISessionListener sessionListener = (ISessionListener)type.newInstance();
-				
-				appComponentService.inject(sessionListener, bundleContext);
-				
-				if (sessionListener instanceof IConnectionManagerAware) {
-					((IConnectionManagerAware)sessionListener).setConnectionManager(connectionManager);
-				}
-				
-				sessionListeners.add(sessionListener);
-			}
-			
-			synchronized (StandardClientMessageProcessor.this) {
-				bundleToSessionListeners.put(bundle.getSymbolicName(), sessionListeners);
-				sessionListeners = null;
-			}
-		}
-
-		@Override
-		public void lost(Bundle bundle, String contribution) throws Exception {
-			synchronized (StandardClientMessageProcessor.this) {
-				bundleToSessionListeners.remove(bundle.getSymbolicName());
-				sessionListeners = null;
-			}
+			return;
 		}
 		
+		for (Class<? extends ISessionListener> sessionListenerClass : sessionListenerClasses) {
+			ISessionListener sessionListener = appComponentService.createRawExtension(sessionListenerClass);
+			if (sessionListener instanceof IConnectionManagerAware) {
+				((IConnectionManagerAware)sessionListener).setConnectionManager(connectionManager);
+			}
+			
+			appComponentService.inject(sessionListener);
+			sessionListeners.add(sessionListener);
+		}
 	}
 
 	@Override
 	public void setConnectionManager(IConnectionManager connectionManager) {
 		this.connectionManager = connectionManager;
-	}*/
+	}
+
+	@Override
+	public void setApplicationComponentService(IApplicationComponentService appComponentService) {
+		this.appComponentService = appComponentService;
+	}
 
 }

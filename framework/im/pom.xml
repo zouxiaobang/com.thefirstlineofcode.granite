@@ -27,7 +27,7 @@
 		</dependency>-->
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
-			<artifactId>granite-framework-processing</artifactId>
+			<artifactId>granite-framework-core</artifactId>
 		</dependency>
 	</dependencies>
 

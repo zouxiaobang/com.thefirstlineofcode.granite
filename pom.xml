@@ -80,11 +80,12 @@
 	<modules>
 		<module>server</module>
 		<module>framework</module>
-<!--		<module>stream</module>
-		<module>im</module>
-		<module>leps</module>
+		<module>pipes</module>
+		<module>stream</module>
+<!--		<module>im</module>
+		<module>leps</module> -->
 		<module>xeps</module>
-		<module>lite</module>
+<!--		<module>lite</module>
 		<module>cluster</module>
 		<module>cluster-debug</module> -->
 		<module>pack</module>
@@ -188,6 +189,11 @@
 				<artifactId>basalt-oxm</artifactId>
 				<version>${basalt.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.basalt.xeps</groupId>
+				<artifactId>basalt-xeps-ibr</artifactId>
+				<version>${basalt.version}</version>
+			</dependency>
 			<!-- Granite Libraries -->
 			<dependency>
         			<groupId>com.firstlinecode.granite.framework</groupId>
@@ -196,13 +202,25 @@
       			</dependency>
 			<dependency>
         			<groupId>com.firstlinecode.granite.framework</groupId>
-        			<artifactId>granite-framework-stream</artifactId>
+        			<artifactId>granite-framework-im</artifactId>
         			<version>${granite.version}</version>
       			</dependency>
 			<dependency>
-        			<groupId>com.firstlinecode.granite.framework</groupId>
-        			<artifactId>granite-framework-processing</artifactId>
+        			<groupId>com.firstlinecode.granite.pipes</groupId>
+        			<artifactId>granite-pipes-stream</artifactId>
         			<version>${granite.version}</version>
+      			</dependency>
+			<dependency>
+        			<groupId>com.firstlinecode.granite.stream</groupId>
+        			<artifactId>granite-stream-standard</artifactId>
+        			<version>${granite.version}</version>
+      			</dependency>
+			<!-- GEM libraries -->
+			<dependency>
+        			<groupId>com.firstlinecode.gem.server</groupId>
+        			<artifactId>gem-server-bxmpp</artifactId>
+        			<version>${gem.version}</version>
+				<optional>true</optional>
       			</dependency>
 		</dependencies>
 	</dependencyManagement>

@@ -16,6 +16,8 @@ import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.filter.executor.OrderedThreadPoolExecutor;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
+import org.pf4j.PluginManager;
+import org.pf4j.PluginWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +31,7 @@ import com.firstlinecode.basalt.protocol.core.stanza.error.BadRequest;
 import com.firstlinecode.basalt.protocol.core.stream.Stream;
 import com.firstlinecode.basalt.protocol.core.stream.error.ConnectionTimeout;
 import com.firstlinecode.basalt.protocol.core.stream.error.InvalidXml;
+import com.firstlinecode.gem.server.bxmpp.BxmppPlugin;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
@@ -37,22 +40,25 @@ import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
 import com.firstlinecode.granite.framework.core.connection.IClientConnectionContext;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
-import com.firstlinecode.granite.framework.core.pipe.IClientMessageProcessor;
-import com.firstlinecode.granite.framework.core.pipe.IMessageProcessor;
-import com.firstlinecode.granite.framework.core.pipe.SimpleMessage;
+import com.firstlinecode.granite.framework.core.pipes.IClientMessageProcessor;
+import com.firstlinecode.granite.framework.core.pipes.IMessageProcessor;
+import com.firstlinecode.granite.framework.core.pipes.SimpleMessage;
+import com.firstlinecode.granite.framework.core.pipes.stream.IClientMessageReceiver;
+import com.firstlinecode.granite.framework.core.platform.IPluginManagerAware;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.routing.ILocalNodeIdProvider;
 import com.firstlinecode.granite.framework.core.routing.IRouter;
 import com.firstlinecode.granite.framework.core.session.ISession;
 import com.firstlinecode.granite.framework.core.session.ISessionManager;
-import com.firstlinecode.granite.framework.stream.IClientMessageReceiver;
-import com.firstlinecode.granite.framework.stream.StreamConstants;
+import com.firstlinecode.granite.pipes.stream.StreamConstants;
 import com.firstlinecode.granite.stream.standard.codec.MessageDecoder;
 import com.firstlinecode.granite.stream.standard.codec.MessageEncoder;
 
 @Component("socket.message.receiver")
 public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMessageReceiver,
-			IServerConfigurationAware, IConfigurationAware, IInitializable {
+			IServerConfigurationAware, IConfigurationAware, IInitializable, IPluginManagerAware {
+	private static final String PLUGIN_NAME_GEM_SERVER_BXMPP = "com.firstlinecode.gem.server.gem-server-bxmpp";
+
 	private static final String DIR_NAME_SECURITY = "/security";
 
 	private static final Logger logger = LoggerFactory.getLogger(SocketMessageReceiver.class);
@@ -86,6 +92,8 @@ public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMe
 	private ISessionManager sessionManager;
 	private IRouter router;
 	private ILocalNodeIdProvider localNodeIdProvider;
+	
+	private PluginManager pluginManager;
 	
 	private IBinaryXmppProtocolConverter bxmppProtocolConverter;
 	private IMessagePreprocessor binaryMessagePreprocessor;
@@ -319,15 +327,28 @@ public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMe
 
 	@Override
 	public void init() {
-		if (Constants.MESSAGE_FORMAT_BINARY.equals(messageFormat)) {
-			bxmppProtocolConverter = OsgiUtils.getService(bundleContext, IBinaryXmppProtocolConverter.class);
-			binaryMessagePreprocessor = OsgiUtils.getService(bundleContext, IMessagePreprocessor.class, IServerConfiguration.SERVER_CONFIG_KEY_MESSAGE_FORMAT, Constants.MESSAGE_FORMAT_BINARY);
+		if (!Constants.MESSAGE_FORMAT_BINARY.equals(messageFormat))
+			return;
+		
+		PluginWrapper bxmppPluginWrapper = pluginManager.getPlugin(PLUGIN_NAME_GEM_SERVER_BXMPP);
+		if (bxmppPluginWrapper == null) {
+			if (logger.isWarnEnabled())
+				logger.warn("You configure Granite Server to use binary message format but BXMPP server plugin not be found. "
+						+ "Please add gem bxmpp plugins to your plugins directory. Ignore to configure message format to binary. "
+						+ "Still use XML message format.");
 			
-			if (bxmppProtocolConverter == null || binaryMessagePreprocessor == null) {
-				logger.warn("Can't get BXMPP protocol converter or binary message preprocessor. Please add gem bxmpp plugins to your plugins directory. Ignore to configure message format to binary. Still use XML message format.");
-				messageFormat = Constants.NAMESPACE_XML;
-			}
+			messageFormat = Constants.NAMESPACE_XML;
+			return;
 		}
+			
+		BxmppPlugin plugin = (BxmppPlugin)bxmppPluginWrapper.getPlugin();
+		bxmppProtocolConverter = plugin.getBxmppProtocolConverter();
+		binaryMessagePreprocessor = plugin.getBinaryMessagePreprocessor();
+	}
+
+	@Override
+	public void setPluginManager(PluginManager pluginManager) {
+		this.pluginManager = pluginManager;
 	}
 	
 }
