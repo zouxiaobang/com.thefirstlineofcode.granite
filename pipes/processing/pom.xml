@@ -14,7 +14,7 @@
 	
 	<groupId>com.firstlinecode.granite.pipes</groupId>
 	<artifactId>granite-pipes-processing</artifactId>
-	<name>Stage implemention for pipe processing</name>
+	<name>Stage implemention for pipes processing</name>
 
 	<dependencies>
 		<dependency>

@@ -13,12 +13,16 @@
 	
 	<groupId>com.firstlinecode.granite.xeps</groupId>
 	<artifactId>granite-xeps-ibr</artifactId>
-	<name>XEPs In-Band Registration protocol implementation</name>
+	<name>XEPs in-band registration protocol implementation</name>
 	
 	<dependencies>
 		<dependency>
 			<groupId>com.firstlinecode.basalt.xeps</groupId>
 			<artifactId>basalt-xeps-ibr</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.framework</groupId>
+			<artifactId>granite-framework-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.stream</groupId>

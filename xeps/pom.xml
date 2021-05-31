@@ -18,7 +18,7 @@
 
 	<modules>
 		<module>ibr</module>
-<!--		<module>ping</module> -->
+		<module>ping</module>
 	</modules>
 
 </project>

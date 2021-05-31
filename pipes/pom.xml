@@ -14,7 +14,7 @@
 	<groupId>com.firstlinecode.granite</groupId>
 	<artifactId>granite-pipes</artifactId>
 	<packaging>pom</packaging>
-	<name>Stage implementents for granite server pipe</name>
+	<name>Stage implementents for granite server pipes</name>
 
 	<modules>
 		<module>stream</module>

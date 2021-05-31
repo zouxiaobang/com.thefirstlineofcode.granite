@@ -194,6 +194,11 @@
 				<artifactId>basalt-xeps-ibr</artifactId>
 				<version>${basalt.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.basalt.xeps</groupId>
+				<artifactId>basalt-xeps-ping</artifactId>
+				<version>${basalt.version}</version>
+			</dependency>
 			<!-- Granite Libraries -->
 			<dependency>
         			<groupId>com.firstlinecode.granite.framework</groupId>

@@ -4,27 +4,26 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	
 	<parent>
-        <groupId>com.firstlinecode.granite</groupId>
-        <artifactId>granite-pipes</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
+		<groupId>com.firstlinecode.granite</groupId>
+		<artifactId>granite-xeps</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
 	
-	<groupId>com.firstlinecode.granite.pipes</groupId>
-	<artifactId>granite-pipes-routing</artifactId>
-	<name>Stage implemention for pipes routing</name>
-
+	<groupId>com.firstlinecode.granite.xeps</groupId>
+	<artifactId>granite-xeps-ping</artifactId>
+	<name>XEPs ping protocol implementation</name>
+	
 	<dependencies>
 		<dependency>
-			<groupId>com.firstlinecode.basalt</groupId>
-			<artifactId>basalt-oxm</artifactId>
+			<groupId>com.firstlinecode.basalt.xeps</groupId>
+			<artifactId>basalt-xeps-ping</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
 			<artifactId>granite-framework-core</artifactId>
 		</dependency>
 	</dependencies>
-
+	
 </project>

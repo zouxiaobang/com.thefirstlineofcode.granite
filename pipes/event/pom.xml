@@ -14,7 +14,7 @@
 	
 	<groupId>com.firstlinecode.granite.pipes</groupId>
 	<artifactId>granite-pipes-event</artifactId>
-	<name>Stage implemention for pipe event</name>
+	<name>Stage implemention for pipes event</name>
 
 	<dependencies>
 		<dependency>
