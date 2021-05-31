@@ -11,7 +11,7 @@
 	</parent>
 
 	<groupId>com.firstlinecode.granite</groupId>
-	<artifactId>pack</artifactId>
+	<artifactId>granite-pack</artifactId>
 	<packaging>pom</packaging>
 	<name>Granite pack tools</name>
 

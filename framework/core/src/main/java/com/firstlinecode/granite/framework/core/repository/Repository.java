@@ -51,11 +51,11 @@ public class Repository implements IRepository, ISingletonComponentHolder {
 	private Map<String, IComponentInfo> components;
 	private List<String> availableServices;
 	private IConfigurationManager configurationManager;
-	private IApplicationComponentService applicationComponentService;
+	private IApplicationComponentService appComponentService;
 	
-	public Repository(IServerConfiguration serverConfiguration, IApplicationComponentService applicationComponentService) {
+	public Repository(IServerConfiguration serverConfiguration, IApplicationComponentService appComponentService) {
 		this.serverConfiguration = serverConfiguration;
-		this.applicationComponentService = applicationComponentService;
+		this.appComponentService = appComponentService;
 		
 		componentBindings = new HashMap<>();
 		
@@ -69,11 +69,39 @@ public class Repository implements IRepository, ISingletonComponentHolder {
 	public void init() {
 		readComponentBindings();
 		createConfigurationManager();
-		loadComponents();
+		
+		loadSystemComponents();
+		loadExtendedComponents();
+		
 		processAvailableServices();
 	}
 	
-	private void loadComponents() {
+	private void loadExtendedComponents() {
+		List<Class<? extends IComponentProvider>> componentProviderClasses = appComponentService.getExtensionClasses(IComponentProvider.class);
+		for (Class<? extends IComponentProvider> componentProviderClass : componentProviderClasses) {
+			IComponentProvider componentProvider = appComponentService.createExtension(componentProviderClass);
+			Class<?>[] componentClasses = componentProvider.getComponentClasses();
+			if (componentClasses == null || componentClasses.length == 0)
+				continue;
+			
+			for (Class<?> componentClass : componentClasses) {				
+				Annotation[] annotations = componentClass.getAnnotations();
+				for (Annotation annotation : annotations) {
+					if (annotation instanceof Component) {
+						found(componentClass, (Component)annotation);
+						continue;
+					}
+					
+					if (logger.isWarnEnabled()) {
+						logger.warn("Component class {} didn't load as a component because it isn't annotated by @Component. Please check your code.",
+								componentClass.getName());
+					}
+				}
+			}
+		}
+	}
+
+	private void loadSystemComponents() {
 		File libsDir = new File(serverConfiguration.getSystemLibsDir());
 		if (!libsDir.exists() || !libsDir.isDirectory())
 			throw new IllegalArgumentException(String.format("Can't determine system libraries directory. %s doesn't exist or isn't a directory.", libsDir));
@@ -289,7 +317,7 @@ public class Repository implements IRepository, ISingletonComponentHolder {
 		logger.info("Service {} is available.", componentInfo);
 		
 		IServiceWrapper serviceWrapper = new ServiceWrapper(serverConfiguration, configurationManager,
-				this, applicationComponentService, componentInfo);
+				this, appComponentService, componentInfo);
 		serviceListener.available(serviceWrapper);
 	}
 

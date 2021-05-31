@@ -40,7 +40,7 @@ public class ServerConfiguration implements IServerConfiguration {
 	public ServerConfiguration(String serverHome) {
 		this.serverHome = serverHome;
 		configDir = getConfigurationDir();
-		merge(getServerConfigFile(configDir));
+		readConfiguratioin(getServerConfigFile(configDir));
 	}
 	
 	private File getServerConfigFile(String configDir) {
@@ -61,7 +61,7 @@ public class ServerConfiguration implements IServerConfiguration {
 		return serverHome;
 	}
 
-	private void merge(File configFile) {
+	private void readConfiguratioin(File configFile) {
 		if (configFile == null)
 			return;
 

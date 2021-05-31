@@ -13,13 +13,10 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<springframework.version>4.3.9.RELEASE_1</springframework.version>
-		<basalt.version>1.1.0.RELEASE</basalt.version>
+		<basalt.version>1.1.0-RELEASE</basalt.version>
 		<granite.version>1.0.0-SNAPSHOT</granite.version>
-		<granite.xeps.component.version>0.2.1.RELEASE</granite.xeps.component.version>
-		<granite.lite.version>0.2.1.RELEASE</granite.lite.version>
-		<granite.cluster.version>0.2.1.RELEASE</granite.cluster.version>
-		<sand.version>0.1.0.RELEASE</sand.version>
-		<gem.version>0.2.0.RELEASE</gem.version>
+		<sand.version>0.1.0-RELEASE</sand.version>
+		<gem.version>0.2.0-RELEASE</gem.version>
 	</properties>
 	
 	<build>
@@ -201,32 +198,67 @@
 			</dependency>
 			<!-- Granite Libraries -->
 			<dependency>
-        			<groupId>com.firstlinecode.granite.framework</groupId>
-        			<artifactId>granite-framework-core</artifactId>
-        			<version>${granite.version}</version>
-      			</dependency>
+				<groupId>com.firstlinecode.granite</groupId>
+				<artifactId>granite-server</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
 			<dependency>
-        			<groupId>com.firstlinecode.granite.framework</groupId>
-        			<artifactId>granite-framework-im</artifactId>
-        			<version>${granite.version}</version>
-      			</dependency>
+				<groupId>com.firstlinecode.granite.framework</groupId>
+				<artifactId>granite-framework-core</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
 			<dependency>
-        			<groupId>com.firstlinecode.granite.pipes</groupId>
-        			<artifactId>granite-pipes-stream</artifactId>
-        			<version>${granite.version}</version>
-      			</dependency>
+ 				<groupId>com.firstlinecode.granite.framework</groupId>
+				<artifactId>granite-framework-im</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
 			<dependency>
-        			<groupId>com.firstlinecode.granite.stream</groupId>
-        			<artifactId>granite-stream-standard</artifactId>
-        			<version>${granite.version}</version>
-      			</dependency>
+				<groupId>com.firstlinecode.granite.pipes</groupId>
+				<artifactId>granite-pipes-stream</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.pipes</groupId>
+				<artifactId>granite-pipes-parsing</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.pipes</groupId>
+				<artifactId>granite-pipes-processing</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.pipes</groupId>
+				<artifactId>granite-pipes-routing</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.pipes</groupId>
+				<artifactId>granite-pipes-event</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.stream</groupId>
+				<artifactId>granite-stream-standard</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.xeps</groupId>
+				<artifactId>granite-xeps-ibr</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.xeps</groupId>
+				<artifactId>granite-xeps-ping</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
 			<!-- GEM libraries -->
 			<dependency>
-        			<groupId>com.firstlinecode.gem.server</groupId>
-        			<artifactId>gem-server-bxmpp</artifactId>
-        			<version>${gem.version}</version>
+				<groupId>com.firstlinecode.gem.server</groupId>
+				<artifactId>gem-server-bxmpp</artifactId>
+				<version>${gem.version}</version>
 				<optional>true</optional>
-      			</dependency>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	

@@ -7,13 +7,13 @@
 	
 	<parent>
 		<groupId>com.firstlinecode.granite</groupId>
-		<artifactId>pack</artifactId>
-		<version>0.2.1.RELEASE</version>
+		<artifactId>granite-pack</artifactId>
+		<version>1.0.0-SNAPSHOTE</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
 	<groupId>com.firstlinecode.granite.pack.lite</groupId>
-	<artifactId>leps</artifactId>
+	<artifactId>granite-pack-lite-leps</artifactId>
 	
 	<dependencies>
 		<dependency>

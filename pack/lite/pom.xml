@@ -7,7 +7,7 @@
 	
 	<parent>
 		<groupId>com.firstlinecode.granite</groupId>
-		<artifactId>pack</artifactId>
+		<artifactId>granite-pack</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
@@ -17,9 +17,48 @@
 	<name>Granite deploy lite packer</name>
 	
 	<dependencies>
+		<!-- System Libraries -->
+		<dependency>
+			<groupId>com.firstlinecode.granite</groupId>
+			<artifactId>granite-server</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
 			<artifactId>granite-framework-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.pipes</groupId>
+			<artifactId>granite-pipes-stream</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.pipes</groupId>
+			<artifactId>granite-pipes-parsing</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.pipes</groupId>
+			<artifactId>granite-pipes-processing</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.pipes</groupId>
+			<artifactId>granite-pipes-routing</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.pipes</groupId>
+			<artifactId>granite-pipes-event</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.stream</groupId>
+			<artifactId>granite-stream-standard</artifactId>
+		</dependency>
+		
+		<!-- Plugins -->
+		<dependency>
+			<groupId>com.firstlinecode.granite.xeps</groupId>
+			<artifactId>granite-xeps-ibr</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.xeps</groupId>
+			<artifactId>granite-xeps-ping</artifactId>
 		</dependency>
 	</dependencies>
 	

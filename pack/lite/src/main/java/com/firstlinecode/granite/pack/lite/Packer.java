@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -21,9 +23,11 @@ public class Packer {
 	private static final String SAND_SERVER_CONFIG_FILE = "sand-server.ini";
 	
 	private Options options;
+	private List<String> systemLibraries;
 	
 	public Packer(Options options) {
 		this.options = options;
+		systemLibraries = new ArrayList<>();
 	}
 	
 	public void pack() {
@@ -49,10 +53,13 @@ public class Packer {
 			
 			copyBasicServerToZip(basicServerZip, zos);
 			
-			File[] plugins = dependencyDir.listFiles();
-			if (plugins != null && plugins.length > 0) {
-				for (File plugin : plugins) {
-					writeToPlugins(zos, plugin);
+			File[] dependencies = dependencyDir.listFiles();
+			if (dependencies != null && dependencies.length > 0) {
+				for (File dependency : dependencies) {
+					if (isPlugin(dependency.getName())) {
+						System.out.println(dependency);
+						writeToPlugins(zos, dependency);
+					}
 				}
 			}
 			
@@ -72,12 +79,23 @@ public class Packer {
 		}
 	}
 
+	private boolean isPlugin(String dependency) {
+		return !systemLibraries.contains(dependency);
+	}
+
 	private void copyBasicServerToZip(File basicServerZip, ZipOutputStream zos) {		
 		ZipInputStream zis = null;
 		try {
 			zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(basicServerZip)));
 			ZipEntry entry = null;
 			while ((entry = zis.getNextEntry()) != null) {
+				String entryName = entry.getName();
+				if (isSystemLibrary(entryName)) {
+					int lastSlash = entryName.lastIndexOf('/');
+					String libraryName = entryName.substring(lastSlash + 1);
+					systemLibraries.add(libraryName);
+				}
+				
 				writeEntryToZip(zis, zos, entry);
 			}
 		} catch (IOException e) {
@@ -90,6 +108,10 @@ public class Packer {
 					e.printStackTrace();
 				}
 		}
+	}
+
+	private boolean isSystemLibrary(String entryName) {
+		return entryName.endsWith(".jar") && entryName.indexOf("/libs/") != -1;
 	}
 
 	private void writeEntryToZip(ZipInputStream zis, ZipOutputStream zos, ZipEntry inEntry) throws IOException {
@@ -216,6 +238,11 @@ public class Packer {
 	}
 	
 	private void writeToPlugins(ZipOutputStream zos, File plugin) throws IOException {
+		File systemLibrary = new File(options.getAppName() + "/libs/" + plugin.getName());
+		// This is a system library. Don't write it as a plugin.
+		if (systemLibrary.exists())
+			return;
+		
 		writeFileToZip(zos, options.getAppName() + "/plugins/" + plugin.getName(), plugin);
 		
 	}

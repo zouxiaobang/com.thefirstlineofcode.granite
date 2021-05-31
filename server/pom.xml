@@ -62,6 +62,31 @@
 			<groupId>com.firstlinecode.granite.framework</groupId>
 			<artifactId>granite-framework-core</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.pipes</groupId>
+			<artifactId>granite-pipes-stream</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.pipes</groupId>
+			<artifactId>granite-pipes-parsing</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.pipes</groupId>
+			<artifactId>granite-pipes-processing</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.pipes</groupId>
+			<artifactId>granite-pipes-routing</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.pipes</groupId>
+			<artifactId>granite-pipes-event</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.stream</groupId>
+			<artifactId>granite-stream-standard</artifactId>
+		</dependency>
+
 	</dependencies>
 	
 </project>
