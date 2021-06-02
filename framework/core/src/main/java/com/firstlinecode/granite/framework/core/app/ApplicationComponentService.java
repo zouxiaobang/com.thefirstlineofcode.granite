@@ -18,13 +18,23 @@ public class ApplicationComponentService implements IApplicationComponentService
 	private PluginManager pluginManager;
 	private IApplicationComponentConfigurations appComponentConfigurations;
 	private boolean started;
-
+	
 	public ApplicationComponentService(IServerConfiguration serverConfiguration,
 			IApplicationComponentConfigurations appComponentConfigurations) {
+		this(serverConfiguration, appComponentConfigurations, null);
+	}
+
+	public ApplicationComponentService(IServerConfiguration serverConfiguration,
+			IApplicationComponentConfigurations appComponentConfigurations,
+			PluginManager pluginManager) {
 		this.serverConfiguration = serverConfiguration;
 		this.appComponentConfigurations = appComponentConfigurations;
 		
-		pluginManager = createPluginManager();
+		if (pluginManager == null) {
+			pluginManager = createPluginManager();
+		} else {
+			this.pluginManager = pluginManager;
+		}
 	}
 	
 	protected PluginManager createPluginManager() {

@@ -2,7 +2,9 @@ package com.firstlinecode.granite.server;
 
 import java.net.URL;
 
+import org.pf4j.PluginManager;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.firstlinecode.granite.framework.core.ConsoleThread;
 import com.firstlinecode.granite.framework.core.IServer;
@@ -47,9 +49,22 @@ public class Main {
 				serverConfiguration.getApplicationLogNamespaces());
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		
-		IApplicationComponentService appComponentService = new ApplicationComponentService(serverConfiguration,
-				readAppComponentConfigurations(serverConfiguration));	
-		IServer server = new ServerProxy().start(serverConfiguration, appComponentService);
+		AnnotationConfigApplicationContext appContext = null;
+		IServer server = null;
+		try {
+			appContext = new AnnotationConfigApplicationContext(SpringConfiguration.class);
+			PluginManager pluginManager = appContext.getBean(PluginManager.class);			
+			IApplicationComponentService appComponentService = new ApplicationComponentService(serverConfiguration,
+					readAppComponentConfigurations(serverConfiguration), pluginManager);
+			
+			server = new ServerProxy().start(serverConfiguration, appComponentService);
+		} catch (Exception e) {
+			throw new RuntimeException("Can't start Granite Server.", e);
+		} finally {
+			if (appContext != null) {
+				appContext.close();
+			}
+		}
 		
 		if (options.isConsole()) {
 			Thread consoleThread = new Thread(new ConsoleThread(server), "Granite Server Console Thread");
