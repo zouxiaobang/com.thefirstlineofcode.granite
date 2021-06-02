@@ -87,8 +87,8 @@
 <!--		<module>im</module>
 		<module>leps</module> -->
 		<module>xeps</module>
-<!--		<module>lite</module>
-		<module>cluster</module>
+		<module>lite</module>
+<!--		<module>cluster</module>
 		<module>cluster-debug</module> -->
 		<module>pack</module>
 	</modules>
@@ -210,6 +210,11 @@
 			<dependency>
 				<groupId>com.firstlinecode.granite.framework</groupId>
 				<artifactId>granite-framework-core</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.framework.app</groupId>
+				<artifactId>granite-framework-app-spring</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>

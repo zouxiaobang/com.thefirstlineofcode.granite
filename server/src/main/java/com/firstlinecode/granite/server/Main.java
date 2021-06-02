@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 import com.firstlinecode.granite.framework.core.ConsoleThread;
 import com.firstlinecode.granite.framework.core.IServer;
 import com.firstlinecode.granite.framework.core.ServerProxy;
+import com.firstlinecode.granite.framework.core.app.ApplicationComponentConfigurations;
+import com.firstlinecode.granite.framework.core.app.ApplicationComponentService;
+import com.firstlinecode.granite.framework.core.app.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.ServerConfiguration;
 import com.firstlinecode.granite.framework.core.log.LogFilter;
@@ -40,16 +43,22 @@ public class Main {
 		}
 		
 		IServerConfiguration serverConfiguration = readServerConfiguration();
-		configureLog(serverConfiguration.getLogLevel(), serverConfiguration.isThirdpartyLogEnabled(), serverConfiguration.getApplicationLogNamespaces());
+		configureLog(serverConfiguration.getLogLevel(), serverConfiguration.isThirdpartyLogEnabled(),
+				serverConfiguration.getApplicationLogNamespaces());
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		
-		ServerProxy serverProxy = new ServerProxy();
-		IServer server = serverProxy.start(serverConfiguration);
+		IApplicationComponentService appComponentService = new ApplicationComponentService(serverConfiguration,
+				readAppComponentConfigurations(serverConfiguration));	
+		IServer server = new ServerProxy().start(serverConfiguration, appComponentService);
 		
 		if (options.isConsole()) {
 			Thread consoleThread = new Thread(new ConsoleThread(server), "Granite Server Console Thread");
 			consoleThread.start();
 		}
+	}
+	
+	private ApplicationComponentConfigurations readAppComponentConfigurations(IServerConfiguration serverConfiguration) {
+		return new ApplicationComponentConfigurations(serverConfiguration.getConfigurationDir());
 	}
 	
 	private void configureLog(String logLevel, boolean enableThidpartyLogs, String[] applicationNamespaces) {

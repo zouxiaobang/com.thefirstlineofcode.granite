@@ -1,13 +1,13 @@
 package com.firstlinecode.granite.framework.core.repository;
 
 import com.firstlinecode.granite.framework.core.IService;
+import com.firstlinecode.granite.framework.core.app.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.app.IApplicationComponentServiceAware;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IConfigurationManager;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
-import com.firstlinecode.granite.framework.core.integration.IApplicationComponentService;
-import com.firstlinecode.granite.framework.core.integration.IApplicationComponentServiceAware;
 
 public class ServiceWrapper implements IServiceWrapper {
 	private IServerConfiguration serverConfiguration;

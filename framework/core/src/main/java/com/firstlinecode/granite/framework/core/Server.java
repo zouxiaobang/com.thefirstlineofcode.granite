@@ -3,9 +3,9 @@ package com.firstlinecode.granite.framework.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.firstlinecode.granite.framework.core.app.ApplicationComponentService;
+import com.firstlinecode.granite.framework.core.app.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
-import com.firstlinecode.granite.framework.core.integration.ApplicationComponentConfigurations;
-import com.firstlinecode.granite.framework.core.integration.ApplicationComponentService;
 import com.firstlinecode.granite.framework.core.repository.IRepository;
 import com.firstlinecode.granite.framework.core.repository.IServiceListener;
 import com.firstlinecode.granite.framework.core.repository.IServiceWrapper;
@@ -16,27 +16,22 @@ public class Server implements IServer, IServiceListener {
 		
 	private IServerConfiguration serverConfiguration;
 	
-	private ApplicationComponentService appComponentService;
+	private IApplicationComponentService appComponentService;
 	private IRepository repository;
 		
-	public Server(IServerConfiguration serverConfiguration) {
+	public Server(IServerConfiguration serverConfiguration, IApplicationComponentService appComponentService) {
 		this.serverConfiguration = serverConfiguration;
+		this.appComponentService = appComponentService;
 	}
 
 	@Override
 	public void start() throws Exception {
-		appComponentService = new ApplicationComponentService(serverConfiguration,
-				readAppComponentConfigurations());
 		appComponentService.start();
 		
 		repository = new Repository(serverConfiguration, appComponentService);
 		repository.init();
 		
 		logger.info("Granite Server has Started");
-	}
-
-	private ApplicationComponentConfigurations readAppComponentConfigurations() {
-		return new ApplicationComponentConfigurations(serverConfiguration.getConfigurationDir());
 	}
 
 	@Override
@@ -47,8 +42,8 @@ public class Server implements IServer, IServiceListener {
 	}
 
 	@Override
-	public IServerContext getContext() {
-		return new ServerContext(serverConfiguration, repository, appComponentService);
+	public IServerContext getServerContext() {
+		return new ServerContext(serverConfiguration, repository, (ApplicationComponentService)appComponentService);
 	}
 
 	@Override

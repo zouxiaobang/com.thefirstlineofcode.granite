@@ -6,7 +6,7 @@ import org.pf4j.Plugin;
 import org.pf4j.PluginFactory;
 import org.pf4j.PluginWrapper;
 
-import com.firstlinecode.granite.framework.core.integration.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.app.IApplicationComponentService;
 
 public class AppComponentPluginManager extends DefaultPluginManager {
 	private IApplicationComponentService appComponentService;

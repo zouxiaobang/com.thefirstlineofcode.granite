@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.framework.core.integration.data;
+package com.firstlinecode.granite.framework.core.app.data;
 
 public interface IDataObjectFactoryAware {
 	void setDataObjectFactory(IDataObjectFactory dataObjectFactory);

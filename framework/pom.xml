@@ -12,13 +12,13 @@
 	</parent>
 
 	<groupId>com.firstlinecode.granite</groupId>
-	<artifactId>framework</artifactId>
+	<artifactId>granite-framework</artifactId>
 	<packaging>pom</packaging>
 	<name>XMPP server framework</name>
 
 	<modules>
 		<module>core</module>
-<!--		<module>supports</module> -->
+		<module>app</module>
 		<module>im</module>
 	</modules>
 

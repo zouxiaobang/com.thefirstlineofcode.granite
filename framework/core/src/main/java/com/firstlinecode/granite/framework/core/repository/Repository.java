@@ -29,11 +29,11 @@ import org.slf4j.LoggerFactory;
 import com.firstlinecode.granite.framework.core.IService;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
+import com.firstlinecode.granite.framework.core.app.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.commons.utils.IoUtils;
 import com.firstlinecode.granite.framework.core.config.IConfigurationManager;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.LocalFileConfigurationManager;
-import com.firstlinecode.granite.framework.core.integration.IApplicationComponentService;
 
 public class Repository implements IRepository, ISingletonComponentHolder {
 	private static final String CLASS_FILE_EXTENSION_NAME = ".class";

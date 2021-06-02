@@ -4,6 +4,7 @@ package com.firstlinecode.granite.framework.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.firstlinecode.granite.framework.core.app.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 
 public class ServerProxy {
@@ -11,8 +12,8 @@ public class ServerProxy {
 	
 	private IServer server;
 	
-	public IServer start(IServerConfiguration serverConfiguration) {
-		server = new Server(serverConfiguration);
+	public IServer start(IServerConfiguration serverConfiguration, IApplicationComponentService appComponentService) {
+		server = createServer(serverConfiguration, appComponentService);
 		try {
 			server.start();
 		} catch (Exception e) {
@@ -20,6 +21,10 @@ public class ServerProxy {
 		}
 		
 		return server;
+	}
+
+	protected Server createServer(IServerConfiguration serverConfiguration, IApplicationComponentService appComponentService) {
+		return new Server(serverConfiguration, appComponentService);
 	}
 	
 	public void stop() {

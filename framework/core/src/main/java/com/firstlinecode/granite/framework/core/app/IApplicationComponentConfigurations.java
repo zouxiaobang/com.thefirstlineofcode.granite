@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.framework.core.integration;
+package com.firstlinecode.granite.framework.core.app;
 
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 

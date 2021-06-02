@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.framework.core.integration;
+package com.firstlinecode.granite.framework.core.app;
 
 import java.io.BufferedInputStream;
 import java.io.File;

@@ -59,8 +59,8 @@
     
     <dependencies>
 		<dependency>
-			<groupId>com.firstlinecode.granite.framework</groupId>
-			<artifactId>granite-framework-core</artifactId>
+			<groupId>com.firstlinecode.granite.framework.app</groupId>
+			<artifactId>granite-framework-app-spring</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.pipes</groupId>

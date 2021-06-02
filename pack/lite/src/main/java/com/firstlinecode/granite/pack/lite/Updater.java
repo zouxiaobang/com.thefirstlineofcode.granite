@@ -428,14 +428,14 @@ public class Updater {
 		libraryInfos.forEach((libraryName, libraryInfo) -> {
 			StringTokenizer st = new StringTokenizer(libraryName, "-");
 			int count = st.countTokens();
-			if (count != 2 && count != 3) {
+			if (count < 2) {
 				throw new RuntimeException("This is an invalid granite library. Library name: " + libraryName);
 			}
 			
 			// First token is system name. It's "granite" or "sand".
 			st.nextToken();
 			String rawSubsystemName = null;
-			if (count == 3) {
+			if (count > 2) {
 				rawSubsystemName = st.nextToken();
 			}
 			
