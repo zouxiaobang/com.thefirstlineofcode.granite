@@ -1,8 +1,8 @@
 package com.firstlinecode.granite.framework.core.repository;
 
 import com.firstlinecode.granite.framework.core.IService;
-import com.firstlinecode.granite.framework.core.app.IApplicationComponentService;
-import com.firstlinecode.granite.framework.core.app.IApplicationComponentServiceAware;
+import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IConfigurationManager;

@@ -59,8 +59,8 @@
     
     <dependencies>
 		<dependency>
-			<groupId>com.firstlinecode.granite.framework.app</groupId>
-			<artifactId>granite-framework-app-spring</artifactId>
+			<groupId>com.firstlinecode.granite.framework.adf</groupId>
+			<artifactId>granite-framework-adf-mybatis</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.pipes</groupId>

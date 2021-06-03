@@ -12,12 +12,13 @@
 	</parent>
 
 	<groupId>com.firstlinecode.granite.framework</groupId>
-	<artifactId>granite-framework-app</artifactId>
+	<artifactId>granite-framework-adf</artifactId>
 	<packaging>pom</packaging>
 	<name>Granite application development framework</name>
 
 	<modules>
 		<module>spring</module>
+		<module>mybatis</module>
 	</modules>
 
 </project>

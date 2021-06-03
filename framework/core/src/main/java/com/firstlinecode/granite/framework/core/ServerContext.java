@@ -1,26 +1,31 @@
 package com.firstlinecode.granite.framework.core;
 
-import com.firstlinecode.granite.framework.core.app.ApplicationComponentService;
-import com.firstlinecode.granite.framework.core.app.IApplicationComponentConfigurations;
-import com.firstlinecode.granite.framework.core.app.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.adf.ApplicationComponentService;
+import com.firstlinecode.granite.framework.core.adf.IApplicationComponentConfigurations;
+import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.repository.IRepository;
 
 public class ServerContext implements IServerContext {
-	private IServerConfiguration serverConfiguration;
+	private IServer server;
 	private IRepository repository;
 	private ApplicationComponentService appComponentService;
 	
-	public ServerContext(IServerConfiguration serverConfiguration, IRepository repository,
+	public ServerContext(IServer server, IRepository repository,
 			ApplicationComponentService appComponentService) {
-		this.serverConfiguration = serverConfiguration;
+		this.server = server;
 		this.repository = repository;
 		this.appComponentService = appComponentService;
 	}
-
+	
+	@Override
+	public IServer getServer() {
+		return server;
+	}
+	
 	@Override
 	public IServerConfiguration getServerConfiguration() {
-		return serverConfiguration;
+		return server.getConfiguration();
 	}
 	
 	@Override

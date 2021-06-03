@@ -180,6 +180,38 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+			<dependency>
+				<groupId>org.mybatis</groupId>
+				<artifactId>mybatis</artifactId>
+				<version>3.5.7</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mybatis</groupId>
+				<artifactId>mybatis-spring</artifactId>
+				<version>2.0.6</version>
+				<exclusions>
+					<exclusion>
+						<artifactId>spring-context</artifactId>
+						<groupId>org.springframework</groupId>
+					</exclusion>
+					<exclusion>
+						<artifactId>spring-core</artifactId>
+						<groupId>org.springframework</groupId>
+					</exclusion>
+					<exclusion>
+						<artifactId>spring-tx</artifactId>
+						<groupId>org.springframework</groupId>
+					</exclusion>
+					<exclusion>
+						<artifactId>spring-jdbc</artifactId>
+						<groupId>org.springframework</groupId>
+					</exclusion>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
 			<!-- Baslat libraries -->
 			<dependency>
 				<groupId>com.firstlinecode.basalt</groupId>
@@ -213,8 +245,13 @@
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.granite.framework.app</groupId>
-				<artifactId>granite-framework-app-spring</artifactId>
+				<groupId>com.firstlinecode.granite.framework.adf</groupId>
+				<artifactId>granite-framework-adf-spring</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.framework.adf</groupId>
+				<artifactId>granite-framework-adf-mybatis</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>

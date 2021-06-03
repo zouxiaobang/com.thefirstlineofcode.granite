@@ -1,12 +1,10 @@
-package com.firstlinecode.granite.framework.core.platform;
+package com.firstlinecode.granite.framework.core.adf;
 
 import org.pf4j.DefaultPluginFactory;
 import org.pf4j.DefaultPluginManager;
 import org.pf4j.Plugin;
 import org.pf4j.PluginFactory;
 import org.pf4j.PluginWrapper;
-
-import com.firstlinecode.granite.framework.core.app.IApplicationComponentService;
 
 public class AppComponentPluginManager extends DefaultPluginManager {
 	private IApplicationComponentService appComponentService;

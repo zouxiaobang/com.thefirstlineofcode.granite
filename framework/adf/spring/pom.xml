@@ -7,14 +7,14 @@
 	
 	<parent>
 		<groupId>com.firstlinecode.granite.framework</groupId>
-		<artifactId>granite-framework-app</artifactId>
+		<artifactId>granite-framework-adf</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
-	<groupId>com.firstlinecode.granite.framework.app</groupId>
-	<artifactId>granite-framework-app-spring</artifactId>
-	<name>Spring integration for granite application developement</name>
+	<groupId>com.firstlinecode.granite.framework.adf</groupId>
+	<artifactId>granite-framework-adf-spring</artifactId>
+	<name>Spring integration for granite application developement framework</name>
 	
 	<dependencies>
 		<dependency>

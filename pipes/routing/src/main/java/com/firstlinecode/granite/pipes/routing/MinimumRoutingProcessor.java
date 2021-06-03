@@ -25,7 +25,7 @@ import com.firstlinecode.basalt.protocol.core.stanza.error.InternalServerError;
 import com.firstlinecode.basalt.protocol.core.stanza.error.StanzaError;
 import com.firstlinecode.basalt.protocol.core.stream.Stream;
 import com.firstlinecode.basalt.protocol.core.stream.error.StreamError;
-import com.firstlinecode.granite.framework.core.app.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;

@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.framework.core.app;
+package com.firstlinecode.granite.framework.core.adf;
 
 import java.util.List;
 
@@ -9,32 +9,39 @@ import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
-import com.firstlinecode.granite.framework.core.platform.AppComponentPluginManager;
 import com.firstlinecode.granite.framework.core.platform.IPluginManagerAware;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 
 public class ApplicationComponentService implements IApplicationComponentService {
-	private IServerConfiguration serverConfiguration;
-	private PluginManager pluginManager;
-	private IApplicationComponentConfigurations appComponentConfigurations;
-	private boolean started;
+	protected IServerConfiguration serverConfiguration;
+	protected PluginManager pluginManager;
+	protected IApplicationComponentConfigurations appComponentConfigurations;
+	protected boolean syncPlugins;
+	protected boolean started;
 	
-	public ApplicationComponentService(IServerConfiguration serverConfiguration,
-			IApplicationComponentConfigurations appComponentConfigurations) {
-		this(serverConfiguration, appComponentConfigurations, null);
+	public ApplicationComponentService(IServerConfiguration serverConfiguration) {
+		this(serverConfiguration, null);
+	}
+	
+	public ApplicationComponentService(IServerConfiguration serverConfiguration, PluginManager pluginManager) {
+		this(serverConfiguration, pluginManager, true);
 	}
 
 	public ApplicationComponentService(IServerConfiguration serverConfiguration,
-			IApplicationComponentConfigurations appComponentConfigurations,
-			PluginManager pluginManager) {
+			PluginManager pluginManager, boolean syncPlugins) {
 		this.serverConfiguration = serverConfiguration;
-		this.appComponentConfigurations = appComponentConfigurations;
+		this.syncPlugins = syncPlugins;
+		appComponentConfigurations = readAppComponentConfigurations(serverConfiguration);
 		
 		if (pluginManager == null) {
 			pluginManager = createPluginManager();
 		} else {
 			this.pluginManager = pluginManager;
 		}
+	}
+	
+	private ApplicationComponentConfigurations readAppComponentConfigurations(IServerConfiguration serverConfiguration) {
+		return new ApplicationComponentConfigurations(serverConfiguration.getConfigurationDir());
 	}
 	
 	protected PluginManager createPluginManager() {
@@ -79,22 +86,35 @@ public class ApplicationComponentService implements IApplicationComponentService
 
 	@Override
 	public void start() {
-		if (!started) {
-			pluginManager.loadPlugins();
-			pluginManager.startPlugins();
+		if (started)
+			return;
+		
+		if (syncPlugins)
+			initPlugins();
 			
-			started = true;
-		}
+		started = true;
+	}
+
+	private void initPlugins() {
+		pluginManager.loadPlugins();
+		pluginManager.startPlugins();
 	}
 
 	@Override
 	public void stop() {
-		if (started) {
-			pluginManager.stopPlugins();
-			pluginManager.unloadPlugins();
-			
-			started = false;
+		if (!started)
+			return;
+
+		if (syncPlugins) {
+			destroyPlugins();
 		}
+		
+		started = false;
+	}
+
+	private void destroyPlugins() {
+		pluginManager.stopPlugins();
+		pluginManager.unloadPlugins();
 	}
 
 	@Override

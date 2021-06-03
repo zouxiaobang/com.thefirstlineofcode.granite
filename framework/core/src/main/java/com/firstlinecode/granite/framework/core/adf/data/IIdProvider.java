@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.framework.core.app.data;
+package com.firstlinecode.granite.framework.core.adf.data;
 
 public interface IIdProvider<T> {
 	void setId(T id);

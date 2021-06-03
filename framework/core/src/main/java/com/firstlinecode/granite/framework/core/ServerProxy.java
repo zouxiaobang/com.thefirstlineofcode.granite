@@ -4,7 +4,7 @@ package com.firstlinecode.granite.framework.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.firstlinecode.granite.framework.core.app.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 
 public class ServerProxy {

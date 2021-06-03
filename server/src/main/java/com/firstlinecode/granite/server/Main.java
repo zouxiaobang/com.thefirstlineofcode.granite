@@ -6,12 +6,12 @@ import org.pf4j.PluginManager;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import com.firstlinecode.granite.framework.adf.spring.AdfConfiguration;
 import com.firstlinecode.granite.framework.core.ConsoleThread;
 import com.firstlinecode.granite.framework.core.IServer;
 import com.firstlinecode.granite.framework.core.ServerProxy;
-import com.firstlinecode.granite.framework.core.app.ApplicationComponentConfigurations;
-import com.firstlinecode.granite.framework.core.app.ApplicationComponentService;
-import com.firstlinecode.granite.framework.core.app.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.adf.ApplicationComponentService;
+import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.ServerConfiguration;
 import com.firstlinecode.granite.framework.core.log.LogFilter;
@@ -49,19 +49,21 @@ public class Main {
 				serverConfiguration.getApplicationLogNamespaces());
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		
-		AnnotationConfigApplicationContext appContext = null;
 		IServer server = null;
+		AnnotationConfigApplicationContext appContext = null;
 		try {
-			appContext = new AnnotationConfigApplicationContext(SpringConfiguration.class);
+			appContext = new AnnotationConfigApplicationContext(AdfConfiguration.class);
 			PluginManager pluginManager = appContext.getBean(PluginManager.class);			
-			IApplicationComponentService appComponentService = new ApplicationComponentService(serverConfiguration,
-					readAppComponentConfigurations(serverConfiguration), pluginManager);
+			IApplicationComponentService appComponentService = new ApplicationComponentService(
+					serverConfiguration, pluginManager, false);
 			
 			server = new ServerProxy().start(serverConfiguration, appComponentService);
 		} catch (Exception e) {
 			throw new RuntimeException("Can't start Granite Server.", e);
 		} finally {
-			if (appContext != null) {
+			if (appContext instanceof IServer) {
+				// Code will never run to here.
+				// To avoid the warning info showed by IDE.
 				appContext.close();
 			}
 		}
@@ -70,10 +72,6 @@ public class Main {
 			Thread consoleThread = new Thread(new ConsoleThread(server), "Granite Server Console Thread");
 			consoleThread.start();
 		}
-	}
-	
-	private ApplicationComponentConfigurations readAppComponentConfigurations(IServerConfiguration serverConfiguration) {
-		return new ApplicationComponentConfigurations(serverConfiguration.getConfigurationDir());
 	}
 	
 	private void configureLog(String logLevel, boolean enableThidpartyLogs, String[] applicationNamespaces) {

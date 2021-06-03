@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>com.firstlinecode.granite.framework</groupId>
+		<artifactId>granite-framework-adf</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	
+	<groupId>com.firstlinecode.granite.framework.adf</groupId>
+	<artifactId>granite-framework-adf-mybatis</artifactId>
+	<name>MyBatis integration for granite application developement framework</name>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.framework.adf</groupId>
+			<artifactId>granite-framework-adf-spring</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>

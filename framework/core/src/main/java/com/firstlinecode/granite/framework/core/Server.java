@@ -6,8 +6,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.firstlinecode.granite.framework.core.app.ApplicationComponentService;
-import com.firstlinecode.granite.framework.core.app.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.adf.ApplicationComponentService;
+import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.repository.IRepository;
 import com.firstlinecode.granite.framework.core.repository.IServiceListener;
@@ -18,14 +18,14 @@ import com.firstlinecode.granite.framework.core.repository.ServiceCreationExcept
 public class Server implements IServer, IServiceListener {
 	private static final Logger logger = LoggerFactory.getLogger(Server.class);
 		
-	private IServerConfiguration serverConfiguration;
+	private IServerConfiguration configuration;
 	
 	private IApplicationComponentService appComponentService;
 	private IRepository repository;
 	private Map<String, IService> services;
 		
-	public Server(IServerConfiguration serverConfiguration, IApplicationComponentService appComponentService) {
-		this.serverConfiguration = serverConfiguration;
+	public Server(IServerConfiguration configuration, IApplicationComponentService appComponentService) {
+		this.configuration = configuration;
 		this.appComponentService = appComponentService;
 		services = new HashMap<>();
 	}
@@ -34,7 +34,7 @@ public class Server implements IServer, IServiceListener {
 	public void start() throws Exception {
 		appComponentService.start();
 		
-		repository = new Repository(serverConfiguration, appComponentService);
+		repository = new Repository(configuration, appComponentService);
 		repository.init();
 		
 		logger.info("Granite Server has Started");
@@ -59,7 +59,7 @@ public class Server implements IServer, IServiceListener {
 
 	@Override
 	public IServerContext getServerContext() {
-		return new ServerContext(serverConfiguration, repository, (ApplicationComponentService)appComponentService);
+		return new ServerContext(this, repository, (ApplicationComponentService)appComponentService);
 	}
 
 	@Override
@@ -89,5 +89,10 @@ public class Server implements IServer, IServiceListener {
 				}
 			}
 		}).start();;
+	}
+
+	@Override
+	public IServerConfiguration getConfiguration() {
+		return configuration;
 	}
 }
