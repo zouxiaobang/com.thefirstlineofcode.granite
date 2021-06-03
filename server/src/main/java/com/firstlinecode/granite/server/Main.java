@@ -1,12 +1,16 @@
 package com.firstlinecode.granite.server;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.pf4j.DefaultPluginManager;
 import org.pf4j.PluginManager;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.firstlinecode.granite.framework.adf.spring.AdfConfiguration;
+import com.firstlinecode.granite.framework.adf.spring.ISpringConfiguration;
 import com.firstlinecode.granite.framework.core.ConsoleThread;
 import com.firstlinecode.granite.framework.core.IServer;
 import com.firstlinecode.granite.framework.core.ServerProxy;
@@ -45,14 +49,26 @@ public class Main {
 		}
 		
 		IServerConfiguration serverConfiguration = readServerConfiguration();
-		configureLog(serverConfiguration.getLogLevel(), serverConfiguration.isThirdpartyLogEnabled(),
-				serverConfiguration.getApplicationLogNamespaces());
+		
+		if (options.getLogLevel() != null) {
+			configureLog(options.getLogLevel(), serverConfiguration.isThirdpartyLogEnabled(),
+					serverConfiguration.getApplicationLogNamespaces());
+		} else {			
+			configureLog(serverConfiguration.getLogLevel(), serverConfiguration.isThirdpartyLogEnabled(),
+					serverConfiguration.getApplicationLogNamespaces());
+		}
 		System.setProperty("java.net.preferIPv4Stack", "true");
+		
+		List<Class<?>> springConfigurations = new ArrayList<>();
+		springConfigurations.add(AdfConfiguration.class);
+		for (Class<?> configuration : getContributedSpringConfigurations()) {
+			springConfigurations.add(configuration);
+		}
 		
 		IServer server = null;
 		AnnotationConfigApplicationContext appContext = null;
 		try {
-			appContext = new AnnotationConfigApplicationContext(AdfConfiguration.class);
+			appContext = new AnnotationConfigApplicationContext(springConfigurations.toArray(new Class<?>[springConfigurations.size()]));
 			PluginManager pluginManager = appContext.getBean(PluginManager.class);			
 			IApplicationComponentService appComponentService = new ApplicationComponentService(
 					serverConfiguration, pluginManager, false);
@@ -74,6 +90,19 @@ public class Main {
 		}
 	}
 	
+	private List<Class<? extends ISpringConfiguration>> getContributedSpringConfigurations() {
+		PluginManager pluginManager = new DefaultPluginManager();
+		pluginManager.loadPlugins();
+		pluginManager.startPlugins();
+		
+		List<Class<? extends ISpringConfiguration>> configurations = pluginManager.getExtensionClasses(ISpringConfiguration.class);
+		
+		pluginManager.stopPlugins();
+		pluginManager.unloadPlugins();
+		
+		return configurations;
+	}
+
 	private void configureLog(String logLevel, boolean enableThidpartyLogs, String[] applicationNamespaces) {
 		LoggerContext lc = (LoggerContext)LoggerFactory.getILoggerFactory();
 		

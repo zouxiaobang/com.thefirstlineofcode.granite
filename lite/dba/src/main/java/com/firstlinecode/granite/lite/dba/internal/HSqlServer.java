@@ -1,6 +1,5 @@
 package com.firstlinecode.granite.lite.dba.internal;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.annotation.PostConstruct;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Component;
 public class HSqlServer {
 	private static final Logger logger = LoggerFactory.getLogger(HSqlServer.class);
 	
-	private static final String PROPERTY_KEY_GRANITE_LITE_DATA_ERASURE = "granite.lite.data.erasure";
 	private static final String PROPERTY_KEY_GRANITE_LITE_HSQL_PORT = "granite.lite.hsql.port";
 	
 	private Server server;
@@ -25,26 +23,7 @@ public class HSqlServer {
 	@PostConstruct
     public void start() {
 			String appHome = System.getProperty("granite.app.home");
-			
 			String dataDir = String.format("%s%s", appHome, "data");
-			
-			if (Boolean.valueOf(System.getProperty(PROPERTY_KEY_GRANITE_LITE_DATA_ERASURE))) {
-				File fDataDir = new File(dataDir);
-				
-				if (fDataDir.exists() && fDataDir.isDirectory()) {
-					for (File file : fDataDir.listFiles()) {
-						if (!file.delete()) {
-							throw new RuntimeException(String.format("Can't erasure data. You need to remove %s manually.", dataDir));
-						}
-					}
-					
-					if (!fDataDir.delete()) {
-						throw new RuntimeException(String.format("Can't erasure data. You need to remove %s manually.", dataDir));
-					}
-					
-					logger.info(String.format("Data directory '%s' has already been removed.", dataDir));
-				}
-			}
 			
             try {
 				doStart(dataDir);

@@ -10,6 +10,7 @@ public interface IServerConfiguration {
 	public static final String SERVER_CONFIG_KEY_CUSTOMIZED_LIBRARIES = "customized.libraries";
 	public static final String SERVER_CONFIG_KEY_LOG_LEVEL = "log.level";
 	public static final String SERVER_CONFIG_KEY_ENABLE_THIRDPARTY_LOGS = "enable.thirdparty.logs";	
+	public static final String SERVER_CONFIG_KEY_HSQL_PORT = "hsql.port";	
 	
 	String[] getDisabledServices();
 	String getServerHome();
@@ -24,4 +25,5 @@ public interface IServerConfiguration {
 	String[] getCustomizedLibraries();
 	String getLogLevel();
 	boolean isThirdpartyLogEnabled();
+	int getHSqlPort();
 }

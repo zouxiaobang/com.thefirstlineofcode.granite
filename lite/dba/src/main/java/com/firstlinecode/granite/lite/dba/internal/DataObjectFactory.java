@@ -1,20 +1,7 @@
 package com.firstlinecode.granite.lite.dba.internal;
 
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-
-import com.firstlinecode.granite.framework.core.commons.osgi.IContributionTracker;
-import com.firstlinecode.granite.framework.core.commons.osgi.OsgiUtils;
-import com.firstlinecode.granite.framework.core.supports.data.IDataObjectFactory;
-import com.firstlinecode.granite.framework.core.supports.data.IIdProvider;
-
-public class DataObjectFactory implements IDataObjectFactory {
-	private static final String KEY_GRANITE_PERSISTENT_OBJECTS = "Granite-MyBatis-Data-Objects";
+public class DataObjectFactory /*implements IDataObjectFactory*/ {
+	/*private static final String KEY_GRANITE_PERSISTENT_OBJECTS = "Granite-MyBatis-Data-Objects";
 	
 	private Map<Class<?>, DataObjectMapping> objectMappings;
 	private IContributionTracker tracker;
@@ -109,6 +96,6 @@ public class DataObjectFactory implements IDataObjectFactory {
 		}
 		
 		return (V)objectMapping.data.newInstance();
-	}
+	} */
 
 }

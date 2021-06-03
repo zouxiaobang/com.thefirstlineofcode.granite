@@ -17,10 +17,10 @@
 	<name>XMPP server deploy lite plugins</name>
 
 	<modules>
-		<module>auth</module>
+	<!--	<module>auth</module> -->
 		<module>dba</module>
-		<module>session</module>
-		<module>xeps-ibr</module>
+<!--		<module>session</module>
+		<module>xeps-ibr</module> -->
 	</modules>
 
 </project>

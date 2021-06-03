@@ -53,6 +53,10 @@
 		
 		<!-- Plugins -->
 		<dependency>
+			<groupId>com.firstlinecode.granite.lite</groupId>
+			<artifactId>granite-lite-dba</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.firstlinecode.granite.xeps</groupId>
 			<artifactId>granite-xeps-ibr</artifactId>
 		</dependency>

@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.firstlinecode.basalt.protocol.Constants;
+import com.firstlinecode.granite.framework.core.commons.utils.IoUtils;
 
 
 public class ServerConfiguration implements IServerConfiguration {
@@ -36,6 +37,8 @@ public class ServerConfiguration implements IServerConfiguration {
 	
 	private String logLevel;
 	private boolean enableThirdpartyLogs = false;
+	
+	private int hSqlPort = 9001;
 	
 	public ServerConfiguration(String serverHome) {
 		this.serverHome = serverHome;
@@ -73,38 +76,49 @@ public class ServerConfiguration implements IServerConfiguration {
 			properties.load(reader);
 			
 			for (Object key : properties.keySet()) {
+				String sKey = (String)key;
 				if (SERVER_CONFIG_KEY_DOMAIN_NAME.equals(key)) {
-					domainName = properties.getProperty((String)key);
+					domainName = properties.getProperty(sKey);
 				} else if (SERVER_CONFIG_KEY_DOMAIN_ALIAS_NAMES.equals(key)) {
-					setDomainAliasNames(properties.getProperty((String)key));
+					setDomainAliasNames(properties.getProperty(sKey));
 				} else if (SERVER_CONFIG_KEY_MESSAGE_FORMAT.equals(key)) {
-					setMessageFormat(properties.getProperty((String)key));
+					setMessageFormat(properties.getProperty(sKey));
 				} else if (SERVER_CONFIG_KEY_DISABLED_SERVICES.equals(key)) {
-					setDisabledServices(properties.getProperty((String)key));
+					setDisabledServices(properties.getProperty(sKey));
 				} else if (SERVER_CONFIG_KEY_APPLICATION_LOG_NAMESPACES.equals(key)) {
-					setApplicationLogNamespaces(properties.getProperty((String)key));
+					setApplicationLogNamespaces(properties.getProperty(sKey));
 				} else if (SERVER_CONFIG_KEY_COMPONENT_BINDING_PROFILE.equals(key)) {
-					componentBindingProfile = properties.getProperty((String)key);
+					componentBindingProfile = properties.getProperty(sKey);
 				} else if (SERVER_CONFIG_KEY_CUSTOMIZED_LIBRARIES.equals(key)) {
-					setCustomizedSystemLibraries(properties.getProperty((String)key));
+					setCustomizedSystemLibraries(properties.getProperty(sKey));
 				} else if (SERVER_CONFIG_KEY_LOG_LEVEL.equals(key)) {
-					setLogLevel(properties.getProperty((String)key));
+					setLogLevel(properties.getProperty(sKey));
 				} else if (SERVER_CONFIG_KEY_ENABLE_THIRDPARTY_LOGS.equals((String)key)) {
-					String sEnableThirdPartyLogs = properties.getProperty((String)key);
+					String sEnableThirdPartyLogs = properties.getProperty(sKey);
 					if (Boolean.valueOf(sEnableThirdPartyLogs))
 						enableThirdpartyLogs();
+				} else if (SERVER_CONFIG_KEY_HSQL_PORT.equals(key)) {
+					setHSqlPort(properties.getProperty(sKey));
 				} else {
 					// ignore
 					logger.warn("Unknown server configuration item: '{}'.", key);
 				}
 			}
 		} catch (Exception e) {
-			// do nothing
+			throw new RuntimeException("Illegal server configuration. Please check your server configuration file.", e);
 		} finally {
-			// IoUtils.closeIO(reader);
+			IoUtils.closeIO(reader);
 		}
 	}
 	
+	private void setHSqlPort(String sPort) {
+		try {
+			hSqlPort = Integer.parseInt(sPort);			
+		} catch (NumberFormatException e) {
+			throw new RuntimeException("HSql port must be an integer.");
+		}
+	}
+
 	private void setMessageFormat(String messageFormat) {
 		if (Constants.MESSAGE_FORMAT_BINARY.equals(messageFormat) || Constants.MESSAGE_FORMAT_XML.equals(messageFormat)) {
 			this.messageFormat = messageFormat;
@@ -239,6 +253,11 @@ public class ServerConfiguration implements IServerConfiguration {
 	@Override
 	public boolean isThirdpartyLogEnabled() {
 		return enableThirdpartyLogs;
+	}
+
+	@Override
+	public int getHSqlPort() {
+		return hSqlPort;
 	}
 	
 }

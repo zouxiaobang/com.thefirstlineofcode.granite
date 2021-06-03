@@ -16,7 +16,12 @@
 	<artifactId>granite-pack-lite-standard</artifactId>
 	
 	<dependencies>
-			<!-- Granite Plugins -->
+			<!-- Granite Deploy Lite Plugins -->
+			<dependency>
+					<groupId>com.firstlinecode.granite.lite</groupId>
+					<artifactId>granite-lite-dba</artifactId>
+			</dependency>
+			<!-- Granite Protocol Plugins -->
 			<dependency>
 					<groupId>com.firstlinecode.granite.xeps</groupId>
 					<artifactId>granite-xeps-ibr</artifactId>
