@@ -49,11 +49,9 @@ public class Main {
 		IServerConfiguration serverConfiguration = readServerConfiguration();
 		
 		if (options.getLogLevel() != null) {
-			configureLog(options.getLogLevel(), serverConfiguration.isThirdpartyLogEnabled(),
-					serverConfiguration.getApplicationLogNamespaces());
+			configureLog(options.getLogLevel(), serverConfiguration);
 		} else {			
-			configureLog(serverConfiguration.getLogLevel(), serverConfiguration.isThirdpartyLogEnabled(),
-					serverConfiguration.getApplicationLogNamespaces());
+			configureLog(serverConfiguration.getLogLevel(), serverConfiguration);
 		}
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		
@@ -96,27 +94,30 @@ public class Main {
 		}
 	}
 
-	private void configureLog(String logLevel, boolean enableThidpartyLogs, String[] applicationNamespaces) {
+	private void configureLog(String logLevel, IServerConfiguration serverConfiguration) {
+		System.setProperty("granite.logs.dir", serverConfiguration.getLogsDir());
+		
 		LoggerContext lc = (LoggerContext)LoggerFactory.getILoggerFactory();
 		
 		if (logLevel != null) {			
 			if ("debug".equals(logLevel)) {
-				configureSystemLogFile(lc, "logback_debug.xml");
+				configureLog(lc, "logback_debug.xml");
 			} else if ("trace".equals(logLevel)) {
-				configureSystemLogFile(lc, "logback_trace.xml");
+				configureLog(lc, "logback_trace.xml");
 			} else if ("info".equals(logLevel)) {
-				configureSystemLogFile(lc, "logback.xml");
+				configureLog(lc, "logback.xml");
 			} else {
 				throw new IllegalArgumentException("Unknown log level option. Only 'info', 'debug' or 'trace' is supported.");
 			}
 		} else {
-			configureSystemLogFile(lc, "logback.xml");
+			configureLog(lc, "logback.xml");
 		}
 		
-		lc.addTurboFilter(new LogFilter(applicationNamespaces, enableThidpartyLogs));
+		lc.addTurboFilter(new LogFilter(serverConfiguration.getApplicationLogNamespaces(),
+				serverConfiguration.isThirdpartyLogEnabled()));
 	}
 
-	private void configureSystemLogFile(LoggerContext lc, String logFile) {
+	private void configureLog(LoggerContext lc, String logFile) {
 		configureLC(lc, getClass().getClassLoader().getResource(logFile));
 	}
 

@@ -3,15 +3,12 @@ package com.firstlinecode.granite.framework.core.config;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.firstlinecode.basalt.protocol.Constants;
-import com.firstlinecode.granite.framework.core.commons.utils.IoUtils;
 
 
 public class ServerConfiguration implements IServerConfiguration {
@@ -20,9 +17,7 @@ public class ServerConfiguration implements IServerConfiguration {
 	private static final String DIRECTORY_NAME_LIBS = "libs";
 	private static final String DIRECTORY_NAME_PLUGINS = "plugins";
 	private static final String NAME_SERVER_CONFIG_FILE = "server.ini";
-
-	private static final Logger logger = LoggerFactory.getLogger(ServerConfiguration.class);
-		
+	
 	private String domainName = "localhost";
 	private String[] domainAliasNames = new String[0];
 	private String messageFormat = Constants.MESSAGE_FORMAT_XML;
@@ -102,13 +97,18 @@ public class ServerConfiguration implements IServerConfiguration {
 					setHSqlPort(properties.getProperty(sKey));
 				} else {
 					// ignore
-					logger.warn("Unknown server configuration item: '{}'.", key);
+					System.out.println(String.format("Unknown server configuration item: '%s'. Ignore it.", key));
 				}
 			}
 		} catch (Exception e) {
 			throw new RuntimeException("Illegal server configuration. Please check your server configuration file.", e);
 		} finally {
-			IoUtils.closeIO(reader);
+			if (reader != null)
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 		}
 	}
 	
@@ -125,7 +125,7 @@ public class ServerConfiguration implements IServerConfiguration {
 			this.messageFormat = messageFormat;
 		} else {
 			// ignore
-			logger.warn("Unknown message format: '{}'. Continue to use 'xml' message format.", messageFormat);
+			System.out.println(String.format("Unknown message format: '%s'. Continue to use 'xml' message format.", messageFormat));
 		}
 	}
 	
