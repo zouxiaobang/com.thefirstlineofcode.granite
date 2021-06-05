@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.lite.dba.internal;
+package com.firstlinecode.granite.lite.dba;
 
 import java.io.IOException;
 
@@ -12,19 +12,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
+import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
+
 @Component
-public class HSqlServer {
+public class HSqlServer implements IServerConfigurationAware {
+	private static final String DIRECTORY_NAME_DATA = "data";
+
 	private static final Logger logger = LoggerFactory.getLogger(HSqlServer.class);
-	
-	private static final String PROPERTY_KEY_GRANITE_LITE_HSQL_PORT = "granite.lite.hsql.port";
+		
+	private String serverHome;
+	private String dataDir;
+	private int port = 9001;
 	
 	private Server server;
 	
 	@PostConstruct
     public void start() {
-			String appHome = System.getProperty("granite.app.home");
-			String dataDir = String.format("%s%s", appHome, "data");
-			
             try {
 				doStart(dataDir);
 				
@@ -41,18 +45,7 @@ public class HSqlServer {
 		properties.setProperty("server.database.0", String.format("file:%s/%s", dataDir, "granite"));
 		properties.setProperty("server.dbname.0", "granite");
 		
-		String sPort = System.getProperty(PROPERTY_KEY_GRANITE_LITE_HSQL_PORT);
-		
-		int port = 9001;
-		if (sPort != null) {
-			try {
-				port = Integer.parseInt(sPort);
-				properties.setProperty("server.port", port);
-			} catch (Exception e) {
-				// ignore
-			}
-		}
-		System.setProperty(PROPERTY_KEY_GRANITE_LITE_HSQL_PORT, Integer.toString(port));
+		properties.setProperty("server.port", port);
 		
 		server.setLogWriter(null);
 		server.setProperties(properties);
@@ -73,4 +66,11 @@ public class HSqlServer {
             
 		logger.info("HSQLDB stopped.");
     }
+
+	@Override
+	public void setServerConfiguration(IServerConfiguration serverConfiguration) {
+		serverHome = serverConfiguration.getServerHome();
+		dataDir = String.format("%s/%s", serverHome, DIRECTORY_NAME_DATA);
+		port = serverConfiguration.getHSqlPort();
+	}
 }

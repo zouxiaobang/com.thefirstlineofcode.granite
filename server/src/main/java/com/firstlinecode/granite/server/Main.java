@@ -1,21 +1,19 @@
 package com.firstlinecode.granite.server;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.pf4j.DefaultPluginManager;
-import org.pf4j.PluginManager;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.firstlinecode.granite.framework.adf.spring.AdfConfiguration;
+import com.firstlinecode.granite.framework.adf.spring.AdfBeanPostProcessor;
+import com.firstlinecode.granite.framework.adf.spring.AdfComponentService;
+import com.firstlinecode.granite.framework.adf.spring.AdfPluginManager;
 import com.firstlinecode.granite.framework.adf.spring.ISpringConfiguration;
 import com.firstlinecode.granite.framework.core.ConsoleThread;
 import com.firstlinecode.granite.framework.core.IServer;
 import com.firstlinecode.granite.framework.core.ServerProxy;
-import com.firstlinecode.granite.framework.core.adf.ApplicationComponentService;
-import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.ServerConfiguration;
 import com.firstlinecode.granite.framework.core.log.LogFilter;
@@ -59,48 +57,43 @@ public class Main {
 		}
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		
-		List<Class<?>> springConfigurations = new ArrayList<>();
-		springConfigurations.add(AdfConfiguration.class);
-		for (Class<?> configuration : getContributedSpringConfigurations()) {
-			springConfigurations.add(configuration);
-		}
-		
 		IServer server = null;
 		AnnotationConfigApplicationContext appContext = null;
-		try {
-			appContext = new AnnotationConfigApplicationContext(springConfigurations.toArray(new Class<?>[springConfigurations.size()]));
-			PluginManager pluginManager = appContext.getBean(PluginManager.class);			
-			IApplicationComponentService appComponentService = new ApplicationComponentService(
-					serverConfiguration, pluginManager, false);
+		try {			
+			AdfPluginManager pluginManager = new AdfPluginManager();
+			
+			AdfComponentService appComponentService = new AdfComponentService(
+					serverConfiguration, pluginManager);
+			pluginManager.setApplicationComponentService(appComponentService);
+			appComponentService.start();
+			
+			appContext = new AnnotationConfigApplicationContext();
+			
+			ConfigurableListableBeanFactory beanFactory = (ConfigurableListableBeanFactory)appContext.getBeanFactory();
+			beanFactory.addBeanPostProcessor(new AdfBeanPostProcessor(appComponentService));
+			
+			List<Class<? extends ISpringConfiguration>> contributedSpringConfigurations =
+					pluginManager.getExtensionClasses(ISpringConfiguration.class);
+			appContext.register(contributedSpringConfigurations.toArray(
+					new Class<?>[contributedSpringConfigurations.size()]));
+			
+			appContext.refresh();
+			
+			pluginManager.setApplicationContext(appContext);
+			pluginManager.injectExtensionsToSpring();
 			
 			server = new ServerProxy().start(serverConfiguration, appComponentService);
 		} catch (Exception e) {
-			throw new RuntimeException("Can't start Granite Server.", e);
-		} finally {
-			if (appContext instanceof IServer) {
-				// Code will never run to here.
-				// To avoid the warning info showed by IDE.
+			if (appContext != null)
 				appContext.close();
-			}
+			
+			throw new RuntimeException("Can't start Granite Server.", e);
 		}
 		
 		if (options.isConsole()) {
 			Thread consoleThread = new Thread(new ConsoleThread(server), "Granite Server Console Thread");
 			consoleThread.start();
 		}
-	}
-	
-	private List<Class<? extends ISpringConfiguration>> getContributedSpringConfigurations() {
-		PluginManager pluginManager = new DefaultPluginManager();
-		pluginManager.loadPlugins();
-		pluginManager.startPlugins();
-		
-		List<Class<? extends ISpringConfiguration>> configurations = pluginManager.getExtensionClasses(ISpringConfiguration.class);
-		
-		pluginManager.stopPlugins();
-		pluginManager.unloadPlugins();
-		
-		return configurations;
 	}
 
 	private void configureLog(String logLevel, boolean enableThidpartyLogs, String[] applicationNamespaces) {

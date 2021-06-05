@@ -18,6 +18,7 @@ public class ServerProxy {
 			server.start();
 		} catch (Exception e) {
 			logger.error("Can't to start Granite Server correctly.", e);
+			throw new RuntimeException("Can't to start Granite Server Correctly.", e);
 		}
 		
 		return server;

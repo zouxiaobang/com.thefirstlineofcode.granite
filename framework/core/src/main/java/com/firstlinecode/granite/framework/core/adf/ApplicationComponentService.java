@@ -94,6 +94,11 @@ public class ApplicationComponentService implements IApplicationComponentService
 			
 		started = true;
 	}
+	
+	@Override
+	public boolean isStarted() {
+		return started;
+	}
 
 	private void initPlugins() {
 		pluginManager.loadPlugins();

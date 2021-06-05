@@ -16,6 +16,7 @@ import com.firstlinecode.granite.framework.core.commons.utils.IoUtils;
 
 public class ServerConfiguration implements IServerConfiguration {
 	private static final String DIRECTORY_NAME_CONFIGURATION = "configuration";
+	private static final String DIRECTORY_NAME_LOGS = "logs";
 	private static final String DIRECTORY_NAME_LIBS = "libs";
 	private static final String DIRECTORY_NAME_PLUGINS = "plugins";
 	private static final String NAME_SERVER_CONFIG_FILE = "server.ini";
@@ -31,6 +32,7 @@ public class ServerConfiguration implements IServerConfiguration {
 	
 	private String serverHome;
 	private String configDir;
+	private String logsDir;
 	
 	private String[] applicationLogNamespaces;
 	private String[] customizedLibraries;
@@ -42,8 +44,7 @@ public class ServerConfiguration implements IServerConfiguration {
 	
 	public ServerConfiguration(String serverHome) {
 		this.serverHome = serverHome;
-		configDir = getConfigurationDir();
-		readConfiguratioin(getServerConfigFile(configDir));
+		readConfiguratioin(getServerConfigFile(getConfigurationDir()));
 	}
 	
 	private File getServerConfigFile(String configDir) {
@@ -88,7 +89,7 @@ public class ServerConfiguration implements IServerConfiguration {
 				} else if (SERVER_CONFIG_KEY_APPLICATION_LOG_NAMESPACES.equals(key)) {
 					setApplicationLogNamespaces(properties.getProperty(sKey));
 				} else if (SERVER_CONFIG_KEY_COMPONENT_BINDING_PROFILE.equals(key)) {
-					componentBindingProfile = properties.getProperty(sKey);
+					setComponentBindingProfile(properties.getProperty(sKey));
 				} else if (SERVER_CONFIG_KEY_CUSTOMIZED_LIBRARIES.equals(key)) {
 					setCustomizedSystemLibraries(properties.getProperty(sKey));
 				} else if (SERVER_CONFIG_KEY_LOG_LEVEL.equals(key)) {
@@ -147,7 +148,7 @@ public class ServerConfiguration implements IServerConfiguration {
 	}
 
 	private String replacePathVariables(String value) {
-		value = value.replace("${config.dir}", configDir);
+		value = value.replace("${config.dir}", getConfigurationDir());
 		value = value.replace("${user.home}", System.getProperty("user.home"));
 		
 		return value;
@@ -183,13 +184,16 @@ public class ServerConfiguration implements IServerConfiguration {
 		return replacePathVariables(componentBindingProfile);
 	}
 	
-	public void setComponentBindingProfile(String componentBindingProfile) {
+	private void setComponentBindingProfile(String componentBindingProfile) {
 		this.componentBindingProfile = componentBindingProfile;
 	}
 	
 	@Override
 	public String getConfigurationDir() {
-		return new File(getServerHome(), DIRECTORY_NAME_CONFIGURATION).getAbsolutePath();
+		if (configDir == null)
+			configDir = new File(getServerHome(), DIRECTORY_NAME_CONFIGURATION).getAbsolutePath();
+		
+		return configDir;
 	}
 
 	@Override
@@ -258,6 +262,14 @@ public class ServerConfiguration implements IServerConfiguration {
 	@Override
 	public int getHSqlPort() {
 		return hSqlPort;
+	}
+
+	@Override
+	public String getLogsDir() {
+		if (logsDir == null)
+			logsDir = new File(getConfigurationDir(), DIRECTORY_NAME_LOGS).getAbsolutePath();
+		
+		return logsDir;
 	}
 	
 }

@@ -17,6 +17,7 @@ public interface IServerConfiguration {
 	String getSystemLibsDir();
 	String getPluginsDir();
 	String getConfigurationDir();
+	String getLogsDir();
 	String getDomainName();
 	String[] getDomainAliasNames();
 	String getMessageFormat();

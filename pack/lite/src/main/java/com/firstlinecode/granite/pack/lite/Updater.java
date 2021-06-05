@@ -64,7 +64,6 @@ public class Updater {
 					updateLibrary(module, clean, updatedLibraries);
 				} else {
 					System.out.println(String.format("Illegal subsystem or library name: %s.", module));
-					return;
 				}
 			}
 		}

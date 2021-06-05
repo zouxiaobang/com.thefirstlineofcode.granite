@@ -56,8 +56,16 @@
 			</plugin>
 		</plugins>
 	</build>
-    
-    <dependencies>
+	
+	<dependencies>
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework.adf</groupId>
 			<artifactId>granite-framework-adf-mybatis</artifactId>

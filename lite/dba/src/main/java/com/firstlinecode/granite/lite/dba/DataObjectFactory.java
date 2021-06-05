@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.lite.dba.internal;
+package com.firstlinecode.granite.lite.dba;
 
 public class DataObjectFactory /*implements IDataObjectFactory*/ {
 	/*private static final String KEY_GRANITE_PERSISTENT_OBJECTS = "Granite-MyBatis-Data-Objects";
