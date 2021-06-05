@@ -16,11 +16,11 @@
 	<artifactId>granite-lite-auth</artifactId>
 	<name>Granite lite auth implementation</name>
 
-<!--	<dependencies>
+	<dependencies>
 		<dependency>
-			<groupId>com.firstlinecode.granite.framework.supports</groupId>
-			<artifactId>granite-framework-supports-mybatis</artifactId>
+			<groupId>com.firstlinecode.granite.framework.adf</groupId>
+			<artifactId>granite-framework-adf-mybatis</artifactId>
 		</dependency>
-	</dependencies> -->
+	</dependencies>
 
 </project>

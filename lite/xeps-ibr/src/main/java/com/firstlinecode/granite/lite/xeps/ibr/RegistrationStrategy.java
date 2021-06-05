@@ -1,18 +1,17 @@
 package com.firstlinecode.granite.lite.xeps.ibr;
 
-import org.springframework.stereotype.Component;
-
-import com.firstlinecode.granite.framework.core.auth.Account;
-import com.firstlinecode.granite.framework.core.commons.utils.StringUtils;
-import com.firstlinecode.granite.framework.core.supports.data.IDataObjectFactory;
-import com.firstlinecode.granite.framework.core.supports.data.IDataObjectFactoryAware;
-import com.firstlinecode.granite.xeps.ibr.IRegistrationStrategy;
-import com.firstlinecode.granite.xeps.ibr.MalformedRegistrationInfoException;
 import com.firstlinecode.basalt.xeps.ibr.IqRegister;
 import com.firstlinecode.basalt.xeps.ibr.RegistrationField;
 import com.firstlinecode.basalt.xeps.ibr.RegistrationForm;
+import com.firstlinecode.granite.framework.core.adf.data.IDataObjectFactory;
+import com.firstlinecode.granite.framework.core.adf.data.IDataObjectFactoryAware;
+import com.firstlinecode.granite.framework.core.annotations.Component;
+import com.firstlinecode.granite.framework.core.auth.Account;
+import com.firstlinecode.granite.framework.core.commons.utils.StringUtils;
+import com.firstlinecode.granite.xeps.ibr.IRegistrationStrategy;
+import com.firstlinecode.granite.xeps.ibr.MalformedRegistrationInfoException;
 
-@Component
+@Component("registration.strategy")
 public class RegistrationStrategy implements IRegistrationStrategy, IDataObjectFactoryAware {
 	private IDataObjectFactory dataObjectFactory;
 

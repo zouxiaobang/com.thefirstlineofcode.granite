@@ -1,6 +1,6 @@
 package com.firstlinecode.granite.lite.auth;
 
-import com.firstlinecode.granite.framework.core.supports.data.IIdProvider;
+import com.firstlinecode.granite.framework.core.adf.data.IIdProvider;
 
 public class D_Account extends com.firstlinecode.granite.framework.core.auth.Account implements IIdProvider<String> {
 	private String id;
