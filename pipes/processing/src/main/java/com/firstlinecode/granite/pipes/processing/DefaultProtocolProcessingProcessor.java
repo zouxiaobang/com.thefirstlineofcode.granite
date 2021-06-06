@@ -36,8 +36,8 @@ import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
 import com.firstlinecode.granite.framework.core.event.EventProducer;
-import com.firstlinecode.granite.framework.core.event.IEventProducer;
-import com.firstlinecode.granite.framework.core.event.IEventProducerAware;
+import com.firstlinecode.granite.framework.core.event.IEventFirer;
+import com.firstlinecode.granite.framework.core.event.IEventFirerAware;
 import com.firstlinecode.granite.framework.core.pipes.IMessage;
 import com.firstlinecode.granite.framework.core.pipes.IMessageChannel;
 import com.firstlinecode.granite.framework.core.pipes.processing.IProcessingContext;
@@ -75,7 +75,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 	@Dependency("authenticator")
 	private IAuthenticator authenticator;
 	
-	private IEventProducer eventProducer;
+	private IEventFirer eventProducer;
 	
 	private JabberId domain;
 	private JabberId[] domainAliases;
@@ -565,8 +565,8 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 		
 		appComponentService.inject(xepProcessor);
 		
-		if (xepProcessor instanceof IEventProducerAware) {
-			((IEventProducerAware)xepProcessor).setEventProducer(eventProducer);
+		if (xepProcessor instanceof IEventFirerAware) {
+			((IEventFirerAware)xepProcessor).setEventFirer(eventProducer);
 		}
 		
 		if (processorFactory.isSingleton())

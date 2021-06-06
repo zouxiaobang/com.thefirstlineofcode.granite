@@ -32,6 +32,7 @@ import com.firstlinecode.basalt.protocol.core.stream.sasl.Mechanisms;
 import com.firstlinecode.basalt.protocol.core.stream.tls.StartTls;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
+import com.firstlinecode.granite.framework.core.annotations.BeanDependency;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.auth.IAuthenticator;
@@ -79,6 +80,7 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 	private IParsingFactory parsingFactory;
 	private ITranslatingFactory translatingFactory;
 	
+	@BeanDependency
 	protected IAuthenticator authenticator;	
 	protected ISessionManager sessionManager;
 	protected IMessageChannel messageChannel;
@@ -338,11 +340,6 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 		}
 		
 		fireConnectionClosedEvent(context);
-	}
-	
-	@Dependency("authenticator")
-	public void setAuthenticator(IAuthenticator authenticator) {
-		this.authenticator = authenticator;
 	}
 	
 	@Dependency("session.manager")

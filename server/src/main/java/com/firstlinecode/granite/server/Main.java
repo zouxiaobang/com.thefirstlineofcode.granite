@@ -7,9 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.firstlinecode.granite.framework.adf.spring.AdfBeanPostProcessor;
+import com.firstlinecode.granite.framework.adf.mybatis.AdfMybatisConfiguration;
 import com.firstlinecode.granite.framework.adf.spring.AdfComponentService;
 import com.firstlinecode.granite.framework.adf.spring.AdfPluginManager;
+import com.firstlinecode.granite.framework.adf.spring.AdfSpringBeanPostProcessor;
 import com.firstlinecode.granite.framework.adf.spring.ISpringConfiguration;
 import com.firstlinecode.granite.framework.core.ConsoleThread;
 import com.firstlinecode.granite.framework.core.IServer;
@@ -68,7 +69,9 @@ public class Main {
 			appContext = new AnnotationConfigApplicationContext();
 			
 			ConfigurableListableBeanFactory beanFactory = (ConfigurableListableBeanFactory)appContext.getBeanFactory();
-			beanFactory.addBeanPostProcessor(new AdfBeanPostProcessor(appComponentService));
+			beanFactory.addBeanPostProcessor(new AdfSpringBeanPostProcessor(appComponentService));
+			
+			appContext.register(AdfMybatisConfiguration.class);
 			
 			List<Class<? extends ISpringConfiguration>> contributedSpringConfigurations =
 					pluginManager.getExtensionClasses(ISpringConfiguration.class);

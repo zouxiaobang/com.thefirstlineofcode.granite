@@ -9,15 +9,26 @@ import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
+import com.firstlinecode.granite.framework.core.event.IEvent;
+import com.firstlinecode.granite.framework.core.event.IEventFirer;
+import com.firstlinecode.granite.framework.core.event.IEventFirerAware;
+import com.firstlinecode.granite.framework.core.pipes.IMessageChannel;
+import com.firstlinecode.granite.framework.core.pipes.SimpleMessage;
 import com.firstlinecode.granite.framework.core.platform.IPluginManagerAware;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
+import com.firstlinecode.granite.framework.core.repository.IRepository;
+import com.firstlinecode.granite.framework.core.repository.IRepositoryAware;
 
-public class ApplicationComponentService implements IApplicationComponentService {
+public class ApplicationComponentService implements IApplicationComponentService, IRepositoryAware {
+	private static final String COMPONENT_ID_LITE_ANY_2_EVENT_MESSAGE_CHANNEL = "lite.any.2.event.message.channel";
+	private static final String COMPONENT_ID_CLUSTER_ANY_2_EVENT_MESSAGE_CHANNEL = "cluster.any.2.event.message.channel";
+	
 	protected IServerConfiguration serverConfiguration;
 	protected PluginManager pluginManager;
 	protected IApplicationComponentConfigurations appComponentConfigurations;
 	protected boolean syncPlugins;
 	protected boolean started;
+	protected IRepository repository;
 	
 	public ApplicationComponentService(IServerConfiguration serverConfiguration) {
 		this(serverConfiguration, null);
@@ -27,8 +38,8 @@ public class ApplicationComponentService implements IApplicationComponentService
 		this(serverConfiguration, pluginManager, true);
 	}
 
-	public ApplicationComponentService(IServerConfiguration serverConfiguration,
-			PluginManager pluginManager, boolean syncPlugins) {
+	public ApplicationComponentService(IServerConfiguration serverConfiguration, PluginManager pluginManager,
+			boolean syncPlugins) {
 		this.serverConfiguration = serverConfiguration;
 		this.syncPlugins = syncPlugins;
 		appComponentConfigurations = readAppComponentConfigurations(serverConfiguration);
@@ -64,6 +75,9 @@ public class ApplicationComponentService implements IApplicationComponentService
 	@Override
 	public <T> T createExtension(Class<T> type) {
 		T extension = createRawExtension(type);
+		
+		if (extension == null)
+			return null;
 		
 		return inject(extension);
 	}
@@ -147,11 +161,56 @@ public class ApplicationComponentService implements IApplicationComponentService
 			((IApplicationComponentServiceAware)rawInstance).setApplicationComponentService(this);
 		}
 		
+		if (rawInstance instanceof IEventFirerAware) {
+			if (repository == null)
+				throw new RuntimeException("Can't create event firer because the repository hasn't been set yet.");
+			
+			((IEventFirerAware)rawInstance).setEventFirer(createEventFirer());
+		}
+		
 		if (rawInstance instanceof IInitializable) {
 			((IInitializable)rawInstance).init();
 		}
 		
 		return rawInstance;
+	}
+	
+	private IEventFirer createEventFirer() {
+		return new EventFirer(repository);
+	}
+	
+	private class EventFirer implements IEventFirer {
+		private IRepository repository;
+		private IMessageChannel messageChannel;
+		
+		public EventFirer(IRepository repository) {
+			this.repository = repository;
+		}
+
+		@Override
+		public void fire(IEvent event) {
+			if (messageChannel == null) {
+				messageChannel = getAnyToEventMessageChannel();
+			}
+			
+			messageChannel.send(new SimpleMessage(event));
+		}
+		
+		private IMessageChannel getAnyToEventMessageChannel() {
+			IMessageChannel messageChannerl = (IMessageChannel)repository.get(COMPONENT_ID_CLUSTER_ANY_2_EVENT_MESSAGE_CHANNEL);
+			if (messageChannerl == null)
+				messageChannerl = (IMessageChannel)repository.get(COMPONENT_ID_LITE_ANY_2_EVENT_MESSAGE_CHANNEL);
+			
+			if (messageChannerl == null)
+				throw new RuntimeException("Can't fire event because the any to event message channel is null.");
+			
+			return messageChannerl;				
+		}
+	}
+
+	@Override
+	public void setRepository(IRepository repository) {
+		this.repository = repository;
 	}
 
 }

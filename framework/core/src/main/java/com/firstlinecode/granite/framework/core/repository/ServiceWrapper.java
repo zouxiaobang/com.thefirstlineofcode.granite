@@ -13,15 +13,15 @@ public class ServiceWrapper implements IServiceWrapper {
 	private IServerConfiguration serverConfiguration;
 	private IConfigurationManager configurationManager;
 	private IComponentInfo componentInfo;
-	private ISingletonComponentHolder singletonHolder;
+	private IRepository repository;
 	private IApplicationComponentService appComponentService;
 	
 	public ServiceWrapper(IServerConfiguration serverConfiguration, IConfigurationManager configurationManager,
-			ISingletonComponentHolder singletonHolder,IApplicationComponentService appComponentService,
+			IRepository repository,IApplicationComponentService appComponentService,
 				IComponentInfo componentInfo) {
 		this.serverConfiguration = serverConfiguration;
 		this.configurationManager = configurationManager;
-		this.singletonHolder = singletonHolder;
+		this.repository = repository;
 		this.appComponentService = appComponentService;
 		
 		if (!componentInfo.isService()) {
@@ -48,7 +48,7 @@ public class ServiceWrapper implements IServiceWrapper {
 	}
 
 	private Object createComponent(IComponentInfo componentInfo) throws Exception {
-		synchronized (singletonHolder) {
+		synchronized (repository) {
 			return doCreateComponent(componentInfo);
 		}
 	}
@@ -56,7 +56,7 @@ public class ServiceWrapper implements IServiceWrapper {
 	private Object doCreateComponent(IComponentInfo componentInfo)
 			throws CreationException, Exception {
 		
-		Object component = singletonHolder.get(componentInfo.getId());
+		Object component = repository.get(componentInfo.getId());
 		
 		if (component != null)
 			return component;
@@ -91,7 +91,7 @@ public class ServiceWrapper implements IServiceWrapper {
 		}
 		
 		if (componentInfo.isSingleton()) {
-			singletonHolder.put(componentInfo.getId(), component);
+			repository.put(componentInfo.getId(), component);
 		}
 		
 		return component;

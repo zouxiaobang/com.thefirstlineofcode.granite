@@ -1,5 +1,5 @@
 package com.firstlinecode.granite.framework.core.event;
 
-public interface IEventProducer {
+public interface IEventFirer {
 	void fire(IEvent event);
 }

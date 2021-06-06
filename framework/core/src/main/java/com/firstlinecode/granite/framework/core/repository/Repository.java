@@ -35,7 +35,7 @@ import com.firstlinecode.granite.framework.core.config.IConfigurationManager;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.LocalFileConfigurationManager;
 
-public class Repository implements IRepository, ISingletonComponentHolder {
+public class Repository implements IRepository {
 	private static final String CLASS_FILE_EXTENSION_NAME = ".class";
 	private static final String JAR_FILE_EXTENSION_NAME = ".jar";
 	public static final String GRANITE_LIBRARY_NAME_PREFIX = "granite-";
@@ -73,14 +73,18 @@ public class Repository implements IRepository, ISingletonComponentHolder {
 		loadSystemComponents();
 		loadExtendedComponents();
 		
+		if (appComponentService instanceof IRepositoryAware) {
+			((IRepositoryAware)appComponentService).setRepository(this);
+		}
+		
 		processAvailableServices();
 	}
 	
 	private void loadExtendedComponents() {
-		List<Class<? extends IComponentProvider>> componentProviderClasses = appComponentService.getExtensionClasses(IComponentProvider.class);
-		for (Class<? extends IComponentProvider> componentProviderClass : componentProviderClasses) {
-			IComponentProvider componentProvider = appComponentService.createExtension(componentProviderClass);
-			Class<?>[] componentClasses = componentProvider.getComponentClasses();
+		List<Class<? extends IComponentContributor>> componentContributorClasses = appComponentService.getExtensionClasses(IComponentContributor.class);
+		for (Class<? extends IComponentContributor> comonentContributorClass : componentContributorClasses) {
+			IComponentContributor componentContributor = appComponentService.createExtension(comonentContributorClass);
+			Class<?>[] componentClasses = componentContributor.getComponentClasses();
 			if (componentClasses == null || componentClasses.length == 0)
 				continue;
 			
