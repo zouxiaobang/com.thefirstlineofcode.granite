@@ -4,11 +4,12 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-public class CommonUtils {
+public class CommonsUtils {
     private static final char SEPARATOR_KEY_VALUE = '=';
 	private static final String SEPARATOR_PROPERTIES = ";";
 
@@ -84,5 +85,21 @@ public class CommonUtils {
 		}
 		
 		return sw.toString();
+	}
+	
+	public static boolean isSetterMethod(Method method) {
+		String methodName = method.getName();
+		if (methodName.length() > 4 && methodName.startsWith("set") && Character.isUpperCase(methodName.charAt(3))) {
+			Class<?>[] types = method.getParameterTypes();
+			if (types.length != 1)
+				return false;
+			
+			if (types[0].isPrimitive())
+				return false;
+			
+			return true;
+		}
+		
+		return false;
 	}
 }

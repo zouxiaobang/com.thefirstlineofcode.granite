@@ -29,7 +29,7 @@ import com.firstlinecode.basalt.protocol.im.stanza.Message;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
 import com.firstlinecode.granite.framework.core.annotations.Component;
-import com.firstlinecode.granite.framework.core.commons.utils.CommonUtils;
+import com.firstlinecode.granite.framework.core.commons.utils.CommonsUtils;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
@@ -262,7 +262,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 			if (logger.isTraceEnabled())
 				logger.trace("Parsing protocol exception. original message: {}.", message);
 		} catch (RuntimeException e) {
-			out = new InternalServerError(CommonUtils.getInternalServerErrorMessage(e));
+			out = new InternalServerError(CommonsUtils.getInternalServerErrorMessage(e));
 			logger.error(String.format("Parsing error. original message: %s.", message), e);
 		}
 		

@@ -29,7 +29,7 @@ import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.auth.IAuthenticator;
-import com.firstlinecode.granite.framework.core.commons.utils.CommonUtils;
+import com.firstlinecode.granite.framework.core.commons.utils.CommonsUtils;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
@@ -158,7 +158,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 		if (message instanceof Stanza) {
 			context.write(createStanzaError(context, e, message));
 		} else {
-			context.write(new com.firstlinecode.basalt.protocol.core.stream.error.InternalServerError(CommonUtils.getInternalServerErrorMessage(e)));
+			context.write(new com.firstlinecode.basalt.protocol.core.stream.error.InternalServerError(CommonsUtils.getInternalServerErrorMessage(e)));
 			context.close();
 		}
 		
@@ -167,7 +167,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 
 	private StanzaError createStanzaError(IConnectionContext context, RuntimeException e, Object message) {
 		Stanza stanza = (Stanza)message;
-		StanzaError error = new com.firstlinecode.basalt.protocol.core.stanza.error.InternalServerError(CommonUtils.getInternalServerErrorMessage(e));
+		StanzaError error = new com.firstlinecode.basalt.protocol.core.stanza.error.InternalServerError(CommonsUtils.getInternalServerErrorMessage(e));
 		
 		error = amendStanzaError(context, error, stanza);
 		

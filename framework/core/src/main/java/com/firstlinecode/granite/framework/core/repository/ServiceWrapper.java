@@ -17,8 +17,7 @@ public class ServiceWrapper implements IServiceWrapper {
 	private IApplicationComponentService appComponentService;
 	
 	public ServiceWrapper(IServerConfiguration serverConfiguration, IConfigurationManager configurationManager,
-			IRepository repository,IApplicationComponentService appComponentService,
-				IComponentInfo componentInfo) {
+			IRepository repository, IApplicationComponentService appComponentService, IComponentInfo componentInfo) {
 		this.serverConfiguration = serverConfiguration;
 		this.configurationManager = configurationManager;
 		this.repository = repository;
@@ -91,7 +90,7 @@ public class ServiceWrapper implements IServiceWrapper {
 		}
 		
 		if (componentInfo.isSingleton()) {
-			repository.put(componentInfo.getId(), component);
+			repository.putSingleton(componentInfo.getId(), component);
 		}
 		
 		return component;

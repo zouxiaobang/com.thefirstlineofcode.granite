@@ -5,7 +5,10 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import com.firstlinecode.granite.framework.adf.spring.injection.SpringBeanInjectionProvider;
 import com.firstlinecode.granite.framework.core.adf.ApplicationComponentService;
+import com.firstlinecode.granite.framework.core.adf.injection.AppComponentInjectionProvider;
+import com.firstlinecode.granite.framework.core.adf.injection.IInjectionProvider;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 
 public class AdfComponentService extends ApplicationComponentService implements ApplicationContextAware {
@@ -53,5 +56,10 @@ public class AdfComponentService extends ApplicationComponentService implements 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		appContext = applicationContext;
+	}
+	
+	@Override
+	protected IInjectionProvider[] getInjectionProviders() {
+		return new IInjectionProvider[] {new AppComponentInjectionProvider(this), new SpringBeanInjectionProvider(appContext)};
 	}
 }

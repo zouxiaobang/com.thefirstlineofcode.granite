@@ -1,11 +1,17 @@
 package com.firstlinecode.granite.framework.core.repository;
 
-public interface IRepository extends IComponentQueryer {
+public interface IRepository {
 	public static final String SEPARATOR_COMPONENT_DEPENDENCY_PATH = "$";
 	
 	void init();
 	
-	void put(String id, Object component);
+	IComponentInfo[] getServiceInfos();
+	IComponentInfo getServiceInfo(String serviceId);
+	IComponentInfo[] getComponentInfos();
+	IComponentInfo getComponentInfo(String componentId);
+	String[] getComponentBinding(String componentId);
+	
+	void putSingleton(String id, Object singleton);
 	Object get(String id);
 	
 	void setServiceListener(IServiceListener listener);

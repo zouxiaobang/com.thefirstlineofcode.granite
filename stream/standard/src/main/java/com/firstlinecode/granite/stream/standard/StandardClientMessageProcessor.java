@@ -36,7 +36,7 @@ import com.firstlinecode.granite.framework.core.annotations.BeanDependency;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.auth.IAuthenticator;
-import com.firstlinecode.granite.framework.core.commons.utils.CommonUtils;
+import com.firstlinecode.granite.framework.core.commons.utils.CommonsUtils;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
@@ -51,8 +51,8 @@ import com.firstlinecode.granite.framework.core.pipes.IClientMessageProcessor;
 import com.firstlinecode.granite.framework.core.pipes.IMessage;
 import com.firstlinecode.granite.framework.core.pipes.IMessageChannel;
 import com.firstlinecode.granite.framework.core.pipes.SimpleMessage;
+import com.firstlinecode.granite.framework.core.pipes.routing.IRouter;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
-import com.firstlinecode.granite.framework.core.routing.IRouter;
 import com.firstlinecode.granite.framework.core.session.ISessionListener;
 import com.firstlinecode.granite.framework.core.session.ISessionManager;
 import com.firstlinecode.granite.pipes.stream.IStreamNegotiant;
@@ -187,7 +187,7 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 				
 				InternalServerError error = new InternalServerError();
 				error.setText(new LangText(String.format("Negotiation error. %s.",
-						CommonUtils.getInternalServerErrorMessage(e))));
+						CommonsUtils.getInternalServerErrorMessage(e))));
 				context.write(translatingFactory.translate(error));
 				closeStream(context);
 			}

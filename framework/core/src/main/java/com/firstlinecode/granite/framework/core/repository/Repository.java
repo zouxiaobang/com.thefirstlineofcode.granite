@@ -514,7 +514,7 @@ public class Repository implements IRepository {
 	}
 
 	@Override
-	public IComponentInfo[] getServices() {
+	public IComponentInfo[] getServiceInfos() {
 		List<IComponentInfo> services = new ArrayList<>();
 		
 		for (IComponentInfo ci : components.values()) {
@@ -527,11 +527,11 @@ public class Repository implements IRepository {
 	}
 
 	@Override
-	public IComponentInfo getService(String serviceId) {
+	public IComponentInfo getServiceInfo(String serviceId) {
 		if (serviceId == null)
 			throw new RuntimeException("Null service id.");
 		
-		IComponentInfo service = getComponent(serviceId);
+		IComponentInfo service = getComponentInfo(serviceId);
 		if (service instanceof IService)
 			return service;
 		
@@ -539,8 +539,8 @@ public class Repository implements IRepository {
 	}
 	
 	@Override
-	public IComponentInfo getComponent(String componentId) {
-		for (IComponentInfo ci : getComponents()) {
+	public IComponentInfo getComponentInfo(String componentId) {
+		for (IComponentInfo ci : getComponentInfos()) {
 			if (componentId.equals(ci.getId()))
 				return ci;
 		}
@@ -549,7 +549,7 @@ public class Repository implements IRepository {
 	}
 
 	@Override
-	public IComponentInfo[] getComponents() {
+	public IComponentInfo[] getComponentInfos() {
 		return components.values().toArray(new IComponentInfo[components.size()]);
 	}
 
@@ -559,12 +559,25 @@ public class Repository implements IRepository {
 	}
 
 	@Override
-	public void put(String id, Object component) {
+	public void putSingleton(String id, Object component) {
 		singletons.put(id, component);
 	}
 
 	@Override
 	public Object get(String id) {
-		return singletons.get(id);
+		Object component = singletons.get(id);
+		if (component == null) {
+			IComponentInfo componentInfo = getComponentInfo(id);
+			if (componentInfo == null)
+				return component;
+			
+			try {
+				component = componentInfo.create();
+			} catch (CreationException e) {
+				throw new RuntimeException(String.format("Can't create component which's component info is %s.", componentInfo), e);
+			}
+		}
+		
+		return component;
 	}
 }

@@ -10,4 +10,5 @@ public interface IApplicationComponentService {
 	<T> T createExtension(Class<T> type);
 	<T> T createRawExtension(Class<T> type);
 	<T> T inject(T rawInstance);
+	Object getComponent(String id);
 }

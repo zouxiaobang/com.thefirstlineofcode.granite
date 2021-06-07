@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.framework.core.routing;
+package com.firstlinecode.granite.framework.core.pipes.routing;
 
 import com.firstlinecode.basalt.protocol.core.JabberId;
 
