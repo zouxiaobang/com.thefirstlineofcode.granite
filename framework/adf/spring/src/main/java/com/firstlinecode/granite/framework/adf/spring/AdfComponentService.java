@@ -4,6 +4,7 @@ import org.pf4j.PluginManager;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import com.firstlinecode.granite.framework.adf.spring.injection.SpringBeanInjectionProvider;
 import com.firstlinecode.granite.framework.core.adf.ApplicationComponentService;
@@ -61,5 +62,12 @@ public class AdfComponentService extends ApplicationComponentService implements 
 	@Override
 	protected IInjectionProvider[] getInjectionProviders() {
 		return new IInjectionProvider[] {new AppComponentInjectionProvider(this), new SpringBeanInjectionProvider(appContext)};
+	}
+	
+	@Override
+	public void stop() {
+		((ConfigurableApplicationContext)appContext).close();
+		
+		super.stop();
 	}
 }

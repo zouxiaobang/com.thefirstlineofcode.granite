@@ -32,9 +32,9 @@ public class HSqlServer implements IServerConfigurationAware {
             try {
 				doStart(dataDir);
 				
-				logger.info("HSQLDB started.");
+				logger.info("HSQLDB has started.");
 			} catch (Exception e) {
-				logger.error("Can't start HSQLDB server.");
+				logger.error("Can't start HSQLDB server.", e);
 				throw new RuntimeException("Can't start HSQLDB server.", e);
 			}
     }
@@ -61,10 +61,10 @@ public class HSqlServer implements IServerConfigurationAware {
 				server = null;
 			}
 		} catch (Exception e) {
-			logger.error("Can't stop HSQLDB server.", e);
+			logger.error("Can't stop HSQLDB server correctly.", e);
 		}
             
-		logger.info("HSQLDB stopped.");
+		logger.info("HSQLDB has stopped.");
     }
 
 	@Override

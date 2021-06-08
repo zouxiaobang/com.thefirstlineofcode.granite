@@ -12,11 +12,11 @@ import com.firstlinecode.granite.framework.adf.spring.AdfComponentService;
 import com.firstlinecode.granite.framework.adf.spring.AdfPluginManager;
 import com.firstlinecode.granite.framework.adf.spring.AdfSpringBeanPostProcessor;
 import com.firstlinecode.granite.framework.adf.spring.ISpringConfiguration;
-import com.firstlinecode.granite.framework.core.ConsoleThread;
 import com.firstlinecode.granite.framework.core.IServer;
 import com.firstlinecode.granite.framework.core.ServerProxy;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.ServerConfiguration;
+import com.firstlinecode.granite.framework.core.console.ConsoleThread;
 import com.firstlinecode.granite.framework.core.log.LogFilter;
 import com.firstlinecode.granite.framework.core.platform.IPlatform;
 import com.firstlinecode.granite.framework.core.platform.Pf4j;
@@ -58,10 +58,11 @@ public class Main {
 		
 		IServer server = null;
 		AnnotationConfigApplicationContext appContext = null;
+		AdfComponentService appComponentService = null;
 		try {			
 			AdfPluginManager pluginManager = new AdfPluginManager();
 			
-			AdfComponentService appComponentService = new AdfComponentService(
+			appComponentService = new AdfComponentService(
 					serverConfiguration, pluginManager);
 			pluginManager.setApplicationComponentService(appComponentService);
 			appComponentService.start();
@@ -80,6 +81,8 @@ public class Main {
 			
 			appContext.refresh();
 			
+			appComponentService.setApplicationContext(appContext);
+			
 			pluginManager.setApplicationContext(appContext);
 			pluginManager.injectExtensionsToSpring();
 			
@@ -88,11 +91,28 @@ public class Main {
 			if (appContext != null)
 				appContext.close();
 			
+			if (server != null) {
+				try {
+					server.stop();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+			
+			if (appContext != null && (appContext.isRunning() || appContext.isActive())) {
+				appContext.close();
+			}
+			
+			if (appComponentService != null && appComponentService.isStarted()) {
+				appComponentService.stop();
+			}
+			
 			throw new RuntimeException("Can't start Granite Server.", e);
 		}
 		
 		if (options.isConsole()) {
-			Thread consoleThread = new Thread(new ConsoleThread(server), "Granite Server Console Thread");
+			Thread consoleThread = new Thread(new ConsoleThread(server.getServerContext()),
+					"Granite Server Console Thread");
 			consoleThread.start();
 		}
 	}
