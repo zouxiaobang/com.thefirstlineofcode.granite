@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.pf4j.PluginManager;
@@ -63,13 +64,16 @@ public class ApplicationComponentService implements IApplicationComponentService
 			boolean syncPlugins) {
 		this.serverConfiguration = serverConfiguration;
 		this.syncPlugins = syncPlugins;
-		appComponentConfigurations = readAppComponentConfigurations(serverConfiguration);
+		
+		dependencyInjectors = new ConcurrentHashMap<>();
 		
 		if (pluginManager == null) {
 			pluginManager = createPluginManager();
 		} else {
 			this.pluginManager = pluginManager;
 		}
+		
+		appComponentConfigurations = readAppComponentConfigurations(serverConfiguration);
 	}
 	
 	private ApplicationComponentConfigurations readAppComponentConfigurations(IServerConfiguration serverConfiguration) {
@@ -233,13 +237,11 @@ public class ApplicationComponentService implements IApplicationComponentService
 						Modifier.isStatic(modifiers))
 					continue;
 				
-				if (!CommonsUtils.isSetterMethod(method)) {
-					logger.warn(String.format("Dependency method '%s' isn't a setter method.", method));
-					continue;
-				}
-				
 				Object dependencyAnnotation = method.getAnnotation(injectionProvider.getAnnotationType());				
 				if (dependencyAnnotation != null) {
+					if (!CommonsUtils.isSetterMethod(method))
+						logger.warn(String.format("Dependency method '%s' isn't a setter method.", method));
+						
 					IDependencyFetcher fetcher = injectionProvider.getFetcher(dependencyAnnotation);
 					IDependencyInjector injector = new MethodDependencyInjector(method, fetcher);
 					injectors.add(injector);

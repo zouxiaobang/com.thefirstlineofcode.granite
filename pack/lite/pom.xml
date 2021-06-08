@@ -22,10 +22,18 @@
 			<groupId>com.firstlinecode.granite</groupId>
 			<artifactId>granite-server</artifactId>
 		</dependency>
+		
+		<!-- Framework -->
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
 			<artifactId>granite-framework-core</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.framework.adf</groupId>
+			<artifactId>granite-framework-adf-mybatis</artifactId>
+		</dependency>
+		
+		<!-- Pipes -->
 		<dependency>
 			<groupId>com.firstlinecode.granite.pipes</groupId>
 			<artifactId>granite-pipes-stream</artifactId>

@@ -67,7 +67,7 @@ public class Main {
 			appComponentService.start();
 			
 			appContext = new AnnotationConfigApplicationContext();
-			
+						
 			ConfigurableListableBeanFactory beanFactory = (ConfigurableListableBeanFactory)appContext.getBeanFactory();
 			beanFactory.addBeanPostProcessor(new AdfSpringBeanPostProcessor(appComponentService));
 			
