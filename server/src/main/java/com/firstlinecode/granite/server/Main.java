@@ -16,7 +16,7 @@ import com.firstlinecode.granite.framework.core.IServer;
 import com.firstlinecode.granite.framework.core.ServerProxy;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.ServerConfiguration;
-import com.firstlinecode.granite.framework.core.console.ConsoleThread;
+import com.firstlinecode.granite.framework.core.console.ConsoleSystem;
 import com.firstlinecode.granite.framework.core.log.LogFilter;
 import com.firstlinecode.granite.framework.core.platform.IPlatform;
 import com.firstlinecode.granite.framework.core.platform.Pf4j;
@@ -111,7 +111,7 @@ public class Main {
 		}
 		
 		if (options.isConsole()) {
-			Thread consoleThread = new Thread(new ConsoleThread(server.getServerContext()),
+			Thread consoleThread = new Thread(new ConsoleSystem(server.getServerContext()),
 					"Granite Server Console Thread");
 			consoleThread.start();
 		}

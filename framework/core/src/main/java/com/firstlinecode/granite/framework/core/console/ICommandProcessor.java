@@ -7,5 +7,5 @@ public interface ICommandProcessor extends ExtensionPoint {
 	
 	String getGroup();
 	String[] getCommands();
-	void process(IConsoleSystem console, String command) throws Exception;
+	boolean process(IConsoleSystem console, String command, String... args) throws Exception;
 }
