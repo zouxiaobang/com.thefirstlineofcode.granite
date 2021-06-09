@@ -1,9 +1,15 @@
 package com.firstlinecode.granite.framework.core.console;
 
+import java.util.Stack;
+
 import org.pf4j.Extension;
+
+import com.firstlinecode.granite.framework.core.repository.IComponentInfo;
+import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
 
 @Extension
 public class DefaultCommandProcessor extends AbstractCommandProcessor {
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
 	@Override
 	public String getGroup() {
@@ -12,7 +18,7 @@ public class DefaultCommandProcessor extends AbstractCommandProcessor {
 	
 	@Override
 	public String[] getCommands() {
-		return new String[] {"help", "services", "service", "exit", "close"};
+		return new String[] {"help", "services", "service", "components", "exit", "close"};
 	}
 	
 	void processExit(IConsoleSystem consoleSystem) {
@@ -30,19 +36,162 @@ public class DefaultCommandProcessor extends AbstractCommandProcessor {
 	}
 	
 	void processServices(IConsoleSystem consoleSystem) {
-		System.out.println("TODO. List all services.");
+		IComponentInfo[] serviceInfos = consoleSystem.getServerContext().getRepository().getServiceInfos();
+		printComponentInfos(consoleSystem, "id\tState\t\tService ID", serviceInfos);
+	}
+
+	private void printComponentInfos(IConsoleSystem consoleSystem, String title, IComponentInfo[] serviceInfos) {
+		consoleSystem.printMessageLine(title);
+		
+		for (int i = 0; i < serviceInfos.length; i++) {
+			IComponentInfo serviceInfo = serviceInfos[i];
+			StringBuilder sb = new StringBuilder();
+			sb.append(i);
+			sb.append("\t");
+			sb.append(serviceInfo.isAvailable() ? "Available  " : "Unavailable");
+			sb.append("\t");
+			sb.append(serviceInfo.getId());
+			consoleSystem.printMessageLine(sb.toString());
+		}
 	}
 	
 	void processService(IConsoleSystem consoleSystem, String serviceId) {
-		System.out.println("TODO. Print service detail.");
+		IComponentInfo serviceInfo = consoleSystem.getServerContext().getRepository().getServiceInfo(serviceId);
+		if (serviceInfo == null) {
+			consoleSystem.printMessageLine(String.format("Can't find service by service ID: %s.", serviceId));
+			return;
+		}
+		
+		new ServicePrinter(consoleSystem, serviceInfo).print();
+	}
+	
+	void processComponents(IConsoleSystem consoleSystem) {
+		IComponentInfo[] componentInfos = consoleSystem.getServerContext().getRepository().getComponentInfos();
+		printComponentInfos(consoleSystem, "id\tState\t\tComponent ID", componentInfos);
 	}
 	
 	void processHelp(IConsoleSystem consoleSystem) {
 		consoleSystem.printMessageLine("Available Commands:");
 		consoleSystem.printMessageLine("help                    Display help information.");
-		consoleSystem.printMessageLine("services                List all started services.");
+		consoleSystem.printMessageLine("services                List all services.");
 		consoleSystem.printMessageLine("service <SERVICE_ID>    Display details for specified service.");
+		consoleSystem.printMessageLine("components              List all components.");
 		consoleSystem.printMessageLine("exit                    Exit the console.");
 		consoleSystem.printMessageLine("close                   Stop the server and exit.");
+	}
+	
+	private class ServicePrinter {
+		private IConsoleSystem consoleSystem;
+		private IComponentInfo service;
+		
+		public ServicePrinter(IConsoleSystem consoleSystem, IComponentInfo service) {
+			this.consoleSystem = consoleSystem;
+			this.service = service;
+		}
+		
+		public void print() {
+			consoleSystem.printMessage(getServiceDetails());
+		}
+
+		private String getServiceDetails() {
+			StringBuilder sb = new StringBuilder();
+			
+			if (!service.isAvailable()) {
+				sb.append("*");
+			}
+			sb.append(service.getId());
+			sb.append(LINE_SEPARATOR);
+			
+			if (service.getDependencies().length > 0) {
+				Stack<Integer> hierarchyContext = new Stack<>();
+				hierarchyContext.push(getBindingsCountOfAllDependencies(service));
+				
+				writeDependencies(sb, service.getId(), service.getDependencies(), hierarchyContext);
+				
+				hierarchyContext.pop();
+			}
+			
+			return sb.toString();
+		}
+
+		private int getBindingsCountOfAllDependencies(IComponentInfo component) {
+			int count = 0;
+			for (IDependencyInfo dependency : component.getDependencies()) {
+				String[] bindings = consoleSystem.getServerContext().getRepository().getComponentBinding(component.getId() + "$" + dependency.getBareId());
+				count += (bindings == null ? 1 : bindings.length);
+			}
+			
+			return count;
+		}
+
+		private void writeDependencies(StringBuilder sb, String parentId, IDependencyInfo[] dependencies,
+					Stack<Integer> hierarchyContext) {
+			
+			for (IDependencyInfo dependency : dependencies) {
+				String[] bindings = consoleSystem.getServerContext().getRepository().getComponentBinding(parentId + "$" + dependency.getBareId());
+				if (bindings != null && bindings.length > 0) {
+					for (String binding : bindings) {
+						hierarchyContext.push(hierarchyContext.pop() - 1);
+						writeBinding(sb, dependency, binding, hierarchyContext);
+					}
+				} else {
+					hierarchyContext.push(hierarchyContext.pop() - 1);
+					writeHierarchyLine(sb, hierarchyContext);
+					sb.append('?');
+					sb.append(dependency.getBareId());
+					sb.append(LINE_SEPARATOR);
+				}
+			}
+		}
+
+		private void writeBinding(StringBuilder sb, IDependencyInfo dependency, String binding, Stack<Integer> hierarchyContext) {
+			writeHierarchyLine(sb, hierarchyContext);
+			
+			IComponentInfo binded = findBindedComponent(dependency, binding);
+			if (binded == null) {
+				sb.append('!');
+			} else if (!binded.isAvailable()) {
+				sb.append('*');
+			}
+			
+			sb.append(dependency.getBareId());
+			sb.append("->");
+			sb.append(binding);
+			sb.append(LINE_SEPARATOR);
+			
+			if (binded != null) {
+				hierarchyContext.push(getBindingsCountOfAllDependencies(binded));
+				writeDependencies(sb, binded.getId(), binded.getDependencies(), hierarchyContext);
+				hierarchyContext.pop();
+			}
+		}
+
+		private IComponentInfo findBindedComponent(IDependencyInfo dependency, String binding) {			
+			for (IComponentInfo binded : dependency.getBindedComponents()) {
+				if (binded.getId().equals(binding)) {
+					return binded;
+				}
+			}
+			
+			return null;
+		}
+
+		private void writeHierarchyLine(StringBuilder sb, Stack<Integer> hierarchyContext) {
+			for (int i = 0; i < hierarchyContext.size() - 1; i++) {
+				if (hierarchyContext.get(i) > 0) {
+					sb.append('|').append("  ");
+				} else {
+					sb.append("   ");
+				}
+			}
+			
+			if (hierarchyContext.peek() == 0) {
+				sb.append('\\');
+			} else {
+				sb.append('+');
+			}
+			
+			sb.append("- ");
+		}
 	}
 }

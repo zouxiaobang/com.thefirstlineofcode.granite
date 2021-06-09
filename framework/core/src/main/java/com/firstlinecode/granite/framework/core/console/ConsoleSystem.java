@@ -81,17 +81,17 @@ public class ConsoleSystem implements Runnable, IConsoleSystem {
 		try {
 			doPrintDefaultHelp();
 		} catch (Exception e) {
-			printMessageLine("Some things was wrong. Exit system now.");
+			printMessageLine("Something was wrong. Close system now.");
 			try {
-				exitSystem();
+				closeSystem();
 			} catch (Exception e1) {
-				throw new RuntimeException("Can't exit system.", e);
+				throw new RuntimeException("Can't close system correctly.", e);
 			}
 		}
 	}
 
-	private void exitSystem() throws Exception {
-		getDefaultCommandProcessor().process(this, "exit");
+	private void closeSystem() throws Exception {
+		getDefaultCommandProcessor().process(this, "close");
 	}
 
 	private ICommandProcessor getDefaultCommandProcessor() {
@@ -221,5 +221,10 @@ public class ConsoleSystem implements Runnable, IConsoleSystem {
 	
 	public void close() {
 		stop = true;
+	}
+
+	@Override
+	public ICommandProcessor[] getCommandProcessors() {
+		return commandProcessors.values().toArray(new ICommandProcessor[commandProcessors.size()]);
 	}
 }

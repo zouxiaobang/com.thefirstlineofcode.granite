@@ -48,7 +48,7 @@ public class Repository implements IRepository {
 	private Map<String, String[]> componentBindings;
 	private Map<String, Object> singletons;
 	
-	private Map<String, IComponentInfo> components;
+	private Map<String, IComponentInfo> componentInfos;
 	private List<String> availableServices;
 	private IConfigurationManager configurationManager;
 	private IApplicationComponentService appComponentService;
@@ -59,7 +59,7 @@ public class Repository implements IRepository {
 		
 		componentBindings = new HashMap<>();
 		
-		components = new HashMap<>();
+		componentInfos = new HashMap<>();
 		availableServices = new ArrayList<>();
 		
 		singletons = new HashMap<>();
@@ -266,7 +266,7 @@ public class Repository implements IRepository {
 		if (componentAnnotation != null) {
 			IComponentInfo componentInfo = new GenericComponentInfo(componentAnnotation.value(), type);
 			
-			if (components.containsKey(componentInfo.getId())) {
+			if (componentInfos.containsKey(componentInfo.getId())) {
 				throw new RuntimeException(String.format("Reduplicated component. Component which's id is %s has already existed.",
 						componentInfo.getId()));
 			}
@@ -307,7 +307,7 @@ public class Repository implements IRepository {
 	}
 
 	private void processAvailableServices() {
-		for (IComponentInfo component : components.values()) {
+		for (IComponentInfo component : componentInfos.values()) {
 			if (component.isService() && component.isAvailable() &&
 					!availableServices.contains(component.getId())) {
 				availableServiceFound(component);
@@ -336,7 +336,7 @@ public class Repository implements IRepository {
 			}
 		}
 		
-		for (IComponentInfo existedComponent : components.values()) {
+		for (IComponentInfo existedComponent : componentInfos.values()) {
 			for (IDependencyInfo dependencyOfExistedComponent : existedComponent.getDependencies()) {
 				String[] bindedComponentIds = componentBindings.get(dependencyOfExistedComponent.getId());
 				if (bindedComponentIds == null)
@@ -363,7 +363,7 @@ public class Repository implements IRepository {
 	}
 
 	private void newComponentDependencyBinding(IComponentInfo newComponent, IDependencyInfo dependency, String bindedComponentId) {
-		for (IComponentInfo existedComponent : components.values()) {
+		for (IComponentInfo existedComponent : componentInfos.values()) {
 			if (existedComponent.getId().equals(bindedComponentId)) {
 				if (existedComponent.isService()) {
 					logger.warn("Component {} depends on a component {} which implements IService interface. It isn't allowed. we ignore this binding.",
@@ -510,20 +510,20 @@ public class Repository implements IRepository {
 
 	public void componentFound(IComponentInfo componentInfo) {
 		bindDependencies(componentInfo);
-		components.put(componentInfo.getId(), componentInfo);
+		componentInfos.put(componentInfo.getId(), componentInfo);
 	}
 
 	@Override
 	public IComponentInfo[] getServiceInfos() {
-		List<IComponentInfo> services = new ArrayList<>();
+		List<IComponentInfo> serviceInfos = new ArrayList<>();
 		
-		for (IComponentInfo ci : components.values()) {
+		for (IComponentInfo ci : componentInfos.values()) {
 			if (ci.isService()) {
-				services.add(ci);
+				serviceInfos.add(ci);
 			}
 		}
 		
-		return services.toArray(new IComponentInfo[services.size()]);
+		return serviceInfos.toArray(new IComponentInfo[serviceInfos.size()]);
 	}
 
 	@Override
@@ -531,9 +531,9 @@ public class Repository implements IRepository {
 		if (serviceId == null)
 			throw new RuntimeException("Null service id.");
 		
-		IComponentInfo service = getComponentInfo(serviceId);
-		if (service instanceof IService)
-			return service;
+		IComponentInfo serviceInfo = getComponentInfo(serviceId);
+		if (IService.class.isAssignableFrom(serviceInfo.getType()))
+			return serviceInfo;
 		
 		return null;
 	}
@@ -550,7 +550,7 @@ public class Repository implements IRepository {
 
 	@Override
 	public IComponentInfo[] getComponentInfos() {
-		return components.values().toArray(new IComponentInfo[components.size()]);
+		return componentInfos.values().toArray(new IComponentInfo[componentInfos.size()]);
 	}
 
 	@Override

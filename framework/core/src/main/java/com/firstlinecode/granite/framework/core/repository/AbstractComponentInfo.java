@@ -60,6 +60,11 @@ public abstract class AbstractComponentInfo extends GenericRepositoryWare implem
 		}
 	}
 	
+	@Override
+	public Class<?> getType() {
+		return super.getType();
+	}
+	
 	protected abstract Object doCreate() throws CreationException;
 
 }
