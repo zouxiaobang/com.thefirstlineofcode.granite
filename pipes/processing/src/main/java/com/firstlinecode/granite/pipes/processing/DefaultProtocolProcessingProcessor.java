@@ -26,6 +26,7 @@ import com.firstlinecode.basalt.protocol.core.stream.error.StreamError;
 import com.firstlinecode.basalt.protocol.im.stanza.Message;
 import com.firstlinecode.basalt.protocol.im.stanza.Presence;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.annotations.BeanDependency;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.auth.IAuthenticator;
@@ -35,11 +36,7 @@ import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
-import com.firstlinecode.granite.framework.core.event.EventProducer;
-import com.firstlinecode.granite.framework.core.event.IEventFirer;
-import com.firstlinecode.granite.framework.core.event.IEventFirerAware;
 import com.firstlinecode.granite.framework.core.pipes.IMessage;
-import com.firstlinecode.granite.framework.core.pipes.IMessageChannel;
 import com.firstlinecode.granite.framework.core.pipes.processing.IProcessingContext;
 import com.firstlinecode.granite.framework.core.pipes.processing.IXepProcessor;
 import com.firstlinecode.granite.framework.core.pipes.processing.IXepProcessorFactory;
@@ -69,24 +66,19 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 	
 	private IApplicationComponentService appComponentService;
 	
-	@Dependency("event.message.channel")
-	private IMessageChannel eventMessageChannel;
-	
-	@Dependency("authenticator")
+	@BeanDependency
 	private IAuthenticator authenticator;
-	
-	private IEventFirer eventProducer;
 	
 	private JabberId domain;
 	private JabberId[] domainAliases;
 	
 	public DefaultProtocolProcessingProcessor() {
 		xepProcessorFactories = new HashMap<>();
+		singletonProcessores = new HashMap<>();
 	}
 
 	@Override
 	public synchronized void init() {
-		eventProducer = new EventProducer(eventMessageChannel);
 		loadContributedXepProcessors();
 	}
 	
@@ -103,7 +95,11 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 		
 		for (Class<? extends IXepProcessorFactory> processorFactoryClass : processorFactoryClasses) {
 			IXepProcessorFactory<?, ?> processorFactory = appComponentService.createExtension(processorFactoryClass);
-			xepProcessorFactories.put(processorFactory.getProtocolChain(), processorFactory);
+			if (processorFactory.isSingleton()) {
+				singletonProcessores.put(processorFactory.getProtocolChain(), processorFactory.createProcessor());
+			} else {				
+				xepProcessorFactories.put(processorFactory.getProtocolChain(), processorFactory);
+			}
 		}
 	}
 
@@ -551,28 +547,16 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 	}
 
 	@SuppressWarnings("unchecked")
-	private synchronized <V, K extends Stanza> IXepProcessor<K, V> createXepProcessorByFactory(ProtocolChain protocolChain) {
-		IXepProcessor<K, V> xepProcessor = (IXepProcessor<K, V>)singletonProcessores.get(protocolChain);
-		if (xepProcessor != null)
-			return xepProcessor;
-		
+	private <V, K extends Stanza> IXepProcessor<K, V> createXepProcessorByFactory(ProtocolChain protocolChain) {
 		IXepProcessorFactory<?, ?> processorFactory = xepProcessorFactories.get(protocolChain);		
 		try {
-			xepProcessor = (IXepProcessor<K, V>)processorFactory.createProcessor();
+			IXepProcessor<K, V> xepProcessor = (IXepProcessor<K, V>)processorFactory.createProcessor();
+			appComponentService.inject(xepProcessor);
+			
+			return xepProcessor;
 		} catch (Exception e) {
 			throw new RuntimeException("Can't instantiate XEP processor.", e);
 		}
-		
-		appComponentService.inject(xepProcessor);
-		
-		if (xepProcessor instanceof IEventFirerAware) {
-			((IEventFirerAware)xepProcessor).setEventFirer(eventProducer);
-		}
-		
-		if (processorFactory.isSingleton())
-			singletonProcessores.put(protocolChain, xepProcessor);
-		
-		return xepProcessor;
 	}
 
 	private ProtocolChain getXepProtocolChain(Stanza stanza, Object xep) {

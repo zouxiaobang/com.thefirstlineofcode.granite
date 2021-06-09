@@ -9,7 +9,7 @@ public class ComponentContributor implements IComponentContributor {
 
 	@Override
 	public Class<?>[] getComponentClasses() {
-		return new Class<?>[] {IbrSupportedClientMessageProcessor.class};
+		return new Class<?>[] {Registrar.class, IbrSupportedClientMessageProcessor.class};
 	}
 
 }
