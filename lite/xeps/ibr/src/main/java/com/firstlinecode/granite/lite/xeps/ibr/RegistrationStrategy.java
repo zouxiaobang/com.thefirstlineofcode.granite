@@ -11,7 +11,7 @@ import com.firstlinecode.granite.framework.core.commons.utils.StringUtils;
 import com.firstlinecode.granite.xeps.ibr.IRegistrationStrategy;
 import com.firstlinecode.granite.xeps.ibr.MalformedRegistrationInfoException;
 
-@Component("registration.strategy")
+@Component("lite.registration.strategy")
 public class RegistrationStrategy implements IRegistrationStrategy, IDataObjectFactoryAware {
 	private IDataObjectFactory dataObjectFactory;
 

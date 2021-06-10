@@ -72,6 +72,12 @@
 			<groupId>com.firstlinecode.granite.xeps</groupId>
 			<artifactId>granite-xeps-ping</artifactId>
 		</dependency>
+		
+		<!-- Deploy Lite Plugins -->
+		<dependency>
+			<groupId>com.firstlinecode.granite.lite.xeps</groupId>
+			<artifactId>granite-lite-xeps-ibr</artifactId>
+		</dependency>
 	</dependencies>
 	
 	<build>

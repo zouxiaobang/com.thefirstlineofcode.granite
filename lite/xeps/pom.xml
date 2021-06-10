@@ -6,21 +6,18 @@
 
 	<parent>
 		<groupId>com.firstlinecode.granite</groupId>
-		<artifactId>com.firstlinecode.granite</artifactId>
+		<artifactId>granite-lite</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<groupId>com.firstlinecode.granite</groupId>
-	<artifactId>granite-lite</artifactId>
+	<groupId>com.firstlinecode.granite.lite</groupId>
+	<artifactId>granite-lite-xeps</artifactId>
 	<packaging>pom</packaging>
-	<name>XMPP server deploy lite plugins</name>
+	<name>XEPs implementation for deploy lite</name>
 
 	<modules>
-	<!--	<module>auth</module> -->
-		<module>dba</module>
-<!--		<module>session</module> -->
-		<module>xeps</module>
+		<module>ibr</module>
 	</modules>
 
 </project>

@@ -1,11 +1,16 @@
 package com.firstlinecode.granite.framework.adf.spring;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -30,14 +35,19 @@ import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService
 
 public class AdfPluginManager extends SpringPluginManager implements ApplicationContextAware,
 			IApplicationComponentServiceAware {
+	private static final String FILE_NAME_PLUGIN_PROPERTIES = "plugin.properties";
+	private static final String CHAR_COMMA = ",";
+	private static final String PROPERTY_NAME_PLUGIN_ID = "plugin.id";
+	private static final String PROPERTY_NAME_NON_PLUGIN_DEPENDENCIES = "non-plugin.dependencies";
 	private AdfComponentService appComponentService;
 	private URL[] nonPluginDependencies;
+	private Map<String, String[]> pluginIdToNonPluginDependencyIds;
 	
 	public AdfPluginManager() {
 	}
 	
 	public AdfPluginManager(Path pluginsRoot) {
-		super(pluginsRoot);
+		super(pluginsRoot);		
 	}
 	
 	@Override
@@ -45,7 +55,9 @@ public class AdfPluginManager extends SpringPluginManager implements Application
 		super.initialize();
 		
 		List<URL> lNonPluginDependency = new ArrayList<>();
+		pluginIdToNonPluginDependencyIds = new HashMap<>();
 		File pluginsDir = getPluginsRoot().toFile();
+		
 		for (File file : pluginsDir.listFiles()) {
 			if (!file.getName().endsWith(".jar"))
 				continue;
@@ -55,7 +67,7 @@ public class AdfPluginManager extends SpringPluginManager implements Application
 					lNonPluginDependency.add(file.toURI().toURL());
 				}
 			} catch (Exception e) {
-				throw new RuntimeException("Can't load non-plugin dependencies from plugin directory.", e);
+				throw new RuntimeException("Can't load non-plugin dependencies from plugins directory.", e);
 			}
 		}
 		
@@ -66,19 +78,12 @@ public class AdfPluginManager extends SpringPluginManager implements Application
 		JarFile jarFile = null;
 		try {
 			jarFile = new JarFile(file);
-			boolean idxFound = false;
-			boolean pluginPropertiesFound = false;
 			Enumeration<JarEntry> entries = jarFile.entries();
 			while (entries.hasMoreElements()) {
-				String entryName = entries.nextElement().getName();
-				if ("META-INF/extensions.idx".equals(entryName)) {
-					idxFound = true;
-					if (pluginPropertiesFound)
-						return true;
-				} else if ("plugin.properties".equals(entryName)) {
-					pluginPropertiesFound = true;
-					if (idxFound)
-						return true;
+				JarEntry entry = entries.nextElement();
+				if (FILE_NAME_PLUGIN_PROPERTIES.equals(entry.getName())) {
+					readPluginIdAndNonPluginDepdencies(jarFile, entry);
+					return true;
 				}
 			}
 		} finally {
@@ -87,6 +92,27 @@ public class AdfPluginManager extends SpringPluginManager implements Application
 		}
 		
 		return false;
+	}
+
+	private void readPluginIdAndNonPluginDepdencies(JarFile jarFile, JarEntry entry) {
+		try {
+			Properties properties = new Properties();
+			properties.load(jarFile.getInputStream(entry));
+			String sNonPluginDependencies = (String)properties.get(PROPERTY_NAME_NON_PLUGIN_DEPENDENCIES);
+			if (sNonPluginDependencies != null) {
+				String pluginId = properties.getProperty(PROPERTY_NAME_PLUGIN_ID);
+				
+				StringTokenizer st = new StringTokenizer(sNonPluginDependencies, CHAR_COMMA);
+				String[] nonPluginDependencyIds = new String[st.countTokens()];
+				for (int i = 0; i < nonPluginDependencyIds.length; i++) {
+					nonPluginDependencyIds[i] = st.nextToken();
+				}
+				
+				pluginIdToNonPluginDependencyIds.put(pluginId, nonPluginDependencyIds);
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(String.format("Can't read non-plugin dependencies. Plugin file: %s", jarFile.getName()), e);
+		}
 	}
 
 	@Override
@@ -150,10 +176,18 @@ public class AdfPluginManager extends SpringPluginManager implements Application
 		extensionsInjector.injectExtensions();
 	}
 	
-    protected PluginLoader createPluginLoader() {
-        return new CompoundPluginLoader()
-            .add(new DevelopmentPluginLoader(this), this::isDevelopment)
-            .add(new AdfPluginLoader(this, nonPluginDependencies), this::isNotDevelopment)
-            .add(new DefaultPluginLoader(this), this::isNotDevelopment);
-    }
+	protected PluginLoader createPluginLoader() {
+		return new CompoundPluginLoader().
+				add(new DevelopmentPluginLoader(this), this::isDevelopment).
+				add(new AdfPluginLoader(this), this::isNotDevelopment).
+				add(new DefaultPluginLoader(this), this::isNotDevelopment);
+	}
+	
+	public URL[] getNonPluginDependencies() {
+		return nonPluginDependencies;
+	}
+	
+	public String[] getNonPluginDependencyIdsByPluginId(String pluginId) {
+		return pluginIdToNonPluginDependencyIds.get(pluginId);
+	}
 }

@@ -6,20 +6,20 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<groupId>com.firstlinecode.granite</groupId>
-		<artifactId>granite-lite</artifactId>
+		<groupId>com.firstlinecode.granite.lite</groupId>
+		<artifactId>granite-lite-xeps</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
-	<groupId>com.firstlinecode.granite.lite</groupId>
+	<groupId>com.firstlinecode.granite.lite.xeps</groupId>
 	<artifactId>granite-lite-xeps-ibr</artifactId>
 	<name>Granite lite XEPs IBR implementation</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.firstlinecode.granite.framework.adf</groupId>
-			<artifactId>granite-framework-adf-spring</artifactId>
+			<groupId>com.firstlinecode.granite.framework</groupId>
+			<artifactId>granite-framework-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.xeps</groupId>

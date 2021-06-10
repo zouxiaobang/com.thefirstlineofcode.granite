@@ -3,16 +3,17 @@ package com.firstlinecode.granite.xeps.ibr;
 import com.firstlinecode.basalt.protocol.core.ProtocolException;
 import com.firstlinecode.basalt.protocol.core.stanza.error.Conflict;
 import com.firstlinecode.basalt.protocol.core.stanza.error.NotAcceptable;
+import com.firstlinecode.basalt.xeps.ibr.IqRegister;
+import com.firstlinecode.granite.framework.core.annotations.BeanDependency;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.auth.Account;
 import com.firstlinecode.granite.framework.core.auth.IAccountManager;
-import com.firstlinecode.basalt.xeps.ibr.IqRegister;
 
 @Component("default.registrar")
 public class Registrar implements IRegistrar {
 	
-	@Dependency("account.manager")
+	@BeanDependency
 	private IAccountManager accountManager;
 	
 	@Dependency("registration.strategy")

@@ -32,6 +32,9 @@
 							<mainClass>${main.class}</mainClass>
 						</manifest>
 					</archive>
+					<excludes>
+						<exclude>META-INF/extensions.idx</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 			<plugin>

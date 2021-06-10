@@ -99,6 +99,9 @@ public class ConsoleSystem implements Runnable, IConsoleSystem {
 	}
 
 	private void loadCommandProcessors() {
+		ICommandProcessor defaultCommandProcessor = new DefaultCommandProcessor();
+		commandProcessors.put(defaultCommandProcessor.getGroup(), defaultCommandProcessor);
+		
 		ApplicationComponentService appComponentService = (ApplicationComponentService)serverContext.getApplicationComponentService();
 		PluginManager pluginManager = appComponentService.getPluginManager();
 		List<? extends ICommandProcessor> commandProcessorExtensions = pluginManager.getExtensions(ICommandProcessor.class);

@@ -109,15 +109,11 @@ public class ApplicationComponentService implements IApplicationComponentService
 	
 	@Override
 	public <T> T createRawExtension(Class<T> type) {
-		PluginWrapper plugin = pluginManager.whichPlugin(type);
-		if (plugin == null)
-			throw new IllegalArgumentException("Can't determine the class %s is loaded from which plugin.");
-		
 		T extension = null;
 		try {
 			extension = type.newInstance();
 		} catch (Exception e) {
-			throw new RuntimeException(String.format("Can't create extension which's type is %s", type.getName()), e);
+			throw new RuntimeException(String.format("Can't create raw extension which's type is %s", type.getName()), e);
 		}
 		
 		return extension;
