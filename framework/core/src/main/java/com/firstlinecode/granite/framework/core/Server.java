@@ -35,6 +35,7 @@ public class Server implements IServer, IServiceListener {
 		appComponentService.start();
 		
 		repository = new Repository(configuration, appComponentService);
+		repository.setServiceListener(this);
 		repository.init();
 		
 		logger.info("Granite Server has Started");
@@ -47,8 +48,11 @@ public class Server implements IServer, IServiceListener {
 				entry.getValue().stop();
 			} catch (Exception e) {
 				if (logger.isErrorEnabled()) {
-					logger.error("Can't stop service which's ID is {}.", entry.getKey(), e);
+					logger.error("Can't stop service which's ID is '{}'.", entry.getKey(), e);
 				}
+				
+				throw new RuntimeException(String.format("Can't stop service which's ID is '%s' correctly.",
+						entry.getKey()), e);
 			}
 		}
 		
@@ -64,12 +68,20 @@ public class Server implements IServer, IServiceListener {
 
 	@Override
 	public void available(IServiceWrapper serviceWrapper) {
+		for (String disableService : configuration.getDisabledServices()) {
+			if (serviceWrapper.getId().equals(disableService))
+				return;
+		}
+		
 		try {
 			createAndRunService(serviceWrapper);
 		} catch (ServiceCreationException e) {
 			if (logger.isErrorEnabled()) {
-				logger.error("Can't create service which's ID is {}.", serviceWrapper.getId(), e);
+				logger.error("Can't create service which's ID is '{}'.", serviceWrapper.getId(), e);
 			}
+			
+			throw new RuntimeException(String.format("Can't create service which's ID is '%s'.",
+					serviceWrapper.getId()), e);
 		}
 	}
 
@@ -86,9 +98,12 @@ public class Server implements IServer, IServiceListener {
 					if (logger.isErrorEnabled()) {
 						logger.error("Can't start service which's ID is {}.", serviceWrapper.getId(), e);
 					}
+					
+					throw new RuntimeException(String.format("Can't start service which's ID is '%s'.",
+							serviceWrapper.getId()), e);
 				}
 			}
-		}).start();;
+		}).start();
 	}
 
 	@Override

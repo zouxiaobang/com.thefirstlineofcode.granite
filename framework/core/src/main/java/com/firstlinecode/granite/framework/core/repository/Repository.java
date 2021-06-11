@@ -71,7 +71,7 @@ public class Repository implements IRepository {
 		createConfigurationManager();
 		
 		loadSystemComponents();
-		loadExtendedComponents();
+		loadContributedComponents();
 		
 		if (appComponentService instanceof IRepositoryAware) {
 			((IRepositoryAware)appComponentService).setRepository(this);
@@ -80,7 +80,7 @@ public class Repository implements IRepository {
 		processAvailableServices();
 	}
 	
-	private void loadExtendedComponents() {
+	private void loadContributedComponents() {
 		List<Class<? extends IComponentContributor>> componentContributorClasses = appComponentService.getExtensionClasses(IComponentContributor.class);
 		for (Class<? extends IComponentContributor> comonentContributorClass : componentContributorClasses) {
 			IComponentContributor componentContributor = appComponentService.createExtension(comonentContributorClass);
@@ -532,7 +532,10 @@ public class Repository implements IRepository {
 			throw new RuntimeException("Null service id.");
 		
 		IComponentInfo serviceInfo = getComponentInfo(serviceId);
-		if (IService.class.isAssignableFrom(serviceInfo.getType()))
+		if (serviceInfo == null)
+			return null;
+		
+		if (IService.class.isAssignableFrom(serviceInfo.getType())) 
 			return serviceInfo;
 		
 		return null;
@@ -557,9 +560,9 @@ public class Repository implements IRepository {
 	public String[] getComponentBinding(String componentId) {
 		return componentBindings.get(componentId);
 	}
-
+	
 	@Override
-	public void putSingleton(String id, Object component) {
+	public void registerSingleton(String id, Object component) {
 		singletons.put(id, component);
 	}
 
@@ -576,8 +579,21 @@ public class Repository implements IRepository {
 			} catch (CreationException e) {
 				throw new RuntimeException(String.format("Can't create component which's component info is %s.", componentInfo), e);
 			}
+			
+			if (componentInfo.isSingleton())
+				registerSingleton(id, component);
 		}
 		
 		return component;
+	}
+
+	@Override
+	public void removeSingleton(String id) {
+		singletons.remove(id);
+	}
+
+	@Override
+	public Object getSingleton(String id) {
+		return singletons.get(id);
 	}
 }

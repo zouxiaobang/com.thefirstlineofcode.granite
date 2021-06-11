@@ -2,6 +2,8 @@ package com.firstlinecode.granite.framework.core.adf;
 
 import java.util.List;
 
+import org.pf4j.PluginManager;
+
 public interface IApplicationComponentService {
 	void start();
 	void stop();
@@ -11,4 +13,5 @@ public interface IApplicationComponentService {
 	<T> T createRawExtension(Class<T> type);
 	<T> T inject(T rawInstance);
 	Object getComponent(String id);
+	PluginManager getPluginManager();
 }

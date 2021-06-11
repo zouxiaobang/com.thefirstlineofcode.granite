@@ -84,6 +84,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 		return new AppComponentPluginManager(this);
 	}
 	
+	@Override
 	public PluginManager getPluginManager() {
 		return pluginManager;
 	}
@@ -165,6 +166,16 @@ public class ApplicationComponentService implements IApplicationComponentService
 			injector.inject(rawInstance);
 		}
 		
+		injectByAwareInterfaces(rawInstance);
+		
+		if (rawInstance instanceof IInitializable) {
+			((IInitializable)rawInstance).init();
+		}
+		
+		return rawInstance;
+	}
+
+	private <T> void injectByAwareInterfaces(T rawInstance) {
 		if (rawInstance instanceof IServerConfigurationAware) {
 			((IServerConfigurationAware)rawInstance).setServerConfiguration(serverConfiguration);
 		}
@@ -194,12 +205,6 @@ public class ApplicationComponentService implements IApplicationComponentService
 			
 			((IEventFirerAware)rawInstance).setEventFirer(createEventFirer());
 		}
-		
-		if (rawInstance instanceof IInitializable) {
-			((IInitializable)rawInstance).init();
-		}
-		
-		return rawInstance;
 	}
 	
 	protected List<IDependencyInjector> getDependencyInjectors(Class<?> clazz) {

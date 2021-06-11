@@ -57,10 +57,10 @@ public class ServiceWrapper implements IServiceWrapper {
 		
 		Object component = repository.get(componentInfo.getId());
 		
-		if (component != null)
-			return component;
+		if (component == null) {
+			throw new RuntimeException(String.format("Component which's ID is '%s' not be found.", componentInfo.getId()));
+		}
 		
-		component = componentInfo.create();
 		for (IDependencyInfo dependency : componentInfo.getDependencies()) {
 			for (IComponentInfo bindedIComponentInfo : dependency.getBindedComponents()) {
 				Object bindedComponent = createComponent(bindedIComponentInfo);
@@ -68,6 +68,12 @@ public class ServiceWrapper implements IServiceWrapper {
 			}
 		}
 		
+		injectByAwareInterfaces(componentInfo, component);
+		
+		return component;
+	}
+
+	private void injectByAwareInterfaces(IComponentInfo componentInfo, Object component) {
 		if (component instanceof IServerConfigurationAware) {
 			((IServerConfigurationAware)component).setServerConfiguration(serverConfiguration);
 		}
@@ -81,6 +87,10 @@ public class ServiceWrapper implements IServiceWrapper {
 			((IComponentIdAware)component).setComponentId(componentInfo.getId());
 		}
 		
+		if (component instanceof IRepositoryAware) {
+			((IRepositoryAware)component).setRepository(repository);
+		}
+		
 		if (component instanceof IApplicationComponentServiceAware) {
 			((IApplicationComponentServiceAware)component).setApplicationComponentService(appComponentService);
 		}
@@ -88,12 +98,5 @@ public class ServiceWrapper implements IServiceWrapper {
 		if (component instanceof IInitializable) {
 			((IInitializable)component).init();
 		}
-		
-		if (componentInfo.isSingleton()) {
-			repository.putSingleton(componentInfo.getId(), component);
-		}
-		
-		return component;
 	}
-	
 }

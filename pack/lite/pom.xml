@@ -75,6 +75,14 @@
 		
 		<!-- Deploy Lite Plugins -->
 		<dependency>
+			<groupId>com.firstlinecode.granite.lite</groupId>
+			<artifactId>granite-lite-session</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.lite</groupId>
+			<artifactId>granite-lite-pipes</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.firstlinecode.granite.lite.xeps</groupId>
 			<artifactId>granite-lite-xeps-ibr</artifactId>
 		</dependency>

@@ -16,6 +16,15 @@
 	<artifactId>granite-pack-lite-standard</artifactId>
 	
 	<dependencies>
+			<!-- Granite Protocol Plugins -->
+			<dependency>
+					<groupId>com.firstlinecode.granite.xeps</groupId>
+					<artifactId>granite-xeps-ibr</artifactId>
+			</dependency>
+			<dependency>
+					<groupId>com.firstlinecode.granite.xeps</groupId>
+					<artifactId>granite-xeps-ping</artifactId>
+			</dependency>
 			<!-- Granite Deploy Lite Plugins -->
 			<dependency>
 					<groupId>com.firstlinecode.granite.lite</groupId>
@@ -25,14 +34,13 @@
 					<groupId>com.firstlinecode.granite.lite.xeps</groupId>
 					<artifactId>granite-lite-xeps-ibr</artifactId>
 			</dependency>
-			<!-- Granite Protocol Plugins -->
 			<dependency>
-					<groupId>com.firstlinecode.granite.xeps</groupId>
-					<artifactId>granite-xeps-ibr</artifactId>
+					<groupId>com.firstlinecode.granite.lite</groupId>
+					<artifactId>granite-lite-session</artifactId>
 			</dependency>
 			<dependency>
-					<groupId>com.firstlinecode.granite.xeps</groupId>
-					<artifactId>granite-xeps-ping</artifactId>
+					<groupId>com.firstlinecode.granite.lite</groupId>
+					<artifactId>granite-lite-pipes</artifactId>
 			</dependency>
 	</dependencies>
 	

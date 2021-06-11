@@ -325,6 +325,16 @@
 				<artifactId>granite-lite-dba</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.lite</groupId>
+				<artifactId>granite-lite-session</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.lite</groupId>
+				<artifactId>granite-lite-pipes</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
 			<!-- XEPs plugins -->
 			<dependency>
 				<groupId>com.firstlinecode.granite.xeps</groupId>

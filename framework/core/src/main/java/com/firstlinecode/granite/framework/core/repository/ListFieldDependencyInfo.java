@@ -19,22 +19,22 @@ public class ListFieldDependencyInfo extends AbstractDependencyInfo {
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void injectComponent(Object parent, Object component) {
+	public void injectComponent(Object object, Object dependency) {
 		boolean accessible = field.isAccessible();
 		try {
 			field.setAccessible(true);
-			Object list = field.get(parent);
+			Object list = field.get(object);
 			
 			if (list == null) {
 				list = new ArrayList();
-				field.set(parent, list);
+				field.set(object, list);
 			}
 			
 			Method addMethod = list.getClass().getMethod("add", new Class<?>[] {Object.class});
 			
-			addMethod.invoke(list, component);
+			addMethod.invoke(list, dependency);
 		} catch (Exception e) {
-			throw new RuntimeException(String.format("Can't inject component %s to %s.", component, parent), e);
+			throw new RuntimeException(String.format("Can't inject component %s to %s.", dependency, object), e);
 		} finally {
 			field.setAccessible(accessible);
 		}

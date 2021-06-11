@@ -17,14 +17,14 @@ public class FieldDependencyInfo extends AbstractDependencyInfo {
 	}
 
 	@Override
-	public void injectComponent(Object parent, Object component) {
+	public void injectComponent(Object object, Object dependency) {
 		boolean accessible = field.isAccessible();
 		
 		try {
 			field.setAccessible(true);
-			field.set(parent, component);
+			field.set(object, dependency);
 		} catch (Exception e) {
-			throw new RuntimeException(String.format("Can't inject component %s to %s.", component, parent), e);
+			throw new RuntimeException(String.format("Can't inject component %s to %s.", dependency, object), e);
 		} finally {
 			field.setAccessible(accessible);
 		}

@@ -1,8 +1,11 @@
 package com.firstlinecode.granite.framework.core.console;
 
+import java.util.List;
 import java.util.Stack;
 
 import org.pf4j.Extension;
+import org.pf4j.PluginManager;
+import org.pf4j.PluginWrapper;
 
 import com.firstlinecode.granite.framework.core.repository.IComponentInfo;
 import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
@@ -18,7 +21,7 @@ public class DefaultCommandProcessor extends AbstractCommandProcessor {
 	
 	@Override
 	public String[] getCommands() {
-		return new String[] {"help", "services", "service", "components", "exit", "close"};
+		return new String[] {"help", "services", "service", "components", "plugins", "exit", "close"};
 	}
 	
 	void processExit(IConsoleSystem consoleSystem) {
@@ -37,7 +40,34 @@ public class DefaultCommandProcessor extends AbstractCommandProcessor {
 	
 	void processServices(IConsoleSystem consoleSystem) {
 		IComponentInfo[] serviceInfos = consoleSystem.getServerContext().getRepository().getServiceInfos();
-		printComponentInfos(consoleSystem, "id\tState\t\tService ID", serviceInfos);
+		
+		if (serviceInfos == null || serviceInfos.length == 0)
+			consoleSystem.printMessageLine("No any services found.");
+		
+		consoleSystem.printMessageLine("id\tState\t\tDisabled\tService ID");
+		
+		for (int i = 0; i < serviceInfos.length; i++) {
+			IComponentInfo serviceInfo = serviceInfos[i];
+			StringBuilder sb = new StringBuilder();
+			sb.append(i);
+			sb.append("\t");
+			sb.append(serviceInfo.isAvailable() ? "Available  " : "Unavailable");
+			sb.append("\t");
+			sb.append(isDisabledService(consoleSystem, serviceInfo) ? "Yes" : "No");
+			sb.append("\t\t");
+			sb.append(serviceInfo.getId());
+			consoleSystem.printMessageLine(sb.toString());
+		}
+	}
+
+	private boolean isDisabledService(IConsoleSystem consoleSystem, IComponentInfo serviceInfo) {
+		String[] disabledServices = consoleSystem.getServerContext().getServerConfiguration().getDisabledServices();
+		for (String disabledService : disabledServices) {
+			if (serviceInfo.getId().equals(disabledService))
+				return true;
+		}
+		
+		return false;
 	}
 
 	private void printComponentInfos(IConsoleSystem consoleSystem, String title, IComponentInfo[] serviceInfos) {
@@ -67,7 +97,32 @@ public class DefaultCommandProcessor extends AbstractCommandProcessor {
 	
 	void processComponents(IConsoleSystem consoleSystem) {
 		IComponentInfo[] componentInfos = consoleSystem.getServerContext().getRepository().getComponentInfos();
+		
+		if (componentInfos == null || componentInfos.length == 0)
+			consoleSystem.printMessageLine("No any components found.");
+		
 		printComponentInfos(consoleSystem, "id\tState\t\tComponent ID", componentInfos);
+	}
+	
+	void processPlugins(IConsoleSystem consoleSystem) {
+		PluginManager pluginManager = consoleSystem.getServerContext().getApplicationComponentService().getPluginManager();
+		List<PluginWrapper> plugins = pluginManager.getPlugins();
+		
+		if (plugins == null || plugins.size() == 0)
+			consoleSystem.printMessageLine("No any plugins found.");
+		
+		consoleSystem.printMessageLine("id\tState\t\tPlugin ID");
+		
+		for (int i = 0; i < plugins.size(); i++) {
+			PluginWrapper plugin = plugins.get(i);
+			StringBuilder sb = new StringBuilder();
+			sb.append(i);
+			sb.append("\t");
+			sb.append(plugin.getPluginState());
+			sb.append("\t\t");
+			sb.append(plugin.getPluginId());
+			consoleSystem.printMessageLine(sb.toString());
+		}
 	}
 	
 	void processHelp(IConsoleSystem consoleSystem) {
@@ -76,6 +131,7 @@ public class DefaultCommandProcessor extends AbstractCommandProcessor {
 		consoleSystem.printMessageLine("services                List all services.");
 		consoleSystem.printMessageLine("service <SERVICE_ID>    Display details for specified service.");
 		consoleSystem.printMessageLine("components              List all components.");
+		consoleSystem.printMessageLine("plugins                 List all plugins.");
 		consoleSystem.printMessageLine("exit                    Exit the console.");
 		consoleSystem.printMessageLine("close                   Stop the server and exit.");
 	}

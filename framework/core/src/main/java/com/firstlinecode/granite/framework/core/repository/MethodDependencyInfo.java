@@ -17,11 +17,11 @@ public class MethodDependencyInfo extends AbstractDependencyInfo {
 	}
 
 	@Override
-	public void injectComponent(Object parent, Object component) {
+	public void injectComponent(Object object, Object dependency) {
 		try {
-			method.invoke(parent, new Object[] {component});
+			method.invoke(object, new Object[] {dependency});
 		} catch (Exception e) {
-			throw new RuntimeException(String.format("Can't inject component %s to %s.", component, parent), e);
+			throw new RuntimeException(String.format("Can't inject component %s to %s.", dependency, object), e);
 		}
 	}
 

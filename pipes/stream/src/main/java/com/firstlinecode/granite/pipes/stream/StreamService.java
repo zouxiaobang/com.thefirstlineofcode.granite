@@ -9,6 +9,7 @@ import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
 import com.firstlinecode.granite.framework.core.connection.IConnectionManager;
 import com.firstlinecode.granite.framework.core.pipes.stream.IClientMessageReceiver;
+import com.firstlinecode.granite.framework.core.pipes.stream.IDeliveryMessageReceiver;
 
 @Component("stream.service")
 public class StreamService implements IService {
