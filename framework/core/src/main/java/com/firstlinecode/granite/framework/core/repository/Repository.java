@@ -310,16 +310,25 @@ public class Repository implements IRepository {
 				availableServiceFound(component);
 			}
 		}
+		
+		if (availableServices.size() == 0) {
+			logger.info("Not available services round.");
+			return;
+		}
+		
+		for (String availableService : availableServices) {
+			IComponentInfo serviceInfo = componentInfos.get(availableService);			
+			IServiceWrapper serviceWrapper = new ServiceWrapper(serverConfiguration, configurationManager,
+					this, appComponentService, serviceInfo);
+			serviceListener.available(serviceWrapper);
+		}
+		
 	}
 
 	private void availableServiceFound(IComponentInfo componentInfo) {
 		availableServices.add(componentInfo.getId());
 		
 		logger.info("Service '{}' is available.", componentInfo);
-		
-		IServiceWrapper serviceWrapper = new ServiceWrapper(serverConfiguration, configurationManager,
-				this, appComponentService, componentInfo);
-		serviceListener.available(serviceWrapper);
 	}
 
 	private void bindDependencies(IComponentInfo newComponent) {

@@ -105,7 +105,7 @@ public class AdfPluginManager extends SpringPluginManager implements Application
 				StringTokenizer st = new StringTokenizer(sNonPluginDependencies, CHAR_COMMA);
 				String[] nonPluginDependencyIds = new String[st.countTokens()];
 				for (int i = 0; i < nonPluginDependencyIds.length; i++) {
-					nonPluginDependencyIds[i] = st.nextToken();
+					nonPluginDependencyIds[i] = st.nextToken().trim();
 				}
 				
 				pluginIdToNonPluginDependencyIds.put(pluginId, nonPluginDependencyIds);

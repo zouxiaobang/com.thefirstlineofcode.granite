@@ -23,6 +23,22 @@
 			</dependency>
 			<dependency>
 					<groupId>com.firstlinecode.granite.xeps</groupId>
+					<artifactId>granite-xeps-ibr</artifactId>
+			</dependency>
+			<dependency>
+					<groupId>com.firstlinecode.granite.xeps</groupId>
+					<artifactId>granite-xeps-ibr</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.basalt.xeps</groupId>
+				<artifactId>basalt-xeps-xdata</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.basalt.xeps</groupId>
+				<artifactId>basalt-xeps-oob</artifactId>
+			</dependency>
+			<dependency>
+					<groupId>com.firstlinecode.granite.xeps</groupId>
 					<artifactId>granite-xeps-ping</artifactId>
 			</dependency>
 			<!-- Granite Deploy Lite Plugins -->

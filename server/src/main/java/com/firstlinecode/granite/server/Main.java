@@ -110,6 +110,12 @@ public class Main {
 			throw new RuntimeException("Can't start Granite Server.", e);
 		}
 		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// Waiting a while. For that all services has started.
+		}
+		
 		if (options.isConsole()) {
 			Thread consoleThread = new Thread(new ConsoleSystem(server.getServerContext()),
 					"Granite Server Console Thread");

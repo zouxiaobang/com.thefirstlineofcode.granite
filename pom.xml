@@ -257,6 +257,16 @@
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.basalt.xeps</groupId>
+				<artifactId>basalt-xeps-xdata</artifactId>
+				<version>${basalt.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.basalt.xeps</groupId>
+				<artifactId>basalt-xeps-oob</artifactId>
+				<version>${basalt.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.basalt.xeps</groupId>
 				<artifactId>basalt-xeps-ping</artifactId>
 				<version>${basalt.version}</version>
 			</dependency>
