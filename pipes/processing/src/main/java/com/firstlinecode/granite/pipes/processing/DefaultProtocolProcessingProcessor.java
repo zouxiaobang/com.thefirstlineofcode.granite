@@ -26,6 +26,7 @@ import com.firstlinecode.basalt.protocol.core.stream.error.StreamError;
 import com.firstlinecode.basalt.protocol.im.stanza.Message;
 import com.firstlinecode.basalt.protocol.im.stanza.Presence;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
 import com.firstlinecode.granite.framework.core.annotations.BeanDependency;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
@@ -37,18 +38,17 @@ import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
 import com.firstlinecode.granite.framework.core.pipes.IMessage;
+import com.firstlinecode.granite.framework.core.pipes.processing.IIqResultProcessor;
 import com.firstlinecode.granite.framework.core.pipes.processing.IProcessingContext;
 import com.firstlinecode.granite.framework.core.pipes.processing.IXepProcessor;
 import com.firstlinecode.granite.framework.core.pipes.processing.IXepProcessorFactory;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.session.ValueWrapper;
-import com.firstlinecode.granite.framework.im.IIqResultProcessor;
 import com.firstlinecode.granite.framework.im.IPresenceProcessor;
 
 @Component("default.protocol.processing.processor")
 public class DefaultProtocolProcessingProcessor implements com.firstlinecode.granite.framework.core.pipes.IMessageProcessor,
-		IConfigurationAware, IInitializable, IServerConfigurationAware {
-	
+		IConfigurationAware, IInitializable, IServerConfigurationAware, IApplicationComponentServiceAware {
 	private static final Logger logger = LoggerFactory.getLogger(DefaultProtocolProcessingProcessor.class);
 	
 	private static final String CONFIGURATION_KEY_STANZA_ERROR_ATTACH_SENDER_MESSAGE = "stanza.error.attach.sender.message";
@@ -450,7 +450,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 			throw new ProtocolException(new ServiceUnavailable());
 		}
 		
-		iqResultProcessor.process(context, iq);
+		iqResultProcessor.processResult(context, iq);
 	}
 
 	private boolean processMessage(IProcessingContext context, Message message) {
@@ -614,5 +614,10 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 		} else {
 			domainAliases = new JabberId[0];
 		}
+	}
+
+	@Override
+	public void setApplicationComponentService(IApplicationComponentService appComponentService) {
+		this.appComponentService = appComponentService;
 	}
 }

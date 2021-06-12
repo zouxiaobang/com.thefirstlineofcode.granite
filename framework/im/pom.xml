@@ -14,17 +14,13 @@
 	
 	<groupId>com.firstlinecode.granite.framework</groupId>
 	<artifactId>granite-framework-im</artifactId>
-	<name>Granite framework XMPP IM module</name>
+	<name>Granite XMPP IM framework</name>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.firstlinecode.basalt</groupId>
 			<artifactId>basalt-oxm</artifactId>
 		</dependency>
-		<!--<dependency>
-			<groupId>com.firstlinecode.granite.framework.supports</groupId>
-			<artifactId>granite-framework-supports-spring</artifactId>
-		</dependency>-->
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
 			<artifactId>granite-framework-core</artifactId>

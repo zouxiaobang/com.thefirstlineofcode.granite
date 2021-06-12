@@ -30,6 +30,7 @@ import com.firstlinecode.granite.framework.core.IService;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
+import com.firstlinecode.granite.framework.core.commons.utils.CommonsUtils;
 import com.firstlinecode.granite.framework.core.commons.utils.IoUtils;
 import com.firstlinecode.granite.framework.core.config.IConfigurationManager;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
@@ -96,10 +97,7 @@ public class Repository implements IRepository {
 						continue;
 					}
 					
-					if (logger.isWarnEnabled()) {
-						logger.warn("Component class {} didn't load as a component because it isn't annotated by @Component. Please check your code.",
-								componentClass.getName());
-					}
+					logger.warn("Component class '{}' didn't load as a component because it isn't annotated by @Component. Please check your code.", componentClass.getName());
 				}
 			}
 		}
@@ -108,7 +106,7 @@ public class Repository implements IRepository {
 	private void loadSystemComponents() {
 		File libsDir = new File(serverConfiguration.getSystemLibsDir());
 		if (!libsDir.exists() || !libsDir.isDirectory())
-			throw new IllegalArgumentException(String.format("Can't determine system libraries directory. %s doesn't exist or isn't a directory.", libsDir));
+			throw new IllegalArgumentException(String.format("Can't determine system libraries directory. '%s' doesn't exist or isn't a directory.", libsDir));
 		
 		loadCoreComponents(libsDir);
 		loadCustomizedComponents(libsDir);
@@ -117,8 +115,8 @@ public class Repository implements IRepository {
 	private void loadCustomizedComponents(File libsDir) {
 		if (serverConfiguration.getCustomizedLibraries() == null ||
 				serverConfiguration.getCustomizedLibraries().length == 0) {
-			if (logger.isInfoEnabled())
-				logger.info("No customized libraries found.");
+			logger.info("No customized libraries found.");
+			
 			return;
 		}
 		
@@ -127,10 +125,7 @@ public class Repository implements IRepository {
 			loadComponentsFromLibrary(libraryFile);			
 		}
 		
-		if (logger.isInfoEnabled()) {
-			logger.info("Components has loaded from customized libraries.");
-		}
-
+		logger.info("Components has loaded from customized libraries.");
 	}
 
 	private File getLibraryFile(File libsDir, String library) {
@@ -140,15 +135,14 @@ public class Repository implements IRepository {
 			
 			String path = child.getPath();
 			if (path.startsWith(library) && path.endsWith(JAR_FILE_EXTENSION_NAME)) {
-				if (logger.isInfoEnabled())
-					logger.info("Cutomized library {} has be found. The library file name is {}.", library, path);
+				logger.info("Cutomized library '{}' has be found. The library file name is '{}'.", library, path);
 				
 				return child;
 			}
 		}
 		
 		if (logger.isWarnEnabled())
-			logger.warn("Customized library {} hasn't be found. Please check your server configuration.");
+			logger.warn("Customized library '{}' hasn't be found. Please check your server configuration.");
 		
 		return null;
 	}
@@ -166,9 +160,8 @@ public class Repository implements IRepository {
 		for (File libraryFile : coreLibraryFiles) {
 			loadComponentsFromLibrary(libraryFile);
 		}
-		if (logger.isInfoEnabled()) {
-			logger.info("Components has loaded from core libraries.");
-		}
+		
+		logger.info("Components has loaded from core libraries.");
 	}
 	
 	private void loadComponentsFromLibrary(File libraryFile) {
@@ -187,6 +180,11 @@ public class Repository implements IRepository {
 				classNames.add(className);
 			}
 			
+			if (classNames.size() == 0) {
+				if (logger.isDebugEnabled())
+					logger.debug("No components be fround from library file: '{}'.", libraryFile.getName());
+			}
+			
 			classNames.forEach((sClass) -> {
 				try {
 					Class<?> clazz = Class.forName(sClass);
@@ -198,12 +196,11 @@ public class Repository implements IRepository {
 							
 					}
 				} catch (ClassNotFoundException e) {
-					if (logger.isWarnEnabled())
-						logger.warn("Can't load class[name: {}] from system library.", sClass, e);
+					logger.warn("Can't load class which's name is '{}' from system library.", sClass, e);
 				}
 			});
 		} catch (IOException e) {
-			throw new RuntimeException(String.format("Failed to load components from library file %s.", libraryFile.getPath()), e);
+			throw new RuntimeException(String.format("Failed to load components from library file '%s'.", libraryFile.getPath()), e);
 		} finally {
 			if (jarFile != null)
 				try {
@@ -267,12 +264,12 @@ public class Repository implements IRepository {
 			IComponentInfo componentInfo = new GenericComponentInfo(componentAnnotation.value(), type);
 			
 			if (componentInfos.containsKey(componentInfo.getId())) {
-				throw new RuntimeException(String.format("Reduplicated component. Component which's id is %s has already existed.",
+				throw new RuntimeException(String.format("Reduplicated component. Component which's id is '%s' has already existed.",
 						componentInfo.getId()));
 			}
 			
 			if (logger.isDebugEnabled())
-				logger.debug("Component {} has found.", componentInfo.getId());
+				logger.debug("Component '{}' has been found.", componentInfo.getId());
 			
 			scanDependencies(type, componentInfo);
 			
@@ -318,7 +315,7 @@ public class Repository implements IRepository {
 	private void availableServiceFound(IComponentInfo componentInfo) {
 		availableServices.add(componentInfo.getId());
 		
-		logger.info("Service {} is available.", componentInfo);
+		logger.info("Service '{}' is available.", componentInfo);
 		
 		IServiceWrapper serviceWrapper = new ServiceWrapper(serverConfiguration, configurationManager,
 				this, appComponentService, componentInfo);
@@ -353,10 +350,12 @@ public class Repository implements IRepository {
 				IDependencyInfo dependencyOfExistedComponent, String bindedComponentId) {
 		if (newComponent.getId().equals(bindedComponentId)) {
 			if (newComponent.isService()) {
-				logger.warn("Component {} depends on a component {} which implements IService interface. It isn't allowed. we ignore this binding.",
+				logger.warn("Component '{}' depends on a component '{}' which implements IService interface. It isn't allowed. we ignore this binding.",
 						exitedComponent, newComponent);
 			} else {
-				logger.debug("Component binding: bind {} to {}.", newComponent, dependencyOfExistedComponent);
+				if (logger.isDebugEnabled())
+					logger.debug("Component binding: binding '{}' to '{}'.", newComponent, dependencyOfExistedComponent);
+				
 				dependencyOfExistedComponent.addBindedComponent(newComponent);
 			}
 		}
@@ -366,11 +365,13 @@ public class Repository implements IRepository {
 		for (IComponentInfo existedComponent : componentInfos.values()) {
 			if (existedComponent.getId().equals(bindedComponentId)) {
 				if (existedComponent.isService()) {
-					logger.warn("Component {} depends on a component {} which implements IService interface. It isn't allowed. we ignore this binding.",
+					logger.warn("Component '{}' depends on a component '{}' which implements IService interface. It isn't allowed. we ignore this binding.",
 							newComponent, existedComponent);
 				}
 				
-				logger.debug("Component binding: bind {} to {}.", existedComponent, dependency);
+				if (logger.isDebugEnabled())
+					logger.debug("Component binding: bind '{}' to '{}'.", existedComponent, dependency);
+				
 				dependency.addBindedComponent(existedComponent);
 				break;
 			}
@@ -404,7 +405,9 @@ public class Repository implements IRepository {
 						field.getType(), field, notNull);
 			}
 			
-			logger.debug("Dependency {} found.", dependencyInfo);
+			if (logger.isTraceEnabled())
+				logger.trace("Dependency '{}' for '{}' was found.", dependencyInfo, componentInfo);
+			
 			componentInfo.addDependency(dependencyInfo);				
 			
 		}
@@ -426,7 +429,7 @@ public class Repository implements IRepository {
 			
 			String id = getFullDependencyId(componentInfo.getId(), dependencyAnnotation.value());
 			int bindedComponentsCount = getBindedDependenciesCount(id);
-			if (isSetterMethod(method)) {
+			if (CommonsUtils.isSetterMethod(method)) {
 				if (bindedComponentsCount > 1) {
 					throw new RuntimeException("Binded components count of setter method dependency must be 0 or 1.");
 				}
@@ -435,7 +438,7 @@ public class Repository implements IRepository {
 				IDependencyInfo dependencyInfo = new MethodDependencyInfo(id, dependencyAnnotation.value(),
 						type, method, bindedComponentsCount);
 				
-				logger.debug("Dependency {} found.", dependencyInfo);
+				logger.debug("Dependency '{}' for '{}' was found.", dependencyInfo, componentInfo);
 				componentInfo.addDependency(dependencyInfo);
 			} else if (isAddMethod(method)) {
 				Class<?> type = method.getParameterTypes()[0];
@@ -443,10 +446,10 @@ public class Repository implements IRepository {
 				IDependencyInfo dependencyInfo = new MethodDependencyInfo(id, dependencyAnnotation.value(),
 						type, method, bindedComponentsCount);
 				
-				logger.debug("Dependency {} found.", dependencyInfo);
+				logger.debug("Dependency '{}' for '{}' was found.", dependencyInfo, componentInfo);
 				componentInfo.addDependency(dependencyInfo);
 			} else {
-				logger.warn("Method annotated with @Dependency isn't a valid setter or add method.");
+				logger.warn("Method annotated with @Dependency isn't a valid setter or add method. The method is '{}'.", method);
 			}
 			
 			
@@ -474,22 +477,6 @@ public class Repository implements IRepository {
 			return 0;
 		
 		return dependencies.length;
-	}
-
-	private boolean isSetterMethod(Method method) {
-		String methodName = method.getName();
-		if (methodName.length() > 4 && methodName.startsWith("set") && Character.isUpperCase(methodName.charAt(3))) {
-			Class<?>[] types = method.getParameterTypes();
-			if (types.length != 1)
-				return false;
-			
-			if (types[0].isPrimitive())
-				return false;
-			
-			return true;
-		}
-		
-		return false;
 	}
 	
 	private boolean isAddMethod(Method method) {
@@ -529,7 +516,7 @@ public class Repository implements IRepository {
 	@Override
 	public IComponentInfo getServiceInfo(String serviceId) {
 		if (serviceId == null)
-			throw new RuntimeException("Null service id.");
+			throw new RuntimeException("Null service ID.");
 		
 		IComponentInfo serviceInfo = getComponentInfo(serviceId);
 		if (serviceInfo == null)
@@ -562,29 +549,42 @@ public class Repository implements IRepository {
 	}
 	
 	@Override
-	public void registerSingleton(String id, Object component) {
+	public synchronized void registerSingleton(String id, Object component) {
+		if (singletons.containsKey(id))
+			throw new RuntimeException(String.format("Dereplicated component ID: '%s'.", id));
+		
 		singletons.put(id, component);
 	}
 
 	@Override
 	public Object get(String id) {
 		Object component = singletons.get(id);
-		if (component == null) {
-			IComponentInfo componentInfo = getComponentInfo(id);
-			if (componentInfo == null)
-				return component;
-			
+		if (component != null)
+			return component;
+		
+		IComponentInfo componentInfo = getComponentInfo(id);
+		if (componentInfo == null)
+			return component;
+		
+		if (!componentInfo.isSingleton()) {			
 			try {
-				component = componentInfo.create();
+				return componentInfo.create();
 			} catch (CreationException e) {
-				throw new RuntimeException(String.format("Can't create component which's component info is %s.", componentInfo), e);
+				throw new RuntimeException(String.format("Can't create component which's component info is '%s'.", componentInfo), e);
+			}
+		} else {
+			synchronized (this) {
+				try {
+					component = componentInfo.create();
+				} catch (CreationException e) {
+					throw new RuntimeException(String.format("Can't create component which's component info is '%s'.", componentInfo), e);
+				}
+				
+				registerSingleton(id, component);
 			}
 			
-			if (componentInfo.isSingleton())
-				registerSingleton(id, component);
+			return component;
 		}
-		
-		return component;
 	}
 
 	@Override

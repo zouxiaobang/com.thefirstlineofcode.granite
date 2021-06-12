@@ -74,6 +74,10 @@
 			<artifactId>granite-framework-adf-mybatis</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.firstlinecode.granite.framework</groupId>
+			<artifactId>granite-framework-im</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.firstlinecode.granite.pipes</groupId>
 			<artifactId>granite-pipes-stream</artifactId>
 		</dependency>

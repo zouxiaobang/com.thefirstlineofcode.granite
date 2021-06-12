@@ -26,6 +26,7 @@ import com.firstlinecode.basalt.protocol.core.stanza.error.StanzaError;
 import com.firstlinecode.basalt.protocol.core.stream.Stream;
 import com.firstlinecode.basalt.protocol.core.stream.error.StreamError;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
@@ -37,7 +38,7 @@ import com.firstlinecode.granite.framework.core.pipes.routing.IProtocolTranslato
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 
 public class MinimumRoutingProcessor implements IMessageProcessor, IInitializable,
-			IServerConfigurationAware {
+			IServerConfigurationAware, IApplicationComponentServiceAware {
 	private static final Logger logger = LoggerFactory.getLogger(MinimumRoutingProcessor.class);
 	
 	protected ITranslatingFactory translatingFactory;
@@ -264,6 +265,11 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 	@Override
 	public void setServerConfiguration(IServerConfiguration serverConfiguration) {
 		this.domain = serverConfiguration.getDomainName();
+	}
+
+	@Override
+	public void setApplicationComponentService(IApplicationComponentService appComponentService) {
+		this.appComponentService = appComponentService;
 	}
 
 }

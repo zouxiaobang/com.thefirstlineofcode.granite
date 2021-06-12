@@ -114,7 +114,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 		try {
 			extension = type.newInstance();
 		} catch (Exception e) {
-			throw new RuntimeException(String.format("Can't create raw extension which's type is %s", type.getName()), e);
+			throw new RuntimeException(String.format("Can't create raw extension which's type is '%s'.", type.getName()), e);
 		}
 		
 		return extension;
@@ -185,7 +185,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 			PluginWrapper plugin = pluginManager.whichPlugin(type);
 			if (plugin == null)
 				throw new IllegalArgumentException(
-					String.format("Can't determine which plugin the extension which's class name is %s is load from.", type));
+					String.format("Can't determine which plugin the extension which's class name is '%s' is load from.", type));
 			
 			IConfiguration configuration = appComponentConfigurations.getConfiguration(plugin.getDescriptor().getPluginId());
 			((IConfigurationAware)rawInstance).setConfiguration(configuration);
@@ -309,7 +309,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 			if (messageChannerl == null)
 				throw new RuntimeException("Can't fire event because the any to event message channel is null.");
 			
-			return messageChannerl;				
+			return messageChannerl;
 		}
 	}
 
