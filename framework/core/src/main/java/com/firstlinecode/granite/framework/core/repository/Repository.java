@@ -30,11 +30,11 @@ import com.firstlinecode.granite.framework.core.IService;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
-import com.firstlinecode.granite.framework.core.commons.utils.CommonsUtils;
-import com.firstlinecode.granite.framework.core.commons.utils.IoUtils;
 import com.firstlinecode.granite.framework.core.config.IConfigurationManager;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.LocalFileConfigurationManager;
+import com.firstlinecode.granite.framework.core.utils.CommonsUtils;
+import com.firstlinecode.granite.framework.core.utils.IoUtils;
 
 public class Repository implements IRepository {
 	private static final String CLASS_FILE_EXTENSION_NAME = ".class";

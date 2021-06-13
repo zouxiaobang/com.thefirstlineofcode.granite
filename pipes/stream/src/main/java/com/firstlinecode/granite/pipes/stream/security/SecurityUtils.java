@@ -34,7 +34,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 
-import com.firstlinecode.granite.framework.core.commons.utils.IoUtils;
+import com.firstlinecode.granite.framework.core.utils.IoUtils;
 
 public class SecurityUtils {
 	public static final Provider DEFAULT_JCA_PROVIDER = new BouncyCastleProvider();

@@ -1,11 +1,9 @@
 package com.firstlinecode.granite.framework.core.pipes.parsing;
 
-import org.pf4j.ExtensionPoint;
-
 import com.firstlinecode.basalt.oxm.parsing.IParser;
 import com.firstlinecode.basalt.protocol.core.ProtocolChain;
 
-public interface IProtocolParserFactory<T> extends ExtensionPoint {
+public interface IProtocolParserFactory<T> {
 	ProtocolChain getProtocolChain();
 	IParser<T> createParser();
 }

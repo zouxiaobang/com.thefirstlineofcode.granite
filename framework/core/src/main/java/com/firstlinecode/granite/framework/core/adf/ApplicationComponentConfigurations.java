@@ -7,10 +7,10 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.firstlinecode.granite.framework.core.commons.utils.SectionalProperties;
 import com.firstlinecode.granite.framework.core.config.DummyConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.PropertiesConfiguration;
+import com.firstlinecode.granite.framework.core.utils.SectionalProperties;
 
 
 public class ApplicationComponentConfigurations implements IApplicationComponentConfigurations {

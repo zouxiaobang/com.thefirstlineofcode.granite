@@ -29,7 +29,6 @@ import com.firstlinecode.basalt.protocol.im.stanza.Message;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
 import com.firstlinecode.granite.framework.core.annotations.Component;
-import com.firstlinecode.granite.framework.core.commons.utils.CommonsUtils;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
@@ -37,9 +36,11 @@ import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
 import com.firstlinecode.granite.framework.core.pipes.IMessage;
 import com.firstlinecode.granite.framework.core.pipes.IMessageProcessor;
-import com.firstlinecode.granite.framework.core.pipes.parsing.IPipePreprocessor;
+import com.firstlinecode.granite.framework.core.pipes.IPipesExtendersFactory;
+import com.firstlinecode.granite.framework.core.pipes.parsing.IPipesPreprocessor;
 import com.firstlinecode.granite.framework.core.pipes.parsing.IProtocolParserFactory;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
+import com.firstlinecode.granite.framework.core.utils.CommonsUtils;
 
 @Component("minimum.message.parsing.processor")
 public class MinimumMessageParsingProcessor implements IMessageProcessor, IInitializable,
@@ -52,50 +53,61 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 	private boolean stanzaErrorAttachSenderMessage;
 	private IServerConfiguration serverConfiguration;
 	
-	private List<IPipePreprocessor> preprocessors;
+	private List<IPipesPreprocessor> pipesPreprocessors;
 	
 	private IApplicationComponentService appComponentService;
 	
 	public MinimumMessageParsingProcessor() {
 		parsingFactory = OxmService.createParsingFactory();
-		preprocessors = new CopyOnWriteArrayList<>();
+		pipesPreprocessors = new CopyOnWriteArrayList<>();
 	}
 	
 	@Override
 	public void init() {
 		registerPredefinedParsers();
-		loadContributedProtocolParsers();
-		loadContributedPreprocessors();
-	}
-	
-	protected void loadContributedPreprocessors() {
-		List<Class<? extends IPipePreprocessor>> preprocessorClasses = appComponentService.getExtensionClasses(IPipePreprocessor.class);
-		if (preprocessorClasses == null || preprocessorClasses.size() == 0) {
-			if (logger.isDebugEnabled())
-				logger.debug("No extension which's extension point is {} found.", IPipePreprocessor.class.getName());
-			
-			return;
-		}
 		
-		for (Class<? extends IPipePreprocessor> preprocessorClass : preprocessorClasses) {
-			IPipePreprocessor preprocessor = appComponentService.createExtension(preprocessorClass);
-			preprocessors.add(preprocessor);
+		IPipesExtendersFactory[] extendersFactories = CommonsUtils.getExtendersFactories(appComponentService);
+		
+		loadContributedProtocolParsers(extendersFactories);
+		loadContributedPreprocessors(extendersFactories);
+	}
+
+	protected void loadContributedPreprocessors(IPipesExtendersFactory[] extendersFactories) {
+		for (IPipesExtendersFactory extendersFactory : extendersFactories) {
+			IPipesPreprocessor[] preproessors = extendersFactory.getPipesPreprocessors();
+			if (preproessors == null || preproessors.length == 0)
+				continue;
+			
+			for (IPipesPreprocessor preprocessor : preproessors) {
+				pipesPreprocessors.add(preprocessor);
+				
+				if (logger.isDebugEnabled()) {
+					logger.debug("Plugin '{}' contributed a pipes preprocessor: '{}'.",
+							appComponentService.getPluginManager().whichPlugin(extendersFactory.getClass()),
+							preprocessor.getClass().getName()
+					);
+				}
+			}
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
-	protected void loadContributedProtocolParsers() {
-		List<Class<? extends IProtocolParserFactory>> parserFactoryClasses = appComponentService.getExtensionClasses(IProtocolParserFactory.class);
-		if (parserFactoryClasses == null || parserFactoryClasses.size() == 0) {
-			if (logger.isDebugEnabled())
-				logger.debug("No extension which's extension point is {} found.", IProtocolParserFactory.class.getName());
+	protected void loadContributedProtocolParsers(IPipesExtendersFactory[] extendersFactories) {
+		for (IPipesExtendersFactory extendersFactory : extendersFactories) {
+			IProtocolParserFactory<?>[] parserFactories = extendersFactory.getProtocolParserFactories();
 			
-			return;
-		}
-		
-		for (Class<? extends IProtocolParserFactory> parserFactoryClass : parserFactoryClasses) {
-			IProtocolParserFactory<?> parserFactory = appComponentService.createExtension(parserFactoryClass);
-			parsingFactory.register(parserFactory.getProtocolChain(), createParserFactoryAdapter(parserFactory));
+			if (parserFactories == null || parserFactories.length == 0)
+				continue;
+			
+			for (IProtocolParserFactory<?> parserFactory : parserFactories) {
+				parsingFactory.register(parserFactory.getProtocolChain(), createParserFactoryAdapter(parserFactory));
+				
+				if (logger.isDebugEnabled()) {
+					logger.debug("Plugin '{}' contributed a protocol parser factory: '{}'.",
+							appComponentService.getPluginManager().whichPlugin(extendersFactory.getClass()),
+							parserFactory.getClass().getName()
+					);
+				}
+			}
 		}
 	}
 	
@@ -142,7 +154,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 	public void process(IConnectionContext context, IMessage message) {
 		String msg = (String)message.getPayload();
 		
-		for (IPipePreprocessor preprocessor : preprocessors) {
+		for (IPipesPreprocessor preprocessor : pipesPreprocessors) {
 			String preprocessedMsg = preprocessor.beforeParsing(msg);
 			
 			if (preprocessedMsg == null) {
@@ -162,7 +174,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 			return;
 		}
 		
-		for (IPipePreprocessor preprocessor : preprocessors) {
+		for (IPipesPreprocessor preprocessor : pipesPreprocessors) {
 			Object preprocessedOut = preprocessor.afterParsing(out);
 			
 			if (preprocessedOut == null) {

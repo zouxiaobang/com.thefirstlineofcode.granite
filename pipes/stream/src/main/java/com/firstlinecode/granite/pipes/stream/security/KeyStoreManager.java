@@ -14,7 +14,7 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
-import com.firstlinecode.granite.framework.core.commons.utils.IoUtils;
+import com.firstlinecode.granite.framework.core.utils.IoUtils;
 
 public class KeyStoreManager {
 	private static final String DEFAULT_KEY_MANAGEMENT_ALGORITHM = "SunX509";

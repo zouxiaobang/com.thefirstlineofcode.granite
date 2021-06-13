@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.framework.core.commons.utils;
+package com.firstlinecode.granite.framework.core.utils;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -6,8 +6,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.pipes.IPipesExtendersFactory;
 
 public class CommonsUtils {
     private static final char SEPARATOR_KEY_VALUE = '=';
@@ -101,5 +105,19 @@ public class CommonsUtils {
 		}
 		
 		return false;
+	}
+	
+	public static IPipesExtendersFactory[] getExtendersFactories(IApplicationComponentService appComponentService) {
+		List<Class<? extends IPipesExtendersFactory>> extendersFactoriesClasses = appComponentService.getExtensionClasses(IPipesExtendersFactory.class);
+		if (extendersFactoriesClasses == null || extendersFactoriesClasses.size() == 0) {
+			return new IPipesExtendersFactory[0];
+		}
+		
+		IPipesExtendersFactory[] extendersFactories = new IPipesExtendersFactory[extendersFactoriesClasses.size()];
+		for (int i = 0; i < extendersFactories.length; i++) {
+			extendersFactories[i] = appComponentService.createExtension(extendersFactoriesClasses.get(i));
+		}
+		
+		return extendersFactories;
 	}
 }

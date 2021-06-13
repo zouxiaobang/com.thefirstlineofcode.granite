@@ -31,19 +31,20 @@ import com.firstlinecode.granite.framework.core.annotations.BeanDependency;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.auth.IAuthenticator;
-import com.firstlinecode.granite.framework.core.commons.utils.CommonsUtils;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
 import com.firstlinecode.granite.framework.core.pipes.IMessage;
+import com.firstlinecode.granite.framework.core.pipes.IPipesExtendersFactory;
 import com.firstlinecode.granite.framework.core.pipes.processing.IIqResultProcessor;
 import com.firstlinecode.granite.framework.core.pipes.processing.IProcessingContext;
 import com.firstlinecode.granite.framework.core.pipes.processing.IXepProcessor;
 import com.firstlinecode.granite.framework.core.pipes.processing.IXepProcessorFactory;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.session.ValueWrapper;
+import com.firstlinecode.granite.framework.core.utils.CommonsUtils;
 import com.firstlinecode.granite.framework.im.IPresenceProcessor;
 
 @Component("default.protocol.processing.processor")
@@ -82,23 +83,27 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 		loadContributedXepProcessors();
 	}
 	
-	@SuppressWarnings("rawtypes")
 	protected void loadContributedXepProcessors() {
-		List<Class<? extends IXepProcessorFactory>> processorFactoryClasses =
-				appComponentService.getExtensionClasses(IXepProcessorFactory.class);
-		if (processorFactoryClasses == null || processorFactoryClasses.size() == 0) {
-			if (logger.isDebugEnabled())
-				logger.debug("No extension which's extension point is {} found.", IXepProcessorFactory.class.getName());
-			
-			return;
-		}
+		IPipesExtendersFactory[] extendersFactories = CommonsUtils.getExtendersFactories(appComponentService);
 		
-		for (Class<? extends IXepProcessorFactory> processorFactoryClass : processorFactoryClasses) {
-			IXepProcessorFactory<?, ?> processorFactory = appComponentService.createExtension(processorFactoryClass);
-			if (processorFactory.isSingleton()) {
-				singletonProcessores.put(processorFactory.getProtocolChain(), processorFactory.createProcessor());
-			} else {				
-				xepProcessorFactories.put(processorFactory.getProtocolChain(), processorFactory);
+		for (IPipesExtendersFactory extendersFactory : extendersFactories) {
+			IXepProcessorFactory<?, ?>[] processorFactories = extendersFactory.getXepProcessorFactories();
+			if (processorFactories == null || processorFactories.length == 0)
+				continue;
+			
+			for (IXepProcessorFactory<?, ?> processorFactory : processorFactories) {
+				if (processorFactory.isSingleton()) {
+					singletonProcessores.put(processorFactory.getProtocolChain(), processorFactory.createProcessor());
+				} else {				
+					xepProcessorFactories.put(processorFactory.getProtocolChain(), processorFactory);
+				}
+				
+				if (logger.isDebugEnabled()) {
+					logger.debug("Plugin '{}' contributed a protocol processor factory: '{}'.",
+							appComponentService.getPluginManager().whichPlugin(extendersFactory.getClass()),
+							processorFactory.getClass().getName()
+					);
+				}
 			}
 		}
 	}

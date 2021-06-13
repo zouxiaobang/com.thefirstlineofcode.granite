@@ -22,15 +22,17 @@ import com.firstlinecode.granite.framework.core.event.IEventListener;
 import com.firstlinecode.granite.framework.core.event.IEventListenerFactory;
 import com.firstlinecode.granite.framework.core.pipes.IMessage;
 import com.firstlinecode.granite.framework.core.pipes.IMessageProcessor;
+import com.firstlinecode.granite.framework.core.pipes.IPipesExtendersFactory;
 import com.firstlinecode.granite.framework.core.pipes.SimpleMessage;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
+import com.firstlinecode.granite.framework.core.utils.CommonsUtils;
 
 @Component("default.event.processor")
 public class DefaultEventProcessor implements IMessageProcessor, IInitializable,
 		IServerConfigurationAware, IApplicationComponentServiceAware {
 	private Logger logger = LoggerFactory.getLogger(DefaultEventProcessor.class);
 	
-	protected Map<Class<? extends IEvent>, List<IEventListener<?>>> eventToListeners;
+	protected Map<Class<?>, List<IEventListener<?>>> eventToListeners;
 	
 	private IApplicationComponentService appComponentService;
 	private JabberId serverJid;
@@ -108,24 +110,32 @@ public class DefaultEventProcessor implements IMessageProcessor, IInitializable,
 		loadContributedEventListeners();
 	}
 	
-	@SuppressWarnings("rawtypes")
 	private void loadContributedEventListeners() {
-		List<Class<? extends IEventListenerFactory>> listenerFactoryClasses = appComponentService.getExtensionClasses(IEventListenerFactory.class);
-		if (listenerFactoryClasses == null || listenerFactoryClasses.size() == 0) {
-			if (logger.isDebugEnabled())
-				logger.debug("No extension which's extension point is {} found.", IEventListenerFactory.class.getName());
-			
-			return;
-		}
+		IPipesExtendersFactory[] extendersFactories = CommonsUtils.getExtendersFactories(appComponentService);
 		
-		for (Class<? extends IEventListenerFactory>listenerFactoryClass : listenerFactoryClasses) {
-			IEventListenerFactory<?> listenerFactory = appComponentService.createExtension(listenerFactoryClass);
-			List<IEventListener<?>> listeners = eventToListeners.get(listenerFactory.getType());
-			if (listeners == null)
-				listeners = new ArrayList<>();
+		for (IPipesExtendersFactory extendersFactory : extendersFactories) {
+			IEventListenerFactory<?>[] listenerFactories = extendersFactory.getEventListenerFactories();
+			if (listenerFactories == null || listenerFactories.length == 0)
+				continue;
 			
-			listeners.add(listenerFactory.createListener());
-			eventToListeners.put(listenerFactory.getType(), listeners);
+			for (IEventListenerFactory<?> listenerFactory : listenerFactories) {
+				List<IEventListener<?>> listeners = eventToListeners.get(listenerFactory.getType());
+				if (listeners == null) {
+					listeners = new ArrayList<>();
+				}
+				listeners.add(listenerFactory.createListener());
+				
+				eventToListeners.put(listenerFactory.getType(), listeners);
+				if (logger.isDebugEnabled()) {
+					logger.debug("Plugin '{}' contributed a event listener to listen '{}' event: '{}'.",
+						new Object[] {
+									appComponentService.getPluginManager().whichPlugin(extendersFactory.getClass()),
+								listenerFactory.getType().getClass().getName(),
+								listenerFactory.getClass().getName()
+						}
+					);
+				}
+			}
 		}
 	}
 	

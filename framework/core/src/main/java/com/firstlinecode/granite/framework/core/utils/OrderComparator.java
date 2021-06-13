@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.framework.core.commons.utils;
+package com.firstlinecode.granite.framework.core.utils;
 
 import java.util.Comparator;
 

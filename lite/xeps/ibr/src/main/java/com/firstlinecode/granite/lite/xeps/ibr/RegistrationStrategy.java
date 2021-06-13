@@ -7,7 +7,7 @@ import com.firstlinecode.granite.framework.core.adf.data.IDataObjectFactory;
 import com.firstlinecode.granite.framework.core.adf.data.IDataObjectFactoryAware;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.auth.Account;
-import com.firstlinecode.granite.framework.core.commons.utils.StringUtils;
+import com.firstlinecode.granite.framework.core.utils.StringUtils;
 import com.firstlinecode.granite.xeps.ibr.IRegistrationStrategy;
 import com.firstlinecode.granite.xeps.ibr.MalformedRegistrationInfoException;
 

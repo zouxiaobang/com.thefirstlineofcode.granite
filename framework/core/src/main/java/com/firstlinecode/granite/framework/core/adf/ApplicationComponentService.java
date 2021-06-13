@@ -22,7 +22,6 @@ import com.firstlinecode.granite.framework.core.adf.injection.IDependencyInjecto
 import com.firstlinecode.granite.framework.core.adf.injection.IInjectionProvider;
 import com.firstlinecode.granite.framework.core.adf.injection.MethodDependencyInjector;
 import com.firstlinecode.granite.framework.core.annotations.Component;
-import com.firstlinecode.granite.framework.core.commons.utils.CommonsUtils;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
@@ -31,12 +30,13 @@ import com.firstlinecode.granite.framework.core.event.IEvent;
 import com.firstlinecode.granite.framework.core.event.IEventFirer;
 import com.firstlinecode.granite.framework.core.event.IEventFirerAware;
 import com.firstlinecode.granite.framework.core.pipes.IMessageChannel;
-import com.firstlinecode.granite.framework.core.pipes.IPipeExtender;
+import com.firstlinecode.granite.framework.core.pipes.IPipesExtender;
 import com.firstlinecode.granite.framework.core.pipes.SimpleMessage;
 import com.firstlinecode.granite.framework.core.platform.IPluginManagerAware;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.repository.IRepository;
 import com.firstlinecode.granite.framework.core.repository.IRepositoryAware;
+import com.firstlinecode.granite.framework.core.utils.CommonsUtils;
 
 public class ApplicationComponentService implements IApplicationComponentService, IRepositoryAware {
 	private static final String COMPONENT_ID_LITE_ANY_2_EVENT_MESSAGE_CHANNEL = "lite.any.2.event.message.channel";
@@ -277,7 +277,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 	private boolean isPipeExtender(Class<?> clazz) {
 		return IParser.class.isAssignableFrom(clazz) ||
 			ITranslator.class.isAssignableFrom(clazz) ||
-			IPipeExtender.class.isAssignableFrom(clazz);
+			IPipesExtender.class.isAssignableFrom(clazz);
 	}
 
 	private IEventFirer createEventFirer() {

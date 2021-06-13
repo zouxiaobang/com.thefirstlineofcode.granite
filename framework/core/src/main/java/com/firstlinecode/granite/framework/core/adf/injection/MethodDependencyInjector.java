@@ -2,7 +2,7 @@ package com.firstlinecode.granite.framework.core.adf.injection;
 
 import java.lang.reflect.Method;
 
-import com.firstlinecode.granite.framework.core.commons.utils.CommonsUtils;
+import com.firstlinecode.granite.framework.core.utils.CommonsUtils;
 
 public class MethodDependencyInjector extends AbstractDependencyInjector {
 	private Method method;

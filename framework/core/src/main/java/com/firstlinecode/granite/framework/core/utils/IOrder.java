@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.framework.core.commons.utils;
+package com.firstlinecode.granite.framework.core.utils;
 
 public interface IOrder {
 	public static final int ORDER_MIN = 0;

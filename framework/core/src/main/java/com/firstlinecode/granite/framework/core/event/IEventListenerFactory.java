@@ -1,8 +1,6 @@
 package com.firstlinecode.granite.framework.core.event;
 
-import org.pf4j.ExtensionPoint;
-
-public interface IEventListenerFactory<E extends IEvent> extends ExtensionPoint {
+public interface IEventListenerFactory<E extends IEvent> {
 	Class<E> getType();
 	IEventListener<E> createListener();
 }

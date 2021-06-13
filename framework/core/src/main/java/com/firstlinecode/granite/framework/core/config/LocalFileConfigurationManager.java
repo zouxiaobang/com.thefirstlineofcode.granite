@@ -10,8 +10,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.firstlinecode.granite.framework.core.commons.utils.IoUtils;
-import com.firstlinecode.granite.framework.core.commons.utils.SectionalProperties;
+import com.firstlinecode.granite.framework.core.utils.IoUtils;
+import com.firstlinecode.granite.framework.core.utils.SectionalProperties;
 
 
 public class LocalFileConfigurationManager implements IConfigurationManager {
