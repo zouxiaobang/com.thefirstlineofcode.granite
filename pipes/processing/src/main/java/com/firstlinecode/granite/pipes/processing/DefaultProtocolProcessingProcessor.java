@@ -105,7 +105,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 								processorFactory.getClass().getName()), e);
 					}
 					
-					singletonProcessores.put(processorFactory.getProtocolChain(), xepProcessor);
+					singletonProcessores.put(processorFactory.getProtocolChain(), appComponentService.inject(xepProcessor));
 				} else {				
 					xepProcessorFactories.put(processorFactory.getProtocolChain(), processorFactory);
 				}
@@ -565,12 +565,14 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 
 	@SuppressWarnings("unchecked")
 	private <V, K extends Stanza> IXepProcessor<K, V> createXepProcessorByFactory(ProtocolChain protocolChain) {
-		IXepProcessorFactory<?, ?> processorFactory = xepProcessorFactories.get(protocolChain);		
+		IXepProcessorFactory<?, ?> processorFactory = xepProcessorFactories.get(protocolChain);
+		if (processorFactory == null) {
+			throw new ProtocolException(new ServiceUnavailable(String.format("Unsupported protocol: %s.", protocolChain)));
+		}
+		
 		try {
 			IXepProcessor<K, V> xepProcessor = (IXepProcessor<K, V>)processorFactory.createProcessor();
-			appComponentService.inject(xepProcessor);
-			
-			return xepProcessor;
+			return appComponentService.inject(xepProcessor);
 		} catch (Exception e) {
 			logger.error("Can't instantiate XEP processor by factory: '{}'.",
 					processorFactory.getClass().getName(), e);

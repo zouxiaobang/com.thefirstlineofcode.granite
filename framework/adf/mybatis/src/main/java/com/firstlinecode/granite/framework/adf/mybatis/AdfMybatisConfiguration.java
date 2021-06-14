@@ -1,7 +1,6 @@
 package com.firstlinecode.granite.framework.adf.mybatis;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -58,85 +57,50 @@ public class AdfMybatisConfiguration implements IPluginManagerAware {
 
 		@Override
 		public SqlSessionFactory build(org.apache.ibatis.session.Configuration configuration) {
-			List<IPersistObjectsContributor> configurationContributors = pluginManager.getExtensions(IPersistObjectsContributor.class);
+			List<IDataObjectsContributor> configurationContributors = pluginManager.getExtensions(IDataObjectsContributor.class);
 			if (configurationContributors == null || configurationContributors.size() == 0) {
 				return super.build(configuration);			
 			}
 			
-			for (IPersistObjectsContributor configurationContributor : configurationContributors) {
-				Alias[] aliases = configurationContributor.getAliases();
-				if (aliases != null) {
-					registerAliases(configuration, aliases);
-				}
-				
-				TypeHandlerMap<?>[] typeHandlerMaps = configurationContributor.getTypeHandlerMaps();
+			for (IDataObjectsContributor configurationContributor : configurationContributors) {				
+				TypeHandlerMapping<?>[] typeHandlerMaps = configurationContributor.getTypeHandlerMappings();
 				if (typeHandlerMaps != null) {
 					registerTypeHandlers(configuration, typeHandlerMaps);
 				}
 				
-				Class<?>[] persistObjectTypes = configurationContributor.getPersistObjectTypes();
-				if (persistObjectTypes != null) {
-					registerPersistObjectTypeAliases(configuration, persistObjectTypes, aliases);
+				DataObjectMapping<?>[] persistObjectMaps = configurationContributor.getDataObjectMappings();
+				if (persistObjectMaps != null) {
+					registerPersistObjectAliases(configuration, persistObjectMaps);
 				}
 			}
 			
 			return super.build(configuration);
 		}
 
-		private void registerPersistObjectTypeAliases(org.apache.ibatis.session.Configuration configuration,
-				Class<?>[] persistObjectTypes, Alias[] aliases) {
-			Class<?>[] registeredAliasTypes = getRegisteredAliasTypes(aliases);
-			for (Class<?> persistObjectType : persistObjectTypes) {
-				if (!isRegistered(persistObjectType, registeredAliasTypes)) {
-					String name = persistObjectType.getSimpleName();
+		private void registerPersistObjectAliases(org.apache.ibatis.session.Configuration configuration,
+				DataObjectMapping<?>[] persistObjectMaps) {
+			for (DataObjectMapping<?> persistObjectMap : persistObjectMaps) {
+				if (persistObjectMap.domainType != null) {
+					configuration.getTypeAliasRegistry().registerAlias(persistObjectMap.domainType.getSimpleName(),
+							persistObjectMap.dataType);					
+				} else {
+					String name = persistObjectMap.dataType.getSimpleName();					
 					if (name.startsWith(PREFIX_NAME_PERSIST_OBJECT_TYPE_COC)) {
 						name = name.substring(2, name.length());
 					}
 					
-					configuration.getTypeAliasRegistry().registerAlias(name, persistObjectType);
+					configuration.getTypeAliasRegistry().registerAlias(name, persistObjectMap.dataType);
 				}
 			}
 		}
 
-		private boolean isRegistered(Class<?> persistObjectType, Class<?>[] registeredAliasTypes) {
-			for (Class<?> aRegisteredAliasType : registeredAliasTypes) {
-				if (persistObjectType == aRegisteredAliasType)
-					return true;
-			}
-			
-			return false;
-		}
-
-		private Class<?>[] getRegisteredAliasTypes(Alias[] aliases) {
-			List<Class<?>> registeredAliasTypes = new ArrayList<>();
-			if (aliases == null || aliases.length == 0) {
-				return registeredAliasTypes.toArray(new Class<?>[0]);
-			}
-			
-			for (Alias alias : aliases) {
-				registeredAliasTypes.add(alias.type);
-			}
-			
-			return registeredAliasTypes.toArray(new Class<?>[registeredAliasTypes.size()]);
-		}
-
 		private void registerTypeHandlers(org.apache.ibatis.session.Configuration configuration,
-				TypeHandlerMap<?>[] typeHandlerMaps) {
-			for (TypeHandlerMap<?> typeHandlerMap : typeHandlerMaps) {
+				TypeHandlerMapping<?>[] typeHandlerMaps) {
+			for (TypeHandlerMapping<?> typeHandlerMap : typeHandlerMaps) {
 				if (typeHandlerMap.type == null) {
 					configuration.getTypeHandlerRegistry().register(typeHandlerMap.typeHandlerType);;
 				} else {
 					configuration.getTypeHandlerRegistry().register(typeHandlerMap.type, typeHandlerMap.typeHandlerType);
-				}
-			}
-		}
-
-		private void registerAliases(org.apache.ibatis.session.Configuration configuration, Alias[] aliases) {
-			for (Alias alias : aliases) {
-				if (alias.name == null) {
-					configuration.getTypeAliasRegistry().registerAlias(alias.type);
-				} else {
-					configuration.getTypeAliasRegistry().registerAlias(alias.name, alias.type);
 				}
 			}
 		}

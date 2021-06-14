@@ -79,7 +79,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 				continue;
 			
 			for (IPipesPreprocessor preprocessor : preproessors) {
-				pipesPreprocessors.add(preprocessor);
+				pipesPreprocessors.add(appComponentService.inject(preprocessor));
 				
 				if (logger.isDebugEnabled()) {
 					logger.debug("Plugin '{}' contributed a pipes preprocessor: '{}'.",

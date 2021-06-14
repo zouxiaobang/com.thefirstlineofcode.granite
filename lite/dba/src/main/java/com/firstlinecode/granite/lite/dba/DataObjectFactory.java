@@ -1,77 +1,44 @@
 package com.firstlinecode.granite.lite.dba;
 
-public class DataObjectFactory /*implements IDataObjectFactory*/ {
-	/*private static final String KEY_GRANITE_PERSISTENT_OBJECTS = "Granite-MyBatis-Data-Objects";
-	
-	private Map<Class<?>, DataObjectMapping> objectMappings;
-	private IContributionTracker tracker;
-	
-	public DataObjectFactory(BundleContext bundleContext) {
-		objectMappings = new ConcurrentHashMap<>();
-		tracker = new PersistentObjectsTracker();
-		
-		OsgiUtils.trackContribution(bundleContext, KEY_GRANITE_PERSISTENT_OBJECTS, tracker);
-	}
-	
-	private class DataObjectMapping {
-		public Class<?> domain;
-		public Class<?> data;
-		public String bundleSymlicName;
-		
-		public DataObjectMapping(Class<?> domain, Class<?> data, String bundleSymlicName) {
-			this.domain = domain;
-			this.data = data;
-			this.bundleSymlicName = bundleSymlicName;
-		}
-	}
-	
-	private class PersistentObjectsTracker implements IContributionTracker {
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-		@Override
-		public void found(Bundle bundle, String contribution) throws Exception {
-			String symbolicName = bundle.getSymbolicName();
-			StringTokenizer st = new StringTokenizer(contribution, ",");
-			while (st.hasMoreTokens()) {
-				String sDataConfig = st.nextToken();
-				int equalMarkIndex = sDataConfig.indexOf('=');
-				String sDomain = null;
-				String sData = null;
-				if (equalMarkIndex == -1) {
-					sData = sDataConfig;
-				} else {
-					sDomain = sDataConfig.substring(0, equalMarkIndex);
-					sData = sDataConfig.substring(equalMarkIndex + 1);
-				}
+import com.firstlinecode.granite.framework.adf.mybatis.DataObjectMapping;
+import com.firstlinecode.granite.framework.adf.mybatis.IDataObjectsContributor;
+import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
+import com.firstlinecode.granite.framework.core.adf.data.IDataObjectFactory;
+import com.firstlinecode.granite.framework.core.adf.data.IIdProvider;
+import com.firstlinecode.granite.framework.core.repository.IInitializable;
+
+public class DataObjectFactory implements IDataObjectFactory, IInitializable, IApplicationComponentServiceAware {	
+	private IApplicationComponentService appComponentService;
+	private Map<Class<?>, Class<?>> dataObjectMappings;
+	
+	public DataObjectFactory() {
+		dataObjectMappings = new HashMap<>();
+	}
+	
+	@Override
+	public void init() {
+		List<IDataObjectsContributor> dataObjectsContributors = appComponentService.getPluginManager().
+				getExtensions(IDataObjectsContributor.class);
+		for (IDataObjectsContributor dataObjectsContributor : dataObjectsContributors) {
+			DataObjectMapping<?>[] mappings = dataObjectsContributor.getDataObjectMappings();
+			if (mappings == null || mappings.length == 0)
+				continue;
+			
+			for (DataObjectMapping<?> mapping : mappings) {
+				if (dataObjectMappings.containsKey(mapping.domainType))
+					throw new IllegalArgumentException(String.format("Reduplicated domain data object type: '%s'.", mapping.domainType));
 				
-				Class<?> data = bundle.loadClass(sData);
-				
-				Class<?> domain = null;
-				if (sDomain != null) {
-					domain = bundle.loadClass(sDomain);
-				} else {
-					domain = data.getSuperclass();
-					
-					if (domain.equals(Object.class)) {
-						continue;
-					}
-				}
-				
-				DataObjectMapping mapping = new DataObjectMapping(domain, data, symbolicName);
-				objectMappings.put(mapping.domain, mapping);
+				dataObjectMappings.put(mapping.domainType, mapping.dataType);
 			}
 		}
-
-		@Override
-		public void lost(Bundle bundle, String contribution) throws Exception {
-			String symbolicName = bundle.getSymbolicName();
-			for (DataObjectMapping objectMapping : objectMappings.values()) {
-				if (objectMapping.bundleSymlicName.equals(symbolicName))
-					objectMappings.remove(objectMapping.domain);
-			}
-		}
-		
 	}
-	
+		
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public <K, V extends K> V create(Class<K> clazz) {
@@ -84,18 +51,23 @@ public class DataObjectFactory /*implements IDataObjectFactory*/ {
 			
 			return object;
 		} catch (Exception e) {
-			throw new RuntimeException(String.format("Can't create data object for class %s.", clazz.getName()), e);
+			throw new RuntimeException(String.format("Can't create data object for class '%s'.", clazz.getName()), e);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private <K, V extends K> V doCreate(Class<K> clazz) throws InstantiationException, IllegalAccessException {
-		DataObjectMapping objectMapping = objectMappings.get(clazz);
-		if (objectMapping == null) {
-			return (V)clazz.newInstance();
+	private <K, V extends K> V doCreate(Class<K> domainType) throws InstantiationException, IllegalAccessException {
+		Class<?> dataType = dataObjectMappings.get(domainType);
+		if (dataType == null) {
+			return (V)domainType.newInstance();
 		}
 		
-		return (V)objectMapping.data.newInstance();
-	} */
+		return (V)dataType.newInstance();
+	}
+
+	@Override
+	public void setApplicationComponentService(IApplicationComponentService appComponentService) {
+		this.appComponentService = appComponentService;
+	}
 
 }

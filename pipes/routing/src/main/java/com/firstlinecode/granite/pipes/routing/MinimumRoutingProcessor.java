@@ -115,7 +115,7 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 				continue;
 			
 			for (IPipesPostprocessor postprocessor : postproessors) {
-				pipesPostprocessors.add(postprocessor);
+				pipesPostprocessors.add(appComponentService.inject(postprocessor));
 				
 				if (logger.isDebugEnabled()) {
 					logger.debug("Plugin '{}' contributed a pipes postprocessor: '{}'.",

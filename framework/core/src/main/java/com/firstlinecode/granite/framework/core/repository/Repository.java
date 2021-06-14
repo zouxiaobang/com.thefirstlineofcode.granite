@@ -82,9 +82,8 @@ public class Repository implements IRepository {
 	}
 	
 	private void loadContributedComponents() {
-		List<Class<? extends IComponentContributor>> componentContributorClasses = appComponentService.getExtensionClasses(IComponentContributor.class);
-		for (Class<? extends IComponentContributor> comonentContributorClass : componentContributorClasses) {
-			IComponentContributor componentContributor = appComponentService.createExtension(comonentContributorClass);
+		for (IComponentContributor componentContributor : appComponentService.getPluginManager().
+				getExtensions(IComponentContributor.class)) {
 			Class<?>[] componentClasses = componentContributor.getComponentClasses();
 			if (componentClasses == null || componentClasses.length == 0)
 				continue;

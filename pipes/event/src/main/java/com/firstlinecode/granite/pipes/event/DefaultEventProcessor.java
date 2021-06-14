@@ -123,7 +123,7 @@ public class DefaultEventProcessor implements IMessageProcessor, IInitializable,
 				if (listeners == null) {
 					listeners = new ArrayList<>();
 				}
-				listeners.add(listenerFactory.createListener());
+				listeners.add(appComponentService.inject(listenerFactory.createListener()));
 				
 				eventToListeners.put(listenerFactory.getType(), listeners);
 				if (logger.isDebugEnabled()) {

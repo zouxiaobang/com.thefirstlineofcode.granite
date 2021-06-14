@@ -108,16 +108,10 @@ public class CommonsUtils {
 	}
 	
 	public static IPipesExtendersContributor[] getExtendersContributors(IApplicationComponentService appComponentService) {
-		List<Class<? extends IPipesExtendersContributor>> extendersControbutorClasses = appComponentService.getExtensionClasses(IPipesExtendersContributor.class);
-		if (extendersControbutorClasses == null || extendersControbutorClasses.size() == 0) {
+		List<IPipesExtendersContributor> extendersContributors = appComponentService.getPluginManager().getExtensions(IPipesExtendersContributor.class);
+		if (extendersContributors == null || extendersContributors.size() == 0)
 			return new IPipesExtendersContributor[0];
-		}
 		
-		IPipesExtendersContributor[] extendersContributors = new IPipesExtendersContributor[extendersControbutorClasses.size()];
-		for (int i = 0; i < extendersContributors.length; i++) {
-			extendersContributors[i] = appComponentService.createExtension(extendersControbutorClasses.get(i));
-		}
-		
-		return extendersContributors;
+		return extendersContributors.toArray(new IPipesExtendersContributor[extendersContributors.size()]);
 	}
 }
