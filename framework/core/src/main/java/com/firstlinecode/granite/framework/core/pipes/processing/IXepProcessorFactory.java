@@ -5,6 +5,6 @@ import com.firstlinecode.basalt.protocol.core.stanza.Stanza;
 
 public interface IXepProcessorFactory<S extends Stanza, X> {
 	ProtocolChain getProtocolChain();
-	IXepProcessor<S, X> createProcessor();
+	IXepProcessor<S, X> createProcessor() throws Exception;
 	boolean isSingleton();
 }

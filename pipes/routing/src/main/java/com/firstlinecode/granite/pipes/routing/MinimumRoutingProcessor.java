@@ -32,7 +32,7 @@ import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
 import com.firstlinecode.granite.framework.core.pipes.IMessage;
 import com.firstlinecode.granite.framework.core.pipes.IMessageProcessor;
-import com.firstlinecode.granite.framework.core.pipes.IPipesExtendersFactory;
+import com.firstlinecode.granite.framework.core.pipes.IPipesExtendersContributor;
 import com.firstlinecode.granite.framework.core.pipes.SimpleMessage;
 import com.firstlinecode.granite.framework.core.pipes.routing.IPipesPostprocessor;
 import com.firstlinecode.granite.framework.core.pipes.routing.IProtocolTranslatorFactory;
@@ -59,15 +59,15 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 	public void init() {
 		registerPredefinedTranslators();
 		
-		IPipesExtendersFactory[] extendersFactories = CommonsUtils.getExtendersFactories(appComponentService);
+		IPipesExtendersContributor[] extendersFactories = CommonsUtils.getExtendersContributors(appComponentService);
 		loadContributedTranslators(extendersFactories);
 		loadContributedPostprocessors(extendersFactories);
 	}
 	
 	
-	private void loadContributedTranslators(IPipesExtendersFactory[] extendersFactories) {
-		for (IPipesExtendersFactory extendersFactory : extendersFactories) {
-			IProtocolTranslatorFactory<?>[] translatorFactories = extendersFactory.getProtocolTranslatorFactories();
+	private void loadContributedTranslators(IPipesExtendersContributor[] extendersContributors) {
+		for (IPipesExtendersContributor extendersContributor : extendersContributors) {
+			IProtocolTranslatorFactory<?>[] translatorFactories = extendersContributor.getProtocolTranslatorFactories();
 			
 			if (translatorFactories == null || translatorFactories.length == 0)
 				continue;
@@ -77,7 +77,7 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 				
 				if (logger.isDebugEnabled()) {
 					logger.debug("Plugin '{}' contributed a protocol translator factory: '{}'.",
-							appComponentService.getPluginManager().whichPlugin(extendersFactory.getClass()),
+							appComponentService.getPluginManager().whichPlugin(extendersContributor.getClass()),
 							translatorFactory.getClass().getName()
 					);
 				}
@@ -108,9 +108,9 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 		
 	}
 
-	private void loadContributedPostprocessors(IPipesExtendersFactory[] extendersFactories) {
-		for (IPipesExtendersFactory extendersFactory : extendersFactories) {
-			IPipesPostprocessor[] postproessors = extendersFactory.getPipesPostprocessors();
+	private void loadContributedPostprocessors(IPipesExtendersContributor[] extendersContributors) {
+		for (IPipesExtendersContributor extendersContributor : extendersContributors) {
+			IPipesPostprocessor[] postproessors = extendersContributor.getPipesPostprocessors();
 			if (postproessors == null || postproessors.length == 0)
 				continue;
 			
@@ -119,7 +119,7 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 				
 				if (logger.isDebugEnabled()) {
 					logger.debug("Plugin '{}' contributed a pipes postprocessor: '{}'.",
-							appComponentService.getPluginManager().whichPlugin(extendersFactory.getClass()),
+							appComponentService.getPluginManager().whichPlugin(extendersContributor.getClass()),
 							postprocessor.getClass().getName()
 					);
 				}

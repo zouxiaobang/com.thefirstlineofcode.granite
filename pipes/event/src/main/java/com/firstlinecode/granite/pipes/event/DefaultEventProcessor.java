@@ -22,7 +22,7 @@ import com.firstlinecode.granite.framework.core.event.IEventListener;
 import com.firstlinecode.granite.framework.core.event.IEventListenerFactory;
 import com.firstlinecode.granite.framework.core.pipes.IMessage;
 import com.firstlinecode.granite.framework.core.pipes.IMessageProcessor;
-import com.firstlinecode.granite.framework.core.pipes.IPipesExtendersFactory;
+import com.firstlinecode.granite.framework.core.pipes.IPipesExtendersContributor;
 import com.firstlinecode.granite.framework.core.pipes.SimpleMessage;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.utils.CommonsUtils;
@@ -111,10 +111,10 @@ public class DefaultEventProcessor implements IMessageProcessor, IInitializable,
 	}
 	
 	private void loadContributedEventListeners() {
-		IPipesExtendersFactory[] extendersFactories = CommonsUtils.getExtendersFactories(appComponentService);
+		IPipesExtendersContributor[] extendersContributors = CommonsUtils.getExtendersContributors(appComponentService);
 		
-		for (IPipesExtendersFactory extendersFactory : extendersFactories) {
-			IEventListenerFactory<?>[] listenerFactories = extendersFactory.getEventListenerFactories();
+		for (IPipesExtendersContributor extendersContributor : extendersContributors) {
+			IEventListenerFactory<?>[] listenerFactories = extendersContributor.getEventListenerFactories();
 			if (listenerFactories == null || listenerFactories.length == 0)
 				continue;
 			
@@ -129,7 +129,7 @@ public class DefaultEventProcessor implements IMessageProcessor, IInitializable,
 				if (logger.isDebugEnabled()) {
 					logger.debug("Plugin '{}' contributed a event listener to listen '{}' event: '{}'.",
 						new Object[] {
-									appComponentService.getPluginManager().whichPlugin(extendersFactory.getClass()),
+									appComponentService.getPluginManager().whichPlugin(extendersContributor.getClass()),
 								listenerFactory.getType().getClass().getName(),
 								listenerFactory.getClass().getName()
 						}

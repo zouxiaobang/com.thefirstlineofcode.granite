@@ -9,7 +9,7 @@ import com.firstlinecode.granite.framework.core.pipes.processing.IXepProcessorFa
 import com.firstlinecode.granite.framework.core.pipes.routing.IPipesPostprocessor;
 import com.firstlinecode.granite.framework.core.pipes.routing.IProtocolTranslatorFactory;
 
-public interface IPipesExtendersFactory extends ExtensionPoint {
+public interface IPipesExtendersContributor extends ExtensionPoint {
 	IProtocolParserFactory<?>[] getProtocolParserFactories();
 	IXepProcessorFactory<?, ?>[] getXepProcessorFactories();
 	IProtocolTranslatorFactory<?>[] getProtocolTranslatorFactories();

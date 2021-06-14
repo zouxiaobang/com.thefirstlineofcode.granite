@@ -7,7 +7,7 @@ import com.firstlinecode.granite.framework.core.pipes.processing.IXepProcessorFa
 import com.firstlinecode.granite.framework.core.pipes.routing.IPipesPostprocessor;
 import com.firstlinecode.granite.framework.core.pipes.routing.IProtocolTranslatorFactory;
 
-public class PipesExtendersFactoryAdapter implements IPipesExtendersFactory {
+public class PipesExtendersContributorAdapter implements IPipesExtendersContributor {
 
 	@Override
 	public IProtocolParserFactory<?>[] getProtocolParserFactories() {

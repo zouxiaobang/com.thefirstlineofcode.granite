@@ -19,6 +19,7 @@ import com.firstlinecode.basalt.protocol.core.stanza.Iq;
 import com.firstlinecode.basalt.protocol.core.stanza.Stanza;
 import com.firstlinecode.basalt.protocol.core.stanza.error.BadRequest;
 import com.firstlinecode.basalt.protocol.core.stanza.error.FeatureNotImplemented;
+import com.firstlinecode.basalt.protocol.core.stanza.error.InternalServerError;
 import com.firstlinecode.basalt.protocol.core.stanza.error.NotAllowed;
 import com.firstlinecode.basalt.protocol.core.stanza.error.ServiceUnavailable;
 import com.firstlinecode.basalt.protocol.core.stanza.error.StanzaError;
@@ -37,7 +38,7 @@ import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
 import com.firstlinecode.granite.framework.core.pipes.IMessage;
-import com.firstlinecode.granite.framework.core.pipes.IPipesExtendersFactory;
+import com.firstlinecode.granite.framework.core.pipes.IPipesExtendersContributor;
 import com.firstlinecode.granite.framework.core.pipes.processing.IIqResultProcessor;
 import com.firstlinecode.granite.framework.core.pipes.processing.IProcessingContext;
 import com.firstlinecode.granite.framework.core.pipes.processing.IXepProcessor;
@@ -84,23 +85,34 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 	}
 	
 	protected void loadContributedXepProcessors() {
-		IPipesExtendersFactory[] extendersFactories = CommonsUtils.getExtendersFactories(appComponentService);
+		IPipesExtendersContributor[] extendersContributors = CommonsUtils.getExtendersContributors(appComponentService);
 		
-		for (IPipesExtendersFactory extendersFactory : extendersFactories) {
-			IXepProcessorFactory<?, ?>[] processorFactories = extendersFactory.getXepProcessorFactories();
+		for (IPipesExtendersContributor extendersContributor : extendersContributors) {
+			IXepProcessorFactory<?, ?>[] processorFactories = extendersContributor.getXepProcessorFactories();
 			if (processorFactories == null || processorFactories.length == 0)
 				continue;
 			
 			for (IXepProcessorFactory<?, ?> processorFactory : processorFactories) {
 				if (processorFactory.isSingleton()) {
-					singletonProcessores.put(processorFactory.getProtocolChain(), processorFactory.createProcessor());
+					IXepProcessor<?, ?> xepProcessor;
+					try {
+						xepProcessor = processorFactory.createProcessor();
+					} catch (Exception e) {
+						logger.error("Can't create singleton XEP processor by factory: '{}'.",
+								processorFactory.getClass().getName(), e);
+						
+						throw new RuntimeException(String.format("Can't create singleton XEP processor by factory: '%s'",
+								processorFactory.getClass().getName()), e);
+					}
+					
+					singletonProcessores.put(processorFactory.getProtocolChain(), xepProcessor);
 				} else {				
 					xepProcessorFactories.put(processorFactory.getProtocolChain(), processorFactory);
 				}
 				
 				if (logger.isDebugEnabled()) {
 					logger.debug("Plugin '{}' contributed a protocol processor factory: '{}'.",
-							appComponentService.getPluginManager().whichPlugin(extendersFactory.getClass()),
+							appComponentService.getPluginManager().whichPlugin(extendersContributor.getClass()),
 							processorFactory.getClass().getName()
 					);
 				}
@@ -560,7 +572,11 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 			
 			return xepProcessor;
 		} catch (Exception e) {
-			throw new RuntimeException("Can't instantiate XEP processor.", e);
+			logger.error("Can't instantiate XEP processor by factory: '{}'.",
+					processorFactory.getClass().getName(), e);
+			throw new ProtocolException(new InternalServerError(
+					String.format("Can't instantiate XEP processor by factory: '%s'.",
+					processorFactory.getClass().getName()), e));
 		}
 	}
 

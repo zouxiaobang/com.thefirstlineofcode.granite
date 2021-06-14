@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
-import com.firstlinecode.granite.framework.core.pipes.IPipesExtendersFactory;
+import com.firstlinecode.granite.framework.core.pipes.IPipesExtendersContributor;
 
 public class CommonsUtils {
     private static final char SEPARATOR_KEY_VALUE = '=';
@@ -107,17 +107,17 @@ public class CommonsUtils {
 		return false;
 	}
 	
-	public static IPipesExtendersFactory[] getExtendersFactories(IApplicationComponentService appComponentService) {
-		List<Class<? extends IPipesExtendersFactory>> extendersFactoriesClasses = appComponentService.getExtensionClasses(IPipesExtendersFactory.class);
-		if (extendersFactoriesClasses == null || extendersFactoriesClasses.size() == 0) {
-			return new IPipesExtendersFactory[0];
+	public static IPipesExtendersContributor[] getExtendersContributors(IApplicationComponentService appComponentService) {
+		List<Class<? extends IPipesExtendersContributor>> extendersControbutorClasses = appComponentService.getExtensionClasses(IPipesExtendersContributor.class);
+		if (extendersControbutorClasses == null || extendersControbutorClasses.size() == 0) {
+			return new IPipesExtendersContributor[0];
 		}
 		
-		IPipesExtendersFactory[] extendersFactories = new IPipesExtendersFactory[extendersFactoriesClasses.size()];
-		for (int i = 0; i < extendersFactories.length; i++) {
-			extendersFactories[i] = appComponentService.createExtension(extendersFactoriesClasses.get(i));
+		IPipesExtendersContributor[] extendersContributors = new IPipesExtendersContributor[extendersControbutorClasses.size()];
+		for (int i = 0; i < extendersContributors.length; i++) {
+			extendersContributors[i] = appComponentService.createExtension(extendersControbutorClasses.get(i));
 		}
 		
-		return extendersFactories;
+		return extendersContributors;
 	}
 }

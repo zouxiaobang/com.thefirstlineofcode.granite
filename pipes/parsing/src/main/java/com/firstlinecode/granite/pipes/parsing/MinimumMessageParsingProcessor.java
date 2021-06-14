@@ -36,7 +36,7 @@ import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
 import com.firstlinecode.granite.framework.core.pipes.IMessage;
 import com.firstlinecode.granite.framework.core.pipes.IMessageProcessor;
-import com.firstlinecode.granite.framework.core.pipes.IPipesExtendersFactory;
+import com.firstlinecode.granite.framework.core.pipes.IPipesExtendersContributor;
 import com.firstlinecode.granite.framework.core.pipes.parsing.IPipesPreprocessor;
 import com.firstlinecode.granite.framework.core.pipes.parsing.IProtocolParserFactory;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
@@ -66,15 +66,15 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 	public void init() {
 		registerPredefinedParsers();
 		
-		IPipesExtendersFactory[] extendersFactories = CommonsUtils.getExtendersFactories(appComponentService);
+		IPipesExtendersContributor[] extendersFactories = CommonsUtils.getExtendersContributors(appComponentService);
 		
 		loadContributedProtocolParsers(extendersFactories);
 		loadContributedPreprocessors(extendersFactories);
 	}
 
-	protected void loadContributedPreprocessors(IPipesExtendersFactory[] extendersFactories) {
-		for (IPipesExtendersFactory extendersFactory : extendersFactories) {
-			IPipesPreprocessor[] preproessors = extendersFactory.getPipesPreprocessors();
+	protected void loadContributedPreprocessors(IPipesExtendersContributor[] extendersContributors) {
+		for (IPipesExtendersContributor extendersContributor : extendersContributors) {
+			IPipesPreprocessor[] preproessors = extendersContributor.getPipesPreprocessors();
 			if (preproessors == null || preproessors.length == 0)
 				continue;
 			
@@ -83,7 +83,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 				
 				if (logger.isDebugEnabled()) {
 					logger.debug("Plugin '{}' contributed a pipes preprocessor: '{}'.",
-							appComponentService.getPluginManager().whichPlugin(extendersFactory.getClass()),
+							appComponentService.getPluginManager().whichPlugin(extendersContributor.getClass()),
 							preprocessor.getClass().getName()
 					);
 				}
@@ -91,9 +91,9 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 		}
 	}
 
-	protected void loadContributedProtocolParsers(IPipesExtendersFactory[] extendersFactories) {
-		for (IPipesExtendersFactory extendersFactory : extendersFactories) {
-			IProtocolParserFactory<?>[] parserFactories = extendersFactory.getProtocolParserFactories();
+	protected void loadContributedProtocolParsers(IPipesExtendersContributor[] extendersContributors) {
+		for (IPipesExtendersContributor extendersContributor : extendersContributors) {
+			IProtocolParserFactory<?>[] parserFactories = extendersContributor.getProtocolParserFactories();
 			
 			if (parserFactories == null || parserFactories.length == 0)
 				continue;
@@ -103,7 +103,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 				
 				if (logger.isDebugEnabled()) {
 					logger.debug("Plugin '{}' contributed a protocol parser factory: '{}'.",
-							appComponentService.getPluginManager().whichPlugin(extendersFactory.getClass()),
+							appComponentService.getPluginManager().whichPlugin(extendersContributor.getClass()),
 							parserFactory.getClass().getName()
 					);
 				}
