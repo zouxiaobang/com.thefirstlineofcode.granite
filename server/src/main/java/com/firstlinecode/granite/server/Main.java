@@ -91,20 +91,16 @@ public class Main {
 			if (appContext != null)
 				appContext.close();
 			
+			if (appComponentService != null && appComponentService.isStarted()) {
+				appComponentService.stop();
+			}
+			
 			if (server != null) {
 				try {
 					server.stop();
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-			}
-			
-			if (appContext != null && (appContext.isRunning() || appContext.isActive())) {
-				appContext.close();
-			}
-			
-			if (appComponentService != null && appComponentService.isStarted()) {
-				appComponentService.stop();
 			}
 			
 			throw new RuntimeException("Can't start Granite Server.", e);

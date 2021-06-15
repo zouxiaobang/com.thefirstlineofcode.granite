@@ -3,10 +3,11 @@ package com.firstlinecode.granite.framework.core.adf;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.Map;
 
 import org.pf4j.PluginManager;
 import org.pf4j.PluginWrapper;
@@ -21,6 +22,7 @@ import com.firstlinecode.granite.framework.core.adf.injection.IDependencyFetcher
 import com.firstlinecode.granite.framework.core.adf.injection.IDependencyInjector;
 import com.firstlinecode.granite.framework.core.adf.injection.IInjectionProvider;
 import com.firstlinecode.granite.framework.core.adf.injection.MethodDependencyInjector;
+import com.firstlinecode.granite.framework.core.annotations.AppComponent;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
@@ -33,10 +35,16 @@ import com.firstlinecode.granite.framework.core.pipes.IMessageChannel;
 import com.firstlinecode.granite.framework.core.pipes.IPipesExtender;
 import com.firstlinecode.granite.framework.core.pipes.SimpleMessage;
 import com.firstlinecode.granite.framework.core.platform.IPluginManagerAware;
+import com.firstlinecode.granite.framework.core.repository.CreationException;
+import com.firstlinecode.granite.framework.core.repository.IComponentInfo;
+import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.repository.IRepository;
 import com.firstlinecode.granite.framework.core.repository.IRepositoryAware;
 import com.firstlinecode.granite.framework.core.utils.CommonsUtils;
+
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.InvocationHandler;
 
 public class ApplicationComponentService implements IApplicationComponentService, IRepositoryAware {
 	private static final String COMPONENT_ID_LITE_ANY_2_EVENT_MESSAGE_CHANNEL = "lite.any.2.event.message.channel";
@@ -50,7 +58,8 @@ public class ApplicationComponentService implements IApplicationComponentService
 	protected boolean syncPlugins;
 	protected boolean started;
 	protected IRepository repository;
-	protected ConcurrentMap<Class<?>, List<IDependencyInjector>> dependencyInjectors;
+	protected Map<String, IComponentInfo> appComponentInfos;
+	protected Map<Class<?>, List<IDependencyInjector>> dependencyInjectors;
 	
 	public ApplicationComponentService(IServerConfiguration serverConfiguration) {
 		this(serverConfiguration, null);
@@ -65,7 +74,8 @@ public class ApplicationComponentService implements IApplicationComponentService
 		this.serverConfiguration = serverConfiguration;
 		this.syncPlugins = syncPlugins;
 		
-		dependencyInjectors = new ConcurrentHashMap<>();
+		appComponentInfos = new HashMap<>();
+		dependencyInjectors = new HashMap<>();
 		
 		if (pluginManager == null) {
 			pluginManager = createPluginManager();
@@ -125,10 +135,141 @@ public class ApplicationComponentService implements IApplicationComponentService
 		if (started)
 			return;
 		
+		loadContributedAppComponents();
+		
 		if (syncPlugins)
 			initPlugins();
 			
 		started = true;
+	}
+	
+	protected void loadContributedAppComponents() {
+		// TODO Auto-generated method stub
+		List<IAppComponentsContributor> componentContributors = pluginManager.getExtensions(IAppComponentsContributor.class);
+		if (componentContributors == null || componentContributors.size() == 0)
+			return;
+		
+		for (IAppComponentsContributor componentContributor : componentContributors) {
+			Class<?>[] appComponentClasses = componentContributor.getAppComponentClasses();
+			if (appComponentClasses == null || appComponentClasses.length == 0)
+				continue;
+			
+			for (Class<?> appComponentClass : appComponentClasses) {
+				AppComponent appComponentAnnotation = appComponentClass.getAnnotation(AppComponent.class);
+				if (appComponentAnnotation == null) {
+					throw new IllegalArgumentException(
+							String.format("Class '%s' isn't an legal application component. " +
+									"You need to add @AppComponent to the class.", appComponentClass.getName()));
+				}
+				
+				registerAppComponentInfo(appComponentAnnotation, appComponentClass);
+			}
+		}
+	}
+
+	protected void registerAppComponentInfo(AppComponent appComponentAnnotation, Class<?> appComponentClass) {
+		String appComponentId = appComponentAnnotation.value();
+		IComponentInfo componentInfo = new AppComponentInfo(appComponentId, appComponentClass,
+				appComponentAnnotation.isSingleton());
+		if (appComponentInfos.containsKey(appComponentId)) {
+			throw new RuntimeException(String.format("Reduplicated application component ID: %s", appComponentId));
+		}
+		
+		appComponentInfos.put(appComponentId, componentInfo);
+	}
+	
+	private class AppComponentInfo implements IComponentInfo {
+		private String id;
+		private Class<?> type;
+		private boolean singleton;
+		private volatile Object instance;
+		private Object singletonLock = new Object();
+		
+		public AppComponentInfo(String id, Class<?> type, boolean singleton) {
+			this.id = id;
+			this.type = type;
+			this.singleton = singleton;
+		}
+		
+		@Override
+		public String getId() {
+			return id;
+		}
+		
+		@Override
+		public void addDependency(IDependencyInfo dependency) {
+			throw new UnsupportedOperationException();
+		}
+		
+		@Override
+		public void removeDependency(IDependencyInfo dependency) {
+			throw new UnsupportedOperationException();
+		}
+		
+		@Override
+		public IDependencyInfo[] getDependencies() {
+			throw new UnsupportedOperationException();
+		}
+		
+		@Override
+		public boolean isAvailable() {
+			throw new UnsupportedOperationException();
+		}
+		
+		@Override
+		public boolean isService() {
+			throw new UnsupportedOperationException();
+		}
+		
+		@Override
+		public Object create() throws CreationException {
+			if (!singleton) {
+				try {
+					return doCreate();
+				} catch (Exception e) {
+					throw new CreationException(String.format("Can't create application component %s.", id), e);
+				}
+			}
+			
+			synchronized (singletonLock) {
+				if (instance == null) {
+					try {
+						instance = doCreate();
+					} catch (Exception e) {
+						throw new CreationException(String.format("Can't create application component %s.", id), e);
+					}
+				}
+				
+				return instance;
+			}
+		}
+
+		private Object doCreate() throws InstantiationException, IllegalAccessException {
+			Object component = type.newInstance();
+			inject(component);
+			
+			return component;
+		}
+		
+		@Override
+		public boolean isSingleton() {
+			return singleton;
+		}
+		
+		@Override
+		public IComponentInfo getAliasComponent(String alias) {
+			throw new UnsupportedOperationException();
+		}
+		
+		@Override
+		public String toString() {
+			return String.format("Application component['%s', '%s'].", id, type.getName());
+		}
+
+		@Override
+		public Class<?> getType() {
+			return type;
+		}
 	}
 	
 	@Override
@@ -319,11 +460,58 @@ public class ApplicationComponentService implements IApplicationComponentService
 	}
 
 	@Override
-	public Object getComponent(String id) {
-		if (repository == null)
-			throw new RuntimeException("Can't get component because the repository hasn't been set yet.");
+	public Object getAppComponent(String id, Class<?> type) {
+		Enhancer enhancer = new Enhancer();
 		
-		return repository.get(id);
+		enhancer.setSuperclass(type);
+		enhancer.setCallback(new LazyLoadComponentInvocationHandler(id));
+		enhancer.setUseFactory(false);
+		enhancer.setClassLoader(type.getClassLoader());
+		
+		return enhancer.create();
 	}
+	
+	private class LazyLoadComponentInvocationHandler implements InvocationHandler {
+		private String id;
+		private volatile Object component = null;
+		
+		public LazyLoadComponentInvocationHandler(String id) {
+			this.id = id;
+		}
+		
+		@Override
+		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+			component = getComponent();
+			
+			if (component == null)
+				throw new IllegalStateException(String.format("Null dependency '%s'.", id));
+			
+			if (Proxy.isProxyClass(component.getClass())) {
+				return Proxy.getInvocationHandler(component).invoke(component, method, args);
+			} else if (net.sf.cglib.proxy.Proxy.isProxyClass(component.getClass())) {
+				return net.sf.cglib.proxy.Proxy.getInvocationHandler(component).invoke(component, method, args);				
+			} else {
+				return method.invoke(component, args);				
+			}
+		}
 
+		private Object getComponent() throws CreationException {
+			if (component != null)
+				return component;
+			
+			synchronized (this) {
+				if (component != null)
+					return component;
+				
+				IComponentInfo componentInfo = appComponentInfos.get(id);
+				if (componentInfo == null)
+					return null;
+				
+				component = componentInfo.create();
+			}
+			
+			return component;
+		}
+		
+	}
 }

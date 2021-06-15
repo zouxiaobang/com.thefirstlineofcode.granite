@@ -4,19 +4,20 @@ import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService
 
 public class AppComponentFetcher implements IDependencyFetcher {
 	private IApplicationComponentService appComponentService;
-	private String componentId;
+	private IdAndType idAndType;
 	
-	public AppComponentFetcher(IApplicationComponentService appComponentService, String componentId) {
+	public AppComponentFetcher(IApplicationComponentService appComponentService,
+			IdAndType idAndType) {
 		this.appComponentService = appComponentService;
-		this.componentId = componentId;
+		this.idAndType = idAndType;
 	}
 	
 	@Override
 	public Object fetch() {
-		Object component = appComponentService.getComponent(componentId);
+		Object component = appComponentService.getAppComponent(idAndType.id, idAndType.type);
 		if (component == null)
 			throw new IllegalArgumentException(String.format("No component which's component id is %s in repository.",
-					componentId));
+					idAndType.id));
 		
 		return component;
 	}
