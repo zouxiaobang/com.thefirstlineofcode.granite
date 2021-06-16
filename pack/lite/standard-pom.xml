@@ -22,14 +22,6 @@
 					<artifactId>granite-xeps-ibr</artifactId>
 			</dependency>
 			<dependency>
-					<groupId>com.firstlinecode.granite.xeps</groupId>
-					<artifactId>granite-xeps-ibr</artifactId>
-			</dependency>
-			<dependency>
-					<groupId>com.firstlinecode.granite.xeps</groupId>
-					<artifactId>granite-xeps-ibr</artifactId>
-			</dependency>
-			<dependency>
 				<groupId>com.firstlinecode.basalt.xeps</groupId>
 				<artifactId>basalt-xeps-xdata</artifactId>
 			</dependency>

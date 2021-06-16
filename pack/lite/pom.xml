@@ -33,7 +33,7 @@
 			<artifactId>granite-framework-adf-mybatis</artifactId>
 		</dependency>
 		
-		<!-- Pipes -->
+		<!-- Pipeline -->
 		<dependency>
 			<groupId>com.firstlinecode.granite.pipeline</groupId>
 			<artifactId>granite-pipeline-stream</artifactId>

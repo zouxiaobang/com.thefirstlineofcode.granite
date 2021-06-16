@@ -88,11 +88,11 @@ public class Main {
 			
 			server = new ServerProxy().start(serverConfiguration, appComponentService);
 		} catch (Exception e) {
-			if (appContext != null)
-				appContext.close();
-			
 			if (appComponentService != null && appComponentService.isStarted()) {
 				appComponentService.stop();
+			} else {
+				if (appContext != null)
+					appContext.close();
 			}
 			
 			if (server != null) {

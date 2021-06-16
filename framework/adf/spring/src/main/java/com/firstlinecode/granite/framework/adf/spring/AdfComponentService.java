@@ -1,9 +1,11 @@
 package com.firstlinecode.granite.framework.adf.spring;
 
 import org.pf4j.PluginManager;
+import org.pf4j.spring.SpringPluginManager;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.support.AbstractApplicationContext;
 
 import com.firstlinecode.granite.framework.adf.spring.injection.SpringBeanInjectionProvider;
 import com.firstlinecode.granite.framework.core.adf.ApplicationComponentService;
@@ -90,5 +92,14 @@ public class AdfComponentService extends ApplicationComponentService implements 
 	@Override
 	protected IInjectionProvider[] getInjectionProviders() {
 		return new IInjectionProvider[] {new AppComponentInjectionProvider(this), new SpringBeanInjectionProvider(appContext)};
+	}
+	
+	@Override
+	public void stop() {
+		AbstractApplicationContext appContext = (AbstractApplicationContext)((SpringPluginManager)pluginManager).getApplicationContext();
+		if (appContext != null)
+			appContext.close();
+		
+		super.stop();
 	}
 }
