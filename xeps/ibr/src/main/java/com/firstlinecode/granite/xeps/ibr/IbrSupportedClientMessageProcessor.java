@@ -10,12 +10,12 @@ import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.connection.IClientConnectionContext;
-import com.firstlinecode.granite.pipes.stream.IStreamNegotiant;
-import com.firstlinecode.granite.pipes.stream.negotiants.InitialStreamNegotiant;
-import com.firstlinecode.granite.pipes.stream.negotiants.ResourceBindingNegotiant;
-import com.firstlinecode.granite.pipes.stream.negotiants.SaslNegotiant;
-import com.firstlinecode.granite.pipes.stream.negotiants.SessionEstablishmentNegotiant;
-import com.firstlinecode.granite.pipes.stream.negotiants.TlsNegotiant;
+import com.firstlinecode.granite.pipeline.stream.IStreamNegotiant;
+import com.firstlinecode.granite.pipeline.stream.negotiants.InitialStreamNegotiant;
+import com.firstlinecode.granite.pipeline.stream.negotiants.ResourceBindingNegotiant;
+import com.firstlinecode.granite.pipeline.stream.negotiants.SaslNegotiant;
+import com.firstlinecode.granite.pipeline.stream.negotiants.SessionEstablishmentNegotiant;
+import com.firstlinecode.granite.pipeline.stream.negotiants.TlsNegotiant;
 import com.firstlinecode.granite.stream.standard.StandardClientMessageProcessor;
 
 @Component("ibr.supported.client.message.processor")

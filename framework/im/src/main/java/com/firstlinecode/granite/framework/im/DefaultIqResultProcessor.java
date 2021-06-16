@@ -10,9 +10,9 @@ import com.firstlinecode.basalt.protocol.core.stanza.error.BadRequest;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
 import com.firstlinecode.granite.framework.core.annotations.Component;
-import com.firstlinecode.granite.framework.core.pipes.processing.IIqResultProcessor;
-import com.firstlinecode.granite.framework.core.pipes.processing.IIqResultProcessorFactory;
-import com.firstlinecode.granite.framework.core.pipes.processing.IProcessingContext;
+import com.firstlinecode.granite.framework.core.pipeline.processing.IIqResultProcessor;
+import com.firstlinecode.granite.framework.core.pipeline.processing.IIqResultProcessorFactory;
+import com.firstlinecode.granite.framework.core.pipeline.processing.IProcessingContext;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.utils.OrderComparator;
 

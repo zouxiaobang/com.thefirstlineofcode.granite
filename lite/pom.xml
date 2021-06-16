@@ -20,7 +20,7 @@
 	<!--	<module>auth</module> -->
 		<module>dba</module>
 		<module>session</module>
-		<module>pipes</module>
+		<module>pipeline</module>
 		<module>xeps</module>
 	</modules>
 

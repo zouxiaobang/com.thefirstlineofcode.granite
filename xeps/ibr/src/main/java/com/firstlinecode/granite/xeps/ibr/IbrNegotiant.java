@@ -31,8 +31,8 @@ import com.firstlinecode.basalt.xeps.ibr.oxm.IqRegisterTranslatorFactory;
 import com.firstlinecode.basalt.xeps.oob.XOob;
 import com.firstlinecode.basalt.xeps.xdata.XData;
 import com.firstlinecode.granite.framework.core.connection.IClientConnectionContext;
-import com.firstlinecode.granite.framework.core.pipes.IMessage;
-import com.firstlinecode.granite.pipes.stream.negotiants.InitialStreamNegotiant;
+import com.firstlinecode.granite.framework.core.pipeline.IMessage;
+import com.firstlinecode.granite.pipeline.stream.negotiants.InitialStreamNegotiant;
 
 public class IbrNegotiant extends InitialStreamNegotiant {
 	public static final Object KEY_IBR_REGISTERED = new Object();

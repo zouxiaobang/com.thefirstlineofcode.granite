@@ -56,7 +56,7 @@
 			</dependency>
 			<dependency>
 					<groupId>com.firstlinecode.granite.lite</groupId>
-					<artifactId>granite-lite-pipes</artifactId>
+					<artifactId>granite-lite-pipeline</artifactId>
 			</dependency>
 	</dependencies>
 	

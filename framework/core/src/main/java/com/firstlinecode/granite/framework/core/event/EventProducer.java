@@ -1,7 +1,7 @@
 package com.firstlinecode.granite.framework.core.event;
 
-import com.firstlinecode.granite.framework.core.pipes.IMessageChannel;
-import com.firstlinecode.granite.framework.core.pipes.SimpleMessage;
+import com.firstlinecode.granite.framework.core.pipeline.IMessageChannel;
+import com.firstlinecode.granite.framework.core.pipeline.SimpleMessage;
 
 public class EventProducer implements IEventFirer {
 	private IMessageChannel eventMessageChannel;

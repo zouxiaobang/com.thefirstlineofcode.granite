@@ -31,9 +31,9 @@ import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware
 import com.firstlinecode.granite.framework.core.event.IEvent;
 import com.firstlinecode.granite.framework.core.event.IEventFirer;
 import com.firstlinecode.granite.framework.core.event.IEventFirerAware;
-import com.firstlinecode.granite.framework.core.pipes.IMessageChannel;
-import com.firstlinecode.granite.framework.core.pipes.IPipesExtender;
-import com.firstlinecode.granite.framework.core.pipes.SimpleMessage;
+import com.firstlinecode.granite.framework.core.pipeline.IMessageChannel;
+import com.firstlinecode.granite.framework.core.pipeline.IPipelineExtender;
+import com.firstlinecode.granite.framework.core.pipeline.SimpleMessage;
 import com.firstlinecode.granite.framework.core.platform.IPluginManagerAware;
 import com.firstlinecode.granite.framework.core.repository.CreationException;
 import com.firstlinecode.granite.framework.core.repository.IComponentInfo;
@@ -418,7 +418,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 	private boolean isPipeExtender(Class<?> clazz) {
 		return IParser.class.isAssignableFrom(clazz) ||
 			ITranslator.class.isAssignableFrom(clazz) ||
-			IPipesExtender.class.isAssignableFrom(clazz);
+			IPipelineExtender.class.isAssignableFrom(clazz);
 	}
 
 	private IEventFirer createEventFirer() {

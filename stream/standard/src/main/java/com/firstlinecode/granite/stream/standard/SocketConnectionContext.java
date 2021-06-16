@@ -7,9 +7,9 @@ import org.apache.mina.filter.ssl.SslFilter;
 
 import com.firstlinecode.basalt.protocol.core.JabberId;
 import com.firstlinecode.granite.framework.core.connection.IClientConnectionContext;
-import com.firstlinecode.granite.framework.core.pipes.IMessage;
+import com.firstlinecode.granite.framework.core.pipeline.IMessage;
 import com.firstlinecode.granite.framework.core.session.ValueWrapper;
-import com.firstlinecode.granite.pipes.stream.security.TlsEnvironment;
+import com.firstlinecode.granite.pipeline.stream.security.TlsEnvironment;
 
 public class SocketConnectionContext extends AbstractSocketConnectionContext implements IClientConnectionContext {
 	public static final String STREAM_ID = "socket";

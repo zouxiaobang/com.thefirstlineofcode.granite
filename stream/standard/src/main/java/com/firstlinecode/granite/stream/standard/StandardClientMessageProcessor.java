@@ -46,22 +46,22 @@ import com.firstlinecode.granite.framework.core.connection.IConnectionManager;
 import com.firstlinecode.granite.framework.core.connection.IConnectionManagerAware;
 import com.firstlinecode.granite.framework.core.event.ConnectionClosedEvent;
 import com.firstlinecode.granite.framework.core.event.ConnectionOpenedEvent;
-import com.firstlinecode.granite.framework.core.pipes.IClientMessageProcessor;
-import com.firstlinecode.granite.framework.core.pipes.IMessage;
-import com.firstlinecode.granite.framework.core.pipes.IMessageChannel;
-import com.firstlinecode.granite.framework.core.pipes.SimpleMessage;
-import com.firstlinecode.granite.framework.core.pipes.routing.IRouter;
+import com.firstlinecode.granite.framework.core.pipeline.IClientMessageProcessor;
+import com.firstlinecode.granite.framework.core.pipeline.IMessage;
+import com.firstlinecode.granite.framework.core.pipeline.IMessageChannel;
+import com.firstlinecode.granite.framework.core.pipeline.SimpleMessage;
+import com.firstlinecode.granite.framework.core.pipeline.routing.IRouter;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.session.ISessionListener;
 import com.firstlinecode.granite.framework.core.session.ISessionManager;
 import com.firstlinecode.granite.framework.core.utils.CommonsUtils;
-import com.firstlinecode.granite.pipes.stream.IStreamNegotiant;
-import com.firstlinecode.granite.pipes.stream.StreamConstants;
-import com.firstlinecode.granite.pipes.stream.negotiants.InitialStreamNegotiant;
-import com.firstlinecode.granite.pipes.stream.negotiants.ResourceBindingNegotiant;
-import com.firstlinecode.granite.pipes.stream.negotiants.SaslNegotiant;
-import com.firstlinecode.granite.pipes.stream.negotiants.SessionEstablishmentNegotiant;
-import com.firstlinecode.granite.pipes.stream.negotiants.TlsNegotiant;
+import com.firstlinecode.granite.pipeline.stream.IStreamNegotiant;
+import com.firstlinecode.granite.pipeline.stream.StreamConstants;
+import com.firstlinecode.granite.pipeline.stream.negotiants.InitialStreamNegotiant;
+import com.firstlinecode.granite.pipeline.stream.negotiants.ResourceBindingNegotiant;
+import com.firstlinecode.granite.pipeline.stream.negotiants.SaslNegotiant;
+import com.firstlinecode.granite.pipeline.stream.negotiants.SessionEstablishmentNegotiant;
+import com.firstlinecode.granite.pipeline.stream.negotiants.TlsNegotiant;
 
 @Component("standard.client.message.processor")
 public class StandardClientMessageProcessor implements IClientMessageProcessor, IConfigurationAware,

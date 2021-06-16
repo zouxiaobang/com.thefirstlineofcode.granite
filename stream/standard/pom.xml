@@ -51,8 +51,8 @@
 			<artifactId>granite-framework-adf-spring</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.firstlinecode.granite.pipes</groupId>
-			<artifactId>granite-pipes-stream</artifactId>
+			<groupId>com.firstlinecode.granite.pipeline</groupId>
+			<artifactId>granite-pipeline-stream</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.gem.server</groupId>

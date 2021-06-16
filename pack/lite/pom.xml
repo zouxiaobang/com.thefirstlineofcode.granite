@@ -35,24 +35,24 @@
 		
 		<!-- Pipes -->
 		<dependency>
-			<groupId>com.firstlinecode.granite.pipes</groupId>
-			<artifactId>granite-pipes-stream</artifactId>
+			<groupId>com.firstlinecode.granite.pipeline</groupId>
+			<artifactId>granite-pipeline-stream</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.firstlinecode.granite.pipes</groupId>
-			<artifactId>granite-pipes-parsing</artifactId>
+			<groupId>com.firstlinecode.granite.pipeline</groupId>
+			<artifactId>granite-pipeline-parsing</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.firstlinecode.granite.pipes</groupId>
-			<artifactId>granite-pipes-processing</artifactId>
+			<groupId>com.firstlinecode.granite.pipeline</groupId>
+			<artifactId>granite-pipeline-processing</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.firstlinecode.granite.pipes</groupId>
-			<artifactId>granite-pipes-routing</artifactId>
+			<groupId>com.firstlinecode.granite.pipeline</groupId>
+			<artifactId>granite-pipeline-routing</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.firstlinecode.granite.pipes</groupId>
-			<artifactId>granite-pipes-event</artifactId>
+			<groupId>com.firstlinecode.granite.pipeline</groupId>
+			<artifactId>granite-pipeline-event</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.stream</groupId>
@@ -80,7 +80,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
-			<artifactId>granite-lite-pipes</artifactId>
+			<artifactId>granite-lite-pipeline</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite.xeps</groupId>

@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
-import com.firstlinecode.granite.framework.core.pipes.IPipesExtendersContributor;
+import com.firstlinecode.granite.framework.core.pipeline.IPipelineExtendersContributor;
 
 public class CommonsUtils {
     private static final char SEPARATOR_KEY_VALUE = '=';
@@ -107,11 +107,11 @@ public class CommonsUtils {
 		return false;
 	}
 	
-	public static IPipesExtendersContributor[] getExtendersContributors(IApplicationComponentService appComponentService) {
-		List<IPipesExtendersContributor> extendersContributors = appComponentService.getPluginManager().getExtensions(IPipesExtendersContributor.class);
+	public static IPipelineExtendersContributor[] getExtendersContributors(IApplicationComponentService appComponentService) {
+		List<IPipelineExtendersContributor> extendersContributors = appComponentService.getPluginManager().getExtensions(IPipelineExtendersContributor.class);
 		if (extendersContributors == null || extendersContributors.size() == 0)
-			return new IPipesExtendersContributor[0];
+			return new IPipelineExtendersContributor[0];
 		
-		return extendersContributors.toArray(new IPipesExtendersContributor[extendersContributors.size()]);
+		return extendersContributors.toArray(new IPipelineExtendersContributor[extendersContributors.size()]);
 	}
 }

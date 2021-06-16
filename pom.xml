@@ -82,7 +82,7 @@
 	<modules>
 		<module>server</module>
 		<module>framework</module>
-		<module>pipes</module>
+		<module>pipeline</module>
 		<module>stream</module>
 <!--		<module>im</module>
 		<module>leps</module> -->
@@ -302,30 +302,30 @@
 				<artifactId>granite-framework-im</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
-			<!-- Granite pipe stage implementations -->
+			<!-- Granite pipeline stage implementations -->
 			<dependency>
-				<groupId>com.firstlinecode.granite.pipes</groupId>
-				<artifactId>granite-pipes-stream</artifactId>
+				<groupId>com.firstlinecode.granite.pipeline</groupId>
+				<artifactId>granite-pipeline-stream</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.granite.pipes</groupId>
-				<artifactId>granite-pipes-parsing</artifactId>
+				<groupId>com.firstlinecode.granite.pipeline</groupId>
+				<artifactId>granite-pipeline-parsing</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.granite.pipes</groupId>
-				<artifactId>granite-pipes-processing</artifactId>
+				<groupId>com.firstlinecode.granite.pipeline</groupId>
+				<artifactId>granite-pipeline-processing</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.granite.pipes</groupId>
-				<artifactId>granite-pipes-routing</artifactId>
+				<groupId>com.firstlinecode.granite.pipeline</groupId>
+				<artifactId>granite-pipeline-routing</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.granite.pipes</groupId>
-				<artifactId>granite-pipes-event</artifactId>
+				<groupId>com.firstlinecode.granite.pipeline</groupId>
+				<artifactId>granite-pipeline-event</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<!-- Standard protocol implementation for XMPP stream -->
@@ -347,7 +347,7 @@
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.lite</groupId>
-				<artifactId>granite-lite-pipes</artifactId>
+				<artifactId>granite-lite-pipeline</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<!-- XEPs plugins -->

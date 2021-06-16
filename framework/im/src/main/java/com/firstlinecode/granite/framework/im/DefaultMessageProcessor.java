@@ -8,7 +8,7 @@ import com.firstlinecode.basalt.protocol.im.stanza.Message;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
 import com.firstlinecode.granite.framework.core.annotations.Component;
-import com.firstlinecode.granite.framework.core.pipes.processing.IProcessingContext;
+import com.firstlinecode.granite.framework.core.pipeline.processing.IProcessingContext;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.utils.OrderComparator;
 
