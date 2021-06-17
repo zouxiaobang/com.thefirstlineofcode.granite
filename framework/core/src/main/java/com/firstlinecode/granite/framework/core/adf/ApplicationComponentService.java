@@ -41,7 +41,7 @@ import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.repository.IRepository;
 import com.firstlinecode.granite.framework.core.repository.IRepositoryAware;
-import com.firstlinecode.granite.framework.core.utils.CommonsUtils;
+import com.firstlinecode.granite.framework.core.utils.CommonUtils;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.InvocationHandler;
@@ -381,7 +381,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 				
 				Object dependencyAnnotation = method.getAnnotation(injectionProvider.getAnnotationType());				
 				if (dependencyAnnotation != null) {
-					if (!CommonsUtils.isSetterMethod(method))
+					if (!CommonUtils.isSetterMethod(method))
 						logger.warn(String.format("Dependency method '%s' isn't a setter method.", method));
 						
 					IDependencyFetcher fetcher = injectionProvider.getFetcher(dependencyAnnotation);

@@ -40,7 +40,7 @@ import com.firstlinecode.granite.framework.core.pipeline.IPipelineExtendersContr
 import com.firstlinecode.granite.framework.core.pipeline.parsing.IPipelinePreprocessor;
 import com.firstlinecode.granite.framework.core.pipeline.parsing.IProtocolParserFactory;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
-import com.firstlinecode.granite.framework.core.utils.CommonsUtils;
+import com.firstlinecode.granite.framework.core.utils.CommonUtils;
 
 @Component("minimum.message.parsing.processor")
 public class MinimumMessageParsingProcessor implements IMessageProcessor, IInitializable,
@@ -66,7 +66,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 	public void init() {
 		registerPredefinedParsers();
 		
-		IPipelineExtendersContributor[] extendersFactories = CommonsUtils.getExtendersContributors(appComponentService);
+		IPipelineExtendersContributor[] extendersFactories = CommonUtils.getExtendersContributors(appComponentService);
 		
 		loadContributedProtocolParsers(extendersFactories);
 		loadContributedPreprocessors(extendersFactories);
@@ -274,7 +274,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 			if (logger.isTraceEnabled())
 				logger.trace("Parsing protocol exception. original message: {}.", message);
 		} catch (RuntimeException e) {
-			out = new InternalServerError(CommonsUtils.getInternalServerErrorMessage(e));
+			out = new InternalServerError(CommonUtils.getInternalServerErrorMessage(e));
 			logger.error(String.format("Parsing error. original message: %s.", message), e);
 		}
 		

@@ -25,7 +25,7 @@ import com.firstlinecode.granite.framework.core.pipeline.IMessageProcessor;
 import com.firstlinecode.granite.framework.core.pipeline.IPipelineExtendersContributor;
 import com.firstlinecode.granite.framework.core.pipeline.SimpleMessage;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
-import com.firstlinecode.granite.framework.core.utils.CommonsUtils;
+import com.firstlinecode.granite.framework.core.utils.CommonUtils;
 
 @Component("default.event.processor")
 public class DefaultEventProcessor implements IMessageProcessor, IInitializable,
@@ -111,7 +111,7 @@ public class DefaultEventProcessor implements IMessageProcessor, IInitializable,
 	}
 	
 	private void loadContributedEventListeners() {
-		IPipelineExtendersContributor[] extendersContributors = CommonsUtils.getExtendersContributors(appComponentService);
+		IPipelineExtendersContributor[] extendersContributors = CommonUtils.getExtendersContributors(appComponentService);
 		
 		for (IPipelineExtendersContributor extendersContributor : extendersContributors) {
 			IEventListenerFactory<?>[] listenerFactories = extendersContributor.getEventListenerFactories();

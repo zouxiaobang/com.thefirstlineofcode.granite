@@ -17,7 +17,7 @@
 	<name>XMPP server deploy lite plugins</name>
 
 	<modules>
-	<!--	<module>auth</module> -->
+		<module>auth</module>
 		<module>dba</module>
 		<module>session</module>
 		<module>pipeline</module>

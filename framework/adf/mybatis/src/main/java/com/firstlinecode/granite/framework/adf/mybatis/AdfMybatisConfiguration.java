@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -57,24 +58,41 @@ public class AdfMybatisConfiguration implements IPluginManagerAware {
 
 		@Override
 		public SqlSessionFactory build(org.apache.ibatis.session.Configuration configuration) {
-			List<IDataObjectsContributor> configurationContributors = pluginManager.getExtensions(IDataObjectsContributor.class);
-			if (configurationContributors == null || configurationContributors.size() == 0) {
+			List<IDataContributor> dataContributors = pluginManager.getExtensions(IDataContributor.class);
+			if (dataContributors == null || dataContributors.size() == 0) {
 				return super.build(configuration);			
 			}
 			
-			for (IDataObjectsContributor configurationContributor : configurationContributors) {				
-				TypeHandlerMapping<?>[] typeHandlerMaps = configurationContributor.getTypeHandlerMappings();
-				if (typeHandlerMaps != null) {
+			for (IDataContributor dataContributor : dataContributors) {				
+				TypeHandlerMapping<?>[] typeHandlerMaps = dataContributor.getTypeHandlerMappings();
+				if (typeHandlerMaps != null && typeHandlerMaps.length != 0) {
 					registerTypeHandlers(configuration, typeHandlerMaps);
 				}
 				
-				DataObjectMapping<?>[] persistObjectMaps = configurationContributor.getDataObjectMappings();
-				if (persistObjectMaps != null) {
-					registerPersistObjectAliases(configuration, persistObjectMaps);
+				DataObjectMapping<?>[] dataObjectMaps = dataContributor.getDataObjectMappings();
+				if (dataObjectMaps != null && dataObjectMaps.length != 0) {
+					registerPersistObjectAliases(configuration, dataObjectMaps);
+				}
+				
+				URL[] mappers = dataContributor.getMappers();
+				if (mappers != null && mappers.length != 0) {
+					registerMappers(configuration, mappers);
 				}
 			}
 			
 			return super.build(configuration);
+		}
+
+		private void registerMappers(org.apache.ibatis.session.Configuration configuration, URL[] mappers) {
+			for (URL mapper : mappers) {				
+				try {
+					XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(mapper.openStream(),
+							configuration, mapper.toString(), configuration.getSqlFragments());
+					xmlMapperBuilder.parse();
+				} catch (Exception e) {
+					throw new RuntimeException(String.format("Failed to parse mapper resource: '%s'.", mapper.toString()), e);
+				}
+			}
 		}
 
 		private void registerPersistObjectAliases(org.apache.ibatis.session.Configuration configuration,

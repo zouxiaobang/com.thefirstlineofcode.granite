@@ -39,16 +39,20 @@
 					<artifactId>granite-lite-dba</artifactId>
 			</dependency>
 			<dependency>
-					<groupId>com.firstlinecode.granite.lite.xeps</groupId>
-					<artifactId>granite-lite-xeps-ibr</artifactId>
-			</dependency>
-			<dependency>
 					<groupId>com.firstlinecode.granite.lite</groupId>
 					<artifactId>granite-lite-session</artifactId>
 			</dependency>
 			<dependency>
 					<groupId>com.firstlinecode.granite.lite</groupId>
 					<artifactId>granite-lite-pipeline</artifactId>
+			</dependency>
+			<dependency>
+					<groupId>com.firstlinecode.granite.lite</groupId>
+					<artifactId>granite-lite-auth</artifactId>
+			</dependency>
+			<dependency>
+					<groupId>com.firstlinecode.granite.lite.xeps</groupId>
+					<artifactId>granite-lite-xeps-ibr</artifactId>
 			</dependency>
 	</dependencies>
 	

@@ -1,8 +1,9 @@
 package com.firstlinecode.granite.lite.auth;
 
 import com.firstlinecode.granite.framework.core.adf.data.IIdProvider;
+import com.firstlinecode.granite.framework.core.auth.Account;
 
-public class D_Account extends com.firstlinecode.granite.framework.core.auth.Account implements IIdProvider<String> {
+public class D_Account extends Account implements IIdProvider<String> {
 	private String id;
 	
 	@Override

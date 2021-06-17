@@ -54,7 +54,7 @@ import com.firstlinecode.granite.framework.core.pipeline.routing.IRouter;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.session.ISessionListener;
 import com.firstlinecode.granite.framework.core.session.ISessionManager;
-import com.firstlinecode.granite.framework.core.utils.CommonsUtils;
+import com.firstlinecode.granite.framework.core.utils.CommonUtils;
 import com.firstlinecode.granite.pipeline.stream.IStreamNegotiant;
 import com.firstlinecode.granite.pipeline.stream.StreamConstants;
 import com.firstlinecode.granite.pipeline.stream.negotiants.InitialStreamNegotiant;
@@ -187,7 +187,7 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 				
 				InternalServerError error = new InternalServerError();
 				error.setText(new LangText(String.format("Negotiation error. %s.",
-						CommonsUtils.getInternalServerErrorMessage(e))));
+						CommonUtils.getInternalServerErrorMessage(e))));
 				context.write(translatingFactory.translate(error));
 				closeStream(context);
 			}

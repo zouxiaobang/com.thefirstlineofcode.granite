@@ -2,7 +2,7 @@ package com.firstlinecode.granite.framework.core.adf.injection;
 
 import java.lang.reflect.Method;
 
-import com.firstlinecode.granite.framework.core.utils.CommonsUtils;
+import com.firstlinecode.granite.framework.core.utils.CommonUtils;
 
 public class MethodDependencyInjector extends AbstractDependencyInjector {
 	private Method method;
@@ -14,7 +14,7 @@ public class MethodDependencyInjector extends AbstractDependencyInjector {
 
 	@Override
 	protected void doInject(Object object, Object dependency) {
-		if (CommonsUtils.isSetterMethod(method)) {
+		if (CommonUtils.isSetterMethod(method)) {
 			try {
 				method.invoke(object, new Object[] {dependency});
 			} catch (Exception e) {

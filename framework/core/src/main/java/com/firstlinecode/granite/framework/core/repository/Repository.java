@@ -33,7 +33,7 @@ import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.config.IConfigurationManager;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.LocalFileConfigurationManager;
-import com.firstlinecode.granite.framework.core.utils.CommonsUtils;
+import com.firstlinecode.granite.framework.core.utils.CommonUtils;
 import com.firstlinecode.granite.framework.core.utils.IoUtils;
 
 public class Repository implements IRepository {
@@ -437,7 +437,7 @@ public class Repository implements IRepository {
 			
 			String id = getFullDependencyId(componentInfo.getId(), dependencyAnnotation.value());
 			int bindedComponentsCount = getBindedDependenciesCount(id);
-			if (CommonsUtils.isSetterMethod(method)) {
+			if (CommonUtils.isSetterMethod(method)) {
 				if (bindedComponentsCount > 1) {
 					throw new RuntimeException("Binded components count of setter method dependency must be 0 or 1.");
 				}

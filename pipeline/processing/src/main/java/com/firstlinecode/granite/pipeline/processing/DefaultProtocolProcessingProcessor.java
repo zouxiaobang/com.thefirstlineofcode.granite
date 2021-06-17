@@ -45,7 +45,7 @@ import com.firstlinecode.granite.framework.core.pipeline.processing.IXepProcesso
 import com.firstlinecode.granite.framework.core.pipeline.processing.IXepProcessorFactory;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.session.ValueWrapper;
-import com.firstlinecode.granite.framework.core.utils.CommonsUtils;
+import com.firstlinecode.granite.framework.core.utils.CommonUtils;
 import com.firstlinecode.granite.framework.im.IPresenceProcessor;
 
 @Component("default.protocol.processing.processor")
@@ -85,7 +85,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 	}
 	
 	protected void loadContributedXepProcessors() {
-		IPipelineExtendersContributor[] extendersContributors = CommonsUtils.getExtendersContributors(appComponentService);
+		IPipelineExtendersContributor[] extendersContributors = CommonUtils.getExtendersContributors(appComponentService);
 		
 		for (IPipelineExtendersContributor extendersContributor : extendersContributors) {
 			IXepProcessorFactory<?, ?>[] processorFactories = extendersContributor.getXepProcessorFactories();
@@ -171,7 +171,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 		if (message instanceof Stanza) {
 			context.write(createStanzaError(context, e, message));
 		} else {
-			context.write(new com.firstlinecode.basalt.protocol.core.stream.error.InternalServerError(CommonsUtils.getInternalServerErrorMessage(e)));
+			context.write(new com.firstlinecode.basalt.protocol.core.stream.error.InternalServerError(CommonUtils.getInternalServerErrorMessage(e)));
 			context.close();
 		}
 		
@@ -180,7 +180,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 
 	private StanzaError createStanzaError(IConnectionContext context, RuntimeException e, Object message) {
 		Stanza stanza = (Stanza)message;
-		StanzaError error = new com.firstlinecode.basalt.protocol.core.stanza.error.InternalServerError(CommonsUtils.getInternalServerErrorMessage(e));
+		StanzaError error = new com.firstlinecode.basalt.protocol.core.stanza.error.InternalServerError(CommonUtils.getInternalServerErrorMessage(e));
 		
 		error = amendStanzaError(context, error, stanza);
 		

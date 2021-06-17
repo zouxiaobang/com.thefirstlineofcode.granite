@@ -363,6 +363,11 @@
 			</dependency>
 			<!-- Deploly lite plugins -->
 			<dependency>
+				<groupId>com.firstlinecode.granite.lite</groupId>
+				<artifactId>granite-lite-auth</artifactId>
+				<version>${granite.version}</version>
+			</dependency>	
+			<dependency>
 				<groupId>com.firstlinecode.granite.lite.xeps</groupId>
 				<artifactId>granite-lite-xeps-ibr</artifactId>
 				<version>${granite.version}</version>

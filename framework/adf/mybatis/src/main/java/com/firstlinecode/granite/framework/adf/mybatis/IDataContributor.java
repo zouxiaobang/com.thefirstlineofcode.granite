@@ -1,6 +1,11 @@
 package com.firstlinecode.granite.framework.adf.mybatis;
 
-public interface IDataObjectsContributor {
+import java.net.URL;
+
+import org.pf4j.ExtensionPoint;
+
+public interface IDataContributor extends ExtensionPoint {
 	TypeHandlerMapping<?>[] getTypeHandlerMappings();
 	DataObjectMapping<?>[] getDataObjectMappings();
+	URL[] getMappers();
 }

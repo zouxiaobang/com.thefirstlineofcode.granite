@@ -37,7 +37,7 @@ import com.firstlinecode.granite.framework.core.pipeline.SimpleMessage;
 import com.firstlinecode.granite.framework.core.pipeline.routing.IPipelinePostprocessor;
 import com.firstlinecode.granite.framework.core.pipeline.routing.IProtocolTranslatorFactory;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
-import com.firstlinecode.granite.framework.core.utils.CommonsUtils;
+import com.firstlinecode.granite.framework.core.utils.CommonUtils;
 
 public class MinimumRoutingProcessor implements IMessageProcessor, IInitializable,
 			IServerConfigurationAware, IApplicationComponentServiceAware {
@@ -59,7 +59,7 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 	public void init() {
 		registerPredefinedTranslators();
 		
-		IPipelineExtendersContributor[] extendersFactories = CommonsUtils.getExtendersContributors(appComponentService);
+		IPipelineExtendersContributor[] extendersFactories = CommonUtils.getExtendersContributors(appComponentService);
 		loadContributedTranslators(extendersFactories);
 		loadContributedPostprocessors(extendersFactories);
 	}

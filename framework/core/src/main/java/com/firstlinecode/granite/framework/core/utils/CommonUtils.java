@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.StringTokenizer;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.pipeline.IPipelineExtendersContributor;
 
-public class CommonsUtils {
+public class CommonUtils {
     private static final char SEPARATOR_KEY_VALUE = '=';
 	private static final String SEPARATOR_PROPERTIES = ";";
 
@@ -113,5 +114,13 @@ public class CommonsUtils {
 			return new IPipelineExtendersContributor[0];
 		
 		return extendersContributors.toArray(new IPipelineExtendersContributor[extendersContributors.size()]);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> T[] singletonArray(T singleton) {
+		T[] array = (T[])(Array.newInstance(singleton.getClass(), 1));
+		array[0] = singleton;
+		
+		return array;
 	}
 }

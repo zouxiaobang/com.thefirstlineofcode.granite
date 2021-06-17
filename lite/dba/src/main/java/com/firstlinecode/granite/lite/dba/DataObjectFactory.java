@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.firstlinecode.granite.framework.adf.mybatis.DataObjectMapping;
-import com.firstlinecode.granite.framework.adf.mybatis.IDataObjectsContributor;
+import com.firstlinecode.granite.framework.adf.mybatis.IDataContributor;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
 import com.firstlinecode.granite.framework.core.adf.data.IDataObjectFactory;
@@ -34,9 +34,9 @@ public class DataObjectFactory implements IDataObjectFactory, IInitializable, IA
 			if (inited)
 				return;
 			
-			List<IDataObjectsContributor> dataObjectsContributors = appComponentService.getPluginManager().
-					getExtensions(IDataObjectsContributor.class);
-			for (IDataObjectsContributor dataObjectsContributor : dataObjectsContributors) {
+			List<IDataContributor> dataObjectsContributors = appComponentService.getPluginManager().
+					getExtensions(IDataContributor.class);
+			for (IDataContributor dataObjectsContributor : dataObjectsContributors) {
 				DataObjectMapping<?>[] mappings = dataObjectsContributor.getDataObjectMappings();
 				if (mappings == null || mappings.length == 0)
 					continue;
