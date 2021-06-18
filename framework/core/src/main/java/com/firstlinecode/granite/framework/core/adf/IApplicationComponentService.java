@@ -12,6 +12,6 @@ public interface IApplicationComponentService {
 	<T> T createExtension(Class<T> type);
 	<T> T createRawExtension(Class<T> type);
 	<T> T inject(T rawInstance);
-	Object getAppComponent(String id, Class<?> type);
+	<T> T getAppComponent(String id, Class<T> type);
 	PluginManager getPluginManager();
 }

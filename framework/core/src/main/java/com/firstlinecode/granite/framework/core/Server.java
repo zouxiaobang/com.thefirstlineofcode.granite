@@ -18,16 +18,20 @@ import com.firstlinecode.granite.framework.core.repository.ServiceCreationExcept
 public class Server implements IServer, IServiceListener {
 	private static final Logger logger = LoggerFactory.getLogger(Server.class);
 		
-	private IServerConfiguration configuration;
+	protected IServerConfiguration configuration;
 	
-	private IApplicationComponentService appComponentService;
-	private IRepository repository;
-	private Map<String, IService> services;
+	protected IApplicationComponentService appComponentService;
+	protected IRepository repository;
+	protected Map<String, IService> services;
 		
-	public Server(IServerConfiguration configuration, IApplicationComponentService appComponentService) {
+	public Server(IServerConfiguration configuration) {
 		this.configuration = configuration;
-		this.appComponentService = appComponentService;
+		this.appComponentService = createAppComponentService();
 		services = new HashMap<>();
+	}
+	
+	protected IApplicationComponentService createAppComponentService() {
+		return new ApplicationComponentService(configuration);
 	}
 
 	@Override
@@ -56,7 +60,8 @@ public class Server implements IServer, IServiceListener {
 			}
 		}
 		
-		appComponentService.stop();
+		if (appComponentService != null)
+			appComponentService.stop();
 		
 		logger.info("Granite Server has stopped.");
 	}

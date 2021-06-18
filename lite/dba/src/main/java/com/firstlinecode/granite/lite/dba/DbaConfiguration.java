@@ -7,7 +7,6 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.pf4j.Extension;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -18,13 +17,12 @@ import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware
 
 @Extension
 @Configuration
-@ComponentScan
 public class DbaConfiguration implements ISpringConfiguration, IServerConfigurationAware {
 	private int hSqlPort;
 	
 	@Bean
 	public HSqlServer hSqlServer() {
-		return new HSqlServer();
+		return new HSqlServer(hSqlPort);
 	}
 	
 	@Bean

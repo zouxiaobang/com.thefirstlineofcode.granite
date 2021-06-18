@@ -64,7 +64,7 @@ public class ServiceWrapper implements IServiceWrapper {
 		for (IDependencyInfo dependency : componentInfo.getDependencies()) {
 			for (IComponentInfo bindedIComponentInfo : dependency.getBindedComponents()) {
 				Object bindedComponent = createComponent(bindedIComponentInfo);
-				dependency.injectComponent(component, bindedComponent);
+				dependency.injectDependency(component, bindedComponent);
 			}
 		}
 		

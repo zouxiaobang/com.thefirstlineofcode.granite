@@ -9,6 +9,6 @@ public interface IDependencyInfo {
 	void addBindedComponent(IComponentInfo component);
 	void removeBindedComponent(IComponentInfo component);
 	List<IComponentInfo> getBindedComponents();
-	void injectComponent(Object parent, Object component);
+	void injectDependency(Object object, Object dependency);
 	IDependencyInfo getAliasDependency(String alias, int bindedComponentsCount);
 }

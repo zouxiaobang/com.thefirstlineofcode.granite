@@ -10,22 +10,29 @@ import org.hsqldb.persist.HsqlProperties;
 import org.hsqldb.server.ServerAcl.AclFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
 
-@Component
 public class HSqlServer implements IServerConfigurationAware {
+	private static final int DEFAULT_SERVER_PORT = 9001;
 	private static final String DIRECTORY_NAME_DATA = "data";
-
+	
 	private static final Logger logger = LoggerFactory.getLogger(HSqlServer.class);
 		
 	private String serverHome;
 	private String dataDir;
-	private int port = 9001;
+	private int port;
 	
 	private Server server;
+	
+	public HSqlServer() {
+		this(DEFAULT_SERVER_PORT);
+	}
+	
+	public HSqlServer(int port) {
+		this.port = port;
+	}
 	
 	@PostConstruct
     public void start() {
@@ -57,7 +64,7 @@ public class HSqlServer implements IServerConfigurationAware {
     public void stop() {
 		try {
 			if (server != null) {
-				server.stop();
+				server.shutdownCatalogs(1);
 				server = null;
 			}
 		} catch (Exception e) {

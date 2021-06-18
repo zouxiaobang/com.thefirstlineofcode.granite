@@ -60,30 +60,16 @@ public class ApplicationComponentService implements IApplicationComponentService
 	protected IRepository repository;
 	protected Map<String, IComponentInfo> appComponentInfos;
 	protected Map<Class<?>, List<IDependencyInjector>> dependencyInjectors;
-	
-	public ApplicationComponentService(IServerConfiguration serverConfiguration) {
-		this(serverConfiguration, null);
-	}
-	
-	public ApplicationComponentService(IServerConfiguration serverConfiguration, PluginManager pluginManager) {
-		this(serverConfiguration, pluginManager, true);
-	}
 
-	public ApplicationComponentService(IServerConfiguration serverConfiguration, PluginManager pluginManager,
-			boolean syncPlugins) {
+	public ApplicationComponentService(IServerConfiguration serverConfiguration) {
 		this.serverConfiguration = serverConfiguration;
-		this.syncPlugins = syncPlugins;
 		
 		appComponentInfos = new HashMap<>();
-		dependencyInjectors = new HashMap<>();
-		
-		if (pluginManager == null) {
-			pluginManager = createPluginManager();
-		} else {
-			this.pluginManager = pluginManager;
-		}
+		dependencyInjectors = new HashMap<>();		
 		
 		appComponentConfigurations = readAppComponentConfigurations(serverConfiguration);
+		
+		initPlugins();
 	}
 	
 	private ApplicationComponentConfigurations readAppComponentConfigurations(IServerConfiguration serverConfiguration) {
@@ -137,14 +123,10 @@ public class ApplicationComponentService implements IApplicationComponentService
 		
 		loadContributedAppComponents();
 		
-		if (syncPlugins)
-			initPlugins();
-			
 		started = true;
 	}
 	
 	protected void loadContributedAppComponents() {
-		// TODO Auto-generated method stub
 		List<IAppComponentsContributor> componentContributors = pluginManager.getExtensions(IAppComponentsContributor.class);
 		if (componentContributors == null || componentContributors.size() == 0)
 			return;
@@ -278,6 +260,8 @@ public class ApplicationComponentService implements IApplicationComponentService
 	}
 
 	private void initPlugins() {
+		pluginManager = createPluginManager();
+		
 		pluginManager.loadPlugins();
 		pluginManager.startPlugins();
 	}
@@ -287,9 +271,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 		if (!started)
 			return;
 
-		if (syncPlugins) {
-			destroyPlugins();
-		}
+		destroyPlugins();
 		
 		started = false;
 	}
@@ -316,7 +298,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 		return rawInstance;
 	}
 
-	private <T> void injectByAwareInterfaces(T rawInstance) {
+	protected <T> void injectByAwareInterfaces(T rawInstance) {
 		if (rawInstance instanceof IServerConfigurationAware) {
 			((IServerConfigurationAware)rawInstance).setServerConfiguration(serverConfiguration);
 		}
@@ -459,8 +441,9 @@ public class ApplicationComponentService implements IApplicationComponentService
 		this.repository = repository;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object getAppComponent(String id, Class<?> type) {
+	public <T> T getAppComponent(String id, Class<T> type) {
 		Enhancer enhancer = new Enhancer();
 		
 		enhancer.setSuperclass(type);
@@ -468,7 +451,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 		enhancer.setUseFactory(false);
 		enhancer.setClassLoader(type.getClassLoader());
 		
-		return enhancer.create();
+		return (T)enhancer.create();
 	}
 	
 	private class LazyLoadComponentInvocationHandler implements InvocationHandler {

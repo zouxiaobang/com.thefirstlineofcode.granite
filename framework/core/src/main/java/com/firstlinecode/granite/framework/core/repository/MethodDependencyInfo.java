@@ -17,7 +17,7 @@ public class MethodDependencyInfo extends AbstractDependencyInfo {
 	}
 
 	@Override
-	public void injectComponent(Object object, Object dependency) {
+	public void injectDependency(Object object, Object dependency) {
 		try {
 			method.invoke(object, new Object[] {dependency});
 		} catch (Exception e) {

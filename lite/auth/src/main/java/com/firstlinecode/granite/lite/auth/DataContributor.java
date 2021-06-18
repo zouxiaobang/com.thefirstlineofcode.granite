@@ -7,7 +7,7 @@ import com.firstlinecode.granite.framework.adf.mybatis.DataObjectMapping;
 import com.firstlinecode.granite.framework.core.auth.Account;
 
 @Extension
-public class DatContributor extends DataContrubutorAdapter {
+public class DataContributor extends DataContrubutorAdapter {
 
 	@Override
 	public DataObjectMapping<?>[] getDataObjectMappings() {

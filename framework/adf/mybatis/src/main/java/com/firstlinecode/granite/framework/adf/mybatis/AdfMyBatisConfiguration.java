@@ -9,16 +9,25 @@ import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.pf4j.PluginManager;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.UrlResource;
 
 import com.firstlinecode.granite.framework.core.platform.IPluginManagerAware;
 
 @Configuration
-public class AdfMybatisConfiguration implements IPluginManagerAware {
+public class AdfMyBatisConfiguration implements IPluginManagerAware {
 	private PluginManager pluginManager;
+	
+	@Bean
+	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+	public SqlSessionTemplate sqlSession(SqlSessionFactory sqlSessionFactory) {
+		return new SqlSessionTemplate(sqlSessionFactory);
+	}
 	
 	@Bean
 	public SqlSessionFactory sqlSessionFactory(DataSource dataSource) {

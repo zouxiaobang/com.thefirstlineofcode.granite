@@ -17,7 +17,7 @@ public class FieldDependencyInfo extends AbstractDependencyInfo {
 	}
 
 	@Override
-	public void injectComponent(Object object, Object dependency) {
+	public void injectDependency(Object object, Object dependency) {
 		boolean accessible = field.isAccessible();
 		
 		try {

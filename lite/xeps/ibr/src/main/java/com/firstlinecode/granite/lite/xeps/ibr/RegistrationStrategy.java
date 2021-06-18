@@ -3,8 +3,9 @@ package com.firstlinecode.granite.lite.xeps.ibr;
 import com.firstlinecode.basalt.xeps.ibr.IqRegister;
 import com.firstlinecode.basalt.xeps.ibr.RegistrationField;
 import com.firstlinecode.basalt.xeps.ibr.RegistrationForm;
+import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
 import com.firstlinecode.granite.framework.core.adf.data.IDataObjectFactory;
-import com.firstlinecode.granite.framework.core.adf.data.IDataObjectFactoryAware;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.auth.Account;
 import com.firstlinecode.granite.framework.core.utils.StringUtils;
@@ -12,7 +13,7 @@ import com.firstlinecode.granite.xeps.ibr.IRegistrationStrategy;
 import com.firstlinecode.granite.xeps.ibr.MalformedRegistrationInfoException;
 
 @Component("lite.registration.strategy")
-public class RegistrationStrategy implements IRegistrationStrategy, IDataObjectFactoryAware {
+public class RegistrationStrategy implements IRegistrationStrategy, IApplicationComponentServiceAware {
 	private IDataObjectFactory dataObjectFactory;
 
 	@Override
@@ -54,8 +55,12 @@ public class RegistrationStrategy implements IRegistrationStrategy, IDataObjectF
 	}
 
 	@Override
-	public void setDataObjectFactory(IDataObjectFactory dataObjectFactory) {
-		this.dataObjectFactory = dataObjectFactory;
+	public void setApplicationComponentService(IApplicationComponentService appComponentService) {
+		dataObjectFactory = appComponentService.getAppComponent(IDataObjectFactory.COMPONENT_ID_DATA_OBJECT_FACTORY,
+				IDataObjectFactory.class);
+		
+		if (dataObjectFactory == null)
+			throw new RuntimeException("Null data object factory. Data object factory wasn't ready.");
 	}
 
 }

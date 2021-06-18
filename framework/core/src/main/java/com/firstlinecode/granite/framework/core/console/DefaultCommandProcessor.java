@@ -36,6 +36,8 @@ public class DefaultCommandProcessor extends AbstractCommandProcessor {
 		}
 		
 		consoleSystem.close();
+		
+		System.exit(0);
 	}
 	
 	void processServices(IConsoleSystem consoleSystem) {

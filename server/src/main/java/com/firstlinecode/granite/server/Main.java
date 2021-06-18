@@ -1,19 +1,10 @@
 package com.firstlinecode.granite.server;
 
 import java.net.URL;
-import java.util.List;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.firstlinecode.granite.framework.adf.mybatis.AdfMybatisConfiguration;
-import com.firstlinecode.granite.framework.adf.spring.AdfComponentService;
-import com.firstlinecode.granite.framework.adf.spring.AdfPluginManager;
-import com.firstlinecode.granite.framework.adf.spring.AdfSpringBeanPostProcessor;
-import com.firstlinecode.granite.framework.adf.spring.ISpringConfiguration;
 import com.firstlinecode.granite.framework.core.IServer;
-import com.firstlinecode.granite.framework.core.ServerProxy;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.ServerConfiguration;
 import com.firstlinecode.granite.framework.core.console.ConsoleSystem;
@@ -56,55 +47,7 @@ public class Main {
 		}
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		
-		IServer server = null;
-		AnnotationConfigApplicationContext appContext = null;
-		AdfComponentService appComponentService = null;
-		try {			
-			AdfPluginManager pluginManager = new AdfPluginManager();
-			
-			appComponentService = new AdfComponentService(
-					serverConfiguration, pluginManager);
-			pluginManager.setApplicationComponentService(appComponentService);
-			appComponentService.start();
-			
-			appContext = new AnnotationConfigApplicationContext();
-						
-			ConfigurableListableBeanFactory beanFactory = (ConfigurableListableBeanFactory)appContext.getBeanFactory();
-			beanFactory.addBeanPostProcessor(new AdfSpringBeanPostProcessor(appComponentService));
-			
-			appContext.register(AdfMybatisConfiguration.class);
-			
-			List<Class<? extends ISpringConfiguration>> contributedSpringConfigurations =
-					pluginManager.getExtensionClasses(ISpringConfiguration.class);
-			appContext.register(contributedSpringConfigurations.toArray(
-					new Class<?>[contributedSpringConfigurations.size()]));
-			
-			appContext.refresh();
-			
-			appComponentService.setApplicationContext(appContext);
-			
-			pluginManager.setApplicationContext(appContext);
-			pluginManager.injectExtensionsToSpring();
-			
-			server = new ServerProxy().start(serverConfiguration, appComponentService);
-		} catch (Exception e) {
-			if (appComponentService != null && appComponentService.isStarted()) {
-				appComponentService.stop();
-			} else {
-				if (appContext != null)
-					appContext.close();
-			}
-			
-			if (server != null) {
-				try {
-					server.stop();
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
-			
-			throw new RuntimeException("Can't start Granite Server.", e);
-		}
+		IServer server = new ServerProxy().start(serverConfiguration);
 		
 		try {
 			Thread.sleep(1000);
