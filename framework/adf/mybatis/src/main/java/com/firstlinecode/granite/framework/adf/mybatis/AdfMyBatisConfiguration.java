@@ -80,43 +80,49 @@ public class AdfMyBatisConfiguration implements IPluginManagerAware {
 				
 				DataObjectMapping<?>[] dataObjectMaps = dataContributor.getDataObjectMappings();
 				if (dataObjectMaps != null && dataObjectMaps.length != 0) {
-					registerPersistObjectAliases(configuration, dataObjectMaps);
+					registerDataObjectAliases(configuration, dataObjectMaps);
 				}
 				
 				URL[] mappers = dataContributor.getMappers();
 				if (mappers != null && mappers.length != 0) {
-					registerMappers(configuration, mappers);
+					registerMappers(configuration, mappers, dataContributor);
 				}
 			}
 			
 			return super.build(configuration);
 		}
 
-		private void registerMappers(org.apache.ibatis.session.Configuration configuration, URL[] mappers) {
-			for (URL mapper : mappers) {				
-				try {
-					XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(mapper.openStream(),
+		private void registerMappers(org.apache.ibatis.session.Configuration configuration, URL[] mappers, IDataContributor dataContributor) {
+			ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
+			try {
+				Thread.currentThread().setContextClassLoader(dataContributor.getClass().getClassLoader());
+				for (URL mapper : mappers) {				
+					try {
+						XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(mapper.openStream(),
 							configuration, mapper.toString(), configuration.getSqlFragments());
-					xmlMapperBuilder.parse();
-				} catch (Exception e) {
-					throw new RuntimeException(String.format("Failed to parse mapper resource: '%s'.", mapper.toString()), e);
+						xmlMapperBuilder.parse();
+					} catch (Exception e) {						// TODO: handle exception
+						throw new RuntimeException(String.format("Failed to parse mapper resource: '%s'.", mapper.toString()), e);
+					}
 				}
+			} finally {
+				Thread.currentThread().setContextClassLoader(oldClassLoader);
 			}
 		}
 
-		private void registerPersistObjectAliases(org.apache.ibatis.session.Configuration configuration,
-				DataObjectMapping<?>[] persistObjectMaps) {
-			for (DataObjectMapping<?> persistObjectMap : persistObjectMaps) {
-				if (persistObjectMap.domainType != null) {
-					configuration.getTypeAliasRegistry().registerAlias(persistObjectMap.domainType.getSimpleName(),
-							persistObjectMap.dataType);					
+		private void registerDataObjectAliases(org.apache.ibatis.session.Configuration configuration,
+				DataObjectMapping<?>[] dataObjectMaps) {
+			for (DataObjectMapping<?> dataObjectMap : dataObjectMaps) {
+				if (dataObjectMap.domainType != null) {
+					configuration.getTypeAliasRegistry().registerAlias(dataObjectMap.domainType.getSimpleName(),
+							dataObjectMap.dataType);					
 				} else {
-					String name = persistObjectMap.dataType.getSimpleName();					
+					String name = dataObjectMap.dataType.getSimpleName();					
 					if (name.startsWith(PREFIX_NAME_PERSIST_OBJECT_TYPE_COC)) {
 						name = name.substring(2, name.length());
 					}
 					
-					configuration.getTypeAliasRegistry().registerAlias(name, persistObjectMap.dataType);
+					configuration.getTypeAliasRegistry().registerAlias(name, dataObjectMap.dataType);
 				}
 			}
 		}

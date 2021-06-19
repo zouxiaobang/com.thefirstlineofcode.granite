@@ -42,10 +42,14 @@ public class DataObjectFactory implements IDataObjectFactory, IInitializable, IA
 					continue;
 				
 				for (DataObjectMapping<?> mapping : mappings) {
-					if (dataObjectMappings.containsKey(mapping.domainType))
+					Class<?> domainType = mapping.domainType;
+					if (domainType == null)
+						domainType = mapping.dataType.getSuperclass();
+					
+					if (dataObjectMappings.containsKey(domainType))
 						throw new IllegalArgumentException(String.format("Reduplicated domain data object type: '%s'.", mapping.domainType));
 					
-					dataObjectMappings.put(mapping.domainType, mapping.dataType);
+					dataObjectMappings.put(domainType, mapping.dataType);
 				}
 			}
 			

@@ -8,4 +8,5 @@ public interface IDataContributor extends ExtensionPoint {
 	TypeHandlerMapping<?>[] getTypeHandlerMappings();
 	DataObjectMapping<?>[] getDataObjectMappings();
 	URL[] getMappers();
+	URL[] getInitScripts();
 }
