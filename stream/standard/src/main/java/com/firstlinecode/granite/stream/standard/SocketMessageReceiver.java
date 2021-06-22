@@ -246,8 +246,8 @@ public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMe
 	
 	@Override
 	public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
-		if (logger.isTraceEnabled()) {
-			logger.trace("Session idle[{}, {}].", session, status);
+		if (logger.isDebugEnabled()) {
+			logger.debug("Session idle[{}, {}].", session, status);
 		}
 		
 		session.write(STRING_CONNECTION_TIMEOUT).await(500);

@@ -1,5 +1,7 @@
 package com.firstlinecode.granite.stream.standard.codec;
 
+import java.io.UnsupportedEncodingException;
+
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.CumulativeProtocolDecoder;
@@ -8,8 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.firstlinecode.basalt.oxm.preprocessing.IMessagePreprocessor;
+import com.firstlinecode.basalt.protocol.Constants;
 
 public class MessageDecoder extends CumulativeProtocolDecoder {
+	private static final char CHAR_HEART_BEAT = ' ';
+	private static final byte BYTE_HEART_BEAT = (byte)CHAR_HEART_BEAT;
+	private static final byte[] BYTES_OF_HEART_BEAT_CHAR =  getBytesOfHeartBeatChar();
+
 	private static final Logger logger = LoggerFactory.getLogger(MessageDecoder.class);
 	
 	private static int DEFAULT_MAX_BUFFER_SIZE = 1024 * 1024;
@@ -34,6 +41,14 @@ public class MessageDecoder extends CumulativeProtocolDecoder {
 		this.maxBufferSize = maxBufferSize;
 		this.binaryMessagePrecessor = binaryMessagePrecessor;
 	}
+	
+	private static byte[] getBytesOfHeartBeatChar() {
+		try {
+			return String.valueOf(CHAR_HEART_BEAT).getBytes(Constants.DEFAULT_CHARSET);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(String.format("%s not supported!", Constants.DEFAULT_CHARSET), e);
+		}
+	}
 
 	@Override
 	protected boolean doDecode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
@@ -56,12 +71,33 @@ public class MessageDecoder extends CumulativeProtocolDecoder {
 		if (messages != null) {
 			for (String message : messages) {
 				if (logger.isTraceEnabled())
-					logger.trace("Message decoded: {}.", message);
+					logger.trace("Message decoded: '{}'.", message);
 				
-				out.write(message);
+				if (isHeartbeats(message)) {
+					writeHeartbeatToClient(session);
+				} else {
+					out.write(message);					
+				}
 			}
 		}
 		
 		return !in.hasRemaining();
+	}
+
+	private void writeHeartbeatToClient(IoSession session) {
+		if (binaryMessagePrecessor != null) {
+			session.write(BYTE_HEART_BEAT);
+		} else {
+			session.write(BYTES_OF_HEART_BEAT_CHAR);
+		}
+	}
+
+	private boolean isHeartbeats(String message) {
+		for (char c : message.toCharArray()) {
+			if (!(CHAR_HEART_BEAT == c))
+				return false;
+		}
+		
+		return true;
 	}
 }
