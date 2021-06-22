@@ -97,11 +97,7 @@
 			<groupId>com.firstlinecode.granite.pipeline</groupId>
 			<artifactId>granite-pipeline-event</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.firstlinecode.granite.stream</groupId>
-			<artifactId>granite-stream-standard</artifactId>
-		</dependency>
-
+		
 	</dependencies>
 	
 </project>

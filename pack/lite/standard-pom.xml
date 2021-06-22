@@ -16,6 +16,11 @@
 	<artifactId>granite-pack-lite-standard</artifactId>
 	
 	<dependencies>
+			<!-- Granite Standard Stream Plugin -->
+			<dependency>
+				<groupId>com.firstlinecode.granite.stream</groupId>
+				<artifactId>granite-stream-standard</artifactId>
+			</dependency>
 			<!-- Granite Protocol Plugins -->
 			<dependency>
 					<groupId>com.firstlinecode.granite.xeps</groupId>

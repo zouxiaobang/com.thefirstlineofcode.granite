@@ -15,28 +15,6 @@
 	<artifactId>granite-stream-standard</artifactId>
 	<name>Granite stream standard implementation</name>
 	
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<classpathPrefix>libs/</classpathPrefix>
-							<mainClass>${main.class}</mainClass>
-						</manifest>
-					</archive>
-					<excludes>
-						<exclude>META-INF/extensions.idx</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	
 	<dependencies>
 		<dependency>
         	<groupId>org.slf4j</groupId>
