@@ -31,11 +31,11 @@ import com.firstlinecode.basalt.protocol.core.stanza.error.BadRequest;
 import com.firstlinecode.basalt.protocol.core.stream.Stream;
 import com.firstlinecode.basalt.protocol.core.stream.error.ConnectionTimeout;
 import com.firstlinecode.basalt.protocol.core.stream.error.InvalidXml;
-import com.firstlinecode.gem.server.bxmpp.BxmppPlugin;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
 import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
+import com.firstlinecode.granite.framework.core.bxmpp.IBxmppService;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
@@ -58,7 +58,7 @@ import com.firstlinecode.granite.stream.standard.codec.MessageEncoder;
 @Component("socket.message.receiver")
 public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMessageReceiver,
 			IServerConfigurationAware, IConfigurationAware, IInitializable, IApplicationComponentServiceAware {
-	private static final String PLUGIN_NAME_GEM_SERVER_BXMPP = "com.firstlinecode.gem.server.gem-server-bxmpp";
+	private static final String PLUGIN_NAME_GEM_SERVER_BXMPP = "gem-server-bxmpp";
 
 	private static final String DIR_NAME_SECURITY = "/security";
 
@@ -342,9 +342,9 @@ public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMe
 			return;
 		}
 			
-		BxmppPlugin plugin = (BxmppPlugin)bxmppPluginWrapper.getPlugin();
-		bxmppProtocolConverter = plugin.getBxmppProtocolConverter();
-		binaryMessagePreprocessor = plugin.getBinaryMessagePreprocessor();
+		IBxmppService bxmppService = (IBxmppService)bxmppPluginWrapper.getPlugin();
+		bxmppProtocolConverter = bxmppService.getBxmppProtocolConverter();
+		binaryMessagePreprocessor = bxmppService.getBinaryMessagePreprocessor();
 	}
 
 	@Override

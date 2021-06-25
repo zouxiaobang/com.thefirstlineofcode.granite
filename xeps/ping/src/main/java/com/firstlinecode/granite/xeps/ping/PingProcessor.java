@@ -19,10 +19,7 @@ public class PingProcessor implements IXepProcessor<Iq, Ping>, IConfigurationAwa
 			ServiceUnavailable error = StanzaError.create(iq, ServiceUnavailable.class);
 			context.write(error);
 		} else {
-			Iq pong = new Iq(Iq.Type.RESULT);
-			pong.setId(iq.getId());
-			pong.setObject(new Ping());
-			
+			Iq pong = new Iq(Iq.Type.RESULT, iq.getId());
 			context.write(pong);
 		}
 	}

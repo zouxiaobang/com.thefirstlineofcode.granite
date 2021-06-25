@@ -34,7 +34,6 @@ import com.firstlinecode.granite.framework.core.event.IEventFirerAware;
 import com.firstlinecode.granite.framework.core.pipeline.IMessageChannel;
 import com.firstlinecode.granite.framework.core.pipeline.IPipelineExtender;
 import com.firstlinecode.granite.framework.core.pipeline.SimpleMessage;
-import com.firstlinecode.granite.framework.core.platform.IPluginManagerAware;
 import com.firstlinecode.granite.framework.core.repository.CreationException;
 import com.firstlinecode.granite.framework.core.repository.IComponentInfo;
 import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
@@ -270,8 +269,12 @@ public class ApplicationComponentService implements IApplicationComponentService
 	public void stop() {
 		if (!started)
 			return;
-
-		destroyPlugins();
+		
+		try {			
+			destroyPlugins();
+		} catch (Exception e) {
+			logger.warn("Something was wrong when we stopped the plugins.", e);
+		}
 		
 		started = false;
 	}
@@ -312,10 +315,6 @@ public class ApplicationComponentService implements IApplicationComponentService
 			
 			IConfiguration configuration = appComponentConfigurations.getConfiguration(plugin.getDescriptor().getPluginId());
 			((IConfigurationAware)rawInstance).setConfiguration(configuration);
-		}
-		
-		if (rawInstance instanceof IPluginManagerAware) {
-			((IPluginManagerAware)rawInstance).setPluginManager(pluginManager);
 		}
 		
 		if (rawInstance instanceof IApplicationComponentServiceAware) {

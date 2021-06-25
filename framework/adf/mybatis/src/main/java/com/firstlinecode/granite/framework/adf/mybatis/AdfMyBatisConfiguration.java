@@ -17,10 +17,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.UrlResource;
 
-import com.firstlinecode.granite.framework.core.platform.IPluginManagerAware;
+import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
+import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
 
 @Configuration
-public class AdfMyBatisConfiguration implements IPluginManagerAware {
+public class AdfMyBatisConfiguration implements IApplicationComponentServiceAware {
 	private PluginManager pluginManager;
 	
 	@Bean
@@ -55,11 +56,6 @@ public class AdfMyBatisConfiguration implements IPluginManagerAware {
 		}
 		
 		return sessionFactory;
-	}
-
-	@Override
-	public void setPluginManager(PluginManager pluginManager) {
-		this.pluginManager = pluginManager;
 	}
 	
 	private class AdfSqlSessionFactoryBuilder extends SqlSessionFactoryBuilder {
@@ -137,5 +133,10 @@ public class AdfMyBatisConfiguration implements IPluginManagerAware {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void setApplicationComponentService(IApplicationComponentService appComponentService) {
+		pluginManager = appComponentService.getPluginManager();
 	}
 }

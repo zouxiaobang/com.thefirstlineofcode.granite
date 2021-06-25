@@ -1,9 +1,11 @@
 package com.firstlinecode.granite.framework.adf.spring;
 
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import org.pf4j.JarPluginLoader;
@@ -12,6 +14,8 @@ import org.pf4j.PluginDescriptor;
 import org.pf4j.PluginManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import sun.misc.CompoundEnumeration;
 
 public class AdfPluginLoader extends JarPluginLoader {
 	private static final Logger logger = LoggerFactory.getLogger(AdfPluginLoader.class);
@@ -66,13 +70,13 @@ public class AdfPluginLoader extends JarPluginLoader {
 	}
 	
 	private class AdfClassLoader extends PluginClassLoader {
-		private URLClassLoader nonPluginDependencyClassLoader;
+		private URLClassLoader nonPluginDependenciesClassLoader;
 		
 		public AdfClassLoader(PluginManager pluginManager, PluginDescriptor pluginDescriptor,
 				ClassLoader parent, URL[] nonPluginDependencies) {
 			super(pluginManager, pluginDescriptor, parent);
 			
-			nonPluginDependencyClassLoader = new URLClassLoader(nonPluginDependencies);
+			nonPluginDependenciesClassLoader = new URLClassLoader(nonPluginDependencies);
 		}
 		
 		@Override
@@ -83,7 +87,20 @@ public class AdfPluginLoader extends JarPluginLoader {
 				// Ignore. Try to load class from non-plugin dependencies.
 			}
 			
-			return nonPluginDependencyClassLoader.loadClass(name);
+			return nonPluginDependenciesClassLoader.loadClass(name);
+		}
+		
+		@SuppressWarnings("unchecked")
+		@Override
+		public Enumeration<URL> getResources(String name) throws IOException {
+			Enumeration<URL> pluginUrls = super.getResources(name);
+			Enumeration<URL> nonPluginDependencyUrls = nonPluginDependenciesClassLoader.getResources(name);
+			
+			Enumeration<URL>[] urls = new Enumeration[2];
+			urls[0] = pluginUrls;
+			urls[1] = nonPluginDependencyUrls;
+			
+			return new CompoundEnumeration<>(urls);
 		}
 		
 		@Override
@@ -92,6 +109,10 @@ public class AdfPluginLoader extends JarPluginLoader {
 			if (url != null && url.getFile().indexOf("pf4j-spring") != -1 &&
 					url.getFile().indexOf("META-INF/extensions.idx") != -1) {
 				return null;
+			}
+			
+			if (url == null) {
+				url = nonPluginDependenciesClassLoader.getResource(name);
 			}
 			
 			return url;

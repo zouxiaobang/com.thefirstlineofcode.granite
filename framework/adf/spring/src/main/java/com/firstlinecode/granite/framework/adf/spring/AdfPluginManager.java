@@ -132,6 +132,10 @@ public class AdfPluginManager extends SpringPluginManager implements Application
 				((ApplicationContextAware)plugin).setApplicationContext(getApplicationContext());
 			}
 			
+			if (plugin instanceof IApplicationComponentServiceAware) {
+				((IApplicationComponentServiceAware)plugin).setApplicationComponentService(appComponentService);
+			}
+			
 			return plugin;
 		}
 	}
@@ -176,6 +180,7 @@ public class AdfPluginManager extends SpringPluginManager implements Application
 		extensionsInjector.injectExtensions();
 	}
 	
+	@Override
 	protected PluginLoader createPluginLoader() {
 		return new CompoundPluginLoader().
 				add(new DevelopmentPluginLoader(this), this::isDevelopment).
