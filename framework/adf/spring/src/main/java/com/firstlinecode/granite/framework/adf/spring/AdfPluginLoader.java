@@ -15,7 +15,7 @@ import org.pf4j.PluginManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sun.misc.CompoundEnumeration;
+import com.firstlinecode.granite.framework.core.utils.CompositeEnumeration;
 
 public class AdfPluginLoader extends JarPluginLoader {
 	private static final Logger logger = LoggerFactory.getLogger(AdfPluginLoader.class);
@@ -100,7 +100,7 @@ public class AdfPluginLoader extends JarPluginLoader {
 			urls[0] = pluginUrls;
 			urls[1] = nonPluginDependencyUrls;
 			
-			return new CompoundEnumeration<>(urls);
+			return new CompositeEnumeration<>(urls);
 		}
 		
 		@Override

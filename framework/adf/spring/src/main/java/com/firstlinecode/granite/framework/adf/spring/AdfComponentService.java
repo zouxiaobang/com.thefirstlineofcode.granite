@@ -22,8 +22,7 @@ import com.firstlinecode.granite.framework.core.adf.data.IDataObjectFactoryAware
 import com.firstlinecode.granite.framework.core.adf.injection.AppComponentInjectionProvider;
 import com.firstlinecode.granite.framework.core.adf.injection.IInjectionProvider;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
-
-import sun.misc.CompoundEnumeration;
+import com.firstlinecode.granite.framework.core.utils.CompositeEnumeration;
 
 public class AdfComponentService extends ApplicationComponentService {
 	protected AnnotationConfigApplicationContext appContext;
@@ -84,7 +83,7 @@ public class AdfComponentService extends ApplicationComponentService {
 				allResources[i] = classLoaders[i].getResources(name);
 			}
 			
-			return new CompoundEnumeration<URL>(allResources);
+			return new CompositeEnumeration<URL>(allResources);
 		}
 		
 		@Override

@@ -1,6 +1,7 @@
 package com.firstlinecode.granite.framework.core.adf;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
@@ -107,7 +108,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 	public <T> T createRawExtension(Class<T> type) {
 		T extension = null;
 		try {
-			extension = type.newInstance();
+			extension = type.getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
 			throw new RuntimeException(String.format("Can't create raw extension which's type is '%s'.", type.getName()), e);
 		}
@@ -225,8 +226,9 @@ public class ApplicationComponentService implements IApplicationComponentService
 			}
 		}
 
-		private Object doCreate() throws InstantiationException, IllegalAccessException {
-			Object component = type.newInstance();
+		private Object doCreate() throws InstantiationException, IllegalAccessException, IllegalArgumentException,
+					InvocationTargetException, NoSuchMethodException, SecurityException {
+			Object component = type.getDeclaredConstructor().newInstance();
 			inject(component);
 			
 			return component;
