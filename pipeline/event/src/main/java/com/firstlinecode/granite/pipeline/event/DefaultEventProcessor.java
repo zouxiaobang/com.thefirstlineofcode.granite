@@ -16,14 +16,14 @@ import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
-import com.firstlinecode.granite.framework.core.event.IEvent;
-import com.firstlinecode.granite.framework.core.event.IEventContext;
-import com.firstlinecode.granite.framework.core.event.IEventListener;
-import com.firstlinecode.granite.framework.core.event.IEventListenerFactory;
 import com.firstlinecode.granite.framework.core.pipeline.IMessage;
 import com.firstlinecode.granite.framework.core.pipeline.IMessageProcessor;
 import com.firstlinecode.granite.framework.core.pipeline.IPipelineExtendersContributor;
 import com.firstlinecode.granite.framework.core.pipeline.SimpleMessage;
+import com.firstlinecode.granite.framework.core.pipeline.event.IEvent;
+import com.firstlinecode.granite.framework.core.pipeline.event.IEventContext;
+import com.firstlinecode.granite.framework.core.pipeline.event.IEventListener;
+import com.firstlinecode.granite.framework.core.pipeline.event.IEventListenerFactory;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.utils.CommonUtils;
 

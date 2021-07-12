@@ -9,14 +9,12 @@ import com.firstlinecode.basalt.protocol.core.stanza.Iq;
 import com.firstlinecode.basalt.protocol.core.stanza.error.BadRequest;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
-import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.pipeline.processing.IIqResultProcessor;
 import com.firstlinecode.granite.framework.core.pipeline.processing.IIqResultProcessorFactory;
 import com.firstlinecode.granite.framework.core.pipeline.processing.IProcessingContext;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.utils.OrderComparator;
 
-@Component("default.iq.result.processor")
 public class DefaultIqResultProcessor implements IIqResultProcessor, IInitializable,
 			IApplicationComponentServiceAware {
 	private IApplicationComponentService appComponentService;

@@ -30,7 +30,6 @@ import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
 import com.firstlinecode.granite.framework.core.annotations.BeanDependency;
 import com.firstlinecode.granite.framework.core.annotations.Component;
-import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.auth.IAuthenticator;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
@@ -46,6 +45,9 @@ import com.firstlinecode.granite.framework.core.pipeline.processing.IXepProcesso
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.session.ValueWrapper;
 import com.firstlinecode.granite.framework.core.utils.CommonUtils;
+import com.firstlinecode.granite.framework.im.DefaultIqResultProcessor;
+import com.firstlinecode.granite.framework.im.DefaultMessageProcessor;
+import com.firstlinecode.granite.framework.im.DefaultPresenceProcessor;
 import com.firstlinecode.granite.framework.im.IPresenceProcessor;
 
 @Component("default.protocol.processing.processor")
@@ -81,7 +83,19 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 
 	@Override
 	public synchronized void init() {
+		loadDefaultSimpleStanzaProcessors();
 		loadContributedXepProcessors();
+	}
+
+	private void loadDefaultSimpleStanzaProcessors() {
+		messageProcessor = new DefaultMessageProcessor();
+		appComponentService.inject(messageProcessor);
+		
+		presenceProcessor = new DefaultPresenceProcessor();
+		appComponentService.inject(presenceProcessor);
+		
+		iqResultProcessor = new DefaultIqResultProcessor();
+		appComponentService.inject(iqResultProcessor);
 	}
 	
 	protected void loadContributedXepProcessors() {
@@ -598,22 +612,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 		
 		return null;
 	}
-
-	@Dependency("presence.processor")
-	public void setPresenceProcessor(IPresenceProcessor presenceProcessor) {
-		this.presenceProcessor = presenceProcessor;
-	}
 	
-	@Dependency("message.processor")
-	public void setMessageProcessor(com.firstlinecode.granite.framework.im.IMessageProcessor messageProcessor) {
-		this.messageProcessor = messageProcessor;
-	}
-	
-	@Dependency("iq.result.processor")
-	public void setIqProcessor(IIqResultProcessor iqResultProcessor) {
-		this.iqResultProcessor = iqResultProcessor;
-	}
-
 	@Override
 	public void setConfiguration(IConfiguration configuration) {
 		stanzaErrorAttachSenderMessage = configuration.getBoolean(
@@ -623,7 +622,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 				CONFIGURATION_KEY_RELAY_UNKNOWN_NAMESPACE_IQ,
 				false);
 	}
-
+	
 	@Override
 	public void setServerConfiguration(IServerConfiguration serverConfiguration) {
 		domain = JabberId.parse(serverConfiguration.getDomainName());
@@ -638,7 +637,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 			domainAliases = new JabberId[0];
 		}
 	}
-
+	
 	@Override
 	public void setApplicationComponentService(IApplicationComponentService appComponentService) {
 		this.appComponentService = appComponentService;

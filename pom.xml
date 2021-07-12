@@ -84,8 +84,8 @@
 		<module>framework</module>
 		<module>pipeline</module>
 		<module>stream</module>
-<!--		<module>im</module>
-		<module>leps</module> -->
+		<module>im</module>
+	<!--	<module>leps</module> -->
 		<module>xeps</module>
 		<module>lite</module>
 <!--		<module>cluster</module>
@@ -258,6 +258,11 @@
 			<dependency>
 				<groupId>com.firstlinecode.basalt</groupId>
 				<artifactId>basalt-oxm</artifactId>
+				<version>${basalt.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.basalt</groupId>
+				<artifactId>basalt-xmpp-im</artifactId>
 				<version>${basalt.version}</version>
 			</dependency>
 			<dependency>

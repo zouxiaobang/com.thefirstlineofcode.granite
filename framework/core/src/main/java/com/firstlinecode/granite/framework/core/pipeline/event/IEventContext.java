@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.framework.core.event;
+package com.firstlinecode.granite.framework.core.pipeline.event;
 
 import com.firstlinecode.basalt.protocol.core.JabberId;
 import com.firstlinecode.basalt.protocol.core.stanza.Stanza;

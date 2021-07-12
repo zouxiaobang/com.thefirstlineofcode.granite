@@ -7,12 +7,10 @@ import java.util.List;
 import com.firstlinecode.basalt.protocol.im.stanza.Presence;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
-import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.pipeline.processing.IProcessingContext;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.utils.OrderComparator;
 
-@Component("default.presence.processor")
 public class DefaultPresenceProcessor implements IPresenceProcessor, IInitializable, IApplicationComponentServiceAware {
 	private IApplicationComponentService appComponentService;
 	private volatile List<IPresenceProcessor> presenceProcessors;	

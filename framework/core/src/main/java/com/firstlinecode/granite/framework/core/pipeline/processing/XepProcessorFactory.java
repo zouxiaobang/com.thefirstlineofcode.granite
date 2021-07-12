@@ -3,11 +3,11 @@ package com.firstlinecode.granite.framework.core.pipeline.processing;
 import com.firstlinecode.basalt.protocol.core.ProtocolChain;
 import com.firstlinecode.basalt.protocol.core.stanza.Stanza;
 
-public class PrototypeXepProcessorFactory<S extends Stanza, X> implements IXepProcessorFactory<S, X> {
+public class XepProcessorFactory<S extends Stanza, X> implements IXepProcessorFactory<S, X> {
 	private ProtocolChain protocolChain;
 	private Class<IXepProcessor<S, X>> processorClass;
 	
-	public PrototypeXepProcessorFactory(ProtocolChain protocolChain, Class<IXepProcessor<S, X>> processorClass) {
+	public XepProcessorFactory(ProtocolChain protocolChain, Class<IXepProcessor<S, X>> processorClass) {
 		this.protocolChain = protocolChain;
 		this.processorClass = processorClass;
 	}

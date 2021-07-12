@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.framework.core.event;
+package com.firstlinecode.granite.framework.core.pipeline.event;
 
 public class ConnectionOpenedEvent implements IEvent {
 	private String id;

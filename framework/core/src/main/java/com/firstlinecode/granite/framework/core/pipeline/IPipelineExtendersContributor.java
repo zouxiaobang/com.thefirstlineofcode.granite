@@ -2,7 +2,7 @@ package com.firstlinecode.granite.framework.core.pipeline;
 
 import org.pf4j.ExtensionPoint;
 
-import com.firstlinecode.granite.framework.core.event.IEventListenerFactory;
+import com.firstlinecode.granite.framework.core.pipeline.event.IEventListenerFactory;
 import com.firstlinecode.granite.framework.core.pipeline.parsing.IPipelinePreprocessor;
 import com.firstlinecode.granite.framework.core.pipeline.parsing.IProtocolParserFactory;
 import com.firstlinecode.granite.framework.core.pipeline.processing.IXepProcessorFactory;

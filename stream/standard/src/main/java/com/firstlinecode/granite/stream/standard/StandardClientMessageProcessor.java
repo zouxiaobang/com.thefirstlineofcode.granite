@@ -44,12 +44,12 @@ import com.firstlinecode.granite.framework.core.connection.IClientConnectionCont
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
 import com.firstlinecode.granite.framework.core.connection.IConnectionManager;
 import com.firstlinecode.granite.framework.core.connection.IConnectionManagerAware;
-import com.firstlinecode.granite.framework.core.event.ConnectionClosedEvent;
-import com.firstlinecode.granite.framework.core.event.ConnectionOpenedEvent;
 import com.firstlinecode.granite.framework.core.pipeline.IClientMessageProcessor;
 import com.firstlinecode.granite.framework.core.pipeline.IMessage;
 import com.firstlinecode.granite.framework.core.pipeline.IMessageChannel;
 import com.firstlinecode.granite.framework.core.pipeline.SimpleMessage;
+import com.firstlinecode.granite.framework.core.pipeline.event.ConnectionClosedEvent;
+import com.firstlinecode.granite.framework.core.pipeline.event.ConnectionOpenedEvent;
 import com.firstlinecode.granite.framework.core.pipeline.routing.IRouter;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.session.ISessionListener;

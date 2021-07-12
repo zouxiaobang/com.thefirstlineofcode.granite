@@ -34,7 +34,7 @@ public class PipesExtendersContributor extends PipelineExtendersContributorAdapt
 	@Override
 	public IXepProcessorFactory<?, ?>[] getXepProcessorFactories() {
 		return new IXepProcessorFactory<?, ?>[] {
-			new SingletonXepProcessorFactory<>(PROTOCOL_CHAIN, new PingProcessor())
+			new SingletonXepProcessorFactory<Iq, Ping>(PROTOCOL_CHAIN, new PingProcessor())
 		};
 	}
 

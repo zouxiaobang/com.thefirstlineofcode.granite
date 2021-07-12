@@ -1,6 +1,6 @@
 package com.firstlinecode.granite.framework.core.pipeline;
 
-import com.firstlinecode.granite.framework.core.event.IEventListenerFactory;
+import com.firstlinecode.granite.framework.core.pipeline.event.IEventListenerFactory;
 import com.firstlinecode.granite.framework.core.pipeline.parsing.IPipelinePreprocessor;
 import com.firstlinecode.granite.framework.core.pipeline.parsing.IProtocolParserFactory;
 import com.firstlinecode.granite.framework.core.pipeline.processing.IXepProcessorFactory;
@@ -38,5 +38,4 @@ public class PipelineExtendersContributorAdapter implements IPipelineExtendersCo
 	public IEventListenerFactory<?>[] getEventListenerFactories() {
 		return null;
 	}
-
 }

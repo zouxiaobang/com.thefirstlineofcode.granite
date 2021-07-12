@@ -7,12 +7,10 @@ import java.util.List;
 import com.firstlinecode.basalt.protocol.im.stanza.Message;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
-import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.pipeline.processing.IProcessingContext;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.utils.OrderComparator;
 
-@Component("default.message.processor")
 public class DefaultMessageProcessor implements IMessageProcessor, IInitializable, IApplicationComponentServiceAware {
 	private IApplicationComponentService appComponentService;
 	private List<IMessageProcessor> messageProcessors;	
