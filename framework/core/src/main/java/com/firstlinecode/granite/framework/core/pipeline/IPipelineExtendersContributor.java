@@ -5,6 +5,7 @@ import org.pf4j.ExtensionPoint;
 import com.firstlinecode.granite.framework.core.pipeline.event.IEventListenerFactory;
 import com.firstlinecode.granite.framework.core.pipeline.parsing.IPipelinePreprocessor;
 import com.firstlinecode.granite.framework.core.pipeline.parsing.IProtocolParserFactory;
+import com.firstlinecode.granite.framework.core.pipeline.processing.IIqResultProcessor;
 import com.firstlinecode.granite.framework.core.pipeline.processing.IXepProcessorFactory;
 import com.firstlinecode.granite.framework.core.pipeline.routing.IPipelinePostprocessor;
 import com.firstlinecode.granite.framework.core.pipeline.routing.IProtocolTranslatorFactory;
@@ -16,4 +17,5 @@ public interface IPipelineExtendersContributor extends ExtensionPoint {
 	IPipelinePreprocessor[] getPipesPreprocessors();
 	IPipelinePostprocessor[] getPipesPostprocessors();
 	IEventListenerFactory<?>[] getEventListenerFactories();
+	IIqResultProcessor[] getIqResultProcessors();
 }

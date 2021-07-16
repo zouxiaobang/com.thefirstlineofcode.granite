@@ -3,6 +3,7 @@ package com.firstlinecode.granite.framework.core.pipeline;
 import com.firstlinecode.granite.framework.core.pipeline.event.IEventListenerFactory;
 import com.firstlinecode.granite.framework.core.pipeline.parsing.IPipelinePreprocessor;
 import com.firstlinecode.granite.framework.core.pipeline.parsing.IProtocolParserFactory;
+import com.firstlinecode.granite.framework.core.pipeline.processing.IIqResultProcessor;
 import com.firstlinecode.granite.framework.core.pipeline.processing.IXepProcessorFactory;
 import com.firstlinecode.granite.framework.core.pipeline.routing.IPipelinePostprocessor;
 import com.firstlinecode.granite.framework.core.pipeline.routing.IProtocolTranslatorFactory;
@@ -36,6 +37,11 @@ public class PipelineExtendersContributorAdapter implements IPipelineExtendersCo
 
 	@Override
 	public IEventListenerFactory<?>[] getEventListenerFactories() {
+		return null;
+	}
+
+	@Override
+	public IIqResultProcessor[] getIqResultProcessors() {
 		return null;
 	}
 }

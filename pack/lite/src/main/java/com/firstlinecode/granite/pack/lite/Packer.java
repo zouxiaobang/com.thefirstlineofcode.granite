@@ -15,11 +15,15 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import com.firstlinecode.granite.pack.lite.Options.Protocol;
+
 public class Packer {
 	public static final String CONFIGURATION_DIR = "configuration";
 	public static final String COMPONENT_BINDING_LITE_CONFIG_FILE = "component-binding-lite.ini";
+	private static final String IOT_COMPONENT_BINDING_LITE_CONFIG_FILE = "iot-component-binding-lite.ini";
 	private static final String SAND_COMPONENT_BINDING_LITE_CONFIG_FILE = "sand-component-binding-lite.ini";
 	private static final String SERVER_CONFIG_FILE = "server.ini";
+	private static final String IOT_SERVER_CONFIG_FILE = "iot-server.ini";
 	private static final String SAND_SERVER_CONFIG_FILE = "sand-server.ini";
 	
 	private Options options;
@@ -161,7 +165,11 @@ public class Packer {
 			throw new RuntimeException("Can't determine granite server directory.");
 		
 		File serverTargetDir = new File(serverDir, "target");
-		Main.runMvn(serverDir, options.isOffline(), "clean", "package");
+		if (options.getProtocol() == Protocol.IOT || options.getProtocol() == Protocol.STANDARD) {			
+			Main.runMvn(serverDir, options.isOffline(), "clean", "package");			
+		} else {
+			throw new UnsupportedOperationException("Only support 'iot' and 'standard' protocols now.");
+		}
 		
 		if (!serverTargetDir.exists() || !serverTargetDir.isDirectory()) {
 			throw new RuntimeException("Can't determine target directory of Granite Server project.");
@@ -203,6 +211,8 @@ public class Packer {
 			Main.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fstandard-pom.xml", "dependency:copy-dependencies");
 		} else if (options.getProtocol() == Options.Protocol.LEPS) {
 			Main.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fleps-pom.xml", "dependency:copy-dependencies");
+		} else if (options.getProtocol() == Options.Protocol.IOT) {
+			Main.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fiot-pom.xml", "dependency:copy-dependencies");			
 		} else {
 			Main.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fsand-pom.xml", "dependency:copy-dependencies");			
 		}
@@ -220,6 +230,12 @@ public class Packer {
 			if (options.getProtocol() != Options.Protocol.SAND) {
 				if (SAND_SERVER_CONFIG_FILE.equals(configFile.getName()) ||
 						SAND_COMPONENT_BINDING_LITE_CONFIG_FILE.equals(configFile.getName()))
+					continue;
+				
+				writeFileToZip(zos, String.format("/%s/%s/%s", options.getAppName(), CONFIGURATION_DIR, configFile.getName()), configFile);
+			} else if (options.getProtocol() != Options.Protocol.IOT) {
+				if (IOT_SERVER_CONFIG_FILE.equals(configFile.getName()) ||
+						IOT_COMPONENT_BINDING_LITE_CONFIG_FILE.equals(configFile.getName()))
 					continue;
 				
 				writeFileToZip(zos, String.format("/%s/%s/%s", options.getAppName(), CONFIGURATION_DIR, configFile.getName()), configFile);

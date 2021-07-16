@@ -5,30 +5,26 @@ import java.util.Collections;
 import java.util.List;
 
 import com.firstlinecode.basalt.protocol.im.stanza.Message;
-import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
-import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
 import com.firstlinecode.granite.framework.core.pipeline.processing.IProcessingContext;
-import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.utils.OrderComparator;
 
-public class DefaultMessageProcessor implements IMessageProcessor, IInitializable, IApplicationComponentServiceAware {
-	private IApplicationComponentService appComponentService;
+public class DefaultMessageProcessor implements IMessageProcessor {
 	private List<IMessageProcessor> messageProcessors;	
 	
 	public DefaultMessageProcessor() {
 		messageProcessors = new ArrayList<>();
 	}
 	
-	@Override
-	public void init() {
-		List<Class<? extends IMessageProcessorFactory>> processorFactoryClasses = appComponentService.
-				getExtensionClasses(IMessageProcessorFactory.class);
-		for (Class<? extends IMessageProcessorFactory> processorFactoryClass : processorFactoryClasses) {
-			IMessageProcessorFactory processorFactory = appComponentService.createExtension(processorFactoryClass);
-			messageProcessors.add(processorFactory.createProcessor());
-		}
-		
+	public void setMessageProcessors(List<IMessageProcessor> messageProcessors) {
+		this.messageProcessors = messageProcessors;
 		Collections.sort(messageProcessors, new OrderComparator<>());
+	}
+	
+	public void addMessageProcessor(IMessageProcessor messageProcessor) {
+		if (!messageProcessors.contains(messageProcessor)) {			
+			messageProcessors.add(messageProcessor);
+			Collections.sort(messageProcessors, new OrderComparator<>());
+		}
 	}
 
 	@Override
@@ -39,10 +35,5 @@ public class DefaultMessageProcessor implements IMessageProcessor, IInitializabl
 		}
 		
 		return false;
-	}
-	
-	@Override
-	public void setApplicationComponentService(IApplicationComponentService appComponentService) {
-		this.appComponentService = appComponentService;
 	}
 }

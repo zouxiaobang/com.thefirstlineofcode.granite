@@ -2,7 +2,6 @@ package com.firstlinecode.granite.im;
 
 import org.pf4j.Extension;
 
-import com.firstlinecode.granite.framework.core.pipeline.processing.IIqResultProcessor;
 import com.firstlinecode.granite.framework.im.IMessageProcessor;
 import com.firstlinecode.granite.framework.im.IPresenceProcessor;
 import com.firstlinecode.granite.framework.im.ISimpleStanzaProcessorsFactory;
@@ -11,7 +10,7 @@ import com.firstlinecode.granite.framework.im.ISimpleStanzaProcessorsFactory;
 public class SimpleStanzaProcessorsFactory implements ISimpleStanzaProcessorsFactory {
 
 	@Override
-	public IPresenceProcessor[] getPresenceProcessor() {
+	public IPresenceProcessor[] getPresenceProcessors() {
 		return new IPresenceProcessor[] {
 			new StandardPresenceProcessor(),
 			new SubscriptionProcessor()
@@ -19,15 +18,10 @@ public class SimpleStanzaProcessorsFactory implements ISimpleStanzaProcessorsFac
 	}
 
 	@Override
-	public IMessageProcessor[] getMessageProcessor() {
+	public IMessageProcessor[] getMessageProcessors() {
 		return new IMessageProcessor[] {
 			new StandardMessageProcessor()
 		};
-	}
-
-	@Override
-	public IIqResultProcessor[] getIqResultProcessor() {
-		return null;
 	}
 
 }

@@ -20,6 +20,7 @@ public class Options {
 	public enum Protocol {
 		LEPS,
 		STANDARD,
+		IOT,
 		SAND
 	}
 	

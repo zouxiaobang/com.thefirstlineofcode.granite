@@ -82,7 +82,7 @@
 	<modules>
 		<module>server</module>
 		<module>framework</module>
-		<module>pipeline</module>
+		<module>pipelines</module>
 		<module>stream</module>
 		<module>im</module>
 	<!--	<module>leps</module> -->
@@ -314,34 +314,40 @@
 			</dependency>
 			<!-- Granite pipeline stage implementations -->
 			<dependency>
-				<groupId>com.firstlinecode.granite.pipeline</groupId>
-				<artifactId>granite-pipeline-stream</artifactId>
+				<groupId>com.firstlinecode.granite.pipelines</groupId>
+				<artifactId>granite-pipelines-stream</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.granite.pipeline</groupId>
-				<artifactId>granite-pipeline-parsing</artifactId>
+				<groupId>com.firstlinecode.granite.pipelines</groupId>
+				<artifactId>granite-pipelines-parsing</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.granite.pipeline</groupId>
-				<artifactId>granite-pipeline-processing</artifactId>
+				<groupId>com.firstlinecode.granite.pipelines</groupId>
+				<artifactId>granite-pipelines-processing</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.granite.pipeline</groupId>
-				<artifactId>granite-pipeline-routing</artifactId>
+				<groupId>com.firstlinecode.granite.pipelines</groupId>
+				<artifactId>granite-pipelines-routing</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.granite.pipeline</groupId>
-				<artifactId>granite-pipeline-event</artifactId>
+				<groupId>com.firstlinecode.granite.pipelines</groupId>
+				<artifactId>granite-pipelines-event</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<!-- Standard protocol implementation for XMPP stream -->
 			<dependency>
 				<groupId>com.firstlinecode.granite.stream</groupId>
 				<artifactId>granite-stream-standard</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<!-- Standard protocol implementation for XMPP IM -->
+			<dependency>
+				<groupId>com.firstlinecode.granite</groupId>
+				<artifactId>granite-im</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<!-- Granite deploy lite libraries -->
