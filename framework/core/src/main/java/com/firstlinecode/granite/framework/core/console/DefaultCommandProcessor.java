@@ -25,10 +25,6 @@ public class DefaultCommandProcessor extends AbstractCommandProcessor {
 	}
 	
 	void processExit(IConsoleSystem consoleSystem) {
-		consoleSystem.close();
-	}
-	
-	void processClose(IConsoleSystem consoleSystem) {
 		try {
 			consoleSystem.getServerContext().getServer().stop();
 		} catch (Exception e) {
@@ -38,6 +34,10 @@ public class DefaultCommandProcessor extends AbstractCommandProcessor {
 		consoleSystem.close();
 		
 		System.exit(0);
+	}
+	
+	void processClose(IConsoleSystem consoleSystem) {
+		consoleSystem.close();		
 	}
 	
 	void processServices(IConsoleSystem consoleSystem) {
@@ -134,8 +134,8 @@ public class DefaultCommandProcessor extends AbstractCommandProcessor {
 		consoleSystem.printMessageLine("service <SERVICE_ID>    Display details for specified service.");
 		consoleSystem.printMessageLine("components              List all components.");
 		consoleSystem.printMessageLine("plugins                 List all plugins.");
-		consoleSystem.printMessageLine("exit                    Exit the console.");
-		consoleSystem.printMessageLine("close                   Stop the server and exit.");
+		consoleSystem.printMessageLine("close                   Close the console.");
+		consoleSystem.printMessageLine("exit                    Stop the server and exit system.");
 	}
 	
 	private class ServicePrinter {

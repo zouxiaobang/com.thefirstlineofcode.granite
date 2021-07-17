@@ -19,12 +19,6 @@ import com.firstlinecode.granite.pack.lite.Options.Protocol;
 
 public class Packer {
 	public static final String CONFIGURATION_DIR = "configuration";
-	public static final String COMPONENT_BINDING_LITE_CONFIG_FILE = "component-binding-lite.ini";
-	private static final String IOT_COMPONENT_BINDING_LITE_CONFIG_FILE = "iot-component-binding-lite.ini";
-	private static final String SAND_COMPONENT_BINDING_LITE_CONFIG_FILE = "sand-component-binding-lite.ini";
-	private static final String SERVER_CONFIG_FILE = "server.ini";
-	private static final String IOT_SERVER_CONFIG_FILE = "iot-server.ini";
-	private static final String SAND_SERVER_CONFIG_FILE = "sand-server.ini";
 	
 	private Options options;
 	private List<String> systemLibraries;
@@ -168,7 +162,7 @@ public class Packer {
 		if (options.getProtocol() == Protocol.IOT || options.getProtocol() == Protocol.STANDARD) {			
 			Main.runMvn(serverDir, options.isOffline(), "clean", "package");			
 		} else {
-			throw new UnsupportedOperationException("Only support 'iot' and 'standard' protocols now.");
+			throw new IllegalArgumentException("Only support 'iot' and 'standard' protocols now.");
 		}
 		
 		if (!serverTargetDir.exists() || !serverTargetDir.isDirectory()) {
@@ -224,32 +218,19 @@ public class Packer {
 
 	private void writeGraniteConfigFilesToZip(String targetDirPath, ZipOutputStream zos) throws IOException, URISyntaxException {
 		File targetDir = new File(targetDirPath);
-		File configFilesDir = new File(targetDir.getParent(), "config");
+		File configDir = new File(targetDir.getParent(), "config");
+		
+		File configFilesDir;
+		if (options.getProtocol() == Options.Protocol.IOT) {
+			configFilesDir = new File(configDir, "iot");
+		} else if (options.getProtocol() == Options.Protocol.STANDARD) {
+			configFilesDir = new File(configDir, "standard");			
+		} else {
+			throw new IllegalArgumentException("Only support 'iot' and 'standard' protocols now.");
+		}
 		
 		for (File configFile : configFilesDir.listFiles()) {
-			if (options.getProtocol() != Options.Protocol.SAND) {
-				if (SAND_SERVER_CONFIG_FILE.equals(configFile.getName()) ||
-						SAND_COMPONENT_BINDING_LITE_CONFIG_FILE.equals(configFile.getName()))
-					continue;
-				
-				writeFileToZip(zos, String.format("/%s/%s/%s", options.getAppName(), CONFIGURATION_DIR, configFile.getName()), configFile);
-			} else if (options.getProtocol() != Options.Protocol.IOT) {
-				if (IOT_SERVER_CONFIG_FILE.equals(configFile.getName()) ||
-						IOT_COMPONENT_BINDING_LITE_CONFIG_FILE.equals(configFile.getName()))
-					continue;
-				
-				writeFileToZip(zos, String.format("/%s/%s/%s", options.getAppName(), CONFIGURATION_DIR, configFile.getName()), configFile);
-			} else {
-				if (SERVER_CONFIG_FILE.equals(configFile.getName()) ||
-						COMPONENT_BINDING_LITE_CONFIG_FILE.equals(configFile.getName())) {
-					continue;
-				} else if (configFile.getName().equals(SAND_SERVER_CONFIG_FILE)) {					
-					writeFileToZip(zos, options.getAppName() + CONFIGURATION_DIR + SERVER_CONFIG_FILE, configFile);					
-				} else {
-					writeFileToZip(zos, options.getAppName() + CONFIGURATION_DIR + configFile.getName(), configFile);					
-				}
-			}
-
+			writeFileToZip(zos, String.format("/%s/%s/%s", options.getAppName(), CONFIGURATION_DIR, configFile.getName()), configFile);
 		}
 	}
 	

@@ -32,10 +32,6 @@
 			<groupId>com.firstlinecode.granite.pipelines</groupId>
 			<artifactId>granite-pipelines-stream</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.firstlinecode.gem.server</groupId>
-			<artifactId>gem-server-bxmpp</artifactId>
-		</dependency>
 	</dependencies>
 	
 </project>
