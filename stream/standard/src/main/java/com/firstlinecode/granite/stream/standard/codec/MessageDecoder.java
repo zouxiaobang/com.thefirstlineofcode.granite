@@ -65,6 +65,8 @@ public class MessageDecoder extends CumulativeProtocolDecoder {
 			if (logger.isDebugEnabled())
 				logger.debug("Decode error.", e);
 			
+			session.removeAttribute(GRANITE_DECODER_MESSAGE_PARSER);
+			
 			throw e;
 		}
 		

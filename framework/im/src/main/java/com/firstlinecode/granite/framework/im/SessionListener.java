@@ -57,8 +57,8 @@ public class SessionListener implements ISessionListener, IConnectionManagerAwar
 					getConnectionContext(sessionJid);
 			
 			if (clientContext != null) {
-				clientContext.write(MESSAGE_CONFLICT, true);
-				clientContext.write(MESSAGE_CLOSE_STREAM, true);
+				clientContext.write(MESSAGE_CONFLICT);
+				clientContext.write(MESSAGE_CLOSE_STREAM);
 				
 				clientContext.close(true);
 			}

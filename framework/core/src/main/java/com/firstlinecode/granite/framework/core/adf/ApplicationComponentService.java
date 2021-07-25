@@ -344,7 +344,8 @@ public class ApplicationComponentService implements IApplicationComponentService
 			for (IInjectionProvider injectionProvider : injectionProviders) {
 				Object dependencyAnnotation = field.getAnnotation(injectionProvider.getAnnotationType());				
 				if (dependencyAnnotation != null) {
-					IDependencyFetcher fetcher = injectionProvider.getFetcher(dependencyAnnotation);
+					Object mark = injectionProvider.getMark(field, dependencyAnnotation);
+					IDependencyFetcher fetcher = injectionProvider.getFetcher(mark);
 					IDependencyInjector injector = new FieldDependencyInjector(field, fetcher);
 					injectors.add(injector);
 				}
@@ -366,8 +367,9 @@ public class ApplicationComponentService implements IApplicationComponentService
 				if (dependencyAnnotation != null) {
 					if (!CommonUtils.isSetterMethod(method))
 						logger.warn(String.format("Dependency method '%s' isn't a setter method.", method));
-						
-					IDependencyFetcher fetcher = injectionProvider.getFetcher(dependencyAnnotation);
+					
+					Object mark = injectionProvider.getMark(method, dependencyAnnotation);
+					IDependencyFetcher fetcher = injectionProvider.getFetcher(mark);
 					IDependencyInjector injector = new MethodDependencyInjector(method, fetcher);
 					injectors.add(injector);
 				}

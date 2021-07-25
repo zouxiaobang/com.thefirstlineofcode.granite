@@ -15,6 +15,7 @@ import org.apache.mina.filter.codec.ProtocolEncoder;
 import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.filter.executor.OrderedThreadPoolExecutor;
 import org.apache.mina.filter.logging.LoggingFilter;
+import org.apache.mina.transport.socket.SocketSessionConfig;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.pf4j.PluginManager;
 import org.pf4j.PluginWrapper;
@@ -143,7 +144,7 @@ public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMe
 		acceptor.getFilterChain().addLast("exceutor", createExecutorFilter());
 		
 		acceptor.setHandler(this);
-		acceptor.getSessionConfig().setIdleTime(IdleStatus.READER_IDLE, connectionTimeout);
+		
 		acceptor.bind(getInetSocketAddress());
 		
 		logger.info("Socket message receiver has binded on port {}.", port);
@@ -214,6 +215,10 @@ public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMe
 			logger.debug("Session opened[{}].", session);
 		}
 		
+		SocketSessionConfig socketSessionConfig = (SocketSessionConfig)session.getConfig();
+		socketSessionConfig.setIdleTime(IdleStatus.READER_IDLE, connectionTimeout);
+		socketSessionConfig.setTcpNoDelay(true);
+		
 		messageProcessor.connectionOpened(new SocketConnectionContext(session, localNodeIdProvider.getLocalNodeId()));
 	}
 	
@@ -254,13 +259,18 @@ public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMe
 		session.write(STRING_CONNECTION_TIMEOUT).await(500);
 		session.write(STRING_CLOSE_STREAM).await(500);
 		
-		session.close(true);
+		session.closeOnFlush();
 		
 		sessionClosed(session);
 	}
 	
 	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception {
+		if (!(message instanceof String)) {
+			logger.warn(String.format("Message isn't a String. Message type: %s.", message.getClass().getName()));
+			return;
+		}
+		
 		if (logger.isTraceEnabled()) {
 			logger.trace("Message received[{}, {}].", session, message);
 		}
@@ -288,7 +298,7 @@ public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMe
 			}
 			
 			session.write(STRING_CLOSE_STREAM);
-			session.close(true);
+			session.closeOnFlush();
 
 		} else {
 			if (logger.isWarnEnabled()) {

@@ -60,7 +60,7 @@ public class InitialStreamNegotiant extends AbstractNegotiant {
 			
 			// (rfc3290 4.7.1)
             // must response a opening stream
-			context.write(oxmFactory.translate(openStream), true);
+			context.write(oxmFactory.translate(openStream));
 			
 			if (!Constants.SPECIFICATION_VERSION.equals(initialStream.getVersion())) {
 				throw new ProtocolException(new UnsupportedVersion(String.format("Unsupported specification version: %s.",

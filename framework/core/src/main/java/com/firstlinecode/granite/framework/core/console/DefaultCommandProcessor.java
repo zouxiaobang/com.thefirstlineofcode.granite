@@ -131,7 +131,7 @@ public class DefaultCommandProcessor extends AbstractCommandProcessor {
 		consoleSystem.printMessageLine("Available Commands:");
 		consoleSystem.printMessageLine("help                    Display help information.");
 		consoleSystem.printMessageLine("services                List all services.");
-		consoleSystem.printMessageLine("service <SERVICE_ID>    Display details for specified service.");
+		consoleSystem.printMessageLine("service <SERVICE_ID>    Display details for the specified service.");
 		consoleSystem.printMessageLine("components              List all components.");
 		consoleSystem.printMessageLine("plugins                 List all plugins.");
 		consoleSystem.printMessageLine("close                   Close the console.");

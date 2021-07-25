@@ -62,6 +62,11 @@ public class SocketConnectionContext extends AbstractSocketConnectionContext imp
 			
 			globalSslFilter = new SslFilter(tlsEnvironment.getSslContext());
 			
+			globalSslFilter.setEnabledProtocols(new String[] {
+				"TLSv1",
+				"TLSv1.1",
+				"TLSv1.2"
+			});
 			globalSslFilter.setEnabledCipherSuites(new String[] {
 				"SSL_RSA_WITH_3DES_EDE_CBC_SHA",
 				"TLS_DHE_RSA_WITH_AES_256_CBC_SHA",

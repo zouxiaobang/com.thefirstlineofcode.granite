@@ -3,7 +3,6 @@ package com.firstlinecode.granite.stream.standard;
 import java.net.InetSocketAddress;
 
 import org.apache.mina.core.future.CloseFuture;
-import org.apache.mina.core.future.WriteFuture;
 import org.apache.mina.core.session.IoSession;
 
 import com.firstlinecode.granite.framework.core.connection.IClientConnectionContext;
@@ -24,22 +23,12 @@ public abstract class AbstractSocketConnectionContext implements IClientConnecti
 
 	@Override
 	public void close() {
-		session.close(false);
-	}
-	
-	@Override
-	public boolean write(Object message, boolean sync) {
-		WriteFuture future = session.write(message);
-	    if (sync) {
-	        future.awaitUninterruptibly();
-	    }
-	
-	    return future.isWritten();
+		close(false);
 	}
 	
 	@Override
 	public boolean close(boolean sync) {
-	    CloseFuture future = session.close(false);
+	    CloseFuture future = session.closeOnFlush();
 	    if (sync) {
 	        future.awaitUninterruptibly();
 	    }

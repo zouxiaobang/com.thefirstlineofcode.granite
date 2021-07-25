@@ -18,7 +18,7 @@ public class TlsEnvironment {
 	private static final String ALIAS_HOST_KEY = "host-key";
 	private static final String NAME_KEY_STORE = "keystore";
 	private static final String DEFAULT_PASSWORD = "changeit";
-	private static final String PROTOCOL_TLS = "TLS";
+	private static final String PROTOCOL_TLS = "TLSv1.2";
 	private File securityDirectory;
 	private String hostName;
 	

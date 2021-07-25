@@ -33,7 +33,7 @@
 			<artifactId>granite-framework-adf-mybatis</artifactId>
 		</dependency>
 		
-		<!-- Pipeline -->
+		<!-- Pipelines -->
 		<dependency>
 			<groupId>com.firstlinecode.granite.pipelines</groupId>
 			<artifactId>granite-pipelines-stream</artifactId>
@@ -91,6 +91,12 @@
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite.xeps</groupId>
 			<artifactId>granite-lite-xeps-ibr</artifactId>
+		</dependency>
+		
+		<!-- Gem plugins -->
+		<dependency>
+			<groupId>com.firstlinecode.gem.server</groupId>
+			<artifactId>gem-server-bxmpp</artifactId>
 		</dependency>
 		
 	</dependencies>

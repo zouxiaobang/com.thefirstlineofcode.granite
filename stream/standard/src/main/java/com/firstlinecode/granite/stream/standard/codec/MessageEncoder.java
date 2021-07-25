@@ -3,6 +3,10 @@ package com.firstlinecode.granite.stream.standard.codec;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.mina.core.buffer.IoBuffer;
+import org.apache.mina.core.future.IoFuture;
+import org.apache.mina.core.future.IoFutureListener;
+import org.apache.mina.core.future.WriteFuture;
+import org.apache.mina.core.session.AbstractIoSession;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolEncoderAdapter;
 import org.apache.mina.filter.codec.ProtocolEncoderOutput;
@@ -22,6 +26,7 @@ public class MessageEncoder extends ProtocolEncoderAdapter {
 		this.bxmppProtocolConverter = bxmppProtocolConverter;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void encode(IoSession session, Object message, ProtocolEncoderOutput out) throws Exception {
 		if (message instanceof String) {
@@ -38,7 +43,14 @@ public class MessageEncoder extends ProtocolEncoderAdapter {
 			throw new RuntimeException(String.format("Unknown message type: %s.", message.getClass().getName()));
 		}
 		
-		out.flush();
+		WriteFuture future = out.flush();
+		future.addListener(new IoFutureListener<IoFuture>() {
+			@Override
+			public void operationComplete(IoFuture future) {
+				((AbstractIoSession)future.getSession()).getProcessor().flush(future.getSession());
+			}
+		});
+		
 	}
 
 	private boolean isHeartBeatByte(Object message) {

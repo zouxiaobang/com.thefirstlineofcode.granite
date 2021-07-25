@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class Main {
 	private static final String DEFAULT_VERSION = "1.0.0-SNAPSHOT";
-	private static final String NAME_PREFIX_APP = "granite-lite-";
+	private static final String NAME_PREFIX_APP = "granite-lite";
 	private static final String DEFAULT_SAND_PROJECT_NAME = "com.firstlinecode.sand";
 	
 	private Options options;
@@ -139,7 +139,7 @@ public class Main {
 			options.setVersion(DEFAULT_VERSION);
 		}
 		
-		options.setAppName(NAME_PREFIX_APP + options.getVersion());
+		options.setAppName(String.format("%s-%s-%s", NAME_PREFIX_APP, options.getProtocol().toString().toLowerCase(), options.getVersion()));
 		
 		if (!options.isUpdate() && !options.isCleanUpdate() && options.getProtocol() == null) {
 			options.setProtocol(Options.Protocol.STANDARD);

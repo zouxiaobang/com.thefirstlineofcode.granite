@@ -159,6 +159,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 					IXepProcessor<?, ?> xepProcessor;
 					try {
 						xepProcessor = processorFactory.createProcessor();
+						xepProcessor = appComponentService.inject(xepProcessor);
 					} catch (Exception e) {
 						logger.error("Can't create singleton XEP processor by factory: '{}'.",
 								processorFactory.getClass().getName(), e);
@@ -167,7 +168,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 								processorFactory.getClass().getName()), e);
 					}
 					
-					singletonXepProcessores.put(processorFactory.getProtocolChain(), appComponentService.inject(xepProcessor));
+					singletonXepProcessores.put(processorFactory.getProtocolChain(), xepProcessor);
 				} else {				
 					xepProcessorFactories.put(processorFactory.getProtocolChain(), processorFactory);
 				}
