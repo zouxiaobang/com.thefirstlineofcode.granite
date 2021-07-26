@@ -21,26 +21,11 @@
 				<groupId>com.firstlinecode.granite.stream</groupId>
 				<artifactId>granite-stream-standard</artifactId>
 			</dependency>
-			<!-- Granite Protocol Plugins -->
+			
+			<!-- Granite XEPs plugins -->
 			<dependency>
-					<groupId>com.firstlinecode.granite.xeps</groupId>
-					<artifactId>granite-xeps-ibr</artifactId>
-			</dependency>
-			<dependency>
-				<groupId>com.firstlinecode.basalt.xeps</groupId>
-				<artifactId>basalt-xeps-xdata</artifactId>
-			</dependency>
-			<dependency>
-				<groupId>com.firstlinecode.basalt.xeps</groupId>
-				<artifactId>basalt-xeps-oob</artifactId>
-			</dependency>
-<!-- 		<dependency>
-					<groupId>com.firstlinecode.granite</groupId>
-					<artifactId>granite-im</artifactId>
-			</dependency> -->
-			<dependency>
-					<groupId>com.firstlinecode.granite.xeps</groupId>
-					<artifactId>granite-xeps-ping</artifactId>
+				<groupId>com.firstlinecode.granite.xeps</groupId>
+				<artifactId>granite-xeps-ping</artifactId>
 			</dependency>
 			
 			<!-- Granite Deploy Lite Plugins -->
@@ -63,6 +48,14 @@
 			<dependency>
 					<groupId>com.firstlinecode.granite.lite.xeps</groupId>
 					<artifactId>granite-lite-xeps-ibr</artifactId>
+			</dependency>
+			<dependency>
+					<groupId>com.firstlinecode.granite.lite</groupId>
+					<artifactId>granite-lite-im</artifactId>
+			</dependency>
+			<dependency>
+					<groupId>com.firstlinecode.granite.lite.xeps</groupId>
+					<artifactId>granite-lite-xeps-disco</artifactId>
 			</dependency>
 	</dependencies>
 	

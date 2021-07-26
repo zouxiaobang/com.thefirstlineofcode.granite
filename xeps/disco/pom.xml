@@ -5,25 +5,25 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	
-    <parent>
+	<parent>
         <groupId>com.firstlinecode.granite</groupId>
-        <artifactId>granite-lite</artifactId>
+        <artifactId>granite-xeps</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 	
-	<groupId>com.firstlinecode.granite.lite</groupId>
-	<artifactId>granite-lite-im</artifactId>
-	<name>Granite lite IM implementation</name>
+	<groupId>com.firstlinecode.granite.xeps</groupId>
+	<artifactId>granite-xeps-disco</artifactId>
+	<name>XEPs disco implementation</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.firstlinecode.granite.framework.adf</groupId>
-			<artifactId>granite-framework-adf-mybatis</artifactId>
+			<groupId>com.firstlinecode.granite.framework</groupId>
+			<artifactId>granite-framework-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.firstlinecode.granite</groupId>
-			<artifactId>granite-im</artifactId>
+			<groupId>com.firstlinecode.basalt.xeps</groupId>
+			<artifactId>basalt-xeps-disco</artifactId>
 		</dependency>
 	</dependencies>
 

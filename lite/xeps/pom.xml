@@ -18,6 +18,7 @@
 
 	<modules>
 		<module>ibr</module>
+		<module>disco</module>
 	</modules>
 
 </project>

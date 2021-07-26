@@ -15,7 +15,7 @@ import com.firstlinecode.basalt.protocol.im.roster.Roster;
 import com.firstlinecode.granite.framework.core.adf.data.IDataObjectFactory;
 import com.firstlinecode.granite.framework.core.adf.data.IDataObjectFactoryAware;
 import com.firstlinecode.granite.framework.core.annotations.AppComponent;
-import com.firstlinecode.granite.framework.core.annotations.Dependency;
+import com.firstlinecode.granite.framework.core.annotations.BeanDependency;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
@@ -30,13 +30,13 @@ import com.firstlinecode.granite.framework.im.Subscription.State;
 @AppComponent("roster.operator")
 public class RosterOperator implements IServerConfigurationAware, IDataObjectFactoryAware {
 	
-	@Dependency("subscription.service")
+	@BeanDependency
 	private ISubscriptionService subscriptionService;
 	
-	@Dependency("resources.service")
+	@BeanDependency
 	private IResourcesService resourcesService;
 	
-	@Dependency("resources.register")
+	@BeanDependency
 	private IResourcesRegister resourcesRegister;
 	
 	private IDataObjectFactory dataObjectFactory;

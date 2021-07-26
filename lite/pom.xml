@@ -22,6 +22,7 @@
 		<module>session</module>
 		<module>pipeline</module>
 		<module>xeps</module>
+		<module>im</module>
 	</modules>
 
 </project>

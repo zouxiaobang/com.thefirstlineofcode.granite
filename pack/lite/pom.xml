@@ -61,16 +61,6 @@
 			<artifactId>granite-stream-standard</artifactId>
 		</dependency>
 		
-		<!-- XEPs Plugins -->
-		<dependency>
-			<groupId>com.firstlinecode.granite.xeps</groupId>
-			<artifactId>granite-xeps-ibr</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.firstlinecode.granite.xeps</groupId>
-			<artifactId>granite-xeps-ping</artifactId>
-		</dependency>
-		
 		<!-- Deploy Lite Plugins -->
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
@@ -91,6 +81,14 @@
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite.xeps</groupId>
 			<artifactId>granite-lite-xeps-ibr</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.lite</groupId>
+			<artifactId>granite-lite-im</artifactId>
+		</dependency>
+		<dependency>
+				<groupId>com.firstlinecode.granite.lite.xeps</groupId>
+				<artifactId>granite-lite-xeps-disco</artifactId>
 		</dependency>
 		
 		<!-- Gem plugins -->

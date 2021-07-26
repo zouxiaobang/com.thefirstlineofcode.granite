@@ -1,6 +1,6 @@
 package com.firstlinecode.granite.lite.im;
 
-import com.firstlinecode.granite.framework.core.supports.data.IIdProvider;
+import com.firstlinecode.granite.framework.core.adf.data.IIdProvider;
 
 public class D_SubscriptionNotification extends com.firstlinecode.granite.framework.im.SubscriptionNotification
 		implements IIdProvider<String> {

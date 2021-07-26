@@ -5,7 +5,7 @@ import java.util.List;
 import com.firstlinecode.basalt.protocol.core.JabberId;
 import com.firstlinecode.basalt.protocol.im.stanza.Presence;
 import com.firstlinecode.basalt.protocol.im.stanza.Presence.Type;
-import com.firstlinecode.granite.framework.core.annotations.Dependency;
+import com.firstlinecode.granite.framework.core.annotations.BeanDependency;
 import com.firstlinecode.granite.framework.core.pipeline.event.IEventContext;
 import com.firstlinecode.granite.framework.core.pipeline.event.IEventListener;
 import com.firstlinecode.granite.framework.im.ISubscriptionService;
@@ -14,7 +14,7 @@ import com.firstlinecode.granite.framework.im.SubscriptionNotification;
 import com.firstlinecode.granite.framework.im.SubscriptionType;
 
 public class ResourceAvailabledEventListener implements IEventListener<ResourceAvailabledEvent> {
-	@Dependency("subscription.service")
+	@BeanDependency
 	private ISubscriptionService subscriptionService;
 
 	@Override

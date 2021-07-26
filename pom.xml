@@ -285,6 +285,11 @@
 				<artifactId>basalt-xeps-ping</artifactId>
 				<version>${basalt.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.basalt.xeps</groupId>
+				<artifactId>basalt-xeps-disco</artifactId>
+				<version>${basalt.version}</version>
+			</dependency>
 			<!-- Granite Libraries -->
 			<dependency>
 				<groupId>com.firstlinecode.granite</groupId>
@@ -366,6 +371,11 @@
 				<artifactId>granite-lite-pipeline</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.lite</groupId>
+				<artifactId>granite-lite-im</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
 			<!-- XEPs plugins -->
 			<dependency>
 				<groupId>com.firstlinecode.granite.xeps</groupId>
@@ -377,6 +387,11 @@
 				<artifactId>granite-xeps-ping</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.xeps</groupId>
+				<artifactId>granite-xeps-disco</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
 			<!-- Deploly lite plugins -->
 			<dependency>
 				<groupId>com.firstlinecode.granite.lite</groupId>
@@ -386,6 +401,11 @@
 			<dependency>
 				<groupId>com.firstlinecode.granite.lite.xeps</groupId>
 				<artifactId>granite-lite-xeps-ibr</artifactId>
+				<version>${granite.version}</version>
+			</dependency>	
+			<dependency>
+				<groupId>com.firstlinecode.granite.lite.xeps</groupId>
+				<artifactId>granite-lite-xeps-disco</artifactId>
 				<version>${granite.version}</version>
 			</dependency>	
 			

@@ -19,6 +19,7 @@
 	<modules>
 		<module>ibr</module>
 		<module>ping</module>
+		<module>disco</module>
 	</modules>
 
 </project>

@@ -11,6 +11,7 @@ import com.firstlinecode.basalt.protocol.core.stanza.error.Forbidden;
 import com.firstlinecode.basalt.protocol.core.stream.error.NotAuthorized;
 import com.firstlinecode.basalt.protocol.im.stanza.Message;
 import com.firstlinecode.granite.framework.core.annotations.AppComponent;
+import com.firstlinecode.granite.framework.core.annotations.BeanDependency;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.auth.IAuthenticator;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
@@ -29,10 +30,10 @@ public class ChatMessageDeliverer implements IServerConfigurationAware, IChatMes
 	@Dependency("authenticator")
 	private IAuthenticator authenticator;
 	
-	@Dependency("resources.service")
+	@BeanDependency
 	private IResourcesService resourcesService;
 	
-	@Dependency("subscription.service")
+	@BeanDependency
 	private ISubscriptionService subscriptionService;
 	
 	private String domain;

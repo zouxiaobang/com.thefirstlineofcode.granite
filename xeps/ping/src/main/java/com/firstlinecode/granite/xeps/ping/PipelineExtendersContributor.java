@@ -14,7 +14,7 @@ import com.firstlinecode.granite.framework.core.pipeline.routing.IProtocolTransl
 import com.firstlinecode.granite.framework.core.pipeline.routing.SimpleObjectProtocolTranslatorFactory;
 
 @Extension
-public class PipesExtendersContributor extends PipelineExtendersContributorAdapter {
+public class PipelineExtendersContributor extends PipelineExtendersContributorAdapter {
 	private static final ProtocolChain PROTOCOL_CHAIN = ProtocolChain.first(Iq.PROTOCOL).next(Ping.PROTOCOL);
 	
 	@Override
