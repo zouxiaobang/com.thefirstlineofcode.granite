@@ -20,6 +20,7 @@
 		<module>ibr</module>
 		<module>ping</module>
 		<module>disco</module>
+		<module>muc</module>
 	</modules>
 
 </project>

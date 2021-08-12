@@ -17,7 +17,7 @@ import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
 import com.firstlinecode.granite.framework.core.pipeline.AbstractMessageReceiver;
 import com.firstlinecode.granite.framework.core.pipeline.IMessage;
-import com.firstlinecode.granite.framework.core.pipeline.event.IEvent;
+import com.firstlinecode.granite.framework.core.pipeline.stages.event.IEvent;
 import com.firstlinecode.granite.framework.core.repository.IComponentIdAware;
 import com.firstlinecode.granite.framework.core.repository.IRepository;
 import com.firstlinecode.granite.framework.core.repository.IRepositoryAware;

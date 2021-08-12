@@ -57,6 +57,10 @@
 					<groupId>com.firstlinecode.granite.lite.xeps</groupId>
 					<artifactId>granite-lite-xeps-disco</artifactId>
 			</dependency>
+			<dependency>
+					<groupId>com.firstlinecode.granite.lite.xeps</groupId>
+					<artifactId>granite-lite-xeps-muc</artifactId>
+			</dependency>
 	</dependencies>
 	
 	<build>

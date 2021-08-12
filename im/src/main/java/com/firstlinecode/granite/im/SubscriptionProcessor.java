@@ -12,12 +12,13 @@ import com.firstlinecode.basalt.protocol.im.stanza.Presence;
 import com.firstlinecode.basalt.protocol.im.stanza.Presence.Type;
 import com.firstlinecode.granite.framework.core.adf.data.IDataObjectFactory;
 import com.firstlinecode.granite.framework.core.adf.data.IDataObjectFactoryAware;
+import com.firstlinecode.granite.framework.core.annotations.BeanDependency;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.auth.IAuthenticator;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
-import com.firstlinecode.granite.framework.core.pipeline.processing.IProcessingContext;
+import com.firstlinecode.granite.framework.core.pipeline.stages.processing.IProcessingContext;
 import com.firstlinecode.granite.framework.core.utils.StanzaCloner;
 import com.firstlinecode.granite.framework.im.IPresenceProcessor;
 import com.firstlinecode.granite.framework.im.IResource;
@@ -32,16 +33,16 @@ import com.firstlinecode.granite.framework.im.SubscriptionType;
 public class SubscriptionProcessor implements IPresenceProcessor, IServerConfigurationAware,
 		IDataObjectFactoryAware {
 	
-	@Dependency("subscription.service")
+	@BeanDependency
 	private ISubscriptionService subscriptionService;
 	
-	@Dependency("authenticator")
+	@BeanDependency
 	private IAuthenticator authenticator;
 	
 	@Dependency("roster.operator")
 	private RosterOperator rosterOperator;
 	
-	@Dependency("resources.service")
+	@BeanDependency
 	private IResourcesService resourcesService;
 	
 	private IDataObjectFactory dataObjectFactory;

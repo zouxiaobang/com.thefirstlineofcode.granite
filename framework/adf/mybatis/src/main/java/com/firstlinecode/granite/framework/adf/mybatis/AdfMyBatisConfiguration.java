@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.type.EnumTypeHandler;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.pf4j.PluginManager;
@@ -17,6 +18,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.UrlResource;
 
+import com.firstlinecode.basalt.protocol.core.JabberId;
+import com.firstlinecode.basalt.protocol.datetime.DateTime;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
 
@@ -63,11 +66,19 @@ public class AdfMyBatisConfiguration implements IApplicationComponentServiceAwar
 
 		@Override
 		public SqlSessionFactory build(org.apache.ibatis.session.Configuration configuration) {
+			loadPredefinedTypeHandlers(configuration);
+			
 			List<IDataContributor> dataContributors = pluginManager.getExtensions(IDataContributor.class);
 			if (dataContributors == null || dataContributors.size() == 0) {
 				return super.build(configuration);			
 			}
 			
+			loadContributedData(configuration, dataContributors);
+			return super.build(configuration);
+		}
+
+		private void loadContributedData(org.apache.ibatis.session.Configuration configuration,
+				List<IDataContributor> dataContributors) {
 			for (IDataContributor dataContributor : dataContributors) {				
 				TypeHandlerMapping<?>[] typeHandlerMaps = dataContributor.getTypeHandlerMappings();
 				if (typeHandlerMaps != null && typeHandlerMaps.length != 0) {
@@ -84,8 +95,6 @@ public class AdfMyBatisConfiguration implements IApplicationComponentServiceAwar
 					registerMappers(configuration, mappers, dataContributor);
 				}
 			}
-			
-			return super.build(configuration);
 		}
 
 		private void registerMappers(org.apache.ibatis.session.Configuration configuration, URL[] mappers, IDataContributor dataContributor) {
@@ -131,7 +140,18 @@ public class AdfMyBatisConfiguration implements IApplicationComponentServiceAwar
 				} else {
 					configuration.getTypeHandlerRegistry().register(typeHandlerMap.type, typeHandlerMap.typeHandlerType);
 				}
+				configuration.getTypeAliasRegistry().registerAlias(typeHandlerMap.typeHandlerType.getSimpleName(), typeHandlerMap.typeHandlerType);
 			}
+		}
+
+		private void loadPredefinedTypeHandlers(org.apache.ibatis.session.Configuration configuration) {
+			configuration.getTypeHandlerRegistry().register(JabberId.class, JabberIdTypeHandler.class);
+			configuration.getTypeHandlerRegistry().register(DateTime.class, DateTimeTypeHandler.class);
+			
+			configuration.getTypeAliasRegistry().registerAlias("JabberId", JabberId.class);
+			configuration.getTypeAliasRegistry().registerAlias("JabberIdTypeHandler", JabberIdTypeHandler.class);
+			configuration.getTypeAliasRegistry().registerAlias("EnumTypeHandler", EnumTypeHandler.class);
+			configuration.getTypeAliasRegistry().registerAlias("DateTimeTypeHandler", DateTimeTypeHandler.class);
 		}
 	}
 

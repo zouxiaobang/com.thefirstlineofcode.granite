@@ -8,7 +8,7 @@ import com.firstlinecode.granite.framework.core.annotations.Component;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
 import com.firstlinecode.granite.framework.core.connection.IConnectionManager;
 import com.firstlinecode.granite.framework.core.pipeline.IMessage;
-import com.firstlinecode.granite.framework.core.pipeline.stream.IDeliveryMessageReceiver;
+import com.firstlinecode.granite.framework.core.pipeline.stages.stream.IDeliveryMessageReceiver;
 
 @Component(value="lite.routing.2.stream.message.receiver")
 public class Routing2StreamMessageReceiver extends MessageReceiver implements IDeliveryMessageReceiver {

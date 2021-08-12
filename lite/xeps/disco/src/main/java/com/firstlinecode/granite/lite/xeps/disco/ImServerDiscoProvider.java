@@ -11,7 +11,7 @@ import com.firstlinecode.basalt.xeps.disco.Identity;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
-import com.firstlinecode.granite.framework.core.pipeline.processing.IProcessingContext;
+import com.firstlinecode.granite.framework.core.pipeline.stages.processing.IProcessingContext;
 import com.firstlinecode.granite.xeps.disco.IDiscoProvider;
 
 @Extension

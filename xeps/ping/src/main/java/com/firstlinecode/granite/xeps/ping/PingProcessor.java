@@ -6,8 +6,8 @@ import com.firstlinecode.basalt.protocol.core.stanza.error.StanzaError;
 import com.firstlinecode.basalt.xeps.ping.Ping;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
-import com.firstlinecode.granite.framework.core.pipeline.processing.IProcessingContext;
-import com.firstlinecode.granite.framework.core.pipeline.processing.IXepProcessor;
+import com.firstlinecode.granite.framework.core.pipeline.stages.processing.IProcessingContext;
+import com.firstlinecode.granite.framework.core.pipeline.stages.processing.IXepProcessor;
 
 public class PingProcessor implements IXepProcessor<Iq, Ping>, IConfigurationAware {
 	private static final String CONFIG_KEY_DISABLED = "disabled";

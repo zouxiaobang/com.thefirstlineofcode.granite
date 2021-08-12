@@ -5,13 +5,13 @@ import org.pf4j.Extension;
 import com.firstlinecode.basalt.protocol.core.ProtocolChain;
 import com.firstlinecode.basalt.protocol.core.stanza.Iq;
 import com.firstlinecode.basalt.xeps.ping.Ping;
-import com.firstlinecode.granite.framework.core.pipeline.PipelineExtendersContributorAdapter;
-import com.firstlinecode.granite.framework.core.pipeline.parsing.IProtocolParserFactory;
-import com.firstlinecode.granite.framework.core.pipeline.parsing.SimpleObjectProtocolParserFactory;
-import com.firstlinecode.granite.framework.core.pipeline.processing.IXepProcessorFactory;
-import com.firstlinecode.granite.framework.core.pipeline.processing.SingletonXepProcessorFactory;
-import com.firstlinecode.granite.framework.core.pipeline.routing.IProtocolTranslatorFactory;
-import com.firstlinecode.granite.framework.core.pipeline.routing.SimpleObjectProtocolTranslatorFactory;
+import com.firstlinecode.granite.framework.core.pipeline.stages.PipelineExtendersContributorAdapter;
+import com.firstlinecode.granite.framework.core.pipeline.stages.parsing.IProtocolParserFactory;
+import com.firstlinecode.granite.framework.core.pipeline.stages.parsing.SimpleObjectProtocolParserFactory;
+import com.firstlinecode.granite.framework.core.pipeline.stages.processing.IXepProcessorFactory;
+import com.firstlinecode.granite.framework.core.pipeline.stages.processing.SingletonXepProcessorFactory;
+import com.firstlinecode.granite.framework.core.pipeline.stages.routing.IProtocolTranslatorFactory;
+import com.firstlinecode.granite.framework.core.pipeline.stages.routing.SimpleObjectProtocolTranslatorFactory;
 
 @Extension
 public class PipelineExtendersContributor extends PipelineExtendersContributorAdapter {

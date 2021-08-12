@@ -3,16 +3,14 @@ package com.firstlinecode.granite.lite.auth;
 import org.pf4j.Extension;
 
 import com.firstlinecode.granite.framework.adf.mybatis.DataContributorAdapter;
-import com.firstlinecode.granite.framework.adf.mybatis.DataObjectMapping;
-import com.firstlinecode.granite.framework.core.auth.Account;
 
 @Extension
 public class DataContributor extends DataContributorAdapter {
 
 	@Override
-	public DataObjectMapping<?>[] getDataObjectMappings() {
-		return new DataObjectMapping[] {
-				new DataObjectMapping<Account>(D_Account.class)
+	public Class<?>[] getDataObjects() {
+		return new Class<?>[] {
+			D_Account.class
 		};
 	}
 	

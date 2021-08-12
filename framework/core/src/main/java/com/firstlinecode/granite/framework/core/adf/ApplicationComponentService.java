@@ -30,11 +30,11 @@ import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
 import com.firstlinecode.granite.framework.core.pipeline.IMessageChannel;
-import com.firstlinecode.granite.framework.core.pipeline.IPipelineExtender;
 import com.firstlinecode.granite.framework.core.pipeline.SimpleMessage;
-import com.firstlinecode.granite.framework.core.pipeline.event.IEvent;
-import com.firstlinecode.granite.framework.core.pipeline.event.IEventFirer;
-import com.firstlinecode.granite.framework.core.pipeline.event.IEventFirerAware;
+import com.firstlinecode.granite.framework.core.pipeline.stages.IPipelineExtender;
+import com.firstlinecode.granite.framework.core.pipeline.stages.event.IEvent;
+import com.firstlinecode.granite.framework.core.pipeline.stages.event.IEventFirer;
+import com.firstlinecode.granite.framework.core.pipeline.stages.event.IEventFirerAware;
 import com.firstlinecode.granite.framework.core.repository.CreationException;
 import com.firstlinecode.granite.framework.core.repository.IComponentInfo;
 import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
@@ -85,6 +85,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 		return pluginManager;
 	}
 	
+	@Override
 	public IApplicationComponentConfigurations getApplicationComponentConfigurations() {
 		return appComponentConfigurations;
 	}
@@ -394,13 +395,13 @@ public class ApplicationComponentService implements IApplicationComponentService
 		}
 		
 		Class<?> parent = clazz.getSuperclass();
-		if (!isPipeExtender(parent) && parent.getAnnotation(Component.class) == null)
+		if (!isPipelineExtender(parent) && parent.getAnnotation(Component.class) == null)
 			return fields;
 		
 		return getClassFields(parent, fields);
 	}
 	
-	private boolean isPipeExtender(Class<?> clazz) {
+	private boolean isPipelineExtender(Class<?> clazz) {
 		return IParser.class.isAssignableFrom(clazz) ||
 			ITranslator.class.isAssignableFrom(clazz) ||
 			IPipelineExtender.class.isAssignableFrom(clazz);
@@ -452,9 +453,18 @@ public class ApplicationComponentService implements IApplicationComponentService
 		enhancer.setSuperclass(type);
 		enhancer.setCallback(new LazyLoadComponentInvocationHandler(id));
 		enhancer.setUseFactory(false);
-		enhancer.setClassLoader(type.getClassLoader());
+		enhancer.setClassLoader(getClassLoader(type));
 		
 		return (T)enhancer.create();
+	}
+
+	private <T> ClassLoader getClassLoader(Class<T> type) {
+		PluginWrapper plugin = pluginManager.whichPlugin(type);
+		if (plugin != null) {
+			return plugin.getPluginClassLoader();
+		}
+		
+		return type.getClassLoader();
 	}
 	
 	private class LazyLoadComponentInvocationHandler implements InvocationHandler {

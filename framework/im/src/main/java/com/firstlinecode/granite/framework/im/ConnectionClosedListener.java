@@ -5,9 +5,9 @@ import java.util.List;
 import com.firstlinecode.basalt.protocol.core.JabberId;
 import com.firstlinecode.basalt.protocol.im.stanza.Presence;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
-import com.firstlinecode.granite.framework.core.pipeline.event.ConnectionClosedEvent;
-import com.firstlinecode.granite.framework.core.pipeline.event.IEventContext;
-import com.firstlinecode.granite.framework.core.pipeline.event.IEventListener;
+import com.firstlinecode.granite.framework.core.pipeline.stages.event.ConnectionClosedEvent;
+import com.firstlinecode.granite.framework.core.pipeline.stages.event.IEventContext;
+import com.firstlinecode.granite.framework.core.pipeline.stages.event.IEventListener;
 
 public class ConnectionClosedListener implements IEventListener<ConnectionClosedEvent> {
 	@Dependency("resources.register")

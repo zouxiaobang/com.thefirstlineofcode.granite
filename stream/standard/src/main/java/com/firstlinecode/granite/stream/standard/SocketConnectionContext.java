@@ -9,7 +9,7 @@ import com.firstlinecode.basalt.protocol.core.JabberId;
 import com.firstlinecode.granite.framework.core.connection.IClientConnectionContext;
 import com.firstlinecode.granite.framework.core.pipeline.IMessage;
 import com.firstlinecode.granite.framework.core.session.ValueWrapper;
-import com.firstlinecode.granite.pipeline.stream.security.TlsEnvironment;
+import com.firstlinecode.granite.pipeline.stages.stream.security.TlsEnvironment;
 
 public class SocketConnectionContext extends AbstractSocketConnectionContext implements IClientConnectionContext {
 	public static final String STREAM_ID = "socket";
@@ -60,7 +60,7 @@ public class SocketConnectionContext extends AbstractSocketConnectionContext imp
 				throw new SecurityException("io error", e);
 			}
 			
-			globalSslFilter = new SslFilter(tlsEnvironment.getSslContext());
+			globalSslFilter = new SslFilter(tlsEnvironment.getSslContext(), false);
 			
 			globalSslFilter.setEnabledProtocols(new String[] {
 				"TLSv1",

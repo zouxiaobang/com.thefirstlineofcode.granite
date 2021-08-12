@@ -67,8 +67,8 @@ public class DbaConfiguration implements ISpringConfiguration, IServerConfigurat
 			if (initScripts == null || initScripts.length == 0)
 				continue;
 			
-			for (int i = 0; i < initScripts.length; i++) {
-				resourceDatabasePopulator.addScript(new UrlResource(initScripts[i]));			
+			for (URL initScript : initScripts) {
+				resourceDatabasePopulator.addScript(new UrlResource(initScript));			
 			}
 		}
 		resourceDatabasePopulator.setContinueOnError(true);

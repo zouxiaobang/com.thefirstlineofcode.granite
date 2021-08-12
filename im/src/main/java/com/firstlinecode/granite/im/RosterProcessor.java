@@ -6,8 +6,8 @@ import com.firstlinecode.basalt.protocol.core.stanza.Iq;
 import com.firstlinecode.basalt.protocol.core.stanza.error.BadRequest;
 import com.firstlinecode.basalt.protocol.im.roster.Roster;
 import com.firstlinecode.granite.framework.core.annotations.Dependency;
-import com.firstlinecode.granite.framework.core.pipeline.processing.IProcessingContext;
-import com.firstlinecode.granite.framework.core.pipeline.processing.IXepProcessor;
+import com.firstlinecode.granite.framework.core.pipeline.stages.processing.IProcessingContext;
+import com.firstlinecode.granite.framework.core.pipeline.stages.processing.IXepProcessor;
 import com.firstlinecode.granite.framework.core.session.ISession;
 
 public class RosterProcessor implements IXepProcessor<Iq, Roster> {

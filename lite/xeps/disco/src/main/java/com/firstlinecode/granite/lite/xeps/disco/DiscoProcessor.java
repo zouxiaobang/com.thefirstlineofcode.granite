@@ -19,7 +19,7 @@ import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService
 import com.firstlinecode.granite.framework.core.annotations.AppComponent;
 import com.firstlinecode.granite.framework.core.config.IConfiguration;
 import com.firstlinecode.granite.framework.core.config.IConfigurationAware;
-import com.firstlinecode.granite.framework.core.pipeline.processing.IProcessingContext;
+import com.firstlinecode.granite.framework.core.pipeline.stages.processing.IProcessingContext;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.xeps.disco.IDiscoProcessor;
 import com.firstlinecode.granite.xeps.disco.IDiscoProvider;

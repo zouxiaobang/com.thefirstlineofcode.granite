@@ -3,15 +3,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.firstlinecode.granite.lite.im.SubscriptionMapper">
 	<select id="selectByUser" resultType="Subscription">
-		SELECT * FROM SUBSCRIPTIONS WHERE SUBSCRIPTIONS.user=#{0}
+		SELECT * FROM SUBSCRIPTIONS WHERE SUBSCRIPTIONS.user=#{arg0}
     </select>
     
 	<select id="selectByUserAndContact" resultType="Subscription">
-		SELECT * FROM SUBSCRIPTIONS WHERE SUBSCRIPTIONS.user=#{0} AND contact=#{1}
+		SELECT * FROM SUBSCRIPTIONS WHERE SUBSCRIPTIONS.user=#{arg0} AND contact=#{arg1}
     </select>
     
 	<select id="selectCountByUserAndContact" resultType="int">
-		SELECT count(*) FROM SUBSCRIPTIONS WHERE SUBSCRIPTIONS.user=#{0} AND contact=#{1}
+		SELECT count(*) FROM SUBSCRIPTIONS WHERE SUBSCRIPTIONS.user=#{arg0} AND contact=#{arg1}
     </select>
     
     <insert id="insert" parameterType="Subscription">
@@ -19,11 +19,11 @@
     </insert>
     
     <insert id="updateNameAndGroups">
-        UPDATE SUBSCRIPTIONS SET name=#{2}, groups=#{3} WHERE SUBSCRIPTIONS.user=#{0} AND contact=#{1}
+        UPDATE SUBSCRIPTIONS SET name=#{2}, groups=#{3} WHERE SUBSCRIPTIONS.user=#{arg0} AND contact=#{arg1}
     </insert>
     
     <insert id="updateState">
-        UPDATE SUBSCRIPTIONS SET state=#{2, typeHandler=org.apache.ibatis.type.EnumTypeHandler} WHERE SUBSCRIPTIONS.user=#{0} AND contact=#{1}
+        UPDATE SUBSCRIPTIONS SET state=#{2, typeHandler=org.apache.ibatis.type.EnumTypeHandler} WHERE SUBSCRIPTIONS.user=#{arg0} AND contact=#{arg1}
     </insert>
     
     <insert id="insertNotification" parameterType="SubscriptionNotification">
@@ -31,11 +31,11 @@
     </insert>
     
     <select id="selectNotificationsByUser" resultType="SubscriptionNotification">
-		SELECT * FROM SUBSCRIPTION_NOTIFICATIONS WHERE SUBSCRIPTION_NOTIFICATIONS.user=#{0}
+		SELECT * FROM SUBSCRIPTION_NOTIFICATIONS WHERE SUBSCRIPTION_NOTIFICATIONS.user=#{arg0}
     </select>
     
     <select id="selectNotificationsByUserAndContact" resultType="SubscriptionNotification">
-		SELECT * FROM SUBSCRIPTION_NOTIFICATIONS WHERE SUBSCRIPTION_NOTIFICATIONS.user=#{0} AND contact=#{1}
+		SELECT * FROM SUBSCRIPTION_NOTIFICATIONS WHERE SUBSCRIPTION_NOTIFICATIONS.user=#{arg0} AND contact=#{arg1}
     </select>
     
     <delete id="deleteNotification" parameterType="SubscriptionNotification">

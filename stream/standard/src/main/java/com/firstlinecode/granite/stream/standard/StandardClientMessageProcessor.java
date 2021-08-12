@@ -48,20 +48,21 @@ import com.firstlinecode.granite.framework.core.pipeline.IClientMessageProcessor
 import com.firstlinecode.granite.framework.core.pipeline.IMessage;
 import com.firstlinecode.granite.framework.core.pipeline.IMessageChannel;
 import com.firstlinecode.granite.framework.core.pipeline.SimpleMessage;
-import com.firstlinecode.granite.framework.core.pipeline.event.ConnectionClosedEvent;
-import com.firstlinecode.granite.framework.core.pipeline.event.ConnectionOpenedEvent;
-import com.firstlinecode.granite.framework.core.pipeline.routing.IRouter;
+import com.firstlinecode.granite.framework.core.pipeline.stages.IPipelineExtendersContributor;
+import com.firstlinecode.granite.framework.core.pipeline.stages.event.ConnectionClosedEvent;
+import com.firstlinecode.granite.framework.core.pipeline.stages.event.ConnectionOpenedEvent;
+import com.firstlinecode.granite.framework.core.pipeline.stages.routing.IRouter;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.session.ISessionListener;
 import com.firstlinecode.granite.framework.core.session.ISessionManager;
 import com.firstlinecode.granite.framework.core.utils.CommonUtils;
-import com.firstlinecode.granite.pipeline.stream.IStreamNegotiant;
-import com.firstlinecode.granite.pipeline.stream.StreamConstants;
-import com.firstlinecode.granite.pipeline.stream.negotiants.InitialStreamNegotiant;
-import com.firstlinecode.granite.pipeline.stream.negotiants.ResourceBindingNegotiant;
-import com.firstlinecode.granite.pipeline.stream.negotiants.SaslNegotiant;
-import com.firstlinecode.granite.pipeline.stream.negotiants.SessionEstablishmentNegotiant;
-import com.firstlinecode.granite.pipeline.stream.negotiants.TlsNegotiant;
+import com.firstlinecode.granite.pipeline.stages.stream.IStreamNegotiant;
+import com.firstlinecode.granite.pipeline.stages.stream.StreamConstants;
+import com.firstlinecode.granite.pipeline.stages.stream.negotiants.InitialStreamNegotiant;
+import com.firstlinecode.granite.pipeline.stages.stream.negotiants.ResourceBindingNegotiant;
+import com.firstlinecode.granite.pipeline.stages.stream.negotiants.SaslNegotiant;
+import com.firstlinecode.granite.pipeline.stages.stream.negotiants.SessionEstablishmentNegotiant;
+import com.firstlinecode.granite.pipeline.stages.stream.negotiants.TlsNegotiant;
 
 @Component("standard.client.message.processor")
 public class StandardClientMessageProcessor implements IClientMessageProcessor, IConfigurationAware,
@@ -367,23 +368,25 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 	}
 	
 	private void loadContributedSessionListeners() {
-		List<Class<? extends ISessionListener>> sessionListenerClasses = appComponentService.
-				getExtensionClasses(ISessionListener.class);
-		if (sessionListenerClasses == null || sessionListenerClasses.size() == 0) {
-			if (logger.isDebugEnabled())
-				logger.debug("No extension which's extension point is {} found.", ISessionListener.class.getName());
-			
+		List<Class<? extends IPipelineExtendersContributor>> contributorClasses = appComponentService.
+				getExtensionClasses(IPipelineExtendersContributor.class);
+		if (contributorClasses == null || contributorClasses.size() == 0) {
 			return;
 		}
 		
-		for (Class<? extends ISessionListener> sessionListenerClass : sessionListenerClasses) {
-			ISessionListener sessionListener = appComponentService.createRawExtension(sessionListenerClass);
-			if (sessionListener instanceof IConnectionManagerAware) {
-				((IConnectionManagerAware)sessionListener).setConnectionManager(connectionManager);
-			}
+		for (Class<? extends IPipelineExtendersContributor> contributorClass : contributorClasses) {
+			IPipelineExtendersContributor contributor = appComponentService.createExtension(contributorClass);
+			ISessionListener[] sessionListeners = contributor.getSessionListeners();
+			if (sessionListeners == null || sessionListeners.length == 0)
+				continue;
 			
-			appComponentService.inject(sessionListener);
-			sessionListeners.add(sessionListener);
+			for (ISessionListener sessionListener : sessionListeners) {
+				if (sessionListener instanceof IConnectionManagerAware) {
+					((IConnectionManagerAware)sessionListener).setConnectionManager(connectionManager);
+				}
+				
+				this.sessionListeners.add(appComponentService.inject(sessionListener));
+			}
 		}
 	}
 

@@ -10,11 +10,11 @@ import com.firstlinecode.basalt.protocol.core.stanza.error.UnexpectedRequest;
 import com.firstlinecode.basalt.protocol.core.stream.error.InternalServerError;
 import com.firstlinecode.basalt.protocol.im.stanza.Presence;
 import com.firstlinecode.basalt.protocol.im.stanza.Presence.Type;
-import com.firstlinecode.granite.framework.core.annotations.Dependency;
+import com.firstlinecode.granite.framework.core.annotations.BeanDependency;
 import com.firstlinecode.granite.framework.core.auth.IAuthenticator;
-import com.firstlinecode.granite.framework.core.pipeline.event.IEventFirer;
-import com.firstlinecode.granite.framework.core.pipeline.event.IEventFirerAware;
-import com.firstlinecode.granite.framework.core.pipeline.processing.IProcessingContext;
+import com.firstlinecode.granite.framework.core.pipeline.stages.event.IEventFirer;
+import com.firstlinecode.granite.framework.core.pipeline.stages.event.IEventFirerAware;
+import com.firstlinecode.granite.framework.core.pipeline.stages.processing.IProcessingContext;
 import com.firstlinecode.granite.framework.core.utils.StanzaCloner;
 import com.firstlinecode.granite.framework.im.IPresenceProcessor;
 import com.firstlinecode.granite.framework.im.IResource;
@@ -26,16 +26,16 @@ import com.firstlinecode.granite.framework.im.Subscription;
 import com.firstlinecode.granite.framework.im.Subscription.State;
 
 public class StandardPresenceProcessor implements IPresenceProcessor, IEventFirerAware {
-	@Dependency("authenticator")
+	@BeanDependency
 	private IAuthenticator authenticator;
 	
-	@Dependency("resources.service")
+	@BeanDependency
 	private IResourcesService resourcesService;
 	
-	@Dependency("resources.register")
+	@BeanDependency
 	private IResourcesRegister resourcesRegister;
 	
-	@Dependency("subscription.service")
+	@BeanDependency
 	private ISubscriptionService subscriptionService;
 	
 	private IEventFirer eventFirer;

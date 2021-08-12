@@ -14,11 +14,12 @@
 	<groupId>com.firstlinecode.granite.lite</groupId>
 	<artifactId>granite-lite-xeps</artifactId>
 	<packaging>pom</packaging>
-	<name>XEPs implementation for deploy lite</name>
+	<name>XEPs implementations for deploy lite</name>
 
 	<modules>
 		<module>ibr</module>
 		<module>disco</module>
+		<module>muc</module>
 	</modules>
 
 </project>

@@ -15,7 +15,7 @@ import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
 import com.firstlinecode.granite.framework.core.pipeline.IMessage;
 import com.firstlinecode.granite.framework.core.pipeline.IMessageChannel;
 import com.firstlinecode.granite.framework.core.pipeline.SimpleMessage;
-import com.firstlinecode.granite.framework.core.pipeline.processing.IProcessingContext;
+import com.firstlinecode.granite.framework.core.pipeline.stages.processing.IProcessingContext;
 import com.firstlinecode.granite.framework.core.session.ISession;
 import com.firstlinecode.granite.framework.core.session.ValueWrapper;
 

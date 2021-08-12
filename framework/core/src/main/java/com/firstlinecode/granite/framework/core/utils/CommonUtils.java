@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
-import com.firstlinecode.granite.framework.core.pipeline.IPipelineExtendersContributor;
+import com.firstlinecode.granite.framework.core.pipeline.stages.IPipelineExtendersContributor;
 
 public class CommonUtils {
     private static final char SEPARATOR_KEY_VALUE = '=';

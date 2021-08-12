@@ -7,23 +7,23 @@ import com.firstlinecode.basalt.protocol.core.JabberId;
 import com.firstlinecode.basalt.protocol.core.ProtocolException;
 import com.firstlinecode.basalt.protocol.core.stanza.error.BadRequest;
 import com.firstlinecode.basalt.protocol.im.stanza.Message;
-import com.firstlinecode.granite.framework.core.annotations.Dependency;
+import com.firstlinecode.granite.framework.core.annotations.BeanDependency;
 import com.firstlinecode.granite.framework.core.auth.IAuthenticator;
 import com.firstlinecode.granite.framework.core.config.IServerConfiguration;
 import com.firstlinecode.granite.framework.core.config.IServerConfigurationAware;
-import com.firstlinecode.granite.framework.core.pipeline.event.IEventFirer;
-import com.firstlinecode.granite.framework.core.pipeline.event.IEventFirerAware;
-import com.firstlinecode.granite.framework.core.pipeline.processing.IProcessingContext;
+import com.firstlinecode.granite.framework.core.pipeline.stages.event.IEventFirer;
+import com.firstlinecode.granite.framework.core.pipeline.stages.event.IEventFirerAware;
+import com.firstlinecode.granite.framework.core.pipeline.stages.processing.IProcessingContext;
 import com.firstlinecode.granite.framework.im.IMessageProcessor;
 import com.firstlinecode.granite.framework.im.IResource;
 import com.firstlinecode.granite.framework.im.IResourcesService;
 import com.firstlinecode.granite.framework.im.OfflineMessageEvent;
 
 public class StandardMessageProcessor implements IMessageProcessor, IEventFirerAware, IServerConfigurationAware {
-	@Dependency("authenticator")
+	@BeanDependency
 	private IAuthenticator authenticator;
 	
-	@Dependency("resources.service")
+	@BeanDependency
 	private IResourcesService resourcesService;
 	
 	private IEventFirer eventFirer;

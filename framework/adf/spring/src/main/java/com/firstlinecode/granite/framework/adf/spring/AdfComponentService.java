@@ -39,7 +39,7 @@ public class AdfComponentService extends ApplicationComponentService {
 		registerPredefinedSpringConfigurations();
 		
 		ClassLoader[] classLoaders = registerContributedSpringConfigurations();
-		if (classLoaders != null) {			
+		if (classLoaders != null) {
 			appContext.setClassLoader(new CompositeClassLoader(classLoaders));
 		}
 		

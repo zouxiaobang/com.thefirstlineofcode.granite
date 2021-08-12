@@ -3,12 +3,12 @@ package com.firstlinecode.granite.framework.im;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.firstlinecode.basalt.oxm.IOxmFactory;
+import com.firstlinecode.basalt.oxm.OxmService;
 import com.firstlinecode.basalt.protocol.core.JabberId;
 import com.firstlinecode.basalt.protocol.core.stream.Stream;
 import com.firstlinecode.basalt.protocol.core.stream.error.Conflict;
-import com.firstlinecode.basalt.oxm.IOxmFactory;
-import com.firstlinecode.basalt.oxm.OxmService;
-import com.firstlinecode.granite.framework.core.annotations.Dependency;
+import com.firstlinecode.granite.framework.core.annotations.BeanDependency;
 import com.firstlinecode.granite.framework.core.connection.IClientConnectionContext;
 import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
 import com.firstlinecode.granite.framework.core.connection.IConnectionManager;
@@ -18,10 +18,10 @@ import com.firstlinecode.granite.framework.core.session.ISessionListener;
 public class SessionListener implements ISessionListener, IConnectionManagerAware {
 	private static final Logger logger = LoggerFactory.getLogger(SessionListener.class);
 	
-	@Dependency("resources.register")
-	private IResourcesRegister register;
+	@BeanDependency
+	private IResourcesRegister resourcesRegister;
 	
-	@Dependency("resources.service")
+	@BeanDependency
 	private IResourcesService resourceService;
 	
 	private IConnectionManager connectionManager;
@@ -34,7 +34,7 @@ public class SessionListener implements ISessionListener, IConnectionManagerAwar
 	@Override
 	public void sessionEstablished(IConnectionContext context, JabberId sessionJid) throws Exception {
 		try {
-			register.register(sessionJid);
+			resourcesRegister.register(sessionJid);
 		} catch (ResourceRegistrationException e) {
 			logger.error("Can't register resource. JID is {}.", sessionJid);
 			throw e;
@@ -47,7 +47,7 @@ public class SessionListener implements ISessionListener, IConnectionManagerAwar
 	
 	@Override
 	public void sessionClosed(IConnectionContext context, JabberId sessionJid) throws Exception {
-		register.unregister(sessionJid);
+		resourcesRegister.unregister(sessionJid);
 	}
 
 	@Override

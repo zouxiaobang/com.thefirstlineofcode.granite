@@ -82,7 +82,7 @@
 	<modules>
 		<module>server</module>
 		<module>framework</module>
-		<module>pipelines</module>
+		<module>pipeline</module>
 		<module>stream</module>
 		<module>im</module>
 	<!--	<module>leps</module> -->
@@ -290,6 +290,11 @@
 				<artifactId>basalt-xeps-disco</artifactId>
 				<version>${basalt.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.basalt.xeps</groupId>
+				<artifactId>basalt-xeps-muc</artifactId>
+				<version>${basalt.version}</version>
+			</dependency>
 			<!-- Granite Libraries -->
 			<dependency>
 				<groupId>com.firstlinecode.granite</groupId>
@@ -319,28 +324,28 @@
 			</dependency>
 			<!-- Granite pipeline stage implementations -->
 			<dependency>
-				<groupId>com.firstlinecode.granite.pipelines</groupId>
-				<artifactId>granite-pipelines-stream</artifactId>
+				<groupId>com.firstlinecode.granite.pipeline.stages</groupId>
+				<artifactId>granite-pipeline-stages-stream</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.granite.pipelines</groupId>
-				<artifactId>granite-pipelines-parsing</artifactId>
+				<groupId>com.firstlinecode.granite.pipeline.stages</groupId>
+				<artifactId>granite-pipeline-stages-parsing</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.granite.pipelines</groupId>
-				<artifactId>granite-pipelines-processing</artifactId>
+				<groupId>com.firstlinecode.granite.pipeline.stages</groupId>
+				<artifactId>granite-pipeline-stages-processing</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.granite.pipelines</groupId>
-				<artifactId>granite-pipelines-routing</artifactId>
+				<groupId>com.firstlinecode.granite.pipeline.stages</groupId>
+				<artifactId>granite-pipeline-stages-routing</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.granite.pipelines</groupId>
-				<artifactId>granite-pipelines-event</artifactId>
+				<groupId>com.firstlinecode.granite.pipeline.stages</groupId>
+				<artifactId>granite-pipeline-stages-event</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<!-- Standard protocol implementation for XMPP stream -->
@@ -392,6 +397,11 @@
 				<artifactId>granite-xeps-disco</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.xeps</groupId>
+				<artifactId>granite-xeps-muc</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
 			<!-- Deploly lite plugins -->
 			<dependency>
 				<groupId>com.firstlinecode.granite.lite</groupId>
@@ -406,6 +416,11 @@
 			<dependency>
 				<groupId>com.firstlinecode.granite.lite.xeps</groupId>
 				<artifactId>granite-lite-xeps-disco</artifactId>
+				<version>${granite.version}</version>
+			</dependency>	
+			<dependency>
+				<groupId>com.firstlinecode.granite.lite.xeps</groupId>
+				<artifactId>granite-lite-xeps-muc</artifactId>
 				<version>${granite.version}</version>
 			</dependency>	
 			

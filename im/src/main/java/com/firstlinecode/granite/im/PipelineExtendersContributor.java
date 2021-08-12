@@ -8,16 +8,18 @@ import com.firstlinecode.basalt.protocol.core.stanza.Iq;
 import com.firstlinecode.basalt.protocol.im.roster.Roster;
 import com.firstlinecode.basalt.protocol.im.roster.RosterParser;
 import com.firstlinecode.basalt.protocol.im.roster.RosterTranslatorFactory;
-import com.firstlinecode.granite.framework.core.pipeline.PipelineExtendersContributorAdapter;
-import com.firstlinecode.granite.framework.core.pipeline.event.EventListenerFactory;
-import com.firstlinecode.granite.framework.core.pipeline.event.IEventListenerFactory;
-import com.firstlinecode.granite.framework.core.pipeline.parsing.IProtocolParserFactory;
-import com.firstlinecode.granite.framework.core.pipeline.parsing.ProtocolParserFactory;
-import com.firstlinecode.granite.framework.core.pipeline.processing.IXepProcessorFactory;
-import com.firstlinecode.granite.framework.core.pipeline.processing.SingletonXepProcessorFactory;
-import com.firstlinecode.granite.framework.core.pipeline.routing.IProtocolTranslatorFactory;
-import com.firstlinecode.granite.framework.core.pipeline.routing.ProtocolTranslatorFactory;
+import com.firstlinecode.granite.framework.core.pipeline.stages.PipelineExtendersContributorAdapter;
+import com.firstlinecode.granite.framework.core.pipeline.stages.event.EventListenerFactory;
+import com.firstlinecode.granite.framework.core.pipeline.stages.event.IEventListenerFactory;
+import com.firstlinecode.granite.framework.core.pipeline.stages.parsing.IProtocolParserFactory;
+import com.firstlinecode.granite.framework.core.pipeline.stages.parsing.ProtocolParserFactory;
+import com.firstlinecode.granite.framework.core.pipeline.stages.processing.IXepProcessorFactory;
+import com.firstlinecode.granite.framework.core.pipeline.stages.processing.SingletonXepProcessorFactory;
+import com.firstlinecode.granite.framework.core.pipeline.stages.routing.IProtocolTranslatorFactory;
+import com.firstlinecode.granite.framework.core.pipeline.stages.routing.ProtocolTranslatorFactory;
+import com.firstlinecode.granite.framework.core.session.ISessionListener;
 import com.firstlinecode.granite.framework.im.ResourceAvailabledEvent;
+import com.firstlinecode.granite.framework.im.SessionListener;
 
 @Extension
 public class PipelineExtendersContributor extends PipelineExtendersContributorAdapter {
@@ -53,6 +55,13 @@ public class PipelineExtendersContributor extends PipelineExtendersContributorAd
 	public IEventListenerFactory<?>[] getEventListenerFactories() {
 		return new IEventListenerFactory<?>[] {
 			new EventListenerFactory<>(ResourceAvailabledEvent.class, new ResourceAvailabledEventListener())
+		};
+	}
+	
+	@Override
+	public ISessionListener[] getSessionListeners() {
+		return new ISessionListener[] {
+			new SessionListener()
 		};
 	}
 

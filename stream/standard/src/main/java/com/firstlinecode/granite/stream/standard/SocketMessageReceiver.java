@@ -46,13 +46,13 @@ import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
 import com.firstlinecode.granite.framework.core.pipeline.IClientMessageProcessor;
 import com.firstlinecode.granite.framework.core.pipeline.IMessageProcessor;
 import com.firstlinecode.granite.framework.core.pipeline.SimpleMessage;
-import com.firstlinecode.granite.framework.core.pipeline.routing.ILocalNodeIdProvider;
-import com.firstlinecode.granite.framework.core.pipeline.routing.IRouter;
-import com.firstlinecode.granite.framework.core.pipeline.stream.IClientMessageReceiver;
+import com.firstlinecode.granite.framework.core.pipeline.stages.routing.ILocalNodeIdProvider;
+import com.firstlinecode.granite.framework.core.pipeline.stages.routing.IRouter;
+import com.firstlinecode.granite.framework.core.pipeline.stages.stream.IClientMessageReceiver;
 import com.firstlinecode.granite.framework.core.repository.IInitializable;
 import com.firstlinecode.granite.framework.core.session.ISession;
 import com.firstlinecode.granite.framework.core.session.ISessionManager;
-import com.firstlinecode.granite.pipeline.stream.StreamConstants;
+import com.firstlinecode.granite.pipeline.stages.stream.StreamConstants;
 import com.firstlinecode.granite.stream.standard.codec.MessageDecoder;
 import com.firstlinecode.granite.stream.standard.codec.MessageEncoder;
 
