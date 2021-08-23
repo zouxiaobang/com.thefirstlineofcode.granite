@@ -42,9 +42,6 @@ public class AdfComponentService extends ApplicationComponentService {
 		}
 		
 		appContext.refresh();
-		/*AdfPluginManager adfPluginManager = (AdfPluginManager)pluginManager;
-		adfPluginManager.setApplicationContext(appContext);
-		adfPluginManager.injectExtensionsToSpring();*/
 	}
 	
 	private class CompositeClassLoader extends ClassLoader {
