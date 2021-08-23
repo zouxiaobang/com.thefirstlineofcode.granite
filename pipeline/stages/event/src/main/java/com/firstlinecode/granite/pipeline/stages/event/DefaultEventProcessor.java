@@ -44,7 +44,14 @@ public class DefaultEventProcessor implements IMessageProcessor, IInitializable,
 	@Override
 	public void process(IConnectionContext context, IMessage message) {
 		try {
-			processEvent(context, (IEvent)message.getPayload());
+			IEvent event = (IEvent)message.getPayload();
+			if (logger.isDebugEnabled())
+				logger.debug("Begin to process the event. Event object: {}.", event);
+			
+			processEvent(context, event);
+			
+			if (logger.isDebugEnabled())
+				logger.debug("End of processing the event. Event object: {}.", event);
 		} catch (Exception e) {
 			logger.error("Event processing error.", e);
 		}
@@ -56,7 +63,7 @@ public class DefaultEventProcessor implements IMessageProcessor, IInitializable,
 		List<IEventListener<?>> listeners = eventToListeners.get(event.getClass());
 		if (listeners == null || listeners.size() == 0) {
 			if (logger.isWarnEnabled()) {
-				logger.warn("No event listener is listening to event {}.", event.getClass().getName());
+				logger.warn("No event listener is listening to event which's type is {}.", event.getClass().getName());
 			}
 			
 			return;
@@ -64,6 +71,11 @@ public class DefaultEventProcessor implements IMessageProcessor, IInitializable,
 		
 		for (IEventListener<?> listener : listeners) {
 			((IEventListener<E>)listener).process(getEventContext(context), (E)(event.clone()));
+			
+			if (logger.isTraceEnabled()) {
+				logger.trace("The event has processed by event listener. Event object: {}. Event listener type: {}.",
+						new Object[] {context.getJid(), event, listener.getClass().getName()});
+			}
 		}
 	}
 

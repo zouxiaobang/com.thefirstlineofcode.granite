@@ -10,11 +10,15 @@ import org.apache.mina.core.session.AbstractIoSession;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolEncoderAdapter;
 import org.apache.mina.filter.codec.ProtocolEncoderOutput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.firstlinecode.basalt.oxm.binary.IBinaryXmppProtocolConverter;
 import com.firstlinecode.basalt.protocol.Constants;
 
 public class MessageEncoder extends ProtocolEncoderAdapter {
+	private static final Logger logger = LoggerFactory.getLogger(MessageEncoder.class);
+	
 	private static final char CHAR_HEART_BEAT = ' ';
 	private static final byte BYTE_HEART_BEAT = (byte)CHAR_HEART_BEAT;
 	
@@ -35,10 +39,19 @@ public class MessageEncoder extends ProtocolEncoderAdapter {
 			} else {
 				out.write(IoBuffer.wrap(((String)message).getBytes(Constants.DEFAULT_CHARSET)));
 			}
+			
+			if (logger.isTraceEnabled())
+				logger.trace("Server wrote a message '{}' to client.", message);
 		} else if (isHeartBeatChar(message)) {
 			out.write(IoBuffer.wrap((byte[])message));
+			
+			if (logger.isTraceEnabled())
+				logger.trace("Server wrote a heartbeat char to client.");
 		} else if (isHeartBeatByte(message)) {
 			out.write(IoBuffer.wrap(new byte[] {(byte)message}));
+			
+			if (logger.isTraceEnabled())
+				logger.trace("Server wrote a heartbeat byte to client.");
 		} else {
 			throw new RuntimeException(String.format("Unknown message type: %s.", message.getClass().getName()));
 		}

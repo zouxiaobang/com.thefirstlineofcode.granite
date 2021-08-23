@@ -13,7 +13,7 @@
 	
 	<groupId>com.firstlinecode.granite.xeps</groupId>
 	<artifactId>granite-xeps-ping</artifactId>
-	<name>XEPs ping protocol implementation</name>
+	<name>XEPs Ping protocol implementation</name>
 	
 	<dependencies>
 		<dependency>

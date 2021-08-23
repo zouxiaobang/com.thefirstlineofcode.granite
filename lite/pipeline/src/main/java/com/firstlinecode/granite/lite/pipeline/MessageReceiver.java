@@ -50,7 +50,7 @@ public class MessageReceiver extends AbstractMessageReceiver implements IMessage
 	private int messageQueueMaxSize;
 	
 	private ExecutorService executorService;
-	private Thread messageReaderThread;
+	private Thread messageReadingThread;
 	
 	private volatile boolean stop;
 	
@@ -63,7 +63,7 @@ public class MessageReceiver extends AbstractMessageReceiver implements IMessage
 		stop = false;
 		messageQueue = new ArrayBlockingQueue<>(messageQueueMaxSize);
 		executorService = Executors.newCachedThreadPool();
-		messageReaderThread = new Thread(new Runnable() {
+		messageReadingThread = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
@@ -82,7 +82,7 @@ public class MessageReceiver extends AbstractMessageReceiver implements IMessage
 			}
 			
 		}, String.format("Granite Lite Message Receiver[%s]", pipePosition));
-		messageReaderThread.start();
+		messageReadingThread.start();
 	}
 	
 	protected Runnable getTask(IMessage message) {
@@ -101,7 +101,7 @@ public class MessageReceiver extends AbstractMessageReceiver implements IMessage
 			
 			if (!(message.getPayload() instanceof IEvent)) {
 				if (jid == null) {
-					logger.warn("Null session ID. Integrator: {}. Message: {}.", integratorServicePid, message.getPayload());
+					logger.error("Null session ID. Integrator: {}. Message: {}.", integratorServicePid, message.getPayload());
 					return;
 				}
 			}
@@ -110,7 +110,7 @@ public class MessageReceiver extends AbstractMessageReceiver implements IMessage
 			if (context != null) {
 				messageProcessor.process(context, message);
 			} else {
-				logger.warn("Can't get connection context. Pipe position: {}. JID: {}.", pipePosition, jid);
+				logger.error("Can't get connection context. Pipe position: {}. JID: {}.", pipePosition, jid);
 			}
 		}
 	}
@@ -118,7 +118,7 @@ public class MessageReceiver extends AbstractMessageReceiver implements IMessage
 	@Override
 	protected void doStop() throws Exception {
 		stop = true;
-		messageReaderThread.join();
+		messageReadingThread.join();
 		messageQueue = null;
 		executorService = null;
 		

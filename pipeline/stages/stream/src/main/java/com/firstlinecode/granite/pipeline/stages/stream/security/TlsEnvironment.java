@@ -30,8 +30,10 @@ public class TlsEnvironment {
 	}
 	
 	public SSLContext getSslContext() throws SecurityException {
-		if (!ready())
+		if (!ready()) {
+			logger.error("TLS environment isn't ready.");
 			throw new SecurityException("TLS environment isn't ready.");
+		}
 		
 		KeyStoreManager keyStoreManager = new KeyStoreManager(new File(
 				securityDirectory, NAME_KEY_STORE), DEFAULT_PASSWORD);
@@ -41,6 +43,7 @@ public class TlsEnvironment {
 						
 			return sslContext;
 		} catch (Exception e) {
+			logger.error("Can't get SSL context.", e);
 			throw new SecurityException("Can't get SSL context.", e);
 		}
 	}
@@ -58,6 +61,7 @@ public class TlsEnvironment {
 			logger.info("Security directory doesn't exist. Creating it...");
 			
 			if (!securityDirectory.mkdirs()) {
+				logger.error("Can't create security directory.");
 				throw new SecurityException("Can't create security directory.");
 			} else {
 				logger.info("Security directory created.");

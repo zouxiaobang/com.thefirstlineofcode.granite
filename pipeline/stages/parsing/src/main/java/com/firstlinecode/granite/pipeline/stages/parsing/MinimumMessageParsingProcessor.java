@@ -154,12 +154,15 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 	public void process(IConnectionContext context, IMessage message) {
 		String msg = (String)message.getPayload();
 		
+		if (logger.isDebugEnabled())
+			logger.debug("Begin to parse the XMPP message. Session JID: {}. XMPP message: {}.", context.getJid(), msg);
+		
 		for (IPipelinePreprocessor preprocessor : pipesPreprocessors) {
 			String preprocessedMsg = preprocessor.beforeParsing(msg);
 			
 			if (preprocessedMsg == null) {
-				if (logger.isInfoEnabled())
-					logger.info("Message has dropped by preprcessor before parsing. Original message: {}.", msg);
+				logger.info("Message has dropped by preprcessor before parsing. Session JID: {}. XMPP message: {}.",
+						context.getJid(), msg);
 				
 				return;
 			}
@@ -167,10 +170,9 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 		
 		Object out = parseMessage(context, msg);
 		
-		if (out == null && logger.isWarnEnabled()) {
-			logger.warn("Ignored message. Session JID: {}. Message: {}.",
-					message.getHeaders().get(IMessage.KEY_SESSION_JID),
-					message.getPayload());
+		if (out == null) {
+			logger.warn("Null parsed object. Session JID: {}. XMPP message: {}.",
+					context.getJid(), msg);
 			return;
 		}
 		
@@ -178,17 +180,23 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 			Object preprocessedOut = preprocessor.afterParsing(out);
 			
 			if (preprocessedOut == null) {
-				if (logger.isInfoEnabled())
-					logger.info("Message object has dropped by preprcessor after parsing. Original object: {}.", msg);
+				logger.info("Message object has dropped by preprcessor after parsing. Session JID: {}. XMPP message: {}. Out object type: {}.",
+						new Object[] {context.getJid(), msg, out.getClass().getName()});
 				
 				return;
 			}
 		}
 		
-		context.write(out);
-		
 		if (out instanceof StreamError) {
+			logger.warn("Received a stream error. We will close the stream. Session JID: {}. XMPP message: {}.",
+					context.getJid(), msg);
+			
 			context.close();
+		} else {
+			context.write(out);
+			
+			if (logger.isDebugEnabled())
+				logger.debug("End of parsing the XMPP message. Session JID: {}. XMPP message: {}.", context.getJid(), msg);
 		}
 	}
 
@@ -212,12 +220,14 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 				}
 				
 				if (logger.isTraceEnabled())
-					logger.trace("Stanza parsed. Original message: {}.", message);
+					logger.trace("Stanza parsed. Session JID: {}. XMPP message: {}. Parsed stanza: {}.",
+							new Object[] {context.getJid(), message, stanza});
 				
 				// If server doesn't understand the extended namespaces(rfc3921 2.4)
 				if (FlawedProtocolObject.isFlawed(stanza)) {
 					if (logger.isTraceEnabled())
-						logger.trace("Flawed stanza parsed. Original message: {}.", message);
+						logger.trace("Flawed stanza parsed. Session JID: {}. XMPP message: {}.",
+								context.getJid(), message);
 					
 					if (isServerRecipient(stanza)) {
 						if (stanza instanceof Iq) {
@@ -245,7 +255,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 						}
 					} else {
 						return stanza;
-					}					
+					}
 				}
 				
 				return object;
@@ -271,10 +281,12 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 			
 			out = error;
 			if (logger.isTraceEnabled())
-				logger.trace("Parsing protocol exception. original message: {}.", message);
+				logger.trace("Parsing protocol exception. Session JID: {}. XMPP message: {}.",
+						context.getJid(), message);
 		} catch (RuntimeException e) {
 			out = new InternalServerError(CommonUtils.getInternalServerErrorMessage(e));
-			logger.error(String.format("Parsing error. original message: %s.", message), e);
+			logger.error(String.format("Parsing error. Session JID: {}. XMPP message: %s.",
+					context.getJid(), message), e);
 		}
 		
 		return out;

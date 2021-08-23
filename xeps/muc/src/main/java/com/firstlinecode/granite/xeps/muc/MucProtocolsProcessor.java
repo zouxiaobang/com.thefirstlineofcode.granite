@@ -134,7 +134,7 @@ public class MucProtocolsProcessor implements IServerConfigurationAware,
 
 	private void sendConfigurationForm(IProcessingContext context, Iq iq, MucOwner mucOwner) {
 		Room room = roomService.getRoomSession(iq.getTo().getBareId()).getRoom();
-		checkConfigurePriviliege(iq, room);
+		checkPriviliegeForConfiguration(iq, room);
 		
 		context.write(createRoomConfigurationFormIqResult(iq, room));
 	}
@@ -174,13 +174,13 @@ public class MucProtocolsProcessor implements IServerConfigurationAware,
 	}
 
 	private void configureReservedRoom(IProcessingContext context, Iq iq, XData xData, Room room) {
-		checkConfigurePriviliege(iq, room);
+		checkPriviliegeForConfiguration(iq, room);
 		RoomConfig newRoomConfig = convertConfigFormToRoomConfig(xData);
 		
 		roomService.updateRoomConfig(room, newRoomConfig);
 	}
 
-	private void checkConfigurePriviliege(Iq iq, Room room) {
+	private void checkPriviliegeForConfiguration(Iq iq, Room room) {
 		AffiliatedUser user = room.getAffiliatedUser(iq.getFrom());
 		
 		if (user == null || user.getAffiliation() != Affiliation.OWNER) {
@@ -320,7 +320,7 @@ public class MucProtocolsProcessor implements IServerConfigurationAware,
 
 	private void createInstantRoom(IProcessingContext context, Iq iq) {
 		Room room = roomService.getRoomSession(iq.getTo().getBareId()).getRoom();
-		checkConfigurePriviliege(iq, room);
+		checkPriviliegeForConfiguration(iq, room);
 		
 		if (room.isLocked()) {
 			roomService.unlockRoom(room.getRoomJid());
@@ -345,7 +345,7 @@ public class MucProtocolsProcessor implements IServerConfigurationAware,
 		if (presence.getTo().getResource() == null) {
 			// (xep-0045 7.2.1)
 			// no nickname specified
-			throw new ProtocolException(new JidMalformed());
+			throw new ProtocolException(new JidMalformed("No nickname specified."));
 		}
 		
 		JabberId roomJid = presence.getTo().getBareId();

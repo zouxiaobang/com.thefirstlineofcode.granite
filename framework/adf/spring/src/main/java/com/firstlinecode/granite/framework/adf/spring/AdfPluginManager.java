@@ -2,7 +2,6 @@ package com.firstlinecode.granite.framework.adf.spring;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -40,7 +39,7 @@ public class AdfPluginManager extends SpringPluginManager implements Application
 	private static final String PROPERTY_NAME_PLUGIN_ID = "plugin.id";
 	private static final String PROPERTY_NAME_NON_PLUGIN_DEPENDENCIES = "non-plugin.dependencies";
 	private AdfComponentService appComponentService;
-	private URL[] nonPluginDependencies;
+	private File[] nonPluginDependencies;
 	private Map<String, String[]> pluginIdToNonPluginDependencyIds;
 	
 	public AdfPluginManager() {
@@ -54,7 +53,7 @@ public class AdfPluginManager extends SpringPluginManager implements Application
 	protected void initialize() {
 		super.initialize();
 		
-		List<URL> lNonPluginDependency = new ArrayList<>();
+		List<File> lNonPluginDependencies = new ArrayList<>();
 		pluginIdToNonPluginDependencyIds = new HashMap<>();
 		File pluginsDir = getPluginsRoot().toFile();
 		
@@ -64,14 +63,14 @@ public class AdfPluginManager extends SpringPluginManager implements Application
 			
 			try {				
 				if (!isPlugin(file)) {
-					lNonPluginDependency.add(file.toURI().toURL());
+					lNonPluginDependencies.add(file);
 				}
 			} catch (Exception e) {
 				throw new RuntimeException("Can't load non-plugin dependencies from plugins directory.", e);
 			}
 		}
 		
-		nonPluginDependencies = lNonPluginDependency.toArray(new URL[lNonPluginDependency.size()]);
+		nonPluginDependencies = lNonPluginDependencies.toArray(new File[lNonPluginDependencies.size()]);
 	}
 	
 	private boolean isPlugin(File file) throws Exception {
@@ -188,7 +187,7 @@ public class AdfPluginManager extends SpringPluginManager implements Application
 				add(new DefaultPluginLoader(this), this::isNotDevelopment);
 	}
 	
-	public URL[] getNonPluginDependencies() {
+	public File[] getNonPluginDependencies() {
 		return nonPluginDependencies;
 	}
 	

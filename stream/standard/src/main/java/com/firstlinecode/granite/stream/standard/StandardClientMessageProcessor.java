@@ -167,6 +167,10 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 			
 			messageChannel.send(out);
 		} else {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Begin to negotiate stream. Connection ID: {}.", context.getConnectionId());
+			}
+			
 			IStreamNegotiant negotiant = context.getAttribute(KEY_NEGOTIANT);
 			if (negotiant == null) {
 				negotiant = createNegotiant();
@@ -176,6 +180,10 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 			try {
 				if (negotiant.negotiate(context, message)) {
 					context.removeAttribute(KEY_NEGOTIANT);
+					if (logger.isDebugEnabled()) {
+						logger.debug("Stream has negitiated. Connection ID: {}, Session JID: {}.",
+								context.getConnectionId(), context.getJid());
+					}
 				}
 			} catch (ProtocolException e) {
 				context.write(translatingFactory.translate(e.getError()));
@@ -183,7 +191,7 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 					closeStream(context);
 				}
 			} catch (RuntimeException e) {
-				logger.warn("Negotiation error.", e);
+				logger.error("Negotiation error.", e);
 				
 				InternalServerError error = new InternalServerError();
 				error.setText(new LangText(String.format("Negotiation error. %s.",

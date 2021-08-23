@@ -69,7 +69,7 @@ public class MessageParser implements IMessageParser {
 			byte[] bytes = new byte[byteBuffer.limit()];
 			byteBuffer.get(bytes);
 			if (logger.isTraceEnabled())
-				logger.trace("Some bytes received: {}.", getBytesString(bytes));
+				logger.trace("Some bytes received: {}. Ready to preprocess.", getBytesString(bytes));
 			
 			return preprocessor.process(bytes);
 		} else {

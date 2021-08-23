@@ -72,24 +72,24 @@ public class Main {
 				i++;
 			} else if ("-version".equals(args[i])) {
 				if (i == (args.length - 1)) {
-					throw new IllegalArgumentException("-version should follow a [VERSION] option value.");
+					throw new IllegalArgumentException("-version should follow a <VERSION> option value.");
 				}
 				i++;
 				
 				if (args[i].startsWith("-")) {
-					throw new IllegalArgumentException("-version should follow a [VERSION] option value.");
+					throw new IllegalArgumentException("-version should follow a <VERSION> option value.");
 				}
 				
 				options.setVersion(args[i]);
 				i++;
 			} else if("-protocol".equals(args[i])) {
 				if (i == (args.length - 1)) {
-					throw new IllegalArgumentException("-protocol should follow a [PROTOCOL] option value.");
+					throw new IllegalArgumentException("-protocol should follow a <PROTOCOL> option value.");
 				}
 				i++;
 				
 				if (args[i].startsWith("-")) {
-					throw new IllegalArgumentException("-protocol should follow a [PROTOCOL] option value.");
+					throw new IllegalArgumentException("-protocol should follow a <PROTOCOL> option value.");
 				}
 				
 				if ("leps".equals(args[i])) {
@@ -106,12 +106,12 @@ public class Main {
 				i++;
 			} else if ("sandProjectName".equals(args[i])) {
 				if (i == (args.length - 1)) {
-					throw new IllegalArgumentException("-sandProjectName should follow a [SAND-PROJECT-NAME] option value.");
+					throw new IllegalArgumentException("-sandProjectName should follow a <SAND-PROJECT-NAME> option value.");
 				}
 				i++;
 				
 				if (args[i].startsWith("-")) {
-					throw new IllegalArgumentException("-sandProjectName should follow a [SAND-PROJECT-NAME] option value.");
+					throw new IllegalArgumentException("-sandProjectName should follow a <SAND-PROJECT-NAME> option value.");
 				}
 				
 				options.setSandProjectName(args[i]);
@@ -160,14 +160,14 @@ public class Main {
 		System.out.println("Usage:");
 		System.out.println("java -jar com.firstlinecode.granite.pack.lite-${VERSION}.jar [OPTIONS] [Bundle-SymbolicNames or SubSystems]");
 		System.out.println("OPTIONS:");
-		System.out.println("-help                                Display help information.");
-		System.out.println("-update                              Update specified modules.");
-		System.out.println("-cleanUpdate                         Clean and update specified modules.");
-		System.out.println("-cleanCache                          Clean the packing cache.");
-		System.out.println("-offline                             Run in offline mode.");
-		System.out.println("-version VERSION                     Specify the version. Default is 0.2.1-RELEASE.");
-		System.out.println("-prototol PROTOCOL                   Specify the protocol. Optional protocols are 'standard', 'iot', 'leps' or 'sand'. Default is 'standard').");
-		System.out.println("-sandProjectName SAND-PROJECT-NAME   Specify the sand project name. Default is 'com.firstlinecode.sand'.");
+		System.out.println("-help                                  Display help information.");
+		System.out.println("-update                                Update specified modules.");
+		System.out.println("-cleanUpdate                           Clean and update specified modules.");
+		System.out.println("-cleanCache                            Clean the packing cache.");
+		System.out.println("-offline                               Run in offline mode.");
+		System.out.println("-version <VERSION>                     Specify the version. Default is 0.2.1-RELEASE.");
+		System.out.println("-prototol <PROTOCOL>                   Specify the protocol. Optional protocols are 'standard', 'iot', 'leps' or 'sand'. Default is 'standard').");
+		System.out.println("-sandProjectName <SAND-PROJECT-NAME>   Specify the sand project name. Default is 'com.firstlinecode.sand'.");
 	}
 
 	private String getTargetDirPath() {

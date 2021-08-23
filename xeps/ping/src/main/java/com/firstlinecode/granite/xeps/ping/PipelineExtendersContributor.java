@@ -18,14 +18,14 @@ public class PipelineExtendersContributor extends PipelineExtendersContributorAd
 	private static final ProtocolChain PROTOCOL_CHAIN = ProtocolChain.first(Iq.PROTOCOL).next(Ping.PROTOCOL);
 	
 	@Override
-	public IProtocolParserFactory<?>[] getProtocolParserFactories() {
+	protected IProtocolParserFactory<?>[] getCustomizedParserFactories() {
 		return new IProtocolParserFactory<?>[] {
 			new SimpleObjectProtocolParserFactory<Ping>(PROTOCOL_CHAIN, Ping.class)
 		};
 	}
 	
 	@Override
-	public IProtocolTranslatorFactory<?>[] getProtocolTranslatorFactories() {
+	protected IProtocolTranslatorFactory<?>[] getCustomizedTranslatorFactories() {
 		return new IProtocolTranslatorFactory<?>[] {
 			new SimpleObjectProtocolTranslatorFactory<Ping>(Ping.class, Ping.PROTOCOL)
 		};

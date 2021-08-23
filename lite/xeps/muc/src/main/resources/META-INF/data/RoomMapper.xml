@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.firstlinecode.granite.lite.xeps.muc.RoomMapper">
 	<select id="selectCountByJid" resultType="int">
-		SELECT count(*) FROM ROOMS WHERE room_jid = #{0}
+		SELECT count(*) FROM ROOMS WHERE room_jid = #{arg0}
 	</select>
 	
 	<select id="selectCount" resultType="int">
@@ -76,7 +76,7 @@
 			LEFT OUTER JOIN ROOM_CONFIG_GET_MEMBER_LISTS RCGML ON
 				RC.id = RCGML.room_config_id
 		WHERE
-			R.room_jid = #{0}
+			R.room_jid = #{arg0}
 	</select>
 	
 	<resultMap id="roomResultMap" type="Room">
@@ -127,11 +127,11 @@
 	</resultMap>
 	
 	<select id="selectAffiliatedUsersByRoomId" resultMap="affiliatedUserResultMap">
-		SELECT * FROM ROOM_AFFILIATED_USERS WHERE room_id = #{0}
+		SELECT * FROM ROOM_AFFILIATED_USERS WHERE room_id = #{arg0}
 	</select>
     
 	<insert id="updateLocked">
-		UPDATE ROOMS SET locked=#{1} WHERE room_jid=#{0}
+		UPDATE ROOMS SET locked=#{arg1} WHERE room_jid=#{arg0}
 	</insert>
 	
 	<insert id="insert" parameterType="Room">
@@ -221,7 +221,7 @@
 		FROM ROOM_AFFILIATED_USERS RAU
 			LEFT OUTER JOIN ROOMS R ON
 				RAU.room_id = R.id
-		WHERE R.room_jid = #{0, typeHandler=JabberIdTypeHandler} AND RAU.nick = #{1}
+		WHERE R.room_jid = #{arg0, typeHandler=JabberIdTypeHandler} AND RAU.nick = #{arg1}
 	</select>
 	
 	<resultMap id="affiliatedUserJidResultMap" type="JabberId">

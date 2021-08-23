@@ -267,29 +267,27 @@ public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMe
 	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception {
 		if (!(message instanceof String)) {
-			logger.warn(String.format("Message isn't a String. Message type: %s.", message.getClass().getName()));
+			logger.warn("Message isn't a String. Message type: {}.", message.getClass().getName());
 			return;
 		}
 		
-		if (logger.isTraceEnabled()) {
-			logger.trace("Message received[{}, {}].", session, message);
+		if (logger.isDebugEnabled()) {
+			logger.debug("Message received[{}, {}] by socket message receiver.", session, message);
 		}
 		messageProcessor.process(new SocketConnectionContext(session, localNodeIdProvider.getLocalNodeId()), new SimpleMessage(message));
 	}
 	
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception {
-		if (logger.isTraceEnabled()) {
-			logger.trace("Message sent[{}, {}].", session, message);
+		if (logger.isDebugEnabled()) {
+			logger.debug("Message sent[{}, {}] by socket message receiver.", session, message);
 		}
 	}
 	
 	@Override
 	public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
 		if (cause instanceof ProtocolDecoderException) { // the exception is thrown by message decoder
-			if (logger.isDebugEnabled()) {
-				logger.debug("Protocol decoder exception caught.", cause);
-			}
+			logger.warn("Protocol decoder exception caught.", cause);
 			
 			if (session.getAttribute(ISession.KEY_SESSION_JID) != null) {
 				session.write(STRING_BAD_REQUEST);
@@ -301,9 +299,7 @@ public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMe
 			session.closeOnFlush();
 
 		} else {
-			if (logger.isWarnEnabled()) {
-				logger.warn("Exception caught.", cause);
-			}
+			logger.warn("Exception caught.", cause);
 		}
 	}
 
@@ -343,10 +339,9 @@ public class SocketMessageReceiver extends IoHandlerAdapter implements IClientMe
 		
 		PluginWrapper bxmppPluginWrapper = pluginManager.getPlugin(PLUGIN_NAME_GEM_SERVER_BXMPP);
 		if (bxmppPluginWrapper == null) {
-			if (logger.isWarnEnabled())
-				logger.warn("You configure Granite Server to use binary message format but BXMPP server plugin not be found. "
-						+ "Please add gem bxmpp plugins to your plugins directory. Ignore to configure message format to binary. "
-						+ "Still use XML message format.");
+			logger.warn("You configure Granite Server to use binary message format but BXMPP server plugin not be found. "
+					+ "Please add gem bxmpp plugins to your plugins directory. Ignore to configure message format to binary. "
+					+ "Still use XML message format.");
 			
 			messageFormat = Constants.NAMESPACE_XML;
 			return;

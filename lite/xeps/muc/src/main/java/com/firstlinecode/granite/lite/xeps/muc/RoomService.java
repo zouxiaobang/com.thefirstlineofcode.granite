@@ -18,7 +18,6 @@ import com.firstlinecode.basalt.xeps.muc.PresenceBroadcast;
 import com.firstlinecode.basalt.xeps.muc.RoomConfig;
 import com.firstlinecode.granite.framework.core.adf.data.IDataObjectFactory;
 import com.firstlinecode.granite.framework.core.adf.data.IDataObjectFactoryAware;
-import com.firstlinecode.granite.framework.core.annotations.Dependency;
 import com.firstlinecode.granite.framework.core.auth.IAuthenticator;
 import com.firstlinecode.granite.xeps.muc.AffiliatedUser;
 import com.firstlinecode.granite.xeps.muc.IRoomRuntimeInstance;
@@ -35,7 +34,7 @@ public class RoomService implements IRoomService, IDataObjectFactoryAware {
 	@Autowired
 	private SqlSession sqlSession;
 	
-	@Dependency("authenticator")
+	@Autowired
 	private IAuthenticator authenticator;
 	
 	private IDataObjectFactory dataObjectFactory;
@@ -86,9 +85,9 @@ public class RoomService implements IRoomService, IDataObjectFactoryAware {
 	}
 
 	@Override
-	public void isRoomLocked(JabberId roomJid) {
+	public boolean isRoomLocked(JabberId roomJid) {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
 
 	@Override

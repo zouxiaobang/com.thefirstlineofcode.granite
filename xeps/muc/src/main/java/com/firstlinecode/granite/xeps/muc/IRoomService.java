@@ -10,7 +10,7 @@ public interface IRoomService {
 	List<RoomItem> getRoomItems();
 	boolean exists(JabberId roomJid);
 	void createRoom(JabberId roomJid, JabberId creator, RoomConfig roomConfig) throws DuplicateRoomException;
-	void isRoomLocked(JabberId roomJid);
+	boolean isRoomLocked(JabberId roomJid);
 	void unlockRoom(JabberId roomJid);
 	void updateRoomConfig(Room room, RoomConfig newRoomConfig);
 	IRoomSession getRoomSession(JabberId roomJid);

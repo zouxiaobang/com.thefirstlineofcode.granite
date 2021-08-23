@@ -14,7 +14,7 @@
 	
 	<groupId>com.firstlinecode.granite.xeps</groupId>
 	<artifactId>granite-xeps-muc</artifactId>
-	<name>XEPs MUC implementation</name>
+	<name>XEPs MUC protocol implementation</name>
 
 	<dependencies>
 		<dependency>
@@ -24,6 +24,18 @@
 		<dependency>
 			<groupId>com.firstlinecode.granite.framework</groupId>
 			<artifactId>granite-framework-im</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.xeps</groupId>
+			<artifactId>granite-xeps-xdata</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.xeps</groupId>
+			<artifactId>granite-xeps-address</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.granite.xeps</groupId>
+			<artifactId>granite-xeps-delay</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.basalt.xeps</groupId>

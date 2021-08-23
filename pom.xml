@@ -292,6 +292,21 @@
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.basalt.xeps</groupId>
+				<artifactId>basalt-xeps-rsm</artifactId>
+				<version>${basalt.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.basalt.xeps</groupId>
+				<artifactId>basalt-xeps-address</artifactId>
+				<version>${basalt.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.basalt.xeps</groupId>
+				<artifactId>basalt-xeps-delay</artifactId>
+				<version>${basalt.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.basalt.xeps</groupId>
 				<artifactId>basalt-xeps-muc</artifactId>
 				<version>${basalt.version}</version>
 			</dependency>
@@ -399,7 +414,32 @@
 			</dependency>
 			<dependency>
 				<groupId>com.firstlinecode.granite.xeps</groupId>
+				<artifactId>granite-xeps-xdata</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.xeps</groupId>
+				<artifactId>granite-xeps-rsm</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.xeps</groupId>
+				<artifactId>granite-xeps-address</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.xeps</groupId>
+				<artifactId>granite-xeps-delay</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.xeps</groupId>
 				<artifactId>granite-xeps-muc</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.xeps</groupId>
+				<artifactId>granite-xeps-msgoffline</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<!-- Deploly lite plugins -->
@@ -421,6 +461,11 @@
 			<dependency>
 				<groupId>com.firstlinecode.granite.lite.xeps</groupId>
 				<artifactId>granite-lite-xeps-muc</artifactId>
+				<version>${granite.version}</version>
+			</dependency>	
+			<dependency>
+				<groupId>com.firstlinecode.granite.lite.xeps</groupId>
+				<artifactId>granite-lite-xeps-msgoffline</artifactId>
 				<version>${granite.version}</version>
 			</dependency>	
 			

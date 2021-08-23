@@ -21,7 +21,6 @@ import com.firstlinecode.basalt.protocol.core.stanza.error.InternalServerError;
 import com.firstlinecode.basalt.protocol.core.stanza.error.NotAuthorized;
 import com.firstlinecode.basalt.protocol.core.stream.Session;
 import com.firstlinecode.granite.framework.core.connection.IClientConnectionContext;
-import com.firstlinecode.granite.framework.core.connection.IConnectionContext;
 import com.firstlinecode.granite.framework.core.pipeline.IMessage;
 import com.firstlinecode.granite.framework.core.pipeline.IMessageChannel;
 import com.firstlinecode.granite.framework.core.pipeline.SimpleMessage;
@@ -138,8 +137,8 @@ public class SessionEstablishmentNegotiant extends AbstractNegotiant {
 		}
 	}
 	
-	private void fireSessionEstablishedEvent(IConnectionContext context, JabberId jid) {
-		SessionEstablishedEvent event = new SessionEstablishedEvent(context.getJid().toString(), jid);
+	private void fireSessionEstablishedEvent(IClientConnectionContext context, JabberId jid) {
+		SessionEstablishedEvent event = new SessionEstablishedEvent(context.getConnectionId().toString(), jid);
 		
 		Map<Object, Object> headers = new HashMap<>();
 		headers.put(IMessage.KEY_SESSION_JID, jid);

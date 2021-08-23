@@ -33,10 +33,14 @@ import org.bouncycastle.cert.jcajce.JcaX509ExtensionUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.firstlinecode.granite.framework.core.utils.IoUtils;
 
 public class SecurityUtils {
+	private static final Logger logger = LoggerFactory.getLogger(SecurityUtils.class);
+	
 	public static final Provider DEFAULT_JCA_PROVIDER = new BouncyCastleProvider();
 	public static final String DEFAULT_JCA_PROVIDER_NAME = BouncyCastleProvider.PROVIDER_NAME;
 	public static final String DEFAULT_KEY_STORE_TYPE = "PKCS12";
@@ -62,6 +66,7 @@ public class SecurityUtils {
 			
 			return keyPairGenerator.genKeyPair();
 		} catch (Exception e) {
+			logger.error("Failed to create key pair.", e);
 			throw new SecurityException("Failed to create key pair.", e);
 		}
 	}
@@ -78,6 +83,10 @@ public class SecurityUtils {
 	        return createX509Certificate(serialNumber, hostName, startDate,
 	        		expireDate, keyPair, signatureAlgorithm);
 		} catch (Exception e) {
+			if (e instanceof SecurityException)
+				throw (SecurityException)e;
+			
+			logger.error("Can't create a certificate.", e);
 			throw new SecurityException("Can't create a certificate.", e);
 		}
 
@@ -137,6 +146,7 @@ public class SecurityUtils {
 			
 			return new JcaX509CertificateConverter().setProvider(DEFAULT_JCA_PROVIDER_NAME).getCertificate(builder.build(signer));
 		} catch (Exception e) {
+			logger.error("Can't create a certificate.", e);
 			throw new SecurityException("Can't create a certificate.", e);
 		}
 	}
@@ -170,6 +180,7 @@ public class SecurityUtils {
 			
 			return keyStore;
 		} catch (Exception e) {
+			logger.error(String.format("Failed to create key store '%s'.", keyStoreFile), e);
 			throw new SecurityException(String.format("Failed to create key store '%s'.", keyStoreFile), e);
 		} finally {
 			IoUtils.closeIO(in);

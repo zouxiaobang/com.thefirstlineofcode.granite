@@ -27,6 +27,10 @@
 				<groupId>com.firstlinecode.granite.xeps</groupId>
 				<artifactId>granite-xeps-ping</artifactId>
 			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.granite.xeps</groupId>
+				<artifactId>granite-xeps-msgoffline</artifactId>
+			</dependency>
 			
 			<!-- Granite Deploy Lite Plugins -->
 			<dependency>
@@ -60,6 +64,10 @@
 			<dependency>
 					<groupId>com.firstlinecode.granite.lite.xeps</groupId>
 					<artifactId>granite-lite-xeps-muc</artifactId>
+			</dependency>
+			<dependency>
+					<groupId>com.firstlinecode.granite.lite.xeps</groupId>
+					<artifactId>granite-lite-xeps-msgoffline</artifactId>
 			</dependency>
 	</dependencies>
 	

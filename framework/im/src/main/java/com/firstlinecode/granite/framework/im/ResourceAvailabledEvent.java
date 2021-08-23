@@ -18,4 +18,9 @@ public class ResourceAvailabledEvent implements IEvent {
 	public Object clone() {
 		return new ResourceAvailabledEvent(jid);
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("ResourceAvailabledEvent[JID=%s]", jid);
+	}
 }

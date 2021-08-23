@@ -3,16 +3,16 @@ package com.firstlinecode.granite.framework.core.pipeline.stages.event;
 import com.firstlinecode.basalt.protocol.core.JabberId;
 
 public class SessionEstablishedEvent implements IEvent {
-	private String id;
+	private String connectionId;
 	private JabberId jid;
 	
-	public SessionEstablishedEvent(String id, JabberId jid) {
-		this.id = id;
+	public SessionEstablishedEvent(String connectionId, JabberId jid) {
+		this.connectionId = connectionId;
 		this.jid = jid;
 	}
 	
-	public String getId() {
-		return id;
+	public String getConnectionId() {
+		return connectionId;
 	}
 	
 	public JabberId getJid() {
@@ -21,6 +21,12 @@ public class SessionEstablishedEvent implements IEvent {
 	
 	@Override
 	public Object clone() {
-		return new SessionEstablishedEvent(id, jid);
+		return new SessionEstablishedEvent(connectionId, jid);
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("SessionEstablishedEvent[Connection ID=%s, JID=%s]",
+				connectionId, jid);
 	}
 }

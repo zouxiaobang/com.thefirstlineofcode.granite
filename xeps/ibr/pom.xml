@@ -13,7 +13,7 @@
 	
 	<groupId>com.firstlinecode.granite.xeps</groupId>
 	<artifactId>granite-xeps-ibr</artifactId>
-	<name>XEPs in-band registration protocol implementation</name>
+	<name>XEPs In-Band Registration protocol implementation</name>
 	
 	<dependencies>
 		<dependency>

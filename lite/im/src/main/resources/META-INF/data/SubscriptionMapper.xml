@@ -19,11 +19,11 @@
     </insert>
     
     <insert id="updateNameAndGroups">
-        UPDATE SUBSCRIPTIONS SET name=#{2}, groups=#{3} WHERE SUBSCRIPTIONS.user=#{arg0} AND contact=#{arg1}
+        UPDATE SUBSCRIPTIONS SET name=#{arg2}, groups=#{arg3} WHERE SUBSCRIPTIONS.user=#{arg0} AND contact=#{arg1}
     </insert>
     
     <insert id="updateState">
-        UPDATE SUBSCRIPTIONS SET state=#{2, typeHandler=org.apache.ibatis.type.EnumTypeHandler} WHERE SUBSCRIPTIONS.user=#{arg0} AND contact=#{arg1}
+        UPDATE SUBSCRIPTIONS SET state=#{arg2, typeHandler=org.apache.ibatis.type.EnumTypeHandler} WHERE SUBSCRIPTIONS.user=#{arg0} AND contact=#{arg1}
     </insert>
     
     <insert id="insertNotification" parameterType="SubscriptionNotification">

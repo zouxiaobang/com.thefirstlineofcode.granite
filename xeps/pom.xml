@@ -19,8 +19,13 @@
 	<modules>
 		<module>ibr</module>
 		<module>ping</module>
+		<module>xdata</module>
+		<module>rsm</module>
+		<module>address</module>
+		<module>delay</module>
 		<module>disco</module>
 		<module>muc</module>
+		<module>msgoffline</module>
 	</modules>
 
 </project>

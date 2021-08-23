@@ -186,7 +186,15 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 	@Override
 	public void process(IConnectionContext context, IMessage message) {
 		try {
+			if (logger.isDebugEnabled())
+				logger.debug("Begin to process the protocol object. Session JID: {}. Protocol object: {}.",
+						context.getJid(), message.getPayload());
+			
 			doProcess((IProcessingContext)context, message);
+			
+			if (logger.isDebugEnabled())
+				logger.debug("End of processing the protocol object. Session JID: {}. Protocol object: {}.",
+						context.getJid(), message.getPayload());
 		} catch (ProtocolException e) {
 			processProtocolException(context, e, message.getPayload());
 		} catch (RuntimeException e) {
@@ -238,7 +246,8 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 			context.close();
 		}
 		
-		logger.error("Processing error.", e);
+		logger.error(String.format("Processing runtime exception. Session JID: {}. Protocol object: {}",
+				context.getJid(), message), e);
 	}
 
 	private StanzaError createStanzaError(IConnectionContext context, RuntimeException e, Object message) {
@@ -285,6 +294,9 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 		}
 		
 		context.write(e.getError());
+		
+		logger.error(String.format("Processing protocol exception. Session JID: {}. Protocol object: {}",
+				context.getJid(), message), e);
 		
 		if (error instanceof StreamError) {
 			context.close();
@@ -370,30 +382,49 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 			context = new AttachOriginalMessageConnectionContextProxy(context, originalMessage);
 		}
 		
-		if ((object instanceof Stanza) && logger.isTraceEnabled()) {
-			logger.trace("Processing stanza message. Original message: {}.", ((Stanza)object).getOriginalMessage());
-		}
-		
 		if (object instanceof Stanza) {
 			Stanza stanza = (Stanza)object;
 			
+			if (logger.isTraceEnabled()) {
+				logger.trace("Try to process stanza. Session JID: {}. Stanza object: {}. Original message: {}.",
+						new Object[] {context.getJid(), stanza, stanza.getOriginalMessage()});
+			}
+			
 			// Try to process stanza in a more simply way if it's a simple structure stanza. 
 			if (processSimpleStanza(context, stanza)) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Simple stanza. It's processed by simple stanza processor. Session JID: {}. Stanza object: {}.",
+							context.getJid(), stanza);
+				}
+				
 				return;
 			}
 			
-			processComplexStanza(context, stanza);
+			if (FlawedProtocolObject.isFlawed(stanza)) {
+				logger.error("Flawed project object. Ignore to process it. Session JID: {}. Protocol object: {}.", context.getJid(), stanza);
+				throw new ProtocolException(new BadRequest(String.format("Ignore to process flawed project object: %s.", stanza)));
+			}
+			
+			if (stanza.getObjects().size() == 1) {				
+				processXep(context, stanza, stanza.getObject());
+			} else {				
+				processComplexStanza(context, stanza);
+			}
 		} else {
 			context.write(object);
 		}
 	}
-
+	
 	private void processComplexStanza(IProcessingContext context, Stanza stanza)
 			throws ComplexStanzaProtocolException {
 		boolean processed = false;
 		List<Exception> exceptions = new ArrayList<>();
 		for (Object object : stanza.getObjects()) {
 			if (object instanceof FlawedProtocolObject) {
+				if (logger.isTraceEnabled())
+					logger.trace("Protocol object is flawed protocol object. Ignore to process it. Session JID: {}. Stanza object: {}.",
+							context.getJid(), stanza);
+				
 				continue;
 			}
 			
@@ -416,7 +447,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 			FlawedProtocolObject flawed = stanza.getObject(FlawedProtocolObject.class);
 			if (flawed != null) {
 				for (ProtocolChain protocolChain : flawed.getFlaws()) {
-					// we find top level protocol object that are embedded into stanza instantly.
+					// We find a top level protocol object that is embedded into stanza instantly.
 					if (protocolChain.size() == 2) {
 						exceptions.add(new ProtocolException(new ServiceUnavailable(
 								String.format("Unsupported protocol: %s.", protocolChain))));
@@ -478,38 +509,23 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 	}
 
 	private boolean processSimpleStanza(IProcessingContext context, Stanza stanza) {
+		if (!stanza.getObjects().isEmpty())
+			return false;
+		
 		if (stanza instanceof Presence) {
-			if (!stanza.getObjects().isEmpty())
-				return false;
-			
 			if (!processPresence(context, (Presence)stanza)) {
 				throw new ProtocolException(new ServiceUnavailable());
 			}
 			
 			return true;
 		} else if (stanza instanceof Message) {
-			if (!stanza.getObjects().isEmpty())
-				return false;
-				
 			if (!processMessage(context, (Message)stanza)) {
 				throw new ProtocolException(new ServiceUnavailable());
 			}
 			
 			return true;
 		} else if (stanza instanceof Iq) {
-			if (stanza.getObjects().isEmpty()) {
-				processIqResult(context, (Iq)stanza);
-				return true;
-			}
-			
-			if (stanza.getObjects().size() != 1)
-				return false;
-			
-			if (FlawedProtocolObject.isFlawed(stanza)) {
-				return false;
-			}
-			
-			processXep(context, (Iq)stanza, stanza.getObject());
+			processIqResult(context, (Iq)stanza);
 			return true;
 		} else {
 			// stanza instanceof StanzaError
@@ -519,10 +535,13 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 	}
 	
 	private void processIqResult(IProcessingContext context, Iq iq) {
-		if (iq.getType() != Iq.Type.RESULT)
+		if (iq.getType() != Iq.Type.RESULT) {
+			logger.error("Neither XEP nor IQ result. Session JID: {}. IQ object: {}.", context.getJid(), iq);
 			throw new ProtocolException(new BadRequest("Neither XEP nor IQ result."));
+		}
 		
 		if (iq.getId() == null) {
+			logger.error("Null IQ ID. Session JID: {}. IQ object: {}.", context.getJid(), iq);
 			throw new ProtocolException(new BadRequest("Null ID."));
 		}
 		
@@ -582,6 +601,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 
 	private void deliverXepToForeignDomain(IProcessingContext context, Stanza stanza) {
 		if (stanza.getFrom() != null && !stanza.getFrom().equals(context.getJid())) {
+			logger.error("'from' attribute should be {}.", context.getJid());
 			throw new ProtocolException(new NotAllowed(String.format("'from' attribute should be %s.", context.getJid())));
 		}
 		
@@ -602,19 +622,29 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 
 	@SuppressWarnings("unchecked")
 	private <K extends Stanza, V> boolean doProcessXep(IProcessingContext context, Stanza stanza, Object xep) {
+		if (logger.isDebugEnabled())
+			logger.debug("Try to process stanza by XEP processor. Session JID: {}. Stanza object: {}.",
+					context.getJid(), stanza);
+		
 		ProtocolChain protocolChain = getXepProtocolChain(stanza, xep);
 		
 		IXepProcessor<K, V> xepProcessor = getXepProcessor(protocolChain);
 		if (xepProcessor == null) {
+			Protocol protocol = stanza.getObjectProtocol(stanza.getObject().getClass());
+			logger.error("Unsupported protocol: {}. Session JID: {}.", protocol, context.getJid());
 			throw new ProtocolException(new ServiceUnavailable(String.format("Unsupported protocol: %s.",
-					stanza.getObjectProtocol(stanza.getObject().getClass()))));
+					protocol)));
 		}
-
+		
 		xepProcessor.process(context, (K)stanza, (V)xep);
+		
+		if (logger.isDebugEnabled())
+			logger.debug("Stanza is processed by XEP processor. Session JID: {}. Stanza: {}. XEP processor: {}.",
+					new Object[] {context.getJid(), stanza, xepProcessor});
 		
 		return true;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	private <K extends Stanza, V> IXepProcessor<K, V> getXepProcessor(ProtocolChain protocolChain) {
 		IXepProcessor<K, V> xepProcessor = (IXepProcessor<K, V>)singletonXepProcessors.get(protocolChain);
@@ -630,6 +660,7 @@ public class DefaultProtocolProcessingProcessor implements com.firstlinecode.gra
 	private <V, K extends Stanza> IXepProcessor<K, V> createXepProcessorByFactory(ProtocolChain protocolChain) {
 		IXepProcessorFactory<?, ?> processorFactory = xepProcessorFactories.get(protocolChain);
 		if (processorFactory == null) {
+			logger.error("Unsupported protocol: {}.", protocolChain);
 			throw new ProtocolException(new ServiceUnavailable(String.format("Unsupported protocol: %s.", protocolChain)));
 		}
 		

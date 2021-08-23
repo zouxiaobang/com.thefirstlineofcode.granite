@@ -150,6 +150,6 @@ public class Main {
 		System.out.println("OPTIONS:");
 		System.out.println("-help                            Display help information.");
 		System.out.println("-console                         Start the server with console.");
-		System.out.println("-logLevel LOG_LEVEL              Set log level for the server. Three options allowed: 'info', 'debug', 'trace'. Default is 'info'.");
+		System.out.println("-logLevel <LOG_LEVEL>            Set log level for the server. Three options allowed: 'info', 'debug', 'trace'. Default is 'info'.");
 	}
 }

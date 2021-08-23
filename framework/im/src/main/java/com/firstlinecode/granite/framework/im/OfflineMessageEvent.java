@@ -44,4 +44,10 @@ public class OfflineMessageEvent implements IEvent {
 		return new OfflineMessageEvent(user, contact, message);
 	}
 	
+	@Override
+	public String toString() {
+		return String.format("OfflineMessageEvent[User=%s, Contact=%s, Message=%s]",
+				user, contact, message.toString());
+	}
+	
 }

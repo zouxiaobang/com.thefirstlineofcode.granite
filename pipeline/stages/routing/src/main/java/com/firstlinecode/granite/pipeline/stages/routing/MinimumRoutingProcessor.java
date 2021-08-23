@@ -64,7 +64,6 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 		loadContributedPostprocessors(extendersFactories);
 	}
 	
-	
 	private void loadContributedTranslators(IPipelineExtendersContributor[] extendersContributors) {
 		for (IPipelineExtendersContributor extendersContributor : extendersContributors) {
 			IProtocolTranslatorFactory<?>[] translatorFactories = extendersContributor.getProtocolTranslatorFactories();
@@ -138,6 +137,10 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 	public void process(IConnectionContext context, IMessage message) {
 		JabberId sessionJid = (JabberId)message.getHeaders().get(IMessage.KEY_SESSION_JID);
 		
+		if (logger.isDebugEnabled())
+			logger.debug("Begin to route the protocol object. Session JID: {}. Protocol object: {}.",
+					sessionJid, message.getPayload());
+		
 		try {
 			Object payload = message.getPayload();
 			
@@ -152,6 +155,7 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 			}
 			
 			if (domain.equals(target.toString())) {
+				logger.error("Try to route message to server itself. Maybe a application bug. Session JID: {}.", context.getJid());
 				throw new RuntimeException("Try to route message to server itself. Maybe a application bug.");
 			}
 			
@@ -168,12 +172,22 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 		headers.put(IMessage.KEY_MESSAGE_TARGET, target);
 		
 		IMessage message = new SimpleMessage(headers, out);
+		Object originalRoutingObject = out;
 		
 		for (IPipelinePostprocessor postprocessor : pipesPostprocessors) {
 			message = postprocessor.beforeRouting(message);
 			
 			if (message == null) {
+				logger.info("Protocol object has dropped by postprcessor before routing. Session JID: {}. Protocol object: {}.",
+						context.getJid(), originalRoutingObject);
 				return;
+			}
+		}
+		
+		if (message.getPayload() != originalRoutingObject) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Postprocessor has changed the routing object. Session JID: {}. Original routing object: {}. New routing object: {}.",
+						new Object[] {context.getJid(), originalRoutingObject, message.getPayload()});
 			}
 		}
 		
@@ -197,17 +211,32 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 		}
 		
 		if (!(out instanceof String)) {
+			if (logger.isTraceEnabled()) {
+				logger.trace("Begin to translate the protocol object. Session JID: {}. Protocol object: {}.",
+						context.getJid(), out);
+			}
+			
 			out = translatingFactory.translate(out);
+			
+			if (logger.isTraceEnabled()) {
+				logger.trace("End of translating the protocol object. Session JID: {}. Protocol object: {}. Translated message: {}.",
+						new Object[] {context.getJid(), message.getPayload(), out});
+			}
 		}
 		
 		message = new SimpleMessage(headers, out);
 		
-		if (logger.isTraceEnabled()) {
-			logger.trace("Routing message. Session ID: {}. Target: {}, Message: {}.",
-					new Object[] {sessionJid, target, (String)message.getPayload()});
+		if (logger.isDebugEnabled()) {
+			logger.debug("Routing message. Session ID: {}. Target: {}, Protocol object: {}. Message: {}.",
+					new Object[] {sessionJid, target, originalRoutingObject, (String)message.getPayload()});
 		}
 		
 		context.write(message);
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("End of routing the protocol object. Session JID: {}. Protocol object: {}.",
+					sessionJid, originalRoutingObject);
+		}
 	}
 
 	private boolean isFromServer(Stanza stanza) {

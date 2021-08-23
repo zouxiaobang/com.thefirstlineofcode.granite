@@ -14,7 +14,7 @@
 	
 	<groupId>com.firstlinecode.granite.lite</groupId>
 	<artifactId>granite-lite-im</artifactId>
-	<name>Granite lite IM implementation</name>
+	<name>Granite lite XMPP IM implementation</name>
 
 	<dependencies>
 		<dependency>

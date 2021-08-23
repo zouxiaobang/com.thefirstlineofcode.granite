@@ -61,6 +61,12 @@
 			<artifactId>granite-stream-standard</artifactId>
 		</dependency>
 		
+		<!-- XEPs Plugins -->
+		<dependency>
+			<groupId>com.firstlinecode.granite.xeps</groupId>
+			<artifactId>granite-xeps-ping</artifactId>
+		</dependency>
+		
 		<!-- Deploy Lite Plugins -->
 		<dependency>
 			<groupId>com.firstlinecode.granite.lite</groupId>
@@ -93,6 +99,10 @@
 		<dependency>
 				<groupId>com.firstlinecode.granite.lite.xeps</groupId>
 				<artifactId>granite-lite-xeps-muc</artifactId>
+		</dependency>
+		<dependency>
+				<groupId>com.firstlinecode.granite.lite.xeps</groupId>
+				<artifactId>granite-lite-xeps-msgoffline</artifactId>
 		</dependency>
 		
 		<!-- Gem plugins -->

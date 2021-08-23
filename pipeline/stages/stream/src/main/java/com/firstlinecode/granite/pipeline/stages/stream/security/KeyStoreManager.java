@@ -14,9 +14,14 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.firstlinecode.granite.framework.core.utils.IoUtils;
 
 public class KeyStoreManager {
+	private static final Logger logger = LoggerFactory.getLogger(KeyStoreManager.class);
+	
 	private static final String DEFAULT_KEY_MANAGEMENT_ALGORITHM = "SunX509";
 	private File keyStoreFile;
 	private char[] password;
@@ -35,6 +40,7 @@ public class KeyStoreManager {
 		try {
 			loadOrCreateKeyStore();
 		} catch (SecurityException e) {
+			logger.error("Can't initialize 'KeyStoreManager'.", e);
 			throw new RuntimeException("Can't initialize 'KeyStoreManager'.", e);
 		}
 	}
@@ -52,6 +58,7 @@ public class KeyStoreManager {
 			out = new BufferedOutputStream(new FileOutputStream(keyStoreFile));
 			keyStore.store(out, password);
 		} catch (Exception e) {
+			logger.error("Can't save key store.", e);
 			throw new SecurityException("Can't save key store.", e);
 		} finally {
 			IoUtils.closeIO(out);
@@ -70,7 +77,8 @@ public class KeyStoreManager {
 		try {
 			keyStore.setCertificateEntry(alias, certificate);
 		} catch (KeyStoreException e) {
-			throw new SecurityException("Can't add a certificate.", e);
+			logger.error("Can't add a certificate to key store.", e);
+			throw new SecurityException("Can't add a certificate to key store.", e);
 		}
 	}
 	
@@ -78,7 +86,8 @@ public class KeyStoreManager {
 		try {
 			return keyStore.getCertificate(alias);
 		} catch (KeyStoreException e) {
-			throw new SecurityException("Can't retrieve certificate.", e);
+			logger.error("Can't retrieve the certificate from key store.", e);
+			throw new SecurityException("Can't retrieve the certificate from key store.", e);
 		}
 	}
 
@@ -86,7 +95,8 @@ public class KeyStoreManager {
 		try {
 			keyStore.setKeyEntry(alias, key, password.toCharArray(), chain);
 		} catch (Exception e) {
-			throw new SecurityException("Can't add a key.", e);
+			logger.error("Can't add a key to key store.", e);
+			throw new SecurityException("Can't add a key to key store.", e);
 		}
 	}
 	
@@ -94,7 +104,8 @@ public class KeyStoreManager {
 		try {
 			return keyStore.getKey(alias, password.toCharArray());
 		} catch (Exception e) {
-			throw new SecurityException("Can't retieve key.", e);
+			logger.error("Can't retieve the key from key store.", e);
+			throw new SecurityException("Can't retieve the key from key store.", e);
 		}
 	}
 	
@@ -105,6 +116,7 @@ public class KeyStoreManager {
 			
 			return factory.getKeyManagers();
 		} catch (Exception e) {
+			logger.error("Can't retrieve key managers.", e);
 			throw new SecurityException("Can't retrieve key managers.", e);
 		}
 	}
@@ -116,7 +128,8 @@ public class KeyStoreManager {
 			
 			return factory.getTrustManagers();
 		} catch (Exception e) {
-			throw new SecurityException("Can't retrieve key managers.", e);
+			logger.error("Can't retrieve trust managers.", e);
+			throw new SecurityException("Can't retrieve trust managers.", e);
 		}
 	}
 }

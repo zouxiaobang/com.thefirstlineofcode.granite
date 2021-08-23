@@ -239,7 +239,7 @@ public class ServerConfiguration implements IServerConfiguration {
 	}
 	
 	private void setLogLevel(String logLevel) {
-		if (!"debug".equals(logLevel) || !"trace".equals(logLevel) || !"info".equals(logLevel))
+		if (!"debug".equals(logLevel) && !"trace".equals(logLevel) && !"info".equals(logLevel))
 			throw new IllegalArgumentException(String.format("Unknown log level %s. Supported option is: 'info', 'debug', 'trace'.", logLevel));
 		
 		this.logLevel = logLevel;

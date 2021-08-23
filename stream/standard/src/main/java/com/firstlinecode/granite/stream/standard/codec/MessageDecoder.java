@@ -72,12 +72,15 @@ public class MessageDecoder extends CumulativeProtocolDecoder {
 		
 		if (messages != null) {
 			for (String message : messages) {
-				if (logger.isTraceEnabled())
-					logger.trace("Message decoded: '{}'.", message);
-				
 				if (isHeartbeats(message)) {
+					if (logger.isTraceEnabled())
+						logger.trace("Heartbeats decoded: '{}'. Server will write a heartbeat response to client.", message);
+					
 					writeHeartbeatToClient(session);
 				} else {
+					if (logger.isTraceEnabled())
+						logger.trace("Message decoded: '{}'.", message);
+					
 					out.write(message);					
 				}
 			}
