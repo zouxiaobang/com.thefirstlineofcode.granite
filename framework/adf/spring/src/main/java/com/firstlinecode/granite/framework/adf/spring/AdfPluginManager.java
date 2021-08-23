@@ -14,26 +14,22 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.pf4j.CompoundPluginLoader;
+import org.pf4j.DefaultExtensionFactory;
 import org.pf4j.DefaultPluginFactory;
 import org.pf4j.DefaultPluginLoader;
+import org.pf4j.DefaultPluginManager;
 import org.pf4j.DevelopmentPluginLoader;
 import org.pf4j.ExtensionFactory;
 import org.pf4j.Plugin;
 import org.pf4j.PluginFactory;
 import org.pf4j.PluginLoader;
-import org.pf4j.PluginManager;
 import org.pf4j.PluginWrapper;
-import org.pf4j.spring.ExtensionsInjector;
-import org.pf4j.spring.SpringExtensionFactory;
-import org.pf4j.spring.SpringPluginManager;
-import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContextAware;
 
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentService;
 import com.firstlinecode.granite.framework.core.adf.IApplicationComponentServiceAware;
 
-public class AdfPluginManager extends SpringPluginManager implements ApplicationContextAware,
-			IApplicationComponentServiceAware {
+public class AdfPluginManager extends DefaultPluginManager implements IApplicationComponentServiceAware {
 	private static final String FILE_NAME_PLUGIN_PROPERTIES = "plugin.properties";
 	private static final String CHAR_COMMA = ",";
 	private static final String PROPERTY_NAME_PLUGIN_ID = "plugin.id";
@@ -128,7 +124,7 @@ public class AdfPluginManager extends SpringPluginManager implements Application
 			
 			plugin = appComponentService.inject(plugin);
 			if (plugin instanceof ApplicationContextAware) {
-				((ApplicationContextAware)plugin).setApplicationContext(getApplicationContext());
+				((ApplicationContextAware)plugin).setApplicationContext(appComponentService.getApplicationContext());
 			}
 			
 			if (plugin instanceof IApplicationComponentServiceAware) {
@@ -141,15 +137,10 @@ public class AdfPluginManager extends SpringPluginManager implements Application
 	
 	@Override
 	protected ExtensionFactory createExtensionFactory() {
-		return new AdfExtensionFactory(this);
+		return new AdfExtensionFactory();
 	}
 	
-	private class AdfExtensionFactory extends SpringExtensionFactory {
-
-		public AdfExtensionFactory(PluginManager pluginManager) {
-			super(pluginManager);
-		}
-		
+	private class AdfExtensionFactory extends DefaultExtensionFactory {
 		@Override
 		public <T> T create(Class<T> extensionClass) {
 			T extension = super.create(extensionClass);
@@ -171,12 +162,6 @@ public class AdfPluginManager extends SpringPluginManager implements Application
 	
 	public void init() {
 		// Override super.init(). Do nothing.
-	}
-	
-	public void injectExtensionsToSpring() {
-		AbstractAutowireCapableBeanFactory beanFactory = (AbstractAutowireCapableBeanFactory)getApplicationContext().getAutowireCapableBeanFactory();
-		ExtensionsInjector extensionsInjector = new ExtensionsInjector(this, beanFactory);
-		extensionsInjector.injectExtensions();
 	}
 	
 	@Override
