@@ -105,6 +105,40 @@
 				<artifactId>granite-lite-xeps-msgoffline</artifactId>
 		</dependency>
 		
+		<!-- Sand Stream Plugin -->
+		<dependency>
+			<groupId>com.firstlinecode.sand.server</groupId>
+			<artifactId>sand-server-stream</artifactId>
+		</dependency>
+		
+		<!-- Sand Server Plugins -->			
+		<dependency>
+			<groupId>com.firstlinecode.sand.server</groupId>
+			<artifactId>sand-server-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.sand.server</groupId>
+			<artifactId>sand-server-platform</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.sand.server</groupId>
+			<artifactId>sand-server-operator</artifactId>
+		</dependency>
+		
+		<!-- Sand Deploy Lite Plugins -->
+		<dependency>
+			<groupId>com.firstlinecode.sand.server.lite</groupId>
+			<artifactId>sand-server-lite-devices</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.sand.server.lite</groupId>
+			<artifactId>sand-server-lite-ibdr</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.sand.server.lite</groupId>
+			<artifactId>sand-server-lite-concentrator</artifactId>
+		</dependency>
+		
 		<!-- Gem plugins -->
 		<dependency>
 			<groupId>com.firstlinecode.gem.server</groupId>

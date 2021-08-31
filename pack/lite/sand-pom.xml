@@ -15,6 +15,60 @@
 	<groupId>com.firstlinecode.granite.pack.lite</groupId>
 	<artifactId>granite-pack-lite-sand</artifactId>
 	
+		<dependencies>
+			<!-- Sand Stream Plugin -->
+			<dependency>
+				<groupId>com.firstlinecode.sand.server</groupId>
+				<artifactId>sand-server-stream</artifactId>
+			</dependency>
+			
+			<!-- Granite Deploy Lite Plugins -->
+			<dependency>
+					<groupId>com.firstlinecode.granite.lite</groupId>
+					<artifactId>granite-lite-dba</artifactId>
+			</dependency>
+			<dependency>
+					<groupId>com.firstlinecode.granite.lite</groupId>
+					<artifactId>granite-lite-session</artifactId>
+			</dependency>
+			<dependency>
+					<groupId>com.firstlinecode.granite.lite</groupId>
+					<artifactId>granite-lite-pipeline</artifactId>
+			</dependency>
+			<dependency>
+					<groupId>com.firstlinecode.granite.lite</groupId>
+					<artifactId>granite-lite-auth</artifactId>
+			</dependency>
+			
+			<!-- Sand Server Plugins -->			
+			<dependency>
+				<groupId>com.firstlinecode.sand.server</groupId>
+				<artifactId>sand-server-actuator</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.sand.server</groupId>
+				<artifactId>sand-server-platform</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.sand.server</groupId>
+				<artifactId>sand-server-operator</artifactId>
+			</dependency>
+			
+			<!-- Sand Deploy Lite Plugins -->
+			<dependency>
+				<groupId>com.firstlinecode.sand.server.lite</groupId>
+				<artifactId>sand-server-lite-devices</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.sand.server.lite</groupId>
+				<artifactId>sand-server-lite-ibdr</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.sand.server.lite</groupId>
+				<artifactId>sand-server-lite-concentrator</artifactId>
+			</dependency>
+	</dependencies>
+	
 	<build>
 		<plugins>
 			<plugin>

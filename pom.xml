@@ -15,7 +15,7 @@
 		<springframework.version>5.2.9.RELEASE</springframework.version>
 		<basalt.version>1.1.0-RELEASE</basalt.version>
 		<granite.version>1.0.0-SNAPSHOT</granite.version>
-		<sand.version>0.1.0-RELEASE</sand.version>
+		<sand.version>0.2.0-SNAPSHOT</sand.version>
 		<gem.version>0.2.0-RELEASE</gem.version>
 	</properties>
 	
@@ -136,12 +136,12 @@
 			<dependency>
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-core</artifactId>
-				<version>1.0.3</version>
+				<version>1.2.3</version>
 			</dependency>
 			<dependency>
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-classic</artifactId>
-				<version>1.0.3</version>
+				<version>1.2.3</version>
 			</dependency>
 			<dependency>
         			<groupId>org.slf4j</groupId>
@@ -299,13 +299,14 @@
 				<artifactId>basalt-xeps-muc</artifactId>
 				<version>${basalt.version}</version>
 			</dependency>
-			<!-- Granite Libraries -->
+			<!-- Granite server bootstrap program -->
 			<dependency>
 				<groupId>com.firstlinecode.granite</groupId>
 				<artifactId>granite-server</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
-			<!-- Granite Framework -->
+
+			<!-- Granite framework libraries -->
 			<dependency>
 				<groupId>com.firstlinecode.granite.framework</groupId>
 				<artifactId>granite-framework-core</artifactId>
@@ -352,13 +353,13 @@
 				<artifactId>granite-pipeline-stages-event</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
-			<!-- Standard protocol implementation for XMPP stream -->
+			<!-- Granite standard protocol implementation for XMPP stream -->
 			<dependency>
 				<groupId>com.firstlinecode.granite.stream</groupId>
 				<artifactId>granite-stream-standard</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
-			<!-- Standard protocol implementation for XMPP IM -->
+			<!-- Granite standard protocol implementation for XMPP IM -->
 			<dependency>
 				<groupId>com.firstlinecode.granite</groupId>
 				<artifactId>granite-im</artifactId>
@@ -385,7 +386,7 @@
 				<artifactId>granite-lite-im</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
-			<!-- XEPs plugins -->
+			<!-- Granite XEPs plugins -->
 			<dependency>
 				<groupId>com.firstlinecode.granite.xeps</groupId>
 				<artifactId>granite-xeps-ibr</artifactId>
@@ -431,7 +432,7 @@
 				<artifactId>granite-xeps-msgoffline</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
-			<!-- Deploly lite plugins -->
+			<!-- Granite Deploly lite plugins -->
 			<dependency>
 				<groupId>com.firstlinecode.granite.lite</groupId>
 				<artifactId>granite-lite-auth</artifactId>
@@ -456,7 +457,116 @@
 				<groupId>com.firstlinecode.granite.lite.xeps</groupId>
 				<artifactId>granite-lite-xeps-msgoffline</artifactId>
 				<version>${granite.version}</version>
-			</dependency>	
+			</dependency>
+			
+			<!-- Sand protocols libraries -->
+			<dependency>
+				<groupId>com.firstlinecode.sand.protocols</groupId>
+				<artifactId>sand-protocols-core</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>com.firstlinecode.sand.protocols</groupId>
+				<artifactId>sand-protocols-lora</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>com.firstlinecode.sand.protocols</groupId>
+				<artifactId>sand-protocols-ibdr</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.firstlinecode.sand.protocols</groupId>
+				<artifactId>sand-protocols-concentrator</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.firstlinecode.sand.protocols</groupId>
+				<artifactId>sand-protocols-actuator</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.firstlinecode.sand.protocols</groupId>
+				<artifactId>sand-protocols-operator</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>com.firstlinecode.sand.protocols.devices</groupId>
+				<artifactId>sand-protocols-devices-gateway</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.firstlinecode.sand.protocols.devices</groupId>
+				<artifactId>sand-protocols-devices-light</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+			
+			<!-- Sand server plugins -->
+			<dependency>
+				<groupId>com.firstlinecode.sand.server</groupId>
+				<artifactId>sand-server-devices</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.firstlinecode.sand.server</groupId>
+				<artifactId>sand-server-stream</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.firstlinecode.sand.server</groupId>
+				<artifactId>sand-server-ibdr</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.firstlinecode.sand.server</groupId>
+				<artifactId>sand-server-platform</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>com.firstlinecode.sand.server</groupId>
+				<artifactId>sand-server-operator</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.firstlinecode.sand.server</groupId>
+				<artifactId>sand-server-concentrator</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.firstlinecode.sand.server</groupId>
+				<artifactId>sand-server-actuator</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+			
+			<!-- Sand deploy lite plugins -->
+			<dependency>
+				<groupId>com.firstlinecode.sand.server.lite</groupId>
+				<artifactId>sand-server-lite-devices</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.sand.server.lite</groupId>
+				<artifactId>sand-server-lite-ibdr</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.sand.server.lite</groupId>
+				<artifactId>sand-server-lite-concentrator</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
 			
 			<!-- GEM libraries -->
 			<dependency>

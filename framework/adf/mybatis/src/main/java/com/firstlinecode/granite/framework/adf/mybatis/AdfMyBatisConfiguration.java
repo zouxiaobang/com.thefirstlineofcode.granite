@@ -15,6 +15,7 @@ import org.pf4j.PluginManager;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.UrlResource;
 
@@ -34,6 +35,7 @@ public class AdfMyBatisConfiguration implements IApplicationComponentServiceAwar
 	}
 	
 	@Bean
+	@DependsOn("dataSource")
 	public SqlSessionFactory sqlSessionFactory(DataSource dataSource) {
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 		sqlSessionFactoryBean.setDataSource(dataSource);

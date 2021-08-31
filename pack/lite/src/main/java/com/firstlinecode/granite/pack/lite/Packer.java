@@ -159,10 +159,13 @@ public class Packer {
 			throw new RuntimeException("Can't determine granite server directory.");
 		
 		File serverTargetDir = new File(serverDir, "target");
-		if (options.getProtocol() == Protocol.IOT || options.getProtocol() == Protocol.STANDARD) {			
+		if (options.getProtocol() == Protocol.IOT ||
+				options.getProtocol() == Protocol.STANDARD) {			
 			Main.runMvn(serverDir, options.isOffline(), "clean", "package");			
+		} else if (options.getProtocol() == Protocol.SAND) {
+			Main.runMvn(serverDir, options.isOffline(), "-fsand-pom.xml", "clean", "package");
 		} else {
-			throw new IllegalArgumentException("Only support 'iot' and 'standard' protocols now.");
+			throw new IllegalArgumentException("Only support 'iot', 'standard' and 'sand' protocols now.");
 		}
 		
 		if (!serverTargetDir.exists() || !serverTargetDir.isDirectory()) {
@@ -225,8 +228,10 @@ public class Packer {
 			configFilesDir = new File(configDir, "iot");
 		} else if (options.getProtocol() == Options.Protocol.STANDARD) {
 			configFilesDir = new File(configDir, "standard");			
+		} else if (options.getProtocol() == Options.Protocol.SAND) {
+			configFilesDir = new File(configDir, "sand");			
 		} else {
-			throw new IllegalArgumentException("Only support 'iot' and 'standard' protocols now.");
+			throw new IllegalArgumentException("Only support 'iot', 'standard' and 'csand' protocols now.");
 		}
 		
 		for (File configFile : configFilesDir.listFiles()) {

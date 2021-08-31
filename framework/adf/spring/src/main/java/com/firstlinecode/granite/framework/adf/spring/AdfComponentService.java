@@ -34,14 +34,18 @@ public class AdfComponentService extends ApplicationComponentService {
 		ConfigurableListableBeanFactory beanFactory = (ConfigurableListableBeanFactory)appContext.getBeanFactory();
 		beanFactory.addBeanPostProcessor(new AdfSpringBeanPostProcessor(this));
 		
-		registerPredefinedSpringConfigurations();
-		
-		ClassLoader[] classLoaders = registerContributedSpringConfigurations();
+		ClassLoader[] classLoaders = registerSpringConfigurations();
 		if (classLoaders != null) {
 			appContext.setClassLoader(new CompositeClassLoader(classLoaders));
 		}
 		
 		appContext.refresh();
+	}
+	
+	protected ClassLoader[] registerSpringConfigurations() {		
+		registerPredefinedSpringConfigurations();
+		
+		return registerContributedSpringConfigurations();
 	}
 	
 	private class CompositeClassLoader extends ClassLoader {

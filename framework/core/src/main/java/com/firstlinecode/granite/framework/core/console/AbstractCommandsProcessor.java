@@ -5,7 +5,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 
-public abstract class AbstractCommandProcessor implements ICommandProcessor {
+import org.pf4j.Extension;
+
+@Extension
+public abstract class AbstractCommandsProcessor implements ICommandsProcessor {
 	private static final String NAME_PREFIX_OF_PROCESS_METHOD = "process";
 
 	@Override
@@ -38,10 +41,10 @@ public abstract class AbstractCommandProcessor implements ICommandProcessor {
 	protected String getCommandFullName(String commandSimpleName) {
 		String group = getGroup();
 		
-		if (ICommandProcessor.DEFAULT_COMMAND_GROUP.equals(group)) {
+		if (ICommandsProcessor.DEFAULT_COMMAND_GROUP.equals(group)) {
 			return commandSimpleName;
 		} else {
-			return String.format("%s%s%s", group, ICommandProcessor.DEFAULT_COMMAND_GROUP, commandSimpleName);
+			return String.format("%s%s%s", group, ICommandsProcessor.DEFAULT_COMMAND_GROUP, commandSimpleName);
 		}
 	}
 

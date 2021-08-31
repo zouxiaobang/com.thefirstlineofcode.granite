@@ -16,21 +16,21 @@ import com.firstlinecode.granite.framework.core.adf.ApplicationComponentService;
 
 public class ConsoleSystem implements Runnable, IConsoleSystem {
 	private static final char CHAR_BLANK_SPACE = ' ';
-	private static final char CHAR_COLON = ':';
+	private static final String COMMAND_HELP = "help";
 
 	private volatile boolean stop = false;
 	
 	private IServerContext serverContext;
-	private Map<String, ICommandProcessor> commandProcessors;
+	private Map<String, ICommandsProcessor> commandsProcessors;
 	
 	public ConsoleSystem(IServerContext serverContext) {
 		this.serverContext = serverContext;
-		commandProcessors = new HashMap<>();
+		commandsProcessors = new HashMap<>();
 	}
 	
 	@Override
 	public void run() {
-		loadCommandProcessors();
+		loadContributedCommandsProcessors();
 		
 		printBlankLine();
 		printDefaultHelp();
@@ -46,28 +46,44 @@ public class ConsoleSystem implements Runnable, IConsoleSystem {
 				String input = readCommand(in).trim();
 				printBlankLine();
 				
+				String group = null;
 				String command = null;
 				String[] args;
 				int blankSpaceIndex = input.indexOf(CHAR_BLANK_SPACE);
 				if (blankSpaceIndex != -1) {
 					command = input.substring(0, blankSpaceIndex);
-					String sArgs = input.substring(blankSpaceIndex + 1, input.length());
-					StringTokenizer st = new StringTokenizer(sArgs, String.valueOf(CHAR_BLANK_SPACE));
-					
-					args = new String[st.countTokens()];
-					for (int i = 0; i < args.length; i++) {
-						args[i] = st.nextToken();
+					if (commandsProcessors.keySet().contains(command)) {
+						group = command;
+						String commandAndArgs = input.substring(blankSpaceIndex + 1);
+						blankSpaceIndex = commandAndArgs.indexOf(CHAR_BLANK_SPACE);
+						if (blankSpaceIndex == -1) {
+							command = commandAndArgs; 
+							args = new String[0];
+						} else {
+							command = commandAndArgs.substring(0, blankSpaceIndex);
+							String sArgs = commandAndArgs.substring(blankSpaceIndex + 1);
+							StringTokenizer st = new StringTokenizer(sArgs, String.valueOf(CHAR_BLANK_SPACE));							
+							args = new String[st.countTokens()];
+							for (int i = 0; i < args.length; i++) {
+								args[i] = st.nextToken();
+							}
+						}
+					} else {						
+						printBlankLine();
+						printMessageLine(String.format("Unknown command group: '%s'", group));
+						printDefaultHelp();
+						
+						return;
 					}
 				} else {
 					command = input;
 					args = new String[0];
 				}
 				
-				if (!processCommand(this, command, args)) {
+				if (!processCommand(group, command, args)) {
 					printBlankLine();
 					printDefaultHelp();
 				}
-				
 				
 				printBlankLine();
 				printPrompt();
@@ -81,85 +97,118 @@ public class ConsoleSystem implements Runnable, IConsoleSystem {
 		try {
 			doPrintDefaultHelp();
 		} catch (Exception e) {
+			printBlankLine();
 			printMessageLine("Something was wrong. Close system now.");
+			e.printStackTrace(getOutputStream());
 			try {
 				closeSystem();
-			} catch (Exception e1) {
-				throw new RuntimeException("Can't close system correctly.", e);
+			} catch (Exception exception) {
+				throw new RuntimeException("Can't close system correctly.", exception);
 			}
 		}
 	}
 
 	private void closeSystem() throws Exception {
-		getDefaultCommandProcessor().process(this, "close");
+		getDefaultCommandsProcessor().process(this, "close");
 	}
 
-	private ICommandProcessor getDefaultCommandProcessor() {
-		return commandProcessors.get(ICommandProcessor.DEFAULT_COMMAND_GROUP);
+	private ICommandsProcessor getDefaultCommandsProcessor() {
+		return commandsProcessors.get(ICommandsProcessor.DEFAULT_COMMAND_GROUP);
 	}
 
-	private void loadCommandProcessors() {
-		ICommandProcessor defaultCommandProcessor = new DefaultCommandProcessor();
-		commandProcessors.put(defaultCommandProcessor.getGroup(), defaultCommandProcessor);
+	private void loadContributedCommandsProcessors() {
+		ICommandsProcessor defaultCommandsProcessor = new DefaultCommandsProcessor();
+		commandsProcessors.put(defaultCommandsProcessor.getGroup(), defaultCommandsProcessor);
 		
 		ApplicationComponentService appComponentService = (ApplicationComponentService)serverContext.getApplicationComponentService();
 		PluginManager pluginManager = appComponentService.getPluginManager();
-		List<? extends ICommandProcessor> commandProcessorExtensions = pluginManager.getExtensions(ICommandProcessor.class);
-		for (ICommandProcessor commandProcessorExtension : commandProcessorExtensions) {
-			String group = commandProcessorExtension.getGroup();
+		List<? extends ICommandsProcessor> contributedCommandsProcessors = pluginManager.getExtensions(ICommandsProcessor.class);
+		for (ICommandsProcessor contributedCommandsProcessor : contributedCommandsProcessors) {
+			String group = contributedCommandsProcessor.getGroup();
 			
 			if (group == null) {
 				throw new IllegalArgumentException("Null command group.");
 			}
 			
-			if (commandProcessors.containsKey(group)) {
+			if (commandsProcessors.containsKey(group)) {
 				throw new IllegalArgumentException(String.format("Reduplicated command group: '%s'.", group));
 			}
 			
-			commandProcessors.put(group, commandProcessorExtension);
+			commandsProcessors.put(group, appComponentService.inject(contributedCommandsProcessor));
 		}
 	}
 
-	private boolean processCommand(IConsoleSystem consoleSystem, String command, String... args) {
-		int colonIndex = command.indexOf(CHAR_COLON);
-		
-		String group;
-		if (colonIndex == -1) {
-			// Default command group
-			group = ICommandProcessor.DEFAULT_COMMAND_GROUP;
-		} else {
-			group = command.substring(0, colonIndex);
-			command = command.substring(colonIndex, command.length());
-		}
-		
-		ICommandProcessor commandProcessor = commandProcessors.get(group);
-		if (commandProcessor == null) {
-			consoleSystem.printMessageLine(String.format("Unknown command group: '%s'", group));
+	private boolean processCommand(String group, String command, String... args) {
+		ICommandsProcessor commandsProcessor = commandsProcessors.get(group);
+		if (commandsProcessor == null) {
+			printBlankLine();
+			printMessageLine(String.format("Unknown command group: '%s'", group));
 			
 			return false;
 		}
 		
-		for (String aCommand : commandProcessor.getCommands()) {
+		if (COMMAND_HELP.equals(command)) {
+			printHelp(commandsProcessor, args);
+			return true;
+		}
+		
+		for (String aCommand : commandsProcessor.getCommands()) {
 			if (aCommand.equals(command)) {
 				try {
-					return commandProcessor.process(consoleSystem, command, args);
+					return commandsProcessor.process(this, command, args);
 				} catch (Exception e) {
-					consoleSystem.printMessage("Can't process the command. Exception was thrown.");
-					consoleSystem.printBlankLine();
-					e.printStackTrace(consoleSystem.getOutputStream());
+					printBlankLine();
+					printMessageLine("Can't process the command. Exception was thrown.");
+					e.printStackTrace(getOutputStream());
+					printBlankLine();
 				}
 				
 				return true;
 			}
 		}
 		
-		if (ICommandProcessor.DEFAULT_COMMAND_GROUP.equals(group)) {
-			consoleSystem.printMessageLine(String.format("Unknown command: '%s'", command));			
+		if (ICommandsProcessor.DEFAULT_COMMAND_GROUP.equals(group)) {
+			printBlankLine();
+			printMessageLine(String.format("Unknown command: '%s'", command));			
 		} else {
-			consoleSystem.printMessageLine(String.format("Unknown command: '%s:%s'", group, command));
+			printBlankLine();
+			printMessageLine(String.format("Unknown command: '%s %s'", group, command));
 		}
 		
 		return false;
+	}
+
+	private void printHelp(ICommandsProcessor commandsProcessor, String[] args) {
+		if (commandsProcessor.getGroup().equals(ICommandsProcessor.DEFAULT_COMMAND_GROUP) &&
+				(args != null && args.length == 1)) {
+			ICommandsProcessor commandsProcessorForHelp = commandsProcessors.get(args[0]);
+			if (commandsProcessorForHelp == null) {
+				printBlankLine();
+				printMessageLine("Unknown command group: " + args[0]);
+				printDefaultHelp();
+				
+				return;
+			}
+			
+			printMessageLine(String.format("Granite '%s' command group - %s", commandsProcessor.getGroup(),
+					commandsProcessorForHelp.getIntroduction()));
+			printBlankLine();
+			commandsProcessorForHelp.printHelp(this);
+			return;
+		}
+		
+		if (args != null && args.length != 0) {
+			printBlankLine();
+			printMessageLine("Help command is only called with no arguments.");
+			
+			return;
+		}
+		
+		printHelp(commandsProcessor);
+	}
+
+	private void printHelp(ICommandsProcessor commandsProcessor) {
+		commandsProcessor.printHelp(this);
 	}
 
 	private String readCommand(BufferedReader in) throws IOException {
@@ -184,7 +233,7 @@ public class ConsoleSystem implements Runnable, IConsoleSystem {
 
 	private void doPrintDefaultHelp() throws Exception {
 		try {
-			getDefaultCommandProcessor().process(this, "help");
+			getDefaultCommandsProcessor().printHelp(this);
 		} catch (Exception e) {
 			// Why???. Ignore it.
 		}
@@ -227,7 +276,7 @@ public class ConsoleSystem implements Runnable, IConsoleSystem {
 	}
 
 	@Override
-	public ICommandProcessor[] getCommandProcessors() {
-		return commandProcessors.values().toArray(new ICommandProcessor[commandProcessors.size()]);
+	public ICommandsProcessor[] getCommandsProcessors() {
+		return commandsProcessors.values().toArray(new ICommandsProcessor[commandsProcessors.size()]);
 	}
 }

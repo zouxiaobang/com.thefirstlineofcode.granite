@@ -73,11 +73,12 @@ public class Updater {
 			sbUpdatedLibraries.append(library).append(", ");
 		}
 		
-		if (sbUpdatedLibraries.length() > 0) {
+		if (sbUpdatedLibraries.length() == 0) {
+			System.out.println("No library has been updated.");
+		} else {
 			sbUpdatedLibraries.delete(sbUpdatedLibraries.length() - 2, sbUpdatedLibraries.length());
+			System.out.println(String.format("Libraries %s updated.", sbUpdatedLibraries.toString()));
 		}
-		
-		System.out.println(String.format("Libraries %s updated.", sbUpdatedLibraries.toString()));
 	}
 	
 	private void updateLibrary(String library, boolean clean, List<String> updatedLibraries) {
@@ -286,8 +287,9 @@ public class Updater {
 	}
 
 	private void findLibrariesFromDirectory(File librariesDir) {
-		if (!librariesDir.exists())
-			return;
+		if (!librariesDir.exists()) {
+			throw new IllegalArgumentException(String.format("Libraries directory '%s' not existed.", librariesDir));
+		}
 		
 		if (!librariesDir.isDirectory())
 			throw new RuntimeException(String.format("Libraries directory %s isn't a directory.", librariesDir.getAbsolutePath()));
@@ -446,7 +448,7 @@ public class Updater {
 				if (options.getSandProjectDirPath() == null)
 					throw new RuntimeException("Can't determine sand project root directoy.");
 				
-				developmentDir = String.format("%s%s", sandProjectPath + libraryName.substring(firstDashIndex).replace('-', '/'));
+				developmentDir = sandProjectPath + libraryName.substring(firstDashIndex).replace('-', '/');
 			} else {
 				throw new RuntimeException(String.format("Illegal granite library. %s isn't a system library or a plugin library.", libraryName));
 			}

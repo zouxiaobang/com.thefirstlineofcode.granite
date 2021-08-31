@@ -7,7 +7,7 @@ import com.firstlinecode.granite.framework.core.IServerContext;
 public interface IConsoleSystem {
 	IServerContext getServerContext();
 	PrintStream getOutputStream();
-	ICommandProcessor[] getCommandProcessors();
+	ICommandsProcessor[] getCommandsProcessors();
 	
 	void printBlankLine();
 	void printMessage(String message);

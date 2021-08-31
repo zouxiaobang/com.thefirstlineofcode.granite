@@ -11,12 +11,13 @@ import com.firstlinecode.granite.framework.core.repository.IComponentInfo;
 import com.firstlinecode.granite.framework.core.repository.IDependencyInfo;
 
 @Extension
-public class DefaultCommandProcessor extends AbstractCommandProcessor {
+public class DefaultCommandsProcessor extends AbstractCommandsProcessor {
+	private static final String COMMANDS_GROUP_INTRODUCTION = "Monitoring and managing granite server.";
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
 	@Override
 	public String getGroup() {
-		return ICommandProcessor.DEFAULT_COMMAND_GROUP;
+		return ICommandsProcessor.DEFAULT_COMMAND_GROUP;
 	}
 	
 	@Override
@@ -127,15 +128,29 @@ public class DefaultCommandProcessor extends AbstractCommandProcessor {
 		}
 	}
 	
-	void processHelp(IConsoleSystem consoleSystem) {
+	@Override
+	public void printHelp(IConsoleSystem consoleSystem) {
+		consoleSystem.printMessageLine(String.format("Granite '%s'(default) command group - %s", getGroup(),
+				getIntroduction()));
 		consoleSystem.printMessageLine("Available Commands:");
-		consoleSystem.printMessageLine("help                    Display help information.");
-		consoleSystem.printMessageLine("services                List all services.");
-		consoleSystem.printMessageLine("service <SERVICE_ID>    Display details for the specified service.");
-		consoleSystem.printMessageLine("components              List all components.");
-		consoleSystem.printMessageLine("plugins                 List all plugins.");
-		consoleSystem.printMessageLine("close                   Close the console.");
-		consoleSystem.printMessageLine("exit                    Stop the server and exit system.");
+		consoleSystem.printMessageLine("help [COMMAND_GROUP_NAME] - Display help information.");
+		consoleSystem.printMessageLine("services - List all services.");
+		consoleSystem.printMessageLine("service <SERVICE_ID> - Display details for the specified service.");
+		consoleSystem.printMessageLine("components - List all components.");
+		consoleSystem.printMessageLine("plugins - List all plugins.");
+		consoleSystem.printMessageLine("close - Close the console.");
+		consoleSystem.printMessageLine("exit - Stop the server and exit system.");
+		consoleSystem.printBlankLine();
+		if (consoleSystem.getCommandsProcessors().length > 1)
+			consoleSystem.printMessageLine("Call help [COMMAND_GROUP_NAME] below for more available commands contributed by plugins:");
+		
+		for (ICommandsProcessor commandsProcessor : consoleSystem.getCommandsProcessors()) {
+			if (commandsProcessor.getGroup().equals(ICommandsProcessor.DEFAULT_COMMAND_GROUP))
+				continue;
+			
+			consoleSystem.printMessageLine(String.format("help %s - %s", commandsProcessor.getGroup(),
+					commandsProcessor.getIntroduction()));
+		}
 	}
 	
 	private class ServicePrinter {
@@ -251,5 +266,10 @@ public class DefaultCommandProcessor extends AbstractCommandProcessor {
 			
 			sb.append("- ");
 		}
+	}
+
+	@Override
+	public String getIntroduction() {
+		return COMMANDS_GROUP_INTRODUCTION;
 	}
 }
