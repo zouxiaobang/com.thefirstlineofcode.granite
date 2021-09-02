@@ -48,7 +48,7 @@ public class ConsoleSystem implements Runnable, IConsoleSystem {
 				
 				String group = null;
 				String command = null;
-				String[] args;
+				String[] args = null;
 				int blankSpaceIndex = input.indexOf(CHAR_BLANK_SPACE);
 				if (blankSpaceIndex != -1) {
 					command = input.substring(0, blankSpaceIndex);
@@ -62,35 +62,60 @@ public class ConsoleSystem implements Runnable, IConsoleSystem {
 						} else {
 							command = commandAndArgs.substring(0, blankSpaceIndex);
 							String sArgs = commandAndArgs.substring(blankSpaceIndex + 1);
-							StringTokenizer st = new StringTokenizer(sArgs, String.valueOf(CHAR_BLANK_SPACE));							
-							args = new String[st.countTokens()];
-							for (int i = 0; i < args.length; i++) {
-								args[i] = st.nextToken();
-							}
+							args = getArgs(sArgs);
 						}
-					} else {						
-						printBlankLine();
-						printMessageLine(String.format("Unknown command group: '%s'", group));
-						printDefaultHelp();
-						
-						return;
+					} else {
+						if (isDefaultCommands(command)) {
+							group = ICommandsProcessor.DEFAULT_COMMAND_GROUP;
+							args = getArgs(input.substring(blankSpaceIndex + 1));
+						} else {
+							printMessageLine(String.format("Unknown command group: '%s'", group));
+							printDefaultHelp();							
+						}
 					}
 				} else {
+					group = ICommandsProcessor.DEFAULT_COMMAND_GROUP;
 					command = input;
 					args = new String[0];
 				}
 				
-				if (!processCommand(group, command, args)) {
-					printBlankLine();
-					printDefaultHelp();
+				if (group != null && command != null && args != null) {					
+					try {
+						if (!processCommand(group, command, args)) {
+							printBlankLine();
+							printDefaultHelp();
+						}
+					} catch (Exception e) {					
+						e.printStackTrace();
+					}
 				}
 				
 				printBlankLine();
 				printPrompt();
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
 			}
 		}
+	}
+
+	private String[] getArgs(String sArgs) {
+		String[] args;
+		StringTokenizer st = new StringTokenizer(sArgs, String.valueOf(CHAR_BLANK_SPACE));							
+		args = new String[st.countTokens()];
+		for (int i = 0; i < args.length; i++) {
+			args[i] = st.nextToken();
+		}
+		return args;
+	}
+	
+	private boolean isDefaultCommands(String command) {
+		for (String aCommand : getDefaultCommandsProcessor().getCommands()) {
+			if (command.equals(aCommand)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	private void printDefaultHelp() {
@@ -139,6 +164,10 @@ public class ConsoleSystem implements Runnable, IConsoleSystem {
 	}
 
 	private boolean processCommand(String group, String command, String... args) {
+		if (group == null) {
+			group = ICommandsProcessor.DEFAULT_COMMAND_GROUP;
+		}
+		
 		ICommandsProcessor commandsProcessor = commandsProcessors.get(group);
 		if (commandsProcessor == null) {
 			printBlankLine();
@@ -190,9 +219,8 @@ public class ConsoleSystem implements Runnable, IConsoleSystem {
 				return;
 			}
 			
-			printMessageLine(String.format("Granite '%s' command group - %s", commandsProcessor.getGroup(),
+			printTitleLine(String.format("Granite '%s' command group - %s", commandsProcessorForHelp.getGroup(),
 					commandsProcessorForHelp.getIntroduction()));
-			printBlankLine();
 			commandsProcessorForHelp.printHelp(this);
 			return;
 		}
@@ -263,6 +291,16 @@ public class ConsoleSystem implements Runnable, IConsoleSystem {
 	@Override
 	public PrintStream getOutputStream() {
 		return System.out;
+	}
+	
+	@Override
+	public void printTitleLine(String title) {
+		printMessageLine(title);
+	}
+	
+	@Override
+	public void printContentLine(String content) {
+		printMessageLine("  " + content);
 	}
 
 	@Override

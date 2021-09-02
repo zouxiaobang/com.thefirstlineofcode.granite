@@ -12,6 +12,8 @@ public interface IConsoleSystem {
 	void printBlankLine();
 	void printMessage(String message);
 	void printMessageLine(String message);
+	void printTitleLine(String title);
+	void printContentLine(String content);
 	
 	void close();
 }

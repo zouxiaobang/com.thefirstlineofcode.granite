@@ -130,25 +130,25 @@ public class DefaultCommandsProcessor extends AbstractCommandsProcessor {
 	
 	@Override
 	public void printHelp(IConsoleSystem consoleSystem) {
-		consoleSystem.printMessageLine(String.format("Granite '%s'(default) command group - %s", getGroup(),
-				getIntroduction()));
-		consoleSystem.printMessageLine("Available Commands:");
-		consoleSystem.printMessageLine("help [COMMAND_GROUP_NAME] - Display help information.");
-		consoleSystem.printMessageLine("services - List all services.");
-		consoleSystem.printMessageLine("service <SERVICE_ID> - Display details for the specified service.");
-		consoleSystem.printMessageLine("components - List all components.");
-		consoleSystem.printMessageLine("plugins - List all plugins.");
-		consoleSystem.printMessageLine("close - Close the console.");
-		consoleSystem.printMessageLine("exit - Stop the server and exit system.");
-		consoleSystem.printBlankLine();
-		if (consoleSystem.getCommandsProcessors().length > 1)
-			consoleSystem.printMessageLine("Call help [COMMAND_GROUP_NAME] below for more available commands contributed by plugins:");
+		consoleSystem.printTitleLine(String.format("%s Available commands:", getIntroduction()));
+		consoleSystem.printContentLine("help [COMMAND_GROUP_NAME] - Display help information.");
+		consoleSystem.printContentLine("services - List all services.");
+		consoleSystem.printContentLine("service <SERVICE_ID> - Display details for the specified service.");
+		consoleSystem.printContentLine("components - List all components.");
+		consoleSystem.printContentLine("plugins - List all plugins.");
+		consoleSystem.printContentLine("close - Close the console.");
+		consoleSystem.printContentLine("exit - Stop the server and exit system.");
 		
+		if (consoleSystem.getCommandsProcessors().length == 1)
+			return;
+		
+		consoleSystem.printBlankLine();
+		consoleSystem.printTitleLine("Call help [COMMAND_GROUP_NAME] below for more available commands contributed by plugins:");
 		for (ICommandsProcessor commandsProcessor : consoleSystem.getCommandsProcessors()) {
 			if (commandsProcessor.getGroup().equals(ICommandsProcessor.DEFAULT_COMMAND_GROUP))
 				continue;
 			
-			consoleSystem.printMessageLine(String.format("help %s - %s", commandsProcessor.getGroup(),
+			consoleSystem.printContentLine(String.format("help %s - %s", commandsProcessor.getGroup(),
 					commandsProcessor.getIntroduction()));
 		}
 	}
