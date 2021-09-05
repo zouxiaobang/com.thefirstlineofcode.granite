@@ -67,6 +67,16 @@
 				<groupId>com.firstlinecode.sand.server.lite</groupId>
 				<artifactId>sand-server-lite-concentrator</artifactId>
 			</dependency>
+			
+			<!-- Sand Demo Plugins -->
+			<dependency>
+				<groupId>com.firstlinecode.sand.demo.server</groupId>
+				<artifactId>sand-demo-server-models</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.sand.demo.server.lite</groupId>
+				<artifactId>sand-demo-server-lite-acl</artifactId>
+			</dependency>
 	</dependencies>
 	
 	<build>

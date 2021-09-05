@@ -33,6 +33,9 @@ public class ConsoleSystem implements Runnable, IConsoleSystem {
 		loadContributedCommandsProcessors();
 		
 		printBlankLine();
+		printTitleLine("\tGranite Server Console");		
+		printBlankLine();
+		
 		printDefaultHelp();
 		printBlankLine();
 		printPrompt();
@@ -219,8 +222,6 @@ public class ConsoleSystem implements Runnable, IConsoleSystem {
 				return;
 			}
 			
-			printTitleLine(String.format("Granite '%s' command group - %s", commandsProcessorForHelp.getGroup(),
-					commandsProcessorForHelp.getIntroduction()));
 			commandsProcessorForHelp.printHelp(this);
 			return;
 		}

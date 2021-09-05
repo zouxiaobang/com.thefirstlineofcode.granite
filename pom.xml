@@ -136,17 +136,17 @@
 			<dependency>
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-core</artifactId>
-				<version>1.2.3</version>
+				<version>1.2.5</version>
 			</dependency>
 			<dependency>
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-classic</artifactId>
-				<version>1.2.3</version>
+				<version>1.2.5</version>
 			</dependency>
 			<dependency>
         			<groupId>org.slf4j</groupId>
         			<artifactId>slf4j-api</artifactId>
-        			<version>1.6.4</version>
+        			<version>1.7.31</version>
       			</dependency>
 			<dependency>
         			<groupId>org.slf4j</groupId>
@@ -565,6 +565,18 @@
 			<dependency>
 				<groupId>com.firstlinecode.sand.server.lite</groupId>
 				<artifactId>sand-server-lite-concentrator</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+			
+			<!-- Sand demo plugins -->
+			<dependency>
+				<groupId>com.firstlinecode.sand.demo.server</groupId>
+				<artifactId>sand-demo-server-models</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.firstlinecode.sand.demo.server.lite</groupId>
+				<artifactId>sand-demo-server-lite-acl</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
 			
