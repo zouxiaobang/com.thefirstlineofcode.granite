@@ -24,22 +24,32 @@ public class SpringBeanInjectionProvider implements IInjectionProvider {
 
 	@Override
 	public IDependencyFetcher getFetcher(Object mark) {
-		return new SpringBeanFetcher(appContext, (Class<?>)mark);
+		return new SpringBeanFetcher(appContext, getBeanType((Object[])mark), getQualifier((Object[])mark));
+	}
+
+	private Class<?> getBeanType(Object[] mark) {
+		return (Class<?>)mark[0];
+	}
+	
+	private String getQualifier(Object[] mark) {
+		return (String)mark[1];
 	}
 
 	@Override
 	public Object getMark(Object source, Object dependencyAnnotation) {
-		BeanDependency beanDependency = (BeanDependency)dependencyAnnotation;
-		if (beanDependency.value() != Object.class)
-			return beanDependency.value();
-		
+		Class<?> type = null;
 		if (source instanceof Field) {
 			Field field = (Field)source;
-			return field.getType();
+			type = field.getType();
 		} else {
 			Method method = (Method)source;
-			return method.getParameters()[0].getType();
+			type = method.getParameters()[0].getType();
 		}
+		
+		String qualifier = null;
+		BeanDependency beanDependency = (BeanDependency)dependencyAnnotation;
+		qualifier = beanDependency.value();
+		
+		return new Object[] {type, qualifier};
 	}
-
 }

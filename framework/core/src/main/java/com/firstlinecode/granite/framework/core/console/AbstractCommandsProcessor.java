@@ -29,7 +29,7 @@ public abstract class AbstractCommandsProcessor implements ICommandsProcessor {
 			return true;
 		}
 		
-		if (matchMethodName) {			
+		if (matchMethodName) {
 			consoleSystem.printMessageLine(String.format("Illegal command format: '%s'. Arguments don't match.", getCommandFullName(command)));
 			return false;
 		} else {
@@ -44,7 +44,7 @@ public abstract class AbstractCommandsProcessor implements ICommandsProcessor {
 		if (ICommandsProcessor.DEFAULT_COMMAND_GROUP.equals(group)) {
 			return commandSimpleName;
 		} else {
-			return String.format("%s%s%s", group, ICommandsProcessor.DEFAULT_COMMAND_GROUP, commandSimpleName);
+			return String.format("%s %s", group, commandSimpleName);
 		}
 	}
 

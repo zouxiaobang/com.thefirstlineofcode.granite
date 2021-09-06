@@ -67,6 +67,8 @@ import com.firstlinecode.granite.pipeline.stages.stream.negotiants.TlsNegotiant;
 @Component("standard.client.message.processor")
 public class StandardClientMessageProcessor implements IClientMessageProcessor, IConfigurationAware,
 		IServerConfigurationAware, IApplicationComponentServiceAware, IInitializable {
+	private static final String BEAN_NAME_AUTHENTICATOR = "authenticator";
+
 	private static final Logger logger = LoggerFactory.getLogger(StandardClientMessageProcessor.class);
 	
 	private static final String CONFIGURATION_KEY_TLS_REQUIRED = "tls.required";
@@ -97,9 +99,9 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 	
 	protected ISessionListener sessionListenerDelegate;
 	
-	private List<ISessionListener> sessionListeners;
+	protected List<ISessionListener> sessionListeners;
 	
-	private IApplicationComponentService appComponentService;
+	protected IApplicationComponentService appComponentService;
 	
 	public StandardClientMessageProcessor() {
 		parsingFactory = OxmService.createParsingFactory();
@@ -406,7 +408,8 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 	@Override
 	public void setApplicationComponentService(IApplicationComponentService appComponentService) {
 		this.appComponentService = appComponentService;
-		authenticator = ((AdfComponentService)appComponentService).getApplicationContext().getBean(IAuthenticator.class);
+		authenticator = ((AdfComponentService)appComponentService).getApplicationContext().
+				getBean(BEAN_NAME_AUTHENTICATOR, IAuthenticator.class);
 	}
 
 }
