@@ -1,5 +1,6 @@
 package com.firstlinecode.granite.framework.core.console;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
 
@@ -113,6 +114,13 @@ public class DefaultCommandsProcessor extends AbstractCommandsProcessor {
 		
 		if (plugins == null || plugins.size() == 0)
 			consoleSystem.printMessageLine("No any plugins found.");
+		
+		plugins.sort(new Comparator<PluginWrapper>() {
+			@Override
+			public int compare(PluginWrapper pw1, PluginWrapper pw2) {
+				return pw1.getPluginId().compareTo(pw2.getPluginId());
+			}
+		});
 		
 		consoleSystem.printMessageLine("id\tState\t\tPlugin ID");
 		

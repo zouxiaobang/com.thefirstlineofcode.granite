@@ -74,7 +74,7 @@ public class Updater {
 		}
 		
 		if (sbUpdatedLibraries.length() == 0) {
-			System.out.println("No library has been updated.");
+			System.out.println("No library updated.");
 		} else {
 			sbUpdatedLibraries.delete(sbUpdatedLibraries.length() - 2, sbUpdatedLibraries.length());
 			System.out.println(String.format("Libraries %s updated.", sbUpdatedLibraries.toString()));
@@ -83,7 +83,7 @@ public class Updater {
 	
 	private void updateLibrary(String library, boolean clean, List<String> updatedLibraries) {
 		if (!libraryInfos.containsKey(library)) {
-			throw new IllegalArgumentException(String.format("Illegal library name '%s'", library));
+			throw new IllegalArgumentException(String.format("Illegal library name '%s'.", library));
 		}
 		
 		LibraryInfo libraryInfo = libraryInfos.get(library);
@@ -123,7 +123,7 @@ public class Updater {
 		File targetDir = new File(libraryInfo.developmentDir, "target");
 		File newestLibrary = new File(targetDir, libraryInfo.fileName);
 		if (!newestLibrary.exists()) {
-			throw new RuntimeException(String.format("Newest library %s doesn't exist. Please build it first.", newestLibrary.getPath()));
+			throw new RuntimeException(String.format("Newest library '%s' doesn't exist. Please build it first.", newestLibrary.getPath()));
 		}
 		
 		return newestLibrary;
@@ -137,7 +137,7 @@ public class Updater {
 		} else if (subsystem.startsWith(SAND_PROJECT_PREFIX)) {
 			subsystemProjectDir = new File(options.getSandProjectDirPath(), subsystem.substring(5));
 		} else {
-			throw new IllegalArgumentException(String.format("Illegal subsystem name '%s'", subsystem));
+			throw new IllegalArgumentException(String.format("Illegal subsystem name '%s'.", subsystem));
 		}
 		
 		if (!subsystemProjectDir.exists()) {
