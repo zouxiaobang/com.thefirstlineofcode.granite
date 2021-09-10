@@ -192,7 +192,6 @@ public class ConsoleSystem implements Runnable, IConsoleSystem {
 					printBlankLine();
 					printMessageLine("Can't process the command. Exception was thrown.");
 					e.printStackTrace(getOutputStream());
-					printBlankLine();
 				}
 				
 				return true;

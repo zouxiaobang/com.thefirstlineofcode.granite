@@ -72,11 +72,22 @@ public abstract class AbstractCommandsProcessor implements ICommandsProcessor {
 			method.invoke(this, consoleSystem);			
 		} else if (args.length == 1) {
 			invokeOneArgumentCommandProcessMethod(consoleSystem, method, args);
+		} else if (args.length == 2) {
+			invokeTwoArgumentCommandProcessMethod(consoleSystem, method, args);			
 		} else {
 			method.invoke(this, consoleSystem, args);			
 		}
 	}
 
+	private void invokeTwoArgumentCommandProcessMethod(IConsoleSystem consoleSystem, Method method, String... args)
+			throws IllegalAccessException, InvocationTargetException {
+		if (method.getParameters()[1].getType() == String.class &&
+				method.getParameters()[2].getType() == String.class)
+			method.invoke(this, consoleSystem, args[0], args[1]);
+		else
+			method.invoke(this, consoleSystem, args);
+	}
+	
 	private void invokeOneArgumentCommandProcessMethod(IConsoleSystem consoleSystem, Method method, String... args)
 			throws IllegalAccessException, InvocationTargetException {
 		if (method.getParameters()[1].getType() == String.class)
@@ -97,12 +108,25 @@ public abstract class AbstractCommandsProcessor implements ICommandsProcessor {
 			return parameters.length == 1;
 		} else if (args.length == 1) {
 			return parameters.length == 2 && (parameters[1].getType() == String.class || parameters[1].getType() == String[].class);
+		} else if (args.length == 2) {
+			return parameters.length == 3 &&
+					((parameters[1].getType() == String.class && parameters[2].getType() == String.class ) ||
+					parameters[1].getType() == String[].class);
 		} else {
 			return parameters[1].getType() == String[].class;
 		}
 	}
 
 	private boolean isMethodNameMatched(Method method, String command) {
+		for (;;) {
+			int slashIndex = command.indexOf("-");
+			if (slashIndex == -1)
+				break;
+			
+			command = command.substring(0, slashIndex) + Character.toUpperCase(command.charAt(slashIndex + 1)) +
+					command.substring(slashIndex + 2, command.length());
+		}
+		
 		String processCommandMethodName = NAME_PREFIX_OF_PROCESS_METHOD + Character.toUpperCase(command.charAt(0)) +
 				command.substring(1, command.length());
 		return method.getName().equals(processCommandMethodName);

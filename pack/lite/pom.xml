@@ -118,7 +118,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server</groupId>
-			<artifactId>sand-server-platform</artifactId>
+			<artifactId>sand-server-console</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.server</groupId>
@@ -143,6 +143,10 @@
 		<dependency>
 			<groupId>com.firstlinecode.sand.demo.server</groupId>
 			<artifactId>sand-demo-server-models</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.firstlinecode.sand.demo.server</groupId>
+			<artifactId>sand-demo-server-console</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.firstlinecode.sand.demo.server.lite</groupId>
