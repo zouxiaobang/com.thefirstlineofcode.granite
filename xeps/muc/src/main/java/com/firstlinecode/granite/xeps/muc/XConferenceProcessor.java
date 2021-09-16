@@ -7,12 +7,12 @@ import com.firstlinecode.granite.framework.core.pipeline.stages.processing.IProc
 import com.firstlinecode.granite.framework.core.pipeline.stages.processing.IXepProcessor;
 
 public class XConferenceProcessor implements IXepProcessor<Message, XConference> {
-	@Dependency("muc.protocols.processor")
-	private MucProtocolsProcessor delegate;
+	@Dependency("muc.protocols.delegator")
+	private MucProtocolsDelegator delegator;
 
 	@Override
 	public void process(IProcessingContext context, Message message, XConference xConference) {
-		delegate.process(context, message, xConference);
+		delegator.process(context, message, xConference);
 	}
 
 }

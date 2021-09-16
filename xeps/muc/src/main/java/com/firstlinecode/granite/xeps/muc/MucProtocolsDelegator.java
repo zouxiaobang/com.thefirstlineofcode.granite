@@ -58,11 +58,11 @@ import com.firstlinecode.granite.framework.core.utils.StanzaCloner;
 import com.firstlinecode.granite.framework.im.IResource;
 import com.firstlinecode.granite.framework.im.IResourcesService;
 
-@AppComponent("muc.protocols.processor")
-public class MucProtocolsProcessor implements IServerConfigurationAware,
+@AppComponent("muc.protocols.delegator")
+public class MucProtocolsDelegator implements IServerConfigurationAware,
 			IConfigurationAware, IDataObjectFactoryAware {
 
-	private static final Logger logger = LoggerFactory.getLogger(MucProtocolsProcessor.class);
+	private static final Logger logger = LoggerFactory.getLogger(MucProtocolsDelegator.class);
 	
 	private static final String COINFIGURATION_KEY_ROOM_DEFAULT_MAX_HISTORY_FETCH = "room.default.max.history.fetch";
 	private static final String COINFIGURATION_KEY_ROOM_DEFAULT_WHO_IS = "room.default.who.is";

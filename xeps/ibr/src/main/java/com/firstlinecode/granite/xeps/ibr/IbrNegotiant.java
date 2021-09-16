@@ -14,7 +14,7 @@ import com.firstlinecode.basalt.oxm.translators.core.stanza.IqTranslatorFactory;
 import com.firstlinecode.basalt.oxm.translators.core.stream.StreamTranslatorFactory;
 import com.firstlinecode.basalt.oxm.translators.error.StreamErrorTranslatorFactory;
 import com.firstlinecode.basalt.protocol.core.IError;
-import com.firstlinecode.basalt.protocol.core.ProtocolChain;
+import com.firstlinecode.basalt.protocol.core.IqProtocolChain;
 import com.firstlinecode.basalt.protocol.core.ProtocolException;
 import com.firstlinecode.basalt.protocol.core.stanza.Iq;
 import com.firstlinecode.basalt.protocol.core.stanza.error.BadRequest;
@@ -46,22 +46,21 @@ public class IbrNegotiant extends InitialStreamNegotiant {
 	
 	static {
 		parsingFactory.register(
-				ProtocolChain.first(Iq.PROTOCOL),
+				new IqProtocolChain(),
 				new IqParserFactory()
 		);
 		parsingFactory.register(
-				ProtocolChain.first(Iq.PROTOCOL).
-					next(IqRegister.PROTOCOL),
+				new IqProtocolChain(IqRegister.PROTOCOL),
 				new IqRegisterParserFactory()
 		);
 		parsingFactory.register(
-				ProtocolChain.first(Iq.PROTOCOL).
+				new IqProtocolChain().
 					next(IqRegister.PROTOCOL).
 					next(XData.PROTOCOL),
 				new NamingConventionParserFactory<>(XData.class)
 		);
 		parsingFactory.register(
-				ProtocolChain.first(Iq.PROTOCOL).
+				new IqProtocolChain().
 					next(IqRegister.PROTOCOL).
 					next(XOob.PROTOCOL),
 				new NamingConventionParserFactory<>(XOob.class)

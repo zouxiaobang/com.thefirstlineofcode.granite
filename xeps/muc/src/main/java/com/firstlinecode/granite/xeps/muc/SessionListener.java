@@ -10,8 +10,8 @@ import com.firstlinecode.granite.framework.core.pipeline.stages.processing.IProc
 import com.firstlinecode.granite.framework.core.session.ISessionListener;
 
 public class SessionListener implements ISessionListener {
-	@Dependency("muc.protocols.processor")
-	private MucProtocolsProcessor mucProtocolsProcessor;
+	@Dependency("muc.protocols.delegator")
+	private MucProtocolsDelegator mucProtocolsDelegator;
 	
 	@Override
 	public void sessionEstablished(IConnectionContext context, JabberId sessionJid) {}
@@ -20,7 +20,7 @@ public class SessionListener implements ISessionListener {
 	public void sessionClosing(IConnectionContext context, JabberId sessionJid) {
 		Map<JabberId, String> roomJidToNicks = MucSessionUtils.getOrCreateRoomJidToNicks(context);
 		for (Entry<JabberId, String> roomJidAndNick : roomJidToNicks.entrySet()) {
-			mucProtocolsProcessor.exitRoom((IProcessingContext)context, roomJidAndNick.getKey(), roomJidAndNick.getValue());
+			mucProtocolsDelegator.exitRoom((IProcessingContext)context, roomJidAndNick.getKey(), roomJidAndNick.getValue());
 		}
 	}
 

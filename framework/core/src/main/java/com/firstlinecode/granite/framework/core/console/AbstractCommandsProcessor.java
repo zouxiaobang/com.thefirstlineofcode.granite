@@ -5,10 +5,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 
-import org.pf4j.Extension;
-
-@Extension
 public abstract class AbstractCommandsProcessor implements ICommandsProcessor {
+	private static final String SYMBOL_DASH = "-";
 	private static final String NAME_PREFIX_OF_PROCESS_METHOD = "process";
 
 	@Override
@@ -119,12 +117,12 @@ public abstract class AbstractCommandsProcessor implements ICommandsProcessor {
 
 	private boolean isMethodNameMatched(Method method, String command) {
 		for (;;) {
-			int slashIndex = command.indexOf("-");
-			if (slashIndex == -1)
+			int dashIndex = command.indexOf(SYMBOL_DASH);
+			if (dashIndex == -1)
 				break;
 			
-			command = command.substring(0, slashIndex) + Character.toUpperCase(command.charAt(slashIndex + 1)) +
-					command.substring(slashIndex + 2, command.length());
+			command = command.substring(0, dashIndex) + Character.toUpperCase(command.charAt(dashIndex + 1)) +
+					command.substring(dashIndex + 2, command.length());
 		}
 		
 		String processCommandMethodName = NAME_PREFIX_OF_PROCESS_METHOD + Character.toUpperCase(command.charAt(0)) +

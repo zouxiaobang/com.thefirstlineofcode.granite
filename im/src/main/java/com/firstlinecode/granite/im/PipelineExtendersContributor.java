@@ -3,8 +3,7 @@ package com.firstlinecode.granite.im;
 import org.pf4j.Extension;
 
 import com.firstlinecode.basalt.oxm.annotation.AnnotatedParserFactory;
-import com.firstlinecode.basalt.protocol.core.ProtocolChain;
-import com.firstlinecode.basalt.protocol.core.stanza.Iq;
+import com.firstlinecode.basalt.protocol.core.IqProtocolChain;
 import com.firstlinecode.basalt.protocol.im.roster.Roster;
 import com.firstlinecode.basalt.protocol.im.roster.RosterParser;
 import com.firstlinecode.basalt.protocol.im.roster.RosterTranslatorFactory;
@@ -28,7 +27,7 @@ public class PipelineExtendersContributor extends PipelineExtendersContributorAd
 	public IProtocolParserFactory<?>[] getProtocolParserFactories() {
 		return new IProtocolParserFactory<?>[] {
 			new ProtocolParserFactory<>(
-					ProtocolChain.first(Iq.PROTOCOL).next(Roster.PROTOCOL),
+					new IqProtocolChain(Roster.PROTOCOL),
 					new AnnotatedParserFactory<Roster>(RosterParser.class)
 			)			
 		};
@@ -38,7 +37,7 @@ public class PipelineExtendersContributor extends PipelineExtendersContributorAd
 	public IXepProcessorFactory<?, ?>[] getXepProcessorFactories() {
 		return new IXepProcessorFactory<?, ?>[] {
 			new SingletonXepProcessorFactory<>(
-					ProtocolChain.first(Iq.PROTOCOL).next(Roster.PROTOCOL),
+					new IqProtocolChain().next(Roster.PROTOCOL),
 					new RosterProcessor()
 			)
 		};

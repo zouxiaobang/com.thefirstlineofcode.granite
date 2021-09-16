@@ -8,8 +8,8 @@ import com.firstlinecode.granite.framework.core.pipeline.stages.processing.IProc
 import com.firstlinecode.granite.framework.im.IPresenceProcessor;
 
 public class GroupChatPresenceProcessor implements IPresenceProcessor {
-	@Dependency("muc.protocols.processor")
-	private MucProtocolsProcessor delegate;
+	@Dependency("muc.protocols.delegator")
+	private MucProtocolsDelegator delegator;
 	
 	@BeanDependency
 	private IRoomService roomService;
@@ -28,7 +28,7 @@ public class GroupChatPresenceProcessor implements IPresenceProcessor {
 			return false;
 		}
 		
-		delegate.process(context, presence);
+		delegator.process(context, presence);
 		
 		return true;
 	}

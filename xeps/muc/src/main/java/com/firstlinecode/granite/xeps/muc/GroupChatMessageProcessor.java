@@ -10,8 +10,8 @@ import com.firstlinecode.granite.framework.core.pipeline.stages.processing.IProc
 import com.firstlinecode.granite.framework.im.IMessageProcessor;
 
 public class GroupChatMessageProcessor implements IMessageProcessor {
-	@Dependency("muc.protocols.processor")
-	private MucProtocolsProcessor delegate;
+	@Dependency("muc.protocols.delegator")
+	private MucProtocolsDelegator delegator;
 	
 	@BeanDependency
 	private IRoomService roomService;
@@ -31,10 +31,10 @@ public class GroupChatMessageProcessor implements IMessageProcessor {
 				throw new ProtocolException(new ItemNotFound());
 			}
 			
-			delegate.processRoomSubjectOrGroupChatMessage(context, message);
+			delegator.processRoomSubjectOrGroupChatMessage(context, message);
 			return true;
 		} else if (isGroupChatPrivateMessage(message)) {
-			delegate.processGroupChatPrivateMessage(context, message);
+			delegator.processGroupChatPrivateMessage(context, message);
 			return true;
 		} else {
 			return false;

@@ -2,8 +2,7 @@ package com.firstlinecode.granite.xeps.disco;
 
 import org.pf4j.Extension;
 
-import com.firstlinecode.basalt.protocol.core.ProtocolChain;
-import com.firstlinecode.basalt.protocol.core.stanza.Iq;
+import com.firstlinecode.basalt.protocol.core.IqProtocolChain;
 import com.firstlinecode.basalt.xeps.disco.DiscoInfo;
 import com.firstlinecode.basalt.xeps.disco.DiscoItems;
 import com.firstlinecode.basalt.xeps.rsm.Set;
@@ -19,10 +18,10 @@ public class PipelineExtendersContributor extends PipelineExtendersContributorAd
 	public IXepProcessorFactory<?, ?>[] getXepProcessorFactories() {
 		return new IXepProcessorFactory<?, ?>[] {
 			new SingletonXepProcessorFactory<>(
-					ProtocolChain.first(Iq.PROTOCOL).next(DiscoInfo.PROTOCOL),
+					new IqProtocolChain(DiscoInfo.PROTOCOL),
 					new DiscoInfoProcessor()),
 			new SingletonXepProcessorFactory<>(
-					ProtocolChain.first(Iq.PROTOCOL).next(DiscoItems.PROTOCOL),
+					new IqProtocolChain(DiscoItems.PROTOCOL),
 					new DiscoItemsProcessor())
 		};
 	}
@@ -31,16 +30,16 @@ public class PipelineExtendersContributor extends PipelineExtendersContributorAd
 	protected NamingConventionParsableProtocolObject[] getNamingConventionParsableProtocolObjects() {
 		return new NamingConventionParsableProtocolObject[] {
 				new NamingConventionParsableProtocolObject(
-						ProtocolChain.first(Iq.PROTOCOL).next(DiscoInfo.PROTOCOL),
+						new IqProtocolChain(DiscoInfo.PROTOCOL),
 						DiscoInfo.class),
 				new NamingConventionParsableProtocolObject(
-						ProtocolChain.first(Iq.PROTOCOL).next(DiscoInfo.PROTOCOL).next(XData.PROTOCOL),
+						new IqProtocolChain().next(DiscoInfo.PROTOCOL).next(XData.PROTOCOL),
 						XData.class),
 				new NamingConventionParsableProtocolObject(
-						ProtocolChain.first(Iq.PROTOCOL).next(DiscoItems.PROTOCOL),
+						new IqProtocolChain(DiscoItems.PROTOCOL),
 						DiscoItems.class),
 				new NamingConventionParsableProtocolObject(
-						ProtocolChain.first(Iq.PROTOCOL).next(DiscoItems.PROTOCOL).next(Set.PROTOCOL),
+						new IqProtocolChain().next(DiscoItems.PROTOCOL).next(Set.PROTOCOL),
 						Set.class)
 		};
 	}

@@ -10,7 +10,7 @@ public class AppComponentContributor implements IAppComponentsContributor {
 	@Override
 	public Class<?>[] getAppComponentClasses() {
 		return new Class<?>[] {
-			MucProtocolsProcessor.class
+			MucProtocolsDelegator.class
 		};
 	}
 

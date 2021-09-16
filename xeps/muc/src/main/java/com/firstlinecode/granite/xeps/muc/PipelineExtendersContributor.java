@@ -2,10 +2,10 @@ package com.firstlinecode.granite.xeps.muc;
 
 import org.pf4j.Extension;
 
+import com.firstlinecode.basalt.protocol.core.IqProtocolChain;
+import com.firstlinecode.basalt.protocol.core.MessageProtocolChain;
+import com.firstlinecode.basalt.protocol.core.PresenceProtocolChain;
 import com.firstlinecode.basalt.protocol.core.ProtocolChain;
-import com.firstlinecode.basalt.protocol.core.stanza.Iq;
-import com.firstlinecode.basalt.protocol.im.stanza.Message;
-import com.firstlinecode.basalt.protocol.im.stanza.Presence;
 import com.firstlinecode.basalt.xeps.muc.Muc;
 import com.firstlinecode.basalt.xeps.muc.admin.MucAdmin;
 import com.firstlinecode.basalt.xeps.muc.owner.MucOwner;
@@ -19,13 +19,13 @@ import com.firstlinecode.granite.framework.core.session.ISessionListener;
 
 @Extension
 public class PipelineExtendersContributor extends PipelineExtendersContributorAdapter {
-	private static final ProtocolChain PROTOCOLCHAIN_IQ_MUCADMIN = ProtocolChain.first(Iq.PROTOCOL).next(MucAdmin.PROTOCOL);
-	private static final ProtocolChain PROTOCOLCHAIN_IQ_MUCOWNER = ProtocolChain.first(Iq.PROTOCOL).next(MucOwner.PROTOCOL);
-	private static final ProtocolChain PROTOCOLCHAIN_IQ_MUCOWNER_XDATA = ProtocolChain.first(Iq.PROTOCOL).next(MucOwner.PROTOCOL).next(XData.PROTOCOL);
-	private static final ProtocolChain PROTOCOLCHAIN_PRESENCE_MUC = ProtocolChain.first(Presence.PROTOCOL).next(Muc.PROTOCOL);
-	private static final ProtocolChain PROTOCOLCHAIN_MESSAGE_MUCUSER = ProtocolChain.first(Message.PROTOCOL).next(MucUser.PROTOCOL);
-	private static final ProtocolChain PROTOCOLCHAIN_PRESENCE_MUCUSER = ProtocolChain.first(Presence.PROTOCOL).next(MucUser.PROTOCOL);
-	private static final ProtocolChain PROTOCOLCHAIN_MESSAE_XCONFERENCE = ProtocolChain.first(Message.PROTOCOL).next(XConference.PROTOCOL);
+	private static final ProtocolChain PROTOCOLCHAIN_IQ_MUCADMIN = new IqProtocolChain(MucAdmin.PROTOCOL);
+	private static final ProtocolChain PROTOCOLCHAIN_IQ_MUCOWNER = new IqProtocolChain(MucOwner.PROTOCOL);
+	private static final ProtocolChain PROTOCOLCHAIN_IQ_MUCOWNER_XDATA = new IqProtocolChain().next(MucOwner.PROTOCOL).next(XData.PROTOCOL);
+	private static final ProtocolChain PROTOCOLCHAIN_PRESENCE_MUC = new PresenceProtocolChain(Muc.PROTOCOL);
+	private static final ProtocolChain PROTOCOLCHAIN_MESSAGE_MUCUSER = new MessageProtocolChain(MucUser.PROTOCOL);
+	private static final ProtocolChain PROTOCOLCHAIN_PRESENCE_MUCUSER = new PresenceProtocolChain(MucUser.PROTOCOL);
+	private static final ProtocolChain PROTOCOLCHAIN_MESSAE_XCONFERENCE = new MessageProtocolChain(XConference.PROTOCOL);
 	
 	@Override
 	protected NamingConventionParsableProtocolObject[] getNamingConventionParsableProtocolObjects() {

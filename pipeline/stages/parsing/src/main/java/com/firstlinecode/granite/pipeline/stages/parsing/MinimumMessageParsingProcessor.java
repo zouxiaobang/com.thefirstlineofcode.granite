@@ -15,6 +15,7 @@ import com.firstlinecode.basalt.oxm.parsing.IParser;
 import com.firstlinecode.basalt.oxm.parsing.IParserFactory;
 import com.firstlinecode.basalt.oxm.parsing.IParsingFactory;
 import com.firstlinecode.basalt.protocol.core.IError;
+import com.firstlinecode.basalt.protocol.core.IqProtocolChain;
 import com.firstlinecode.basalt.protocol.core.Protocol;
 import com.firstlinecode.basalt.protocol.core.ProtocolChain;
 import com.firstlinecode.basalt.protocol.core.ProtocolException;
@@ -136,7 +137,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 
 	protected void registerPredefinedParsers() {
 		parsingFactory.register(
-				ProtocolChain.first(Iq.PROTOCOL),
+				new IqProtocolChain(),
 				new IqParserFactory()
 		);
 		parsingFactory.register(
