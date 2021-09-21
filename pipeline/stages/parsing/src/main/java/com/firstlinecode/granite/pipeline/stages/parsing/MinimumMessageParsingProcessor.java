@@ -156,13 +156,13 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 		String msg = (String)message.getPayload();
 		
 		if (logger.isDebugEnabled())
-			logger.debug("Begin to parse the XMPP message. Session JID: {}. XMPP message: {}.", context.getJid(), msg);
+			logger.debug("Begin to parse the XMPP message. Session JID: '{}'. XMPP message: '{}'.", context.getJid(), msg);
 		
 		for (IPipelinePreprocessor preprocessor : pipesPreprocessors) {
 			String preprocessedMsg = preprocessor.beforeParsing(msg);
 			
 			if (preprocessedMsg == null) {
-				logger.info("Message has dropped by preprcessor before parsing. Session JID: {}. XMPP message: {}.",
+				logger.info("Message has dropped by preprcessor before parsing. Session JID: '{}'. XMPP message: '{}'.",
 						context.getJid(), msg);
 				
 				return;
@@ -172,7 +172,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 		Object out = parseMessage(context, msg);
 		
 		if (out == null) {
-			logger.warn("Null parsed object. Session JID: {}. XMPP message: {}.",
+			logger.warn("Null parsed object. Session JID: '{}'. XMPP message: '{}'.",
 					context.getJid(), msg);
 			return;
 		}
@@ -181,7 +181,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 			Object preprocessedOut = preprocessor.afterParsing(out);
 			
 			if (preprocessedOut == null) {
-				logger.info("Message object has dropped by preprcessor after parsing. Session JID: {}. XMPP message: {}. Out object type: {}.",
+				logger.info("Message object has dropped by preprcessor after parsing. Session JID: '{}'. XMPP message: '{}'. Out object type: '{}'.",
 						new Object[] {context.getJid(), msg, out.getClass().getName()});
 				
 				return;
@@ -189,7 +189,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 		}
 		
 		if (out instanceof StreamError) {
-			logger.warn("Received a stream error. We will close the stream. Session JID: {}. XMPP message: {}.",
+			logger.warn("Received a stream error. We will close the stream. Session JID: '{}'. XMPP message: '{}'.",
 					context.getJid(), msg);
 			
 			context.close();
@@ -197,7 +197,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 			context.write(out);
 			
 			if (logger.isDebugEnabled())
-				logger.debug("End of parsing the XMPP message. Session JID: {}. XMPP message: {}.", context.getJid(), msg);
+				logger.debug("End of parsing the XMPP message. Session JID: '{}'. XMPP message: '{}'.", context.getJid(), msg);
 		}
 	}
 
@@ -207,9 +207,9 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 		
 		Object out = null;
 		try {
-			Object object = parsingFactory.parse(message);
-			if (object instanceof Stanza) {
-				Stanza stanza = (Stanza)object;
+			out = parsingFactory.parse(message);
+			if (out instanceof Stanza) {
+				Stanza stanza = (Stanza)out;
 				
 				if (stanza.getFrom() == null) {
 					stanza.setFrom(context.getJid());
@@ -221,76 +221,87 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 				}
 				
 				if (logger.isTraceEnabled())
-					logger.trace("Stanza parsed. Session JID: {}. XMPP message: {}. Parsed stanza: {}.",
+					logger.trace("Stanza parsed. Session JID: {}. XMPP message: '{}'. Parsed stanza: '{}'.",
 							new Object[] {context.getJid(), message, stanza});
 				
 				// If server doesn't understand the extended namespaces(rfc3921 2.4)
 				if (FlawedProtocolObject.isFlawed(stanza)) {
 					if (logger.isTraceEnabled())
-						logger.trace("Flawed stanza parsed. Session JID: {}. XMPP message: {}.",
+						logger.trace("Flawed stanza parsed. Session JID: '{}'. XMPP message: '{}'.",
 								context.getJid(), message);
 					
-					if (isServerRecipient(stanza)) {
-						if (stanza instanceof Iq) {
-							Iq iq = (Iq)stanza;
-							
-							//If an entity receives an IQ stanza of type "get" or "set" containing a child element
-							// qualified by a namespace it does not understand, the entity SHOULD return an
-							// IQ stanza of type "error" with an error condition of <service-unavailable/>.
-							if (iq.getType() == Iq.Type.SET || iq.getType() == Iq.Type.GET) {
-								throw new ProtocolException(new ServiceUnavailable());
-							}
-						} else if (stanza instanceof Message) {
-							// If an entity receives a message stanza whose only child element is qualified by a
-							// namespace it does not understand, it MUST ignore the entire stanza.
-							Message messageStanza = (Message)stanza;
-							if (messageStanza.getSubjects().size() == 0 &&
-									messageStanza.getBodies().size() == 0 &&
-									messageStanza.getObjects().size() == 0 &&
-									messageStanza.getThread() == null) {
-								// Ignore the entire stanza
-								return null;
-							}
-						} else {
-							return stanza;
-						}
-					} else {
-						return stanza;
-					}
+					out = processFlawedProtocolObject(stanza);
 				}
 				
-				return object;
-			} else {
-				// ？？？
-				out = object;
+				return out;
 			}
+			
+			return out;
 		} catch (ProtocolException e) {
 			IError error = e.getError();
 			if ((error instanceof StanzaError)) {
-				if (!stanzaErrorAttachSenderMessage) {
-					// Remove sender message
-					((StanzaError)error).setOriginalMessage(null);
-				}
-				
-				if (out instanceof Stanza) {
-					Stanza stanza = (Stanza)out;
-					if (stanza.getId() != null) {
-						((StanzaError)error).setId(stanza.getId());
-					}
-				}
+				amendStanzaError(out, (StanzaError)error);
 			}
 			
-			out = error;
 			if (logger.isTraceEnabled())
-				logger.trace("Parsing protocol exception. Session JID: {}. XMPP message: {}.",
+				logger.trace("Parsing protocol exception. Session JID: '{}'. XMPP message: '{}'.",
 						context.getJid(), message);
+			
+			return error;
 		} catch (RuntimeException e) {
-			out = new InternalServerError(CommonUtils.getInternalServerErrorMessage(e));
-			logger.error(String.format("Parsing error. Session JID: {}. XMPP message: %s.",
+			StanzaError error = new InternalServerError(CommonUtils.getInternalServerErrorMessage(e));
+			amendStanzaError(out, error);
+			
+			logger.error(String.format("Parsing internal server error. Session JID: '{}'. XMPP message: '{}'.",
 					context.getJid(), message), e);
+			
+			return error;
+		}
+	}
+
+	private Object processFlawedProtocolObject(Stanza stanza) {
+		if (isServerRecipient(stanza)) {
+			if (stanza instanceof Iq) {
+				Iq iq = (Iq)stanza;
+				
+				//If an entity receives an IQ stanza of type "get" or "set" containing a child element
+				// qualified by a namespace it does not understand, the entity SHOULD return an
+				// IQ stanza of type "error" with an error condition of <service-unavailable/>.
+				if (iq.getType() == Iq.Type.SET || iq.getType() == Iq.Type.GET) {
+					throw new ProtocolException(new ServiceUnavailable(String.format(
+							"Flawed protocol object: %s.", stanza.getObject().toString())));
+				}
+			} else if (stanza instanceof Message) {
+				// If an entity receives a message stanza whose only child element is qualified by a
+				// namespace it does not understand, it MUST ignore the entire stanza.
+				Message messageStanza = (Message)stanza;
+				if (messageStanza.getSubjects().size() == 0 &&
+						messageStanza.getBodies().size() == 0 &&
+						messageStanza.getObjects().size() == 0 &&
+						messageStanza.getThread() == null) {
+					// Ignore the entire stanza
+					return null;
+				}
+			} else {
+				return stanza;
+			}
 		}
 		
-		return out;
+		return stanza;
+	}
+
+	private void amendStanzaError(Object parsed, StanzaError error) {
+		if (!stanzaErrorAttachSenderMessage) {
+			// Remove sender message
+			error.setOriginalMessage(null);
+		}
+		
+		if (parsed instanceof Stanza) {
+			Stanza stanza = (Stanza)parsed;
+			if (stanza.getId() != null) {
+				error.setId(stanza.getId());
+			}
+		}
 	}
 
 	private boolean isValidFrom(IConnectionContext context, Stanza stanza) {
