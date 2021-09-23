@@ -141,7 +141,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 				AppComponent appComponentAnnotation = appComponentClass.getAnnotation(AppComponent.class);
 				if (appComponentAnnotation == null) {
 					throw new IllegalArgumentException(
-							String.format("Class '%s' isn't an legal application component. " +
+							String.format("Class '%s' isn't a legal application component. " +
 									"You need to add @AppComponent to the class.", appComponentClass.getName()));
 				}
 				
