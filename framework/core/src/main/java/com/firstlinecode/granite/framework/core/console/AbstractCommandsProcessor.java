@@ -105,11 +105,10 @@ public abstract class AbstractCommandsProcessor implements ICommandsProcessor {
 		if (args.length == 0) {
 			return parameters.length == 1;
 		} else if (args.length == 1) {
-			return parameters.length == 2 && (parameters[1].getType() == String.class || parameters[1].getType() == String[].class);
+			return parameters.length == 2 && parameters[1].getType() == String.class;
 		} else if (args.length == 2) {
-			return (parameters.length == 3 &&
-					(parameters[1].getType() == String.class && parameters[2].getType() == String.class ) ||
-					parameters[1].getType() == String[].class);
+			return (parameters.length == 3 && (parameters[1].getType() == String.class &&
+					parameters[2].getType() == String.class ));
 		} else {
 			return parameters[1].getType() == String[].class;
 		}
