@@ -19,7 +19,7 @@ public abstract class AbstractCommandsProcessor implements ICommandsProcessor {
 				matchMethodName = true;
 			}
 			
-			if (!isParametersMatched(method, args)) {
+			if (!isParametersMatched(method, command, args)) {
 				continue;
 			}
 			
@@ -94,7 +94,7 @@ public abstract class AbstractCommandsProcessor implements ICommandsProcessor {
 			method.invoke(this, consoleSystem, args);
 	}
 
-	private boolean isParametersMatched(Method method, String... args) {
+	private boolean isParametersMatched(Method method, String command, String... args) {
 		if (method.getParameterCount() == 0)
 			return false;
 		
@@ -110,8 +110,12 @@ public abstract class AbstractCommandsProcessor implements ICommandsProcessor {
 			return (parameters.length == 3 && (parameters[1].getType() == String.class &&
 					parameters[2].getType() == String.class ));
 		} else {
-			return parameters[1].getType() == String[].class;
+			return parameters[1].getType() == String[].class && isArgumentsMatched(command, args);
 		}
+	}
+
+	protected boolean isArgumentsMatched(String command, String[] args) {
+		return true;
 	}
 
 	private boolean isMethodNameMatched(Method method, String command) {
