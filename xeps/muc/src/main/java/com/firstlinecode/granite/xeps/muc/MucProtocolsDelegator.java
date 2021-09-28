@@ -295,7 +295,7 @@ public class MucProtocolsDelegator implements IServerConfigurationAware,
 		try {
 			return Integer.valueOf(value);
 		} catch (NumberFormatException e) {
-			throw new ProtocolException(new BadRequest("'%s' isn't a integer value.", value));
+			throw new ProtocolException(new BadRequest("'%s' isn't an integer value.", value));
 		}
 		
 	}

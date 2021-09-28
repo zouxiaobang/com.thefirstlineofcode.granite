@@ -20,7 +20,7 @@ public class SpringBeanFetcher implements IDependencyFetcher {
 	public Object fetch() {
 		String[] beanNamesForType = appContext.getBeanNamesForType(type);
 		if (beanNamesForType.length == 0)
-			throw new IllegalArgumentException(String.format("No bean for type %s be found in application context.",
+			throw new IllegalArgumentException(String.format("No bean for type '%s' be found in application context.",
 					type.getName()));
 		
 		if (beanNamesForType.length == 1 && "".equals(qualifier)) {
@@ -29,7 +29,7 @@ public class SpringBeanFetcher implements IDependencyFetcher {
 		
 		Object bean = appContext.getBean(qualifier);
 		if (bean == null)
-			throw new IllegalArgumentException(String.format("No bean for name %s be found in application context.",
+			throw new IllegalArgumentException(String.format("No bean for name '%s' be found in application context.",
 					qualifier));
 				
 		return bean;
