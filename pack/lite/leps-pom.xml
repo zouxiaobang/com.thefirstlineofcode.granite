@@ -6,13 +6,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<groupId>com.firstlinecode.granite</groupId>
+		<groupId>com.thefirstlineofcode.granite</groupId>
 		<artifactId>granite-pack</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
-	<groupId>com.firstlinecode.granite.pack.lite</groupId>
+	<groupId>com.thefirstlineofcode.granite.pack.lite</groupId>
 	<artifactId>granite-pack-lite-leps</artifactId>
 	<dependencies>
 	</dependencies>
@@ -26,7 +26,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.firstlinecode.granite.lite.pack.Main</mainClass>
+							<mainClass>com.thefirstlineofcode.granite.lite.pack.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

@@ -6,79 +6,79 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<groupId>com.firstlinecode.granite</groupId>
+		<groupId>com.thefirstlineofcode.granite</groupId>
 		<artifactId>granite-pack</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
-	<groupId>com.firstlinecode.granite.pack.lite</groupId>
+	<groupId>com.thefirstlineofcode.granite.pack.lite</groupId>
 	<artifactId>granite-pack-lite-sand</artifactId>
 	
 		<dependencies>
 			<!-- Sand Stream Plugin -->
 			<dependency>
-				<groupId>com.firstlinecode.sand.server</groupId>
+				<groupId>com.thefirstlineofcode.sand.server</groupId>
 				<artifactId>sand-server-stream</artifactId>
 			</dependency>
 			
 			<!-- Granite Deploy Lite Plugins -->
 			<dependency>
-					<groupId>com.firstlinecode.granite.lite</groupId>
+					<groupId>com.thefirstlineofcode.granite.lite</groupId>
 					<artifactId>granite-lite-dba</artifactId>
 			</dependency>
 			<dependency>
-					<groupId>com.firstlinecode.granite.lite</groupId>
+					<groupId>com.thefirstlineofcode.granite.lite</groupId>
 					<artifactId>granite-lite-session</artifactId>
 			</dependency>
 			<dependency>
-					<groupId>com.firstlinecode.granite.lite</groupId>
+					<groupId>com.thefirstlineofcode.granite.lite</groupId>
 					<artifactId>granite-lite-pipeline</artifactId>
 			</dependency>
 			<dependency>
-					<groupId>com.firstlinecode.granite.lite</groupId>
+					<groupId>com.thefirstlineofcode.granite.lite</groupId>
 					<artifactId>granite-lite-auth</artifactId>
 			</dependency>
 			
 			<!-- Sand Server Plugins -->			
 			<dependency>
-				<groupId>com.firstlinecode.sand.server</groupId>
+				<groupId>com.thefirstlineofcode.sand.server</groupId>
 				<artifactId>sand-server-actuator</artifactId>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.sand.server</groupId>
+				<groupId>com.thefirstlineofcode.sand.server</groupId>
 				<artifactId>sand-server-console</artifactId>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.sand.server</groupId>
+				<groupId>com.thefirstlineofcode.sand.server</groupId>
 				<artifactId>sand-server-operator</artifactId>
 			</dependency>
 			
 			<!-- Sand Deploy Lite Plugins -->
 			<dependency>
-				<groupId>com.firstlinecode.sand.server.lite</groupId>
+				<groupId>com.thefirstlineofcode.sand.server.lite</groupId>
 				<artifactId>sand-server-lite-devices</artifactId>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.sand.server.lite</groupId>
+				<groupId>com.thefirstlineofcode.sand.server.lite</groupId>
 				<artifactId>sand-server-lite-ibdr</artifactId>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.sand.server.lite</groupId>
+				<groupId>com.thefirstlineofcode.sand.server.lite</groupId>
 				<artifactId>sand-server-lite-concentrator</artifactId>
 			</dependency>
 			
 			<!-- Sand Demo Plugins -->
 			<dependency>
-				<groupId>com.firstlinecode.sand.demo.server</groupId>
+				<groupId>com.thefirstlineofcode.sand.demo.server</groupId>
 				<artifactId>sand-demo-server-models</artifactId>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.sand.demo.server</groupId>
+				<groupId>com.thefirstlineofcode.sand.demo.server</groupId>
 				<artifactId>sand-demo-server-console</artifactId>
 			</dependency>
 			<dependency>
-				<groupId>com.firstlinecode.sand.demo.server.lite</groupId>
+				<groupId>com.thefirstlineofcode.sand.demo.server.lite</groupId>
 				<artifactId>sand-demo-server-lite-acl</artifactId>
 			</dependency>
 	</dependencies>
@@ -92,7 +92,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.firstlinecode.granite.lite.pack.Main</mainClass>
+							<mainClass>com.thefirstlineofcode.granite.lite.pack.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
