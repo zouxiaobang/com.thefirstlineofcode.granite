@@ -80,7 +80,6 @@
 	</build>
 
 	<modules>
-		<module>server</module>
 		<module>framework</module>
 		<module>pipeline</module>
 		<module>stream</module>
@@ -90,7 +89,6 @@
 		<module>lite</module>
 <!--		<module>cluster</module>
 		<module>cluster-debug</module> -->
-		<module>pack</module>
 	</modules>
 	
 	<pluginRepositories>
