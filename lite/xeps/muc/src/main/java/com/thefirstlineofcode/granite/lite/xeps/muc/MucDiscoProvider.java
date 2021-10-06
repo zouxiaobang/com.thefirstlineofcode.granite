@@ -370,7 +370,7 @@ public class MucDiscoProvider implements IDiscoProvider, IServerConfigurationAwa
 
 	@Override
 	public void setApplicationComponentService(IApplicationComponentService appComponentService) {
-		IConfiguration configuration = appComponentService.getApplicationComponentConfigurations().getConfiguration(
+		IConfiguration configuration = appComponentService.getPluginConfigurations().getConfiguration(
 				"granite-xeps-muc");
 		mucDomainName = configuration.getString(CONFIGURATION_KEY_MUC_DOMAIN_NAME, "muc." + domainName);
 		mucIdentityName = configuration.getString(CONFIGURATION_KEY_MUC_IDENTITY_NAME, "muc.service");

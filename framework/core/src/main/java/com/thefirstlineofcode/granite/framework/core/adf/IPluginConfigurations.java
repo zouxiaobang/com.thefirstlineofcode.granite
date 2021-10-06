@@ -2,6 +2,6 @@ package com.thefirstlineofcode.granite.framework.core.adf;
 
 import com.thefirstlineofcode.granite.framework.core.config.IConfiguration;
 
-public interface IApplicationComponentConfigurations {
+public interface IPluginConfigurations {
 	IConfiguration getConfiguration(String pluginId);
 }

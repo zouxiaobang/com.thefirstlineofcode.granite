@@ -1,7 +1,7 @@
 package com.thefirstlineofcode.granite.framework.core;
 
 import com.thefirstlineofcode.granite.framework.core.adf.ApplicationComponentService;
-import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentConfigurations;
+import com.thefirstlineofcode.granite.framework.core.adf.IPluginConfigurations;
 import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentService;
 import com.thefirstlineofcode.granite.framework.core.config.IServerConfiguration;
 import com.thefirstlineofcode.granite.framework.core.repository.IRepository;
@@ -39,7 +39,7 @@ public class ServerContext implements IServerContext {
 	}
 
 	@Override
-	public IApplicationComponentConfigurations getApplicationComponentConfigurations() {
-		return appComponentService.getApplicationComponentConfigurations();
+	public IPluginConfigurations getApplicationComponentConfigurations() {
+		return appComponentService.getPluginConfigurations();
 	}
 }

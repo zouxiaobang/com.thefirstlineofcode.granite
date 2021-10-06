@@ -10,17 +10,17 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.thefirstlineofcode.basalt.oxm.SectionalProperties;
 import com.thefirstlineofcode.granite.framework.core.utils.IoUtils;
-import com.thefirstlineofcode.granite.framework.core.utils.SectionalProperties;
 
 
-public class LocalFileConfigurationManager implements IConfigurationManager {
+public class ComponentConfigurations implements IComponentConfigurations {
 	private static final String CONFIGURATION_FILE = "components.ini";
-	private static final Logger logger = LoggerFactory.getLogger(LocalFileConfigurationManager.class);
+	private static final Logger logger = LoggerFactory.getLogger(ComponentConfigurations.class);
 	
 	private Map<String, PropertiesConfiguration> configurations;
 	
-	public LocalFileConfigurationManager(String configDir) {
+	public ComponentConfigurations(String configDir) {
 		File configFile = new File(configDir + "/" + CONFIGURATION_FILE);
 		SectionalProperties sectionalProperties = new SectionalProperties();
 		if (configFile.exists()) {

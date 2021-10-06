@@ -14,5 +14,5 @@ public interface IApplicationComponentService {
 	<T> T inject(T rawInstance);
 	<T> T getAppComponent(String id, Class<T> type);
 	PluginManager getPluginManager();
-	IApplicationComponentConfigurations getApplicationComponentConfigurations();
+	IPluginConfigurations getPluginConfigurations();
 }

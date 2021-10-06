@@ -30,9 +30,9 @@ import com.thefirstlineofcode.granite.framework.core.IService;
 import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentService;
 import com.thefirstlineofcode.granite.framework.core.annotations.Component;
 import com.thefirstlineofcode.granite.framework.core.annotations.Dependency;
-import com.thefirstlineofcode.granite.framework.core.config.IConfigurationManager;
+import com.thefirstlineofcode.granite.framework.core.config.ComponentConfigurations;
+import com.thefirstlineofcode.granite.framework.core.config.IComponentConfigurations;
 import com.thefirstlineofcode.granite.framework.core.config.IServerConfiguration;
-import com.thefirstlineofcode.granite.framework.core.config.LocalFileConfigurationManager;
 import com.thefirstlineofcode.granite.framework.core.utils.CommonUtils;
 import com.thefirstlineofcode.granite.framework.core.utils.IoUtils;
 
@@ -51,7 +51,7 @@ public class Repository implements IRepository {
 	
 	private Map<String, IComponentInfo> componentInfos;
 	private List<String> availableServices;
-	private IConfigurationManager configurationManager;
+	private IComponentConfigurations componentConfigurations;
 	private IApplicationComponentService appComponentService;
 	
 	public Repository(IServerConfiguration serverConfiguration, IApplicationComponentService appComponentService) {
@@ -69,7 +69,7 @@ public class Repository implements IRepository {
 	@Override
 	public void init() {
 		readComponentBindings();
-		createConfigurationManager();
+		readComponentConfigurations();
 		
 		loadSystemComponents();
 		loadContributedComponents();
@@ -210,12 +210,8 @@ public class Repository implements IRepository {
 		}
 	}
 	
-	private void createConfigurationManager() {
-		configurationManager = new LocalFileConfigurationManager(serverConfiguration.getConfigurationDir());
-		
-		if (configurationManager == null) {
-			throw new RuntimeException("Null configuration manager.");
-		}
+	private void readComponentConfigurations() {
+		componentConfigurations = new ComponentConfigurations(serverConfiguration.getConfigurationDir());
 	}
 
 	private void readComponentBindings() {
@@ -317,7 +313,7 @@ public class Repository implements IRepository {
 		
 		for (String availableService : availableServices) {
 			IComponentInfo serviceInfo = componentInfos.get(availableService);			
-			IServiceWrapper serviceWrapper = new ServiceWrapper(serverConfiguration, configurationManager,
+			IServiceWrapper serviceWrapper = new ServiceWrapper(serverConfiguration, componentConfigurations,
 					this, appComponentService, serviceInfo);
 			serviceListener.available(serviceWrapper);
 		}

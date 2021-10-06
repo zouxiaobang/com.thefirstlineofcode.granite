@@ -54,7 +54,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 	
 	protected IServerConfiguration serverConfiguration;
 	protected PluginManager pluginManager;
-	protected IApplicationComponentConfigurations appComponentConfigurations;
+	protected IPluginConfigurations pluginConfigurations;
 	protected boolean syncPlugins;
 	protected boolean started;
 	protected IRepository repository;
@@ -67,13 +67,13 @@ public class ApplicationComponentService implements IApplicationComponentService
 		appComponentInfos = new HashMap<>();
 		dependencyInjectors = new HashMap<>();		
 		
-		appComponentConfigurations = readAppComponentConfigurations(serverConfiguration);
+		pluginConfigurations = readPluginConfigurations(serverConfiguration);
 		
 		initPlugins();
 	}
 	
-	private ApplicationComponentConfigurations readAppComponentConfigurations(IServerConfiguration serverConfiguration) {
-		return new ApplicationComponentConfigurations(serverConfiguration.getConfigurationDir());
+	private PluginConfigurations readPluginConfigurations(IServerConfiguration serverConfiguration) {
+		return new PluginConfigurations(serverConfiguration.getConfigurationDir());
 	}
 	
 	protected PluginManager createPluginManager() {
@@ -86,8 +86,8 @@ public class ApplicationComponentService implements IApplicationComponentService
 	}
 	
 	@Override
-	public IApplicationComponentConfigurations getApplicationComponentConfigurations() {
-		return appComponentConfigurations;
+	public IPluginConfigurations getPluginConfigurations() {
+		return pluginConfigurations;
 	}
 
 	@Override
@@ -316,7 +316,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 				throw new IllegalArgumentException(
 					String.format("Can't determine which plugin the extension which's class name is '%s' is load from.", type));
 			
-			IConfiguration configuration = appComponentConfigurations.getConfiguration(plugin.getDescriptor().getPluginId());
+			IConfiguration configuration = pluginConfigurations.getConfiguration(plugin.getDescriptor().getPluginId());
 			((IConfigurationAware)rawInstance).setConfiguration(configuration);
 		}
 		

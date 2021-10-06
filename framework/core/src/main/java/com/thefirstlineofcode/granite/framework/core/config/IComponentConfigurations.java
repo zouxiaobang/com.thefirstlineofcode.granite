@@ -1,5 +1,5 @@
 package com.thefirstlineofcode.granite.framework.core.config;
 
-public interface IConfigurationManager {
+public interface IComponentConfigurations {
 	IConfiguration getConfiguration(String componentId);
 }

@@ -5,21 +5,21 @@ import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentSe
 import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentServiceAware;
 import com.thefirstlineofcode.granite.framework.core.config.IConfiguration;
 import com.thefirstlineofcode.granite.framework.core.config.IConfigurationAware;
-import com.thefirstlineofcode.granite.framework.core.config.IConfigurationManager;
+import com.thefirstlineofcode.granite.framework.core.config.IComponentConfigurations;
 import com.thefirstlineofcode.granite.framework.core.config.IServerConfiguration;
 import com.thefirstlineofcode.granite.framework.core.config.IServerConfigurationAware;
 
 public class ServiceWrapper implements IServiceWrapper {
 	private IServerConfiguration serverConfiguration;
-	private IConfigurationManager configurationManager;
+	private IComponentConfigurations componentConfigurations;
 	private IComponentInfo componentInfo;
 	private IRepository repository;
 	private IApplicationComponentService appComponentService;
 	
-	public ServiceWrapper(IServerConfiguration serverConfiguration, IConfigurationManager configurationManager,
+	public ServiceWrapper(IServerConfiguration serverConfiguration, IComponentConfigurations componentConfigurations,
 			IRepository repository, IApplicationComponentService appComponentService, IComponentInfo componentInfo) {
 		this.serverConfiguration = serverConfiguration;
-		this.configurationManager = configurationManager;
+		this.componentConfigurations = componentConfigurations;
 		this.repository = repository;
 		this.appComponentService = appComponentService;
 		
@@ -79,7 +79,7 @@ public class ServiceWrapper implements IServiceWrapper {
 		}
 		
 		if (component instanceof IConfigurationAware) {
-			IConfiguration configuration = configurationManager.getConfiguration(componentInfo.getId());
+			IConfiguration configuration = componentConfigurations.getConfiguration(componentInfo.getId());
 			((IConfigurationAware)component).setConfiguration(configuration);
 		}
 		

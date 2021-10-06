@@ -7,18 +7,18 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.thefirstlineofcode.basalt.oxm.SectionalProperties;
 import com.thefirstlineofcode.granite.framework.core.config.DummyConfiguration;
 import com.thefirstlineofcode.granite.framework.core.config.IConfiguration;
 import com.thefirstlineofcode.granite.framework.core.config.PropertiesConfiguration;
-import com.thefirstlineofcode.granite.framework.core.utils.SectionalProperties;
 
 
-public class ApplicationComponentConfigurations implements IApplicationComponentConfigurations {
-	private static final String CONFIGURATION_FILE = "protocol-plugins.ini";
+public class PluginConfigurations implements IPluginConfigurations {
+	private static final String CONFIGURATION_FILE = "plugins.ini";
 	
 	private Map<String, PropertiesConfiguration> configurations;
 	
-	public ApplicationComponentConfigurations(String configDir) {
+	public PluginConfigurations(String configDir) {
 		File configFile = new File(configDir + "/" + CONFIGURATION_FILE);
 		SectionalProperties sp = new SectionalProperties();
 		if (configFile.exists()) {
