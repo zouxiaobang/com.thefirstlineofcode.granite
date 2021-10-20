@@ -34,7 +34,7 @@ import com.thefirstlineofcode.granite.framework.core.pipeline.IMessage;
 import com.thefirstlineofcode.granite.framework.core.pipeline.IMessageProcessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.SimpleMessage;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.IPipelineExtendersContributor;
-import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IPipelinePostprocessor;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IPipesPostprocessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IProtocolTranslatorFactory;
 import com.thefirstlineofcode.granite.framework.core.repository.IInitializable;
 import com.thefirstlineofcode.granite.framework.core.utils.CommonUtils;
@@ -45,7 +45,7 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 	
 	protected ITranslatingFactory translatingFactory;
 	
-	private List<IPipelinePostprocessor> pipesPostprocessors;
+	private List<IPipesPostprocessor> pipesPostprocessors;
 	private String domain;
 	
 	private IApplicationComponentService appComponentService;
@@ -109,11 +109,11 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 
 	private void loadContributedPostprocessors(IPipelineExtendersContributor[] extendersContributors) {
 		for (IPipelineExtendersContributor extendersContributor : extendersContributors) {
-			IPipelinePostprocessor[] postproessors = extendersContributor.getPipesPostprocessors();
+			IPipesPostprocessor[] postproessors = extendersContributor.getPipesPostprocessors();
 			if (postproessors == null || postproessors.length == 0)
 				continue;
 			
-			for (IPipelinePostprocessor postprocessor : postproessors) {
+			for (IPipesPostprocessor postprocessor : postproessors) {
 				pipesPostprocessors.add(appComponentService.inject(postprocessor));
 				
 				if (logger.isDebugEnabled()) {
@@ -174,7 +174,7 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 		IMessage message = new SimpleMessage(headers, out);
 		Object originalRoutingObject = out;
 		
-		for (IPipelinePostprocessor postprocessor : pipesPostprocessors) {
+		for (IPipesPostprocessor postprocessor : pipesPostprocessors) {
 			message = postprocessor.beforeRouting(message);
 			
 			if (message == null) {

@@ -3,14 +3,13 @@ package com.thefirstlineofcode.granite.xeps.address;
 import org.pf4j.Extension;
 
 import com.thefirstlineofcode.basalt.xeps.address.Addresses;
-import com.thefirstlineofcode.granite.framework.core.pipeline.stages.PipelineExtendersContributorAdapter;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.IPipelineExtendersConfigurator;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.PipelineExtendersConfigurator;
 
 @Extension
-public class PipelineExtendersContributor extends PipelineExtendersContributorAdapter {
+public class PipelineExtendersContributor extends PipelineExtendersConfigurator {
 	@Override
-	protected Class<?>[] getNamingConventionTranslatableProtocolObjects() {
-		return new Class<?>[] {
-			Addresses.class
-		};
+	protected void configure(IPipelineExtendersConfigurator configurator) {
+		configurator.registerNamingConventionTranslator(Addresses.class);
 	}
 }

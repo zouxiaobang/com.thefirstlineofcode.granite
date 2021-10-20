@@ -38,7 +38,7 @@ import com.thefirstlineofcode.granite.framework.core.connection.IConnectionConte
 import com.thefirstlineofcode.granite.framework.core.pipeline.IMessage;
 import com.thefirstlineofcode.granite.framework.core.pipeline.IMessageProcessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.IPipelineExtendersContributor;
-import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.IPipelinePreprocessor;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.IPipesPreprocessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.IProtocolParserFactory;
 import com.thefirstlineofcode.granite.framework.core.repository.IInitializable;
 import com.thefirstlineofcode.granite.framework.core.utils.CommonUtils;
@@ -54,7 +54,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 	private boolean stanzaErrorAttachSenderMessage;
 	private IServerConfiguration serverConfiguration;
 	
-	private List<IPipelinePreprocessor> pipesPreprocessors;
+	private List<IPipesPreprocessor> pipesPreprocessors;
 	
 	private IApplicationComponentService appComponentService;
 	
@@ -75,11 +75,11 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 
 	protected void loadContributedPreprocessors(IPipelineExtendersContributor[] extendersContributors) {
 		for (IPipelineExtendersContributor extendersContributor : extendersContributors) {
-			IPipelinePreprocessor[] preproessors = extendersContributor.getPipesPreprocessors();
+			IPipesPreprocessor[] preproessors = extendersContributor.getPipesPreprocessors();
 			if (preproessors == null || preproessors.length == 0)
 				continue;
 			
-			for (IPipelinePreprocessor preprocessor : preproessors) {
+			for (IPipesPreprocessor preprocessor : preproessors) {
 				pipesPreprocessors.add(appComponentService.inject(preprocessor));
 				
 				if (logger.isDebugEnabled()) {
@@ -158,7 +158,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 		if (logger.isDebugEnabled())
 			logger.debug("Begin to parse the XMPP message. Session JID: '{}'. XMPP message: '{}'.", context.getJid(), msg);
 		
-		for (IPipelinePreprocessor preprocessor : pipesPreprocessors) {
+		for (IPipesPreprocessor preprocessor : pipesPreprocessors) {
 			String preprocessedMsg = preprocessor.beforeParsing(msg);
 			
 			if (preprocessedMsg == null) {
@@ -177,7 +177,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 			return;
 		}
 		
-		for (IPipelinePreprocessor preprocessor : pipesPreprocessors) {
+		for (IPipesPreprocessor preprocessor : pipesPreprocessors) {
 			Object preprocessedOut = preprocessor.afterParsing(out);
 			
 			if (preprocessedOut == null) {

@@ -2,12 +2,12 @@ package com.thefirstlineofcode.granite.framework.core.pipeline.stages;
 
 import com.thefirstlineofcode.basalt.protocol.core.ProtocolChain;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEventListenerFactory;
-import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.IPipelinePreprocessor;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.IPipesPreprocessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.IProtocolParserFactory;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.NamingConventionProtocolParserFactory;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.processing.IIqResultProcessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.processing.IXepProcessorFactory;
-import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IPipelinePostprocessor;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IPipesPostprocessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IProtocolTranslatorFactory;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.NamingConventionProtocolTranslatorFactory;
 import com.thefirstlineofcode.granite.framework.core.session.ISessionListener;
@@ -87,7 +87,7 @@ public class PipelineExtendersContributorAdapter implements IPipelineExtendersCo
 		IProtocolParserFactory<?>[] namingConventionParserFactories = new IProtocolParserFactory<?>[namingConventionParsableProtocolObjects.length];
 		for (int i = 0; i < namingConventionParsableProtocolObjects.length; i++) {
 			namingConventionParserFactories[i] = new NamingConventionProtocolParserFactory<>(
-					namingConventionParsableProtocolObjects[i].protocolChain, namingConventionParsableProtocolObjects[i].protocolObject);
+					namingConventionParsableProtocolObjects[i].protocolChain, namingConventionParsableProtocolObjects[i].protocolObjectClass);
 		}
 		
 		return namingConventionParserFactories;
@@ -136,12 +136,12 @@ public class PipelineExtendersContributorAdapter implements IPipelineExtendersCo
 	}
 
 	@Override
-	public IPipelinePreprocessor[] getPipesPreprocessors() {
+	public IPipesPreprocessor[] getPipesPreprocessors() {
 		return null;
 	}
 
 	@Override
-	public IPipelinePostprocessor[] getPipesPostprocessors() {
+	public IPipesPostprocessor[] getPipesPostprocessors() {
 		return null;
 	}
 
@@ -162,11 +162,11 @@ public class PipelineExtendersContributorAdapter implements IPipelineExtendersCo
 	
 	protected class NamingConventionParsableProtocolObject {
 		public ProtocolChain protocolChain;
-		public Class<?> protocolObject;
+		public Class<?> protocolObjectClass;
 		
-		public NamingConventionParsableProtocolObject(ProtocolChain protocolChain, Class<?> protocolObject) {
+		public NamingConventionParsableProtocolObject(ProtocolChain protocolChain, Class<?> protocolObjectClass) {
 			this.protocolChain = protocolChain;
-			this.protocolObject = protocolObject;
+			this.protocolObjectClass = protocolObjectClass;
 		}
 	}
 }

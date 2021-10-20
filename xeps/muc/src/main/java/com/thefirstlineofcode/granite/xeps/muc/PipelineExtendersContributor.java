@@ -12,13 +12,11 @@ import com.thefirstlineofcode.basalt.xeps.muc.owner.MucOwner;
 import com.thefirstlineofcode.basalt.xeps.muc.user.MucUser;
 import com.thefirstlineofcode.basalt.xeps.muc.xconference.XConference;
 import com.thefirstlineofcode.basalt.xeps.xdata.XData;
-import com.thefirstlineofcode.granite.framework.core.pipeline.stages.PipelineExtendersContributorAdapter;
-import com.thefirstlineofcode.granite.framework.core.pipeline.stages.processing.IXepProcessorFactory;
-import com.thefirstlineofcode.granite.framework.core.pipeline.stages.processing.SingletonXepProcessorFactory;
-import com.thefirstlineofcode.granite.framework.core.session.ISessionListener;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.IPipelineExtendersConfigurator;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.PipelineExtendersConfigurator;
 
 @Extension
-public class PipelineExtendersContributor extends PipelineExtendersContributorAdapter {
+public class PipelineExtendersContributor extends PipelineExtendersConfigurator {
 	private static final ProtocolChain PROTOCOLCHAIN_IQ_MUCADMIN = new IqProtocolChain(MucAdmin.PROTOCOL);
 	private static final ProtocolChain PROTOCOLCHAIN_IQ_MUCOWNER = new IqProtocolChain(MucOwner.PROTOCOL);
 	private static final ProtocolChain PROTOCOLCHAIN_IQ_MUCOWNER_XDATA = new IqProtocolChain().next(MucOwner.PROTOCOL).next(XData.PROTOCOL);
@@ -28,71 +26,31 @@ public class PipelineExtendersContributor extends PipelineExtendersContributorAd
 	private static final ProtocolChain PROTOCOLCHAIN_MESSAE_XCONFERENCE = new MessageProtocolChain(XConference.PROTOCOL);
 	
 	@Override
-	protected NamingConventionParsableProtocolObject[] getNamingConventionParsableProtocolObjects() {
-		return new NamingConventionParsableProtocolObject[] {
-				new NamingConventionParsableProtocolObject(
-						PROTOCOLCHAIN_IQ_MUCADMIN,
-						MucAdmin.class),
-				new NamingConventionParsableProtocolObject(
-						PROTOCOLCHAIN_IQ_MUCOWNER,
-						MucOwner.class),
-				new NamingConventionParsableProtocolObject(
-						PROTOCOLCHAIN_IQ_MUCOWNER_XDATA,
-						XData.class),
-				new NamingConventionParsableProtocolObject(
-						PROTOCOLCHAIN_PRESENCE_MUC,
-						Muc.class),
-				new NamingConventionParsableProtocolObject(
-						PROTOCOLCHAIN_MESSAGE_MUCUSER,
-						MucUser.class),
-				new NamingConventionParsableProtocolObject(
-						PROTOCOLCHAIN_PRESENCE_MUCUSER,
-						MucUser.class),
-				new NamingConventionParsableProtocolObject(
-						PROTOCOLCHAIN_MESSAE_XCONFERENCE,
-						XConference.class)
-		};
-	}
-	
-	@Override
-	public IXepProcessorFactory<?, ?>[] getXepProcessorFactories() {
-		return new IXepProcessorFactory<?, ?>[] {
-			new SingletonXepProcessorFactory<>(
-					PROTOCOLCHAIN_IQ_MUCADMIN,
-					new MucAdminProcessor()),
-			new SingletonXepProcessorFactory<>(
-					PROTOCOLCHAIN_IQ_MUCOWNER,
-					new MucOwnerProcessor()),
-			new SingletonXepProcessorFactory<>(
-					PROTOCOLCHAIN_PRESENCE_MUC,
-					new MucPresenceProcessor()),
-			new SingletonXepProcessorFactory<>(
-					PROTOCOLCHAIN_MESSAGE_MUCUSER,
-					new MucUserMessageProcessor()),
-			new SingletonXepProcessorFactory<>(
-					PROTOCOLCHAIN_PRESENCE_MUCUSER,
-					new MucUserPresenceProcessor()),
-			new SingletonXepProcessorFactory<>(
-					PROTOCOLCHAIN_MESSAE_XCONFERENCE,
-					new XConferenceProcessor()),
-		};
-	}
-	
-	@Override
-	protected Class<?>[] getNamingConventionTranslatableProtocolObjects() {
-		return new Class<?>[] {
-			Muc.class,
-			MucUser.class,
-			MucOwner.class,
-			MucAdmin.class,
-			XConference.class
-		};
-	}
-	
-	@Override
-	public ISessionListener[] getSessionListeners() {
-		return new ISessionListener[] {
-			new SessionListener()
-		};
+	protected void configure(IPipelineExtendersConfigurator configurator) {
+		configurator.
+			registerNamingConventionParser(PROTOCOLCHAIN_IQ_MUCADMIN, MucAdmin.class).
+			registerNamingConventionParser(PROTOCOLCHAIN_IQ_MUCOWNER, MucOwner.class).
+			registerNamingConventionParser(PROTOCOLCHAIN_IQ_MUCOWNER_XDATA, XData.class).
+			registerNamingConventionParser(PROTOCOLCHAIN_PRESENCE_MUC, Muc.class).
+			registerNamingConventionParser(PROTOCOLCHAIN_MESSAGE_MUCUSER, MucUser.class).
+			registerNamingConventionParser(PROTOCOLCHAIN_PRESENCE_MUCUSER, MucUser.class).
+			registerNamingConventionParser(PROTOCOLCHAIN_MESSAE_XCONFERENCE, XConference.class);
+		
+		configurator.
+			registerSingletonXepProcessor(PROTOCOLCHAIN_IQ_MUCADMIN, new MucAdminProcessor()).
+			registerSingletonXepProcessor(PROTOCOLCHAIN_IQ_MUCOWNER, new MucOwnerProcessor()).
+			registerSingletonXepProcessor(PROTOCOLCHAIN_PRESENCE_MUC, new MucPresenceProcessor()).
+			registerSingletonXepProcessor(PROTOCOLCHAIN_MESSAGE_MUCUSER, new MucUserMessageProcessor()).
+			registerSingletonXepProcessor(PROTOCOLCHAIN_PRESENCE_MUCUSER, new MucUserPresenceProcessor()).
+			registerSingletonXepProcessor(PROTOCOLCHAIN_MESSAE_XCONFERENCE, new XConferenceProcessor());
+		
+		configurator.
+			registerNamingConventionTranslator(Muc.class).
+			registerNamingConventionTranslator(MucUser.class).
+			registerNamingConventionTranslator(MucOwner.class).
+			registerNamingConventionTranslator(MucAdmin.class).
+			registerNamingConventionTranslator(XConference.class);
+		
+		configurator.registerSessionListener(new SessionListener());
 	}
 }
