@@ -81,7 +81,7 @@ public abstract class PipelineExtendersConfigurator implements IPipelineExtender
 
 	@Override
 	public IPipelineExtendersConfigurator registerNamingConventionTranslator(Class<?> protocolObjectType) {
-		return registerTranslatorFactory(new NamingConventionProtocolTranslatorFactory<>(null));
+		return registerTranslatorFactory(new NamingConventionProtocolTranslatorFactory<>(protocolObjectType));
 	}
 
 	@Override

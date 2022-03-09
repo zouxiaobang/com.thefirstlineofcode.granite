@@ -13,8 +13,8 @@
 	</parent>
 	
 	<groupId>com.thefirstlineofcode.granite.pack</groupId>
-	<artifactId>granite-pack-lite</artifactId>
-	<name>Granite deploy lite packer</name>
+	<artifactId>granite-pack-lite-with-gem</artifactId>
+	<name>Granite deploy lite packer with GEM libraries</name>
 	
 	<dependencies>
 		<!-- System Libraries -->
@@ -151,6 +151,12 @@
 		<dependency>
 			<groupId>com.thefirstlineofcode.sand.demo.server.lite</groupId>
 			<artifactId>sand-demo-server-lite-acl</artifactId>
+		</dependency>
+		
+		<!-- Gem plugins -->
+		<dependency>
+			<groupId>com.thefirstlineofcode.gem.server</groupId>
+			<artifactId>gem-server-bxmpp</artifactId>
 		</dependency>
 		
 	</dependencies>
