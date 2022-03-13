@@ -8,7 +8,7 @@
 	<parent>
         <groupId>com.thefirstlineofcode.granite</groupId>
         <artifactId>granite-framework</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0-ALPHA-1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 	
