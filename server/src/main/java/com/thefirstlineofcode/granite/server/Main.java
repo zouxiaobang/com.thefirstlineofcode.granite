@@ -9,8 +9,6 @@ import com.thefirstlineofcode.granite.framework.core.config.IServerConfiguration
 import com.thefirstlineofcode.granite.framework.core.config.ServerConfiguration;
 import com.thefirstlineofcode.granite.framework.core.console.ConsoleSystem;
 import com.thefirstlineofcode.granite.framework.core.log.LogFilter;
-import com.thefirstlineofcode.granite.framework.core.platform.IPlatform;
-import com.thefirstlineofcode.granite.framework.core.platform.Pf4j;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
@@ -103,12 +101,7 @@ public class Main {
 	}
 	
 	private IServerConfiguration readServerConfiguration() {
-		IPlatform platform = new Pf4j();
-		String serverHome = platform.getHomeDirectory();
-		
-		if (serverHome == null) {
-			throw new RuntimeException("Can't determine granite server home.");
-		}
+		String serverHome = System.getProperty("user.dir");
 		
 		return new ServerConfiguration(serverHome);
 	}

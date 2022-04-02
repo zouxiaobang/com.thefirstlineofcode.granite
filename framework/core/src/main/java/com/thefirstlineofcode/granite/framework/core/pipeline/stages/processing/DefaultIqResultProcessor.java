@@ -7,6 +7,7 @@ import java.util.List;
 import com.thefirstlineofcode.basalt.protocol.core.ProtocolException;
 import com.thefirstlineofcode.basalt.protocol.core.stanza.Iq;
 import com.thefirstlineofcode.basalt.protocol.core.stanza.error.BadRequest;
+import com.thefirstlineofcode.basalt.protocol.core.stanza.error.StanzaError;
 import com.thefirstlineofcode.granite.framework.core.utils.OrderComparator;
 
 public class DefaultIqResultProcessor implements IIqResultProcessor {
@@ -44,5 +45,23 @@ public class DefaultIqResultProcessor implements IIqResultProcessor {
 		
 		return false;
 	}
+	
+	@Override
+	public boolean processError(IProcessingContext context, StanzaError error) {
+		if (error.getKind() != StanzaError.Kind.IQ)
+			throw new ProtocolException(new BadRequest("Not an IQ error."));
+		
+		if (error.getId() == null) {
+			throw new ProtocolException(new BadRequest("Null ID."));
+		}
+		
+		for (IIqResultProcessor iqResultProcessor : iqResultProcessors) {
+			if (iqResultProcessor.processError(context, error))
+				return true;
+		}
+		
+		return false;
+	}
+	
 
 }

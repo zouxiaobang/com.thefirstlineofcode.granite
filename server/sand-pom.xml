@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.thefirstlineofcode.granite</groupId>
 		<artifactId>com.thefirstlineofcode.granite</artifactId>
-		<version>1.0.0-ALPHA-1</version>
+		<version>1.0.0-ALPHA1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>	
 	
