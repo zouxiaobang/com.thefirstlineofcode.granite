@@ -267,7 +267,8 @@ public class ConsoleSystem implements Runnable, IConsoleSystem {
 		}
 	}
 	
-	private void printPrompt() {
+	@Override
+	public void printPrompt() {
 		printMessage("$ ");		
 	}
 	

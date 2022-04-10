@@ -17,6 +17,8 @@ import com.thefirstlineofcode.granite.framework.core.pipeline.stages.IPipelineEx
 public class CommonUtils {
     private static final char SEPARATOR_KEY_VALUE = '=';
 	private static final String SEPARATOR_PROPERTIES = ";";
+	
+	private static List<IPipelineExtendersContributor> extendersContributors;
 
 	public static boolean equalsEvenNull(Object obj1, Object obj2) {
         if (obj1 == null) {
@@ -109,7 +111,10 @@ public class CommonUtils {
 	}
 	
 	public static IPipelineExtendersContributor[] getExtendersContributors(IApplicationComponentService appComponentService) {
-		List<IPipelineExtendersContributor> extendersContributors = appComponentService.getPluginManager().getExtensions(IPipelineExtendersContributor.class);
+		if (extendersContributors == null) {
+			extendersContributors = appComponentService.getPluginManager().getExtensions(IPipelineExtendersContributor.class);			
+		}
+		
 		if (extendersContributors == null || extendersContributors.size() == 0)
 			return new IPipelineExtendersContributor[0];
 		

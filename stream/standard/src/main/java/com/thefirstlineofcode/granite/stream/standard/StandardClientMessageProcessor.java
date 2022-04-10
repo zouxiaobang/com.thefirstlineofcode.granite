@@ -322,7 +322,7 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 		tlsRequired = configuration.getBoolean(CONFIGURATION_KEY_TLS_REQUIRED, true);
 		
 		saslSupportedMechanisms = parseSupportedMechanisms(configuration.getString(
-				CONFIGURATION_KEY_SASL_SUPPORTED_MECHANISMS, "PLAIN,DIGEST-MD5"));
+				CONFIGURATION_KEY_SASL_SUPPORTED_MECHANISMS, "DIGEST-MD5"));
 		saslAbortRetries = configuration.getInteger(CONFIGURATION_KEY_SASL_ABORT_RETRIES, 3);
 		saslFailureRetries = configuration.getInteger(CONFIGURATION_KEY_SASL_FAILURE_RETRIES, 3);
 	}

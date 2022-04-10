@@ -88,9 +88,9 @@ public class Updater {
 		
 		LibraryInfo libraryInfo = libraryInfos.get(library);
 		if (clean) {
-			Main.runMvn(new File(libraryInfo.developmentDir), options.isOffline(), "clean", "package");
+			Main.runMvn(new File(libraryInfo.developmentDir), options.isOffline(), "clean", "install");
 		} else {
-			Main.runMvn(new File(libraryInfo.developmentDir), options.isOffline(), "package");
+			Main.runMvn(new File(libraryInfo.developmentDir), options.isOffline(), "install");
 		}
 		
 		updateLibrary(libraryInfo);

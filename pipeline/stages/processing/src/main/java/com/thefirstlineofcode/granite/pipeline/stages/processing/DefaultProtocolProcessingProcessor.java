@@ -527,11 +527,27 @@ public class DefaultProtocolProcessingProcessor implements com.thefirstlineofcod
 		} else if (stanza instanceof Iq) {
 			processIqResult(context, (Iq)stanza);
 			return true;
+		} else if (stanza instanceof StanzaError &&
+				((StanzaError)stanza).getKind() == StanzaError.Kind.IQ) {			
+			// Stanza is an IQ error.
+			processIqError(context, (StanzaError)stanza);
+			return true;
 		} else {
-			// stanza instanceof StanzaError
-			context.write(stanza);
 			return true;
 		}
+	}
+	
+	private void processIqError(IProcessingContext context, StanzaError error) {
+		if (error.getId() == null) {
+			logger.error("Null stanza error ID. Session JID: {}. Stanza error object: {}.", context.getJid(), error);
+			throw new ProtocolException(new BadRequest("Null stanza error ID."));
+		}
+		
+		if (defaultIqResultProcessor == null) {
+			throw new ProtocolException(new ServiceUnavailable());
+		}
+		
+		defaultIqResultProcessor.processError(context, error);
 	}
 	
 	private void processIqResult(IProcessingContext context, Iq iq) {
@@ -551,7 +567,7 @@ public class DefaultProtocolProcessingProcessor implements com.thefirstlineofcod
 		
 		defaultIqResultProcessor.processResult(context, iq);
 	}
-
+	
 	private boolean processMessage(IProcessingContext context, Message message) {
 		if (defaultSimpleMessageProcessor != null && defaultSimpleMessageProcessor.process(context, message)) {
 			return true;
