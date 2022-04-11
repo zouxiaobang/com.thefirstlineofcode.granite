@@ -296,7 +296,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 			error.setOriginalMessage(null);
 		}
 		
-		if (parsed instanceof Stanza) {
+		if (parsed != null && parsed instanceof Stanza) {
 			Stanza stanza = (Stanza)parsed;
 			if (stanza.getId() != null) {
 				error.setId(stanza.getId());
