@@ -12,7 +12,7 @@ public interface IRepository {
 	String[] getComponentBinding(String componentId);
 	
 	void registerSingleton(String id, Object component);
-	Object getSingleton(String id);
+	//Object getSingleton(String id);
 	void removeSingleton(String id);
 	Object get(String id);
 	

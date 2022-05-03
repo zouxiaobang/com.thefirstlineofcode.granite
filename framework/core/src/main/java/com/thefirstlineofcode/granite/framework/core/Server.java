@@ -37,12 +37,15 @@ public class Server implements IServer, IServiceListener {
 	@Override
 	public void start() throws Exception {
 		appComponentService.start();
+		initRepository();
 		
+		logger.info("Granite Server has Started");
+	}
+
+	private void initRepository() {
 		repository = new Repository(configuration, appComponentService);
 		repository.setServiceListener(this);
 		repository.init();
-		
-		logger.info("Granite Server has Started");
 	}
 
 	@Override

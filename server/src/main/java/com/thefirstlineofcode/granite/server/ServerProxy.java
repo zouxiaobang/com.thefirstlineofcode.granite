@@ -4,7 +4,6 @@ package com.thefirstlineofcode.granite.server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.thefirstlineofcode.granite.framework.adf.mybatis.AdfMyBatisConfiguration;
 import com.thefirstlineofcode.granite.framework.adf.spring.AdfComponentService;
 import com.thefirstlineofcode.granite.framework.adf.spring.AdfServer;
 import com.thefirstlineofcode.granite.framework.core.IServer;
@@ -41,12 +40,7 @@ public class ServerProxy {
 		return new AdfServer(serverConfiguration) {
 			@Override
 			protected IApplicationComponentService createAppComponentService() {
-				return new AdfComponentService(configuration) {
-					@Override
-					protected void registerPredefinedSpringConfigurations() {
-						appContext.register(AdfMyBatisConfiguration.class);;
-					}
-				};
+				return new AdfComponentService(configuration);
 			}
 		};
 	}

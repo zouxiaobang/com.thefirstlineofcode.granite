@@ -54,7 +54,6 @@ public class ServiceWrapper implements IServiceWrapper {
 
 	private Object doCreateComponent(IComponentInfo componentInfo)
 			throws CreationException, Exception {
-		
 		Object component = repository.get(componentInfo.getId());
 		
 		if (component == null) {

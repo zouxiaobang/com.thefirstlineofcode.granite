@@ -72,7 +72,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 		initPlugins();
 	}
 	
-	private PluginConfigurations readPluginConfigurations(IServerConfiguration serverConfiguration) {
+	protected PluginConfigurations readPluginConfigurations(IServerConfiguration serverConfiguration) {
 		return new PluginConfigurations(serverConfiguration.getConfigurationDir());
 	}
 	
@@ -229,7 +229,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 
 		private Object doCreate() throws InstantiationException, IllegalAccessException, IllegalArgumentException,
 					InvocationTargetException, NoSuchMethodException, SecurityException {
-			Object component = type.getDeclaredConstructor().newInstance();
+			Object component = type.newInstance();
 			inject(component);
 			
 			return component;
@@ -261,7 +261,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 		return started;
 	}
 
-	private void initPlugins() {
+	protected void initPlugins() {
 		pluginManager = createPluginManager();
 		
 		pluginManager.loadPlugins();

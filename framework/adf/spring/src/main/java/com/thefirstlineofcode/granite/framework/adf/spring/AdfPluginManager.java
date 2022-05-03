@@ -15,16 +15,11 @@ import java.util.jar.JarFile;
 
 import org.pf4j.CompoundPluginLoader;
 import org.pf4j.DefaultExtensionFactory;
-import org.pf4j.DefaultPluginFactory;
 import org.pf4j.DefaultPluginLoader;
 import org.pf4j.DefaultPluginManager;
 import org.pf4j.DevelopmentPluginLoader;
 import org.pf4j.ExtensionFactory;
-import org.pf4j.Plugin;
-import org.pf4j.PluginFactory;
 import org.pf4j.PluginLoader;
-import org.pf4j.PluginWrapper;
-import org.springframework.context.ApplicationContextAware;
 
 import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentService;
 import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentServiceAware;
@@ -107,31 +102,6 @@ public class AdfPluginManager extends DefaultPluginManager implements IApplicati
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(String.format("Can't read non-plugin dependencies. Plugin file: %s", jarFile.getName()), e);
-		}
-	}
-
-	@Override
-	protected PluginFactory createPluginFactory() {
-		return new AdfPluginFactory();
-	}
-	
-	private class AdfPluginFactory extends DefaultPluginFactory {
-		@Override
-		public Plugin create(PluginWrapper pluginWrapper) {
-			Plugin plugin = super.create(pluginWrapper);
-			if (plugin == null)
-				return null;
-			
-			plugin = appComponentService.inject(plugin);
-			if (plugin instanceof ApplicationContextAware) {
-				((ApplicationContextAware)plugin).setApplicationContext(appComponentService.getApplicationContext());
-			}
-			
-			if (plugin instanceof IApplicationComponentServiceAware) {
-				((IApplicationComponentServiceAware)plugin).setApplicationComponentService(appComponentService);
-			}
-			
-			return plugin;
 		}
 	}
 	

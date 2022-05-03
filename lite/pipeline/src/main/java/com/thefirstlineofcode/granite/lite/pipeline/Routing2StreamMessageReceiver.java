@@ -46,7 +46,7 @@ public class Routing2StreamMessageReceiver extends MessageReceiver implements ID
 			JabberId jid = (JabberId)(message.getHeaders().get(IMessage.KEY_MESSAGE_TARGET));
 			
 			if (jid == null) {
-				logger.warn("Null message target. Integrator: {}. Message: {}.", integratorServicePid, message.getPayload());
+				logger.warn("Null message target. Connector ID: {}. Message: {}.", componentId, message.getPayload());
 				return;
 			}
 			

@@ -17,10 +17,9 @@ import com.thefirstlineofcode.granite.framework.core.config.IServerConfiguration
 import com.thefirstlineofcode.granite.framework.core.connection.IConnectionContext;
 import com.thefirstlineofcode.granite.framework.core.pipeline.AbstractMessageReceiver;
 import com.thefirstlineofcode.granite.framework.core.pipeline.IMessage;
+import com.thefirstlineofcode.granite.framework.core.pipeline.IMessageConnector;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEvent;
 import com.thefirstlineofcode.granite.framework.core.repository.IComponentIdAware;
-import com.thefirstlineofcode.granite.framework.core.repository.IRepository;
-import com.thefirstlineofcode.granite.framework.core.repository.IRepositoryAware;
 import com.thefirstlineofcode.granite.framework.core.session.ISession;
 import com.thefirstlineofcode.granite.lite.pipeline.AbstractConnectionContext.MessageOutConnectionContext;
 import com.thefirstlineofcode.granite.lite.pipeline.AbstractConnectionContext.ObjectOutConnectionContext;
@@ -34,17 +33,12 @@ import com.thefirstlineofcode.granite.lite.pipeline.AbstractConnectionContext.St
 		"lite.any.2.routing.message.receiver"
 	}
 )
-public class MessageReceiver extends AbstractMessageReceiver implements IMessageIntegrator, IConfigurationAware,
-		IComponentIdAware, IServerConfigurationAware, IRepositoryAware {
+public class MessageReceiver extends AbstractMessageReceiver implements IMessageConnector, IConfigurationAware,
+		IComponentIdAware, IServerConfigurationAware {
 	private static final Logger logger = LoggerFactory.getLogger(MessageReceiver.class);
 	
 	private static final String CONFIGURATION_KEY_MESSAGE_QUEUE_MAX_SIZE = "message.queue.max.size";
 	private static final int DEFAULT_MESSAGE_QUEUE_MAX_SIZE = 1024 * 64;
-	
-	protected String pipePosition;
-	protected String integratorServicePid;
-	
-	protected IRepository repository;
 	
 	private ArrayBlockingQueue<IMessage> messageQueue;
 	private int messageQueueMaxSize;
@@ -52,14 +46,13 @@ public class MessageReceiver extends AbstractMessageReceiver implements IMessage
 	private ExecutorService executorService;
 	private Thread messageReadingThread;
 	
-	private volatile boolean stop;
+	protected String componentId;
 	
+	private volatile boolean stop;
 	private String domain;
 	
 	@Override
 	protected void doStart() throws Exception {
-		repository.registerSingleton(integratorServicePid, this);
-		
 		stop = false;
 		messageQueue = new ArrayBlockingQueue<>(messageQueueMaxSize);
 		executorService = Executors.newCachedThreadPool();
@@ -75,13 +68,13 @@ public class MessageReceiver extends AbstractMessageReceiver implements IMessage
 						}
 					} catch (InterruptedException e) {
 						if (logger.isTraceEnabled()) {
-							logger.trace(String.format("Error[message receiver]. Pipe position: %s.", pipePosition), e);
+							logger.trace(String.format("Error[message receiver]. Connector ID: %s.", componentId), e);
 						}
 					}
 				}
 			}
 			
-		}, String.format("Granite Lite Message Receiver[%s]", pipePosition));
+		}, String.format("Granite Lite Message Receiver[%s]", componentId));
 		messageReadingThread.start();
 	}
 	
@@ -101,7 +94,7 @@ public class MessageReceiver extends AbstractMessageReceiver implements IMessage
 			
 			if (!(message.getPayload() instanceof IEvent)) {
 				if (jid == null) {
-					logger.error("Null session ID. Integrator: {}. Message: {}.", integratorServicePid, message.getPayload());
+					logger.error("Null session ID. Connector ID: {}. Message: {}.", componentId, message.getPayload());
 					return;
 				}
 			}
@@ -110,7 +103,7 @@ public class MessageReceiver extends AbstractMessageReceiver implements IMessage
 			if (context != null) {
 				messageProcessor.process(context, message);
 			} else {
-				logger.error("Can't get connection context. Pipe position: {}. JID: {}.", pipePosition, jid);
+				logger.error("Can't get connection context. Connector ID: {}. JID: {}.", componentId, jid);
 			}
 		}
 	}
@@ -121,8 +114,6 @@ public class MessageReceiver extends AbstractMessageReceiver implements IMessage
 		messageReadingThread.join();
 		messageQueue = null;
 		executorService = null;
-		
-		repository.removeSingleton(integratorServicePid);
 	}
 
 	@Override
@@ -132,9 +123,7 @@ public class MessageReceiver extends AbstractMessageReceiver implements IMessage
 	
 	@Override
 	public void setComponentId(String componentId) {
-		pipePosition = componentId.substring(0, componentId.length() - 17);
-		
-		integratorServicePid = pipePosition + ".integrator";
+		this.componentId = componentId;
 	}
 	
 
@@ -157,29 +146,24 @@ public class MessageReceiver extends AbstractMessageReceiver implements IMessage
 				return null;
 		}
 		
-		if (Constants.PIPE_POSITION_LITE_STREAM_2_PARSING.equals(pipePosition)) {
+		if (Constants.CONNECTOR_ID_LITE_STREAM_2_PARSING.equals(componentId)) {
 			return new ObjectOutConnectionContext(session, messageChannel);
-		} else if (Constants.PIPE_POSITION_LITE_PARSING_2_PROCESSING.equals(pipePosition)) {
+		} else if (Constants.CONNECTOR_ID_LITE_PARSING_2_PROCESSING.equals(componentId)) {
 			return new ProcessingContext(session, messageChannel);
-		} else if (Constants.PIPE_POSITION_LITE_ANY_2_ROUTING.equals(pipePosition)) {
+		} else if (Constants.CONNECTOR_ID_LITE_ANY_2_ROUTING.equals(componentId)) {
 			return new MessageOutConnectionContext(session, messageChannel);
-		} else if (Constants.PIPE_POSITION_LITE_ANY_2_EVENT.equals(pipePosition)) {
+		} else if (Constants.CONNECTOR_ID_LITE_ANY_2_EVENT.equals(componentId)) {
 			return new MessageOutConnectionContext(session, messageChannel);
-		} else if (Constants.PIPE_POSITION_LITE_ROUTING_2_STREAM.equals(pipePosition)) {
+		} else if (Constants.CONNECTOR_ID_LITE_ROUTING_2_STREAM.equals(componentId)) {
 			return new StringOutConnectionContext(session, messageChannel);
 		}
 		
-		throw new RuntimeException("Unknown service ID.");
+		throw new RuntimeException(String.format("Unknown connector ID: %s.", componentId));
 	}
 
 	@Override
 	public void setServerConfiguration(IServerConfiguration serverConfiguration) {
 		domain = serverConfiguration.getDomainName();
-	}
-
-	@Override
-	public void setRepository(IRepository repository) {
-		this.repository = repository;
 	}
 
 }

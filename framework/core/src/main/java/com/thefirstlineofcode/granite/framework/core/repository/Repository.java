@@ -413,7 +413,6 @@ public class Repository implements IRepository {
 				logger.trace("Dependency '{}' for '{}' was found.", dependencyInfo, componentInfo);
 			
 			componentInfo.addDependency(dependencyInfo);				
-			
 		}
 		
 		for (Method method : clazz.getMethods()) {
@@ -454,9 +453,7 @@ public class Repository implements IRepository {
 				componentInfo.addDependency(dependencyInfo);
 			} else {
 				logger.warn("Method annotated with @Dependency isn't a valid setter or add method. The method is '{}'.", method);
-			}
-			
-			
+			}			
 		}
 	}
 
@@ -596,8 +593,8 @@ public class Repository implements IRepository {
 		singletons.remove(id);
 	}
 
-	@Override
+/*	@Override
 	public Object getSingleton(String id) {
 		return singletons.get(id);
-	}
+	}*/
 }
