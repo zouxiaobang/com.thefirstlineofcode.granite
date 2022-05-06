@@ -9,18 +9,18 @@ import java.nio.file.StandardCopyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack.IPackModule.Scope;
+
 public class CopyLibraryOperation {
 	private static final Logger logger = LoggerFactory.getLogger(CopyLibraryOperation.class);
 	
 	private String libraryName;
+	private Scope scope;
 	private boolean optional;
 	
-	public CopyLibraryOperation(String libraryName) {
-		this(libraryName, false);
-	}
-	
-	public CopyLibraryOperation(String libraryName, boolean optional) {
+	public CopyLibraryOperation(String libraryName, Scope scope, boolean optional) {
 		this.libraryName = libraryName;
+		this.scope = scope;
 		this.optional = optional;
 	}
 
@@ -43,7 +43,13 @@ public class CopyLibraryOperation {
 			throw new RuntimeException(String.format("Library not found. Library name %s.", libraryName));
 		}
 		
-		Path target = new File(context.getRuntimePluginsDir().toFile(), library.getName()).toPath();
+		Path target;
+		if (scope == Scope.SYSTEM) {			
+			target = new File(context.getRuntimeLibsDir().toFile(), library.getName()).toPath();			
+		} else {
+			target = new File(context.getRuntimePluginsDir().toFile(), library.getName()).toPath();			
+		}
+		
 		try {
 			if (target.toFile().exists()) {
 				logger.warn("Library {} has existed. Ignore to copy library.", target.getFileName());
@@ -55,8 +61,8 @@ public class CopyLibraryOperation {
 			logger.debug("Copy library {} from repository position[{}] to runtime plugins directory[{}].",
 					new Object[] {libraryName, library.getPath(), target.toFile().getPath()});
 		} catch (IOException e) {
-			throw new RuntimeException(String.format("Can't copy library %s from repository to runtime plugins directory %s.",
-					library.getPath(), context.getRuntimePluginsDir().toFile().getPath()), e);
+			throw new RuntimeException(String.format("Can't copy library %s from repository to runtime %s directory %s.",
+					library.getPath(), (scope == Scope.SYSTEM) ? "libs" : "plugins", target.toFile().getPath()), e);
 		}
 	}
 

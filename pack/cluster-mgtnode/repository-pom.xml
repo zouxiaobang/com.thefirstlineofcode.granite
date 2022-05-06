@@ -29,8 +29,8 @@
 			<artifactId>ignite-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>javax.cache</groupId>
-			<artifactId>cache-api</artifactId>
+			<groupId>com.thefirstlineofcode.granite</groupId>
+			<artifactId>granite-server</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>

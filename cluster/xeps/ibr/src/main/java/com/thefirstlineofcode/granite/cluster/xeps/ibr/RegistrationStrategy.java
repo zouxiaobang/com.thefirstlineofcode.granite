@@ -17,12 +17,10 @@ public class RegistrationStrategy implements IRegistrationStrategy {
 	public IqRegister getRegistrationForm() {
 		RegistrationField username = new RegistrationField("username");
 		RegistrationField password = new RegistrationField("password");
-		RegistrationField email = new RegistrationField("email");
 		
 		RegistrationForm form = new RegistrationForm();
 		form.getFields().add(username);
 		form.getFields().add(password);
-		form.getFields().add(email);
 		
 		IqRegister iqRegister = new IqRegister();
 		iqRegister.setRegister(form);
@@ -40,7 +38,7 @@ public class RegistrationStrategy implements IRegistrationStrategy {
 			} else if ("password".equals(field.getName())) {
 				account.setPassword(field.getValue());
 			} else {
-				// ignore
+				// Ignore
 			}
 		}
 		

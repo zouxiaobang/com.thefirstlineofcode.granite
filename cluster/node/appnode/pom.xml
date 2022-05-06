@@ -25,10 +25,6 @@
 			<groupId>org.apache.ignite</groupId>
 			<artifactId>ignite-core</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>javax.cache</groupId>
-			<artifactId>cache-api</artifactId>
-		</dependency>
 	</dependencies>
 	
 	<build>

@@ -29,10 +29,6 @@
 			<groupId>com.thefirstlineofcode.granite.cluster</groupId>
 			<artifactId>granite-cluster-dba</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>javax.cache</groupId>
-			<artifactId>cache-api</artifactId>
-		</dependency>
 	</dependencies>
 
 </project>

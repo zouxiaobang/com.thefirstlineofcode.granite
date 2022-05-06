@@ -8,9 +8,11 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +25,13 @@ import com.thefirstlineofcode.granite.cluster.node.commons.utils.StringUtils;
 import com.thefirstlineofcode.granite.cluster.node.commons.utils.TargetExistsException;
 import com.thefirstlineofcode.granite.cluster.node.commons.utils.ZipUtils;
 import com.thefirstlineofcode.granite.cluster.node.mgtnode.Options;
+import com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack.IPackModule.Scope;
 
 public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
+	private static final String NAME_PREFIX_GRANITE_SERVER = "granite-server-";
+	private static final String SCOPE_PLUGIN = "plugin";
+	private static final String SCOPE_SYSTEM = "system";
+	private static final String CONFIGURATION_KEY_SCOPE = "scope";
 	private static final String DIRECTORY_NAME_LIBS = "libs";
 	private static final String DIRECTORY_NAME_PLUGINS = "plugins";
 	private static final String DIRECTORY_NAME_CLUSTER = "cluster";
@@ -106,12 +113,29 @@ public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
 		
 		logger.debug("Packing node {}.", nodeType);
 		
+		copyGraniteServerJar(new File(options.getRepositoryDir()), runtimeTmpDirPath);
 		copyPackModules(context, node, configuration);
 		configure(context, node, configuration);
 		
 		zipRuntime(packTmpDir, runtimesDir, runtimeName);
 	}
 	
+	private void copyGraniteServerJar(File repoistoryDir, Path runtimeTmpDirPath) {
+		for (File file : repoistoryDir.listFiles()) {
+			if (file.getName().startsWith(NAME_PREFIX_GRANITE_SERVER)) {
+				try {
+					Files.copy(file.toPath(), runtimeTmpDirPath, StandardCopyOption.COPY_ATTRIBUTES,
+							StandardCopyOption.REPLACE_EXISTING);
+					return;
+				} catch (IOException e) {
+					throw new RuntimeException("Failed to copy granite server jar.", e);
+				}	
+			}
+		}
+		
+		throw new RuntimeException("Can't find granite server jar to copy.");		
+	}
+
 	private void zipRuntime(File packTmpDir, File runtimesDir, String runtimeName) throws IOException {
 		File runtimeZip = new File(runtimesDir, runtimeName + ".zip");
 		if (runtimeZip.exists()) {
@@ -209,13 +233,31 @@ public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
 		for (String sectionName : sp.getSectionNames()) {
 			Properties properties = sp.getSection(sectionName);
 			
+			String sScope = SCOPE_PLUGIN;
+			sScope = properties.getProperty(CONFIGURATION_KEY_SCOPE);
+			
+			Scope scope = getScope(sScope);
 			String[] dependedModules = getDependedModules(StringUtils.stringToArray((String)properties.getProperty(CONFIGURATION_KEY_DEPENDED)));
-			CopyLibraryOperation[] copyLibraries = getCopyLibraryOperations(StringUtils.stringToArray(properties.getProperty(CONFIGURATION_KEY_LIBRARIES)));
+			CopyLibraryOperation[] copyLibraries = getCopyLibraryOperations(scope, StringUtils.stringToArray(properties.getProperty(CONFIGURATION_KEY_LIBRARIES)));
 			IPackConfigurator configurator = getConfigurator(properties.getProperty(CONFIGURATION_KEY_CONFIGURATOR));
 			
-			packModules.put(sectionName, new PackModule(dependedModules, copyLibraries, configurator));
+			packModules.put(sectionName, new PackModule(scope, dependedModules, copyLibraries, configurator));
 		}
 		
+	}
+
+	private Scope getScope(String sScope) {
+		if (sScope == null)
+			return Scope.PLUGIN;
+		
+		if (SCOPE_SYSTEM.equals(sScope))
+			return Scope.SYSTEM;
+		
+		if (!SCOPE_PLUGIN.equals(sScope))
+			throw new IllegalArgumentException("Illegal pack module scope: " + sScope);
+		
+		
+		return Scope.PLUGIN;
 	}
 
 	private String[] getDependedModules(String[] dependedModules) {
@@ -240,26 +282,38 @@ public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
 		}
 	}
 
-	private CopyLibraryOperation[] getCopyLibraryOperations(String[] sCopyLibraries) {
+	private CopyLibraryOperation[] getCopyLibraryOperations(Scope packModuleScope, String[] sCopyLibraries) {
 		if (sCopyLibraries.length == 0)
 			return null;
 		
 		CopyLibraryOperation[] copyLibraries = new CopyLibraryOperation[sCopyLibraries.length];
 		for (int i = 0; i < sCopyLibraries.length; i++) {
 			String libraryName = sCopyLibraries[i];
+			Scope scope = packModuleScope;
 			boolean optional = false;
-			int optionalSeparator = sCopyLibraries[i].indexOf(" - ");
-			if (optionalSeparator != -1) {
-				libraryName = sCopyLibraries[i].substring(0, optionalSeparator).trim();
-				String sOptional = sCopyLibraries[i].substring(optionalSeparator + 3).trim();
-				if (sOptional == null || sOptional.isEmpty()) {						
+			int featuresSeparator = sCopyLibraries[i].indexOf(" - ");
+			if (featuresSeparator != -1) {
+				libraryName = sCopyLibraries[i].substring(0, featuresSeparator).trim();
+				String sFeatures = sCopyLibraries[i].substring(featuresSeparator + 3).trim();
+				if (sFeatures == null || sFeatures.isEmpty()) {						
 					throw new RuntimeException("Illegal pack module configuration format. Check pack_modules.ini file.");
 				}
 				
-				optional = sOptional.equals("optional");
+				StringTokenizer st = new StringTokenizer(sFeatures, ",");
+				while (st.hasMoreTokens()) {
+					String feature = st.nextToken();
+					if ("system".equals(feature)) {
+						scope = Scope.SYSTEM;
+					} else if ("optional".equals(feature)) {
+						optional = true;
+					} else {
+						throw new RuntimeException(String.format("Illegal copy operation feature '%s' for library '%s'. " +
+								"Check pack_modules.ini file.", feature, libraryName));						
+					}
+				}
 			}
 			
-			copyLibraries[i] = new CopyLibraryOperation(libraryName, optional);
+			copyLibraries[i] = new CopyLibraryOperation(libraryName, scope, optional);
 		}
 		
 		return copyLibraries;

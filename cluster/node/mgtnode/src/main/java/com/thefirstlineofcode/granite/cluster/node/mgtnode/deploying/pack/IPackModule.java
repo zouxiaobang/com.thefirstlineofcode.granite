@@ -3,6 +3,12 @@ package com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack;
 import com.thefirstlineofcode.granite.cluster.node.commons.deploying.DeployPlan;
 
 public interface IPackModule {
+	public enum Scope {
+		SYSTEM,
+		PLUGIN
+	}
+	
+	Scope getScope();
 	String[] getDependedModules();
 	CopyLibraryOperation[] getCopyLibraries();
 	IPackConfigurator getCallback();

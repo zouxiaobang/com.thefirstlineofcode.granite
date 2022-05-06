@@ -25,7 +25,7 @@ public class Updater {
 
 	private static final String FILE_NAME_SUBSYSTEMS = "subsystems.ini";
 
-	private static final String FILE_NAME_BUNDLEINFOS = "bundleinfos.ini";
+	private static final String FILE_NAME_LIBRARYINFOS = "libraryinfos.ini";
 
 	private static final String[] SUBSYSTEM_NAMES = new String[] {
 			"framework",
@@ -37,7 +37,7 @@ public class Updater {
 	};
 	
 	private Map<String, String[]> subsystems;
-	private Map<String, BundleInfo> bundleInfos;
+	private Map<String, LibraryInfo> libraryInfos;
 	
 	private Options options;
 	
@@ -46,13 +46,13 @@ public class Updater {
 	public Updater(Options options) {
 		this.options = options;
 		subsystems = new HashMap<>(6);
-		bundleInfos = new HashMap<>(20);
+		libraryInfos = new HashMap<>(20);
 	}
 
 	public void cleanCache() {
 		File cacheDir = new File(options.getTargetDirPath(), DIRECTORY_NAME_CACHE);
 		if (cacheDir.exists()) {
-			new File(cacheDir, FILE_NAME_BUNDLEINFOS).delete();
+			new File(cacheDir, FILE_NAME_LIBRARYINFOS).delete();
 			new File(cacheDir, FILE_NAME_SUBSYSTEMS).delete();
 			cacheDir.delete();
 		}
@@ -65,51 +65,51 @@ public class Updater {
 		if (modules == null)
 			modules = SUBSYSTEM_NAMES;
 		
-		List<String> updatedBundles = new ArrayList<>();
+		List<String> updatedLibraries = new ArrayList<>();
 		for (String module : modules) {
 			if (isSubsystem(module)) {
-				updateSubsystem(module, clean, updatedBundles);
+				updateSubsystem(module, clean, updatedLibraries);
 			} else {
 				if (!module.startsWith(GRANITE_PROJECT_PACKAGE_PREFIX)) {
 					module = GRANITE_PROJECT_PACKAGE_PREFIX + module;
 				}
 				
-				if (bundleInfos.containsKey(module)) {
-					updateBundle(module, clean, updatedBundles);
+				if (libraryInfos.containsKey(module)) {
+					updateLibrary(module, clean, updatedLibraries);
 				} else {
-					System.out.println(String.format("Illegal bundle or subsystem: %s.", module));
+					System.out.println(String.format("Illegal library or subsystem: %s.", module));
 					return;
 				}
 			}
 		}
 		
-		StringBuilder bundles = new StringBuilder();
-		for (String bundle : updatedBundles) {
-			bundles.append(bundle).append(", ");
+		StringBuilder libraries = new StringBuilder();
+		for (String library : updatedLibraries) {
+			libraries.append(library).append(", ");
 		}
 		
-		if (bundles.length() > 0) {
-			bundles.delete(bundles.length() - 2, bundles.length());
+		if (libraries.length() > 0) {
+			libraries.delete(libraries.length() - 2, libraries.length());
 		}
 		
-		System.out.println(String.format("Bundles %s updated.", bundles.toString()));
+		System.out.println(String.format("Libraries %s updated.", libraries.toString()));
 	}
 	
-	private void updateBundle(String bundle, boolean clean, List<String> updatedBundles) {
-		BundleInfo bundleInfo = bundleInfos.get(bundle);
+	private void updateLibrary(String library, boolean clean, List<String> updatedLibraries) {
+		LibraryInfo libraryInfo = libraryInfos.get(library);
 		if (clean) {
-			Main.runMvn(new File(bundleInfo.projectDirPath), "clean", "package");
+			Main.runMvn(new File(libraryInfo.projectDirPath), "clean", "package");
 		} else {
-			Main.runMvn(new File(bundleInfo.projectDirPath), "package");
+			Main.runMvn(new File(libraryInfo.projectDirPath), "package");
 		}
 		
-		updateBundle(bundleInfo);
-		updatedBundles.add(bundleInfo.fileName);
+		updateLibrary(libraryInfo);
+		updatedLibraries.add(libraryInfo.fileName);
 	}
 
-	private void updateBundle(BundleInfo bundleInfo) {
-		File targetDir = new File(bundleInfo.projectDirPath, "target");
-		File artifact = new File(targetDir, bundleInfo.fileName);
+	private void updateLibrary(LibraryInfo libraryInfo) {
+		File targetDir = new File(libraryInfo.projectDirPath, "target");
+		File artifact = new File(targetDir, libraryInfo.fileName);
 		if (!artifact.exists()) {
 			throw new RuntimeException(String.format("Artifact %s doesn't exist.", artifact.getPath()));
 		}
@@ -136,7 +136,7 @@ public class Updater {
 		return existing.lastModified() != artifact.lastModified();
 	}
 
-	private void updateSubsystem(String subsystem, boolean clean, List<String> updatedBundles) {
+	private void updateSubsystem(String subsystem, boolean clean, List<String> updatedLibraries) {
 		String subsystemFullName = GRANITE_PROJECT_PACKAGE_PREFIX + subsystem;
 		File subsystemProjectDir = new File(options.getGraniteProjectDirPath(), subsystemFullName);
 		if (!subsystemProjectDir.exists()) {
@@ -149,19 +149,19 @@ public class Updater {
 			Main.runMvn(subsystemProjectDir, "package");
 		}
 		
-		String[] bundles = subsystems.get(subsystem);
-		if (bundles == null)
+		String[] libraries = subsystems.get(subsystem);
+		if (libraries == null)
 			return;
 		
-		for (String bundle : bundles) {
-			BundleInfo bundleInfo = bundleInfos.get(bundle);
+		for (String library : libraries) {
+			LibraryInfo libraryInfo = libraryInfos.get(library);
 			
-			if (bundleInfo == null) {
-				throw new RuntimeException(String.format("Can't get bundle info for bundle %s.", bundle));
+			if (libraryInfo == null) {
+				throw new RuntimeException(String.format("Can't get library info for library %s.", library));
 			}
 			
-			updateBundle(bundleInfo);
-			updatedBundles.add(bundleInfo.fileName);
+			updateLibrary(libraryInfo);
+			updatedLibraries.add(libraryInfo.fileName);
 		}
 	}
 
@@ -174,7 +174,7 @@ public class Updater {
 	}
 
 	private void loadCacheFromDisk() {
-		loadBundleInfosFromDisk();
+		loadLibraryInfosFromDisk();
 		loadSubsystemsFromDisk();
 	}
 
@@ -202,9 +202,9 @@ public class Updater {
 		subsystems = new HashMap<>();
 		for (Map.Entry<Object, Object> entry : pSubsystems.entrySet()) {
 			String subsystemsName = (String)entry.getKey();
-			String[] bundles = stringToArray((String)entry.getValue());
+			String[] libraries = stringToArray((String)entry.getValue());
 			
-			subsystems.put(subsystemsName, bundles);
+			subsystems.put(subsystemsName, libraries);
 		}
 		
 	}
@@ -221,16 +221,16 @@ public class Updater {
 		return array;
 	}
 
-	private void loadBundleInfosFromDisk() {
+	private void loadLibraryInfosFromDisk() {
 		File cacheDir = new File(options.getTargetDirPath(), DIRECTORY_NAME_CACHE);
 		
-		Properties pBundleInfos = new Properties();
+		Properties pLibraryInfos = new Properties();
 		
 		Reader reader = null;
 		
 		try {
-			reader = new BufferedReader(new FileReader(new File(cacheDir, FILE_NAME_BUNDLEINFOS)));
-			pBundleInfos.load(reader);
+			reader = new BufferedReader(new FileReader(new File(cacheDir, FILE_NAME_LIBRARYINFOS)));
+			pLibraryInfos.load(reader);
 		} catch (IOException e) {
 			throw new RuntimeException("Can't load cache from disk.", e);
 		} finally {
@@ -242,26 +242,26 @@ public class Updater {
 				}
 		}
 		
-		bundleInfos = new HashMap<>();
-		for (Map.Entry<Object, Object> entry : pBundleInfos.entrySet()) {
-			String bundleName = (String)entry.getKey();
-			BundleInfo bundleInfo = stringToBundleInfo((String)entry.getValue());
+		libraryInfos = new HashMap<>();
+		for (Map.Entry<Object, Object> entry : pLibraryInfos.entrySet()) {
+			String libraryName = (String)entry.getKey();
+			LibraryInfo libraryInfo = stringToLibraryInfo((String)entry.getValue());
 			
-			bundleInfos.put(bundleName, bundleInfo);
+			libraryInfos.put(libraryName, libraryInfo);
 		}
 	}
 
-	private BundleInfo stringToBundleInfo(String string) {
+	private LibraryInfo stringToLibraryInfo(String string) {
 		StringTokenizer st = new StringTokenizer(string, ",");
 		if (st.countTokens() != 2) {
-			throw new RuntimeException("Bad cache format[Bundle Info].");
+			throw new RuntimeException("Bad cache format[Library Info].");
 		}
 		
-		BundleInfo bundleInfo = new BundleInfo();
-		bundleInfo.projectDirPath = st.nextToken();
-		bundleInfo.fileName = st.nextToken();
+		LibraryInfo libraryInfo = new LibraryInfo();
+		libraryInfo.projectDirPath = st.nextToken();
+		libraryInfo.fileName = st.nextToken();
 		
-		return bundleInfo;
+		return libraryInfo;
 	}
 
 	private void createCache() {
@@ -272,19 +272,19 @@ public class Updater {
 		
 		File repositoryDir = getRepositoryDir();
 		
-		for (File bundle : repositoryDir.listFiles()) {
-			String bundleFileName = bundle.getName();
-			if (!isGraniteArtifact(bundleFileName)) {
+		for (File library : repositoryDir.listFiles()) {
+			String libraryFileName = library.getName();
+			if (!isGraniteArtifact(libraryFileName)) {
 				continue;
 			}
 			
-			int dashIndex = bundleFileName.indexOf('-');
-			String bundleName = bundleFileName.substring(0, dashIndex);
+			int dashIndex = libraryFileName.indexOf('-');
+			String libraryName = libraryFileName.substring(0, dashIndex);
 			
-			BundleInfo bundleInfo = new BundleInfo();
-			bundleInfo.fileName = bundleFileName;
+			LibraryInfo libraryInfo = new LibraryInfo();
+			libraryInfo.fileName = libraryFileName;
 			
-			bundleInfos.put(bundleName, bundleInfo);
+			libraryInfos.put(libraryName, libraryInfo);
 		}
 		
 		collectCacheData();
@@ -317,20 +317,20 @@ public class Updater {
 	}
 
 	private void syncCacheToDisk(File cacheDir) {
-		syncBundleInfosToDisk(cacheDir);
+		syncLibraryInfosToDisk(cacheDir);
 		syncSubsystemsToDisk(cacheDir);
 	}
 
-	private void syncBundleInfosToDisk(File cacheDir) {
-		Properties pBundleInfos = new Properties();
-		for (Map.Entry<String, BundleInfo> entry : bundleInfos.entrySet()) {
-			pBundleInfos.put(entry.getKey(), convertBundleInfoToString(entry.getValue()));
+	private void syncLibraryInfosToDisk(File cacheDir) {
+		Properties pLibraryInfos = new Properties();
+		for (Map.Entry<String, LibraryInfo> entry : libraryInfos.entrySet()) {
+			pLibraryInfos.put(entry.getKey(), convertLibraryInfoToString(entry.getValue()));
 		}
 		
 		Writer writer = null;
 		try {
-			writer = new BufferedWriter(new FileWriter(new File(cacheDir, FILE_NAME_BUNDLEINFOS)));
-			pBundleInfos.store(writer, null);
+			writer = new BufferedWriter(new FileWriter(new File(cacheDir, FILE_NAME_LIBRARYINFOS)));
+			pLibraryInfos.store(writer, null);
 		} catch (IOException e) {
 			throw new RuntimeException("Can't sync cache to disk.", e);
 		} finally {
@@ -344,11 +344,11 @@ public class Updater {
 		}
 	}
 
-	private Object convertBundleInfoToString(BundleInfo bundleInfo) {
+	private Object convertLibraryInfoToString(LibraryInfo libraryInfo) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(bundleInfo.projectDirPath).
+		sb.append(libraryInfo.projectDirPath).
 			append(',').
-			append(bundleInfo.fileName);
+			append(libraryInfo.fileName);
 		
 		return sb.toString();
 	}
@@ -399,20 +399,20 @@ public class Updater {
 			return;
 		
 		if (isGraniteArtifactProject(currentDir)) {
-			BundleInfo bundleInfo = bundleInfos.get(currentDir.getName());
-			bundleInfo.projectDirPath = currentDir.getPath();
+			LibraryInfo libraryInfo = libraryInfos.get(currentDir.getName());
+			libraryInfo.projectDirPath = currentDir.getPath();
 			
 			if (subsystem != null) {
-				String[] bundles = subsystems.get(subsystem);
-				if (bundles == null) {
-					bundles = new String[] {currentDir.getName()};
+				String[] libraries = subsystems.get(subsystem);
+				if (libraries == null) {
+					libraries = new String[] {currentDir.getName()};
 				} else {
-					String[] newBundles = Arrays.copyOf(bundles, bundles.length + 1);
-					newBundles[newBundles.length - 1] = currentDir.getName();
-					bundles = newBundles;
+					String[] newLibraries = Arrays.copyOf(libraries, libraries.length + 1);
+					newLibraries[newLibraries.length - 1] = currentDir.getName();
+					libraries = newLibraries;
 				}
 				
-				subsystems.put(subsystem, bundles);
+				subsystems.put(subsystem, libraries);
 			}
 			
 			return;
@@ -454,16 +454,16 @@ public class Updater {
 			}
 		}
 		
-		return srcFound && pomFound && bundleInfos.containsKey(dir.getName());
+		return srcFound && pomFound && libraryInfos.containsKey(dir.getName());
 	}
 
-	private class BundleInfo {
+	private class LibraryInfo {
 		public String fileName;
 		public String projectDirPath;
 	}
 
-	private boolean isGraniteArtifact(String bundleFileName) {
-		return bundleFileName.startsWith(GRANITE_PROJECT_PACKAGE_PREFIX);
+	private boolean isGraniteArtifact(String libraryFileName) {
+		return libraryFileName.startsWith(GRANITE_PROJECT_PACKAGE_PREFIX);
 	}
 
 	private boolean isCacheCreated() {
@@ -471,7 +471,7 @@ public class Updater {
 		if (!cacheDir.exists())
 			return false;
 		
-		return new File(cacheDir, FILE_NAME_SUBSYSTEMS).exists() && new File(cacheDir, FILE_NAME_BUNDLEINFOS).exists();
+		return new File(cacheDir, FILE_NAME_SUBSYSTEMS).exists() && new File(cacheDir, FILE_NAME_LIBRARYINFOS).exists();
 	}
 	
 	private boolean isSubsystem(String module) {
