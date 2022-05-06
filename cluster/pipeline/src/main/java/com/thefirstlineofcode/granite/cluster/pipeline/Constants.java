@@ -3,7 +3,7 @@ package com.thefirstlineofcode.granite.cluster.pipeline;
 public class Constants {
 	private Constants() {}
 	
-	public static final String COMPONENT_ID_IGNITE = "ignite";
+	public static final String COMPONENT_ID_IGNITE = "cluster.ignite";
 	public static final String COMPONENT_ID_NODE_RUNTIME_CONFIGURATION = "node.runtime.configuration";
 	
 	public static final String COMPONENT_ID_STREAM_2_PARSING_MESSAGE_CONNECTOR = "stream.2.parsing.message.receiver";

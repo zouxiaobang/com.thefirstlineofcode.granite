@@ -17,7 +17,7 @@
 
 	<modules>
 		<module>commons</module>
-		<!-- <module>mgtnode</module>
-		<module>appnode</module> -->
+		<module>mgtnode</module>
+		<module>appnode</module>
 	</modules>
 </project>

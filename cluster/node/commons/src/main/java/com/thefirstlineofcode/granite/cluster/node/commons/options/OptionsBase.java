@@ -3,7 +3,7 @@ package com.thefirstlineofcode.granite.cluster.node.commons.options;
 public class OptionsBase {
 	private boolean help;
 	private String homeDir;
-	private String configDir;
+	private String configurationDir;
 	
 	public void setHelp(boolean help) {
 		this.help = help;
@@ -21,12 +21,12 @@ public class OptionsBase {
 		this.homeDir = homeDir;
 	}
 
-	public String getConfigDir() {
-		return configDir;
+	public String getConfigurationDir() {
+		return configurationDir;
 	}
 
-	public void setConfigDir(String configDir) {
-		this.configDir = configDir;
+	public void setConfigurationDir(String configurationDir) {
+		this.configurationDir = configurationDir;
 	}
 
 }

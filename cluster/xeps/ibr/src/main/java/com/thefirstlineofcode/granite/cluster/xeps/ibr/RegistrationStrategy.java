@@ -1,4 +1,4 @@
-package com.firstlinecode.granite.cluster.xeps.ibr;
+package com.thefirstlineofcode.granite.cluster.xeps.ibr;
 
 import org.springframework.stereotype.Component;
 

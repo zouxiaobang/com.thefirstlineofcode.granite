@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 public abstract class AbstractOptionsTool<T extends OptionsBase> {
-	private static final String OPTION_NAME_CONFIG_DIR = "config-dir";
+	private static final String OPTION_NAME_CONFIGURATION_DIR = "configuration-dir";
 	
 	private Map<String, OptionRule> optionRules;
 	private String configFileName;
@@ -22,7 +22,7 @@ public abstract class AbstractOptionsTool<T extends OptionsBase> {
 		optionRules = buildOptionRules(optionRules);
 		
 		optionRules.put(
-				OPTION_NAME_CONFIG_DIR,
+				OPTION_NAME_CONFIGURATION_DIR,
 				new OptionRule().
 					setRange(OptionRule.Range.COMMAND_LINE).
 					setDataType(OptionRule.DataType.STRING)
@@ -71,22 +71,22 @@ public abstract class AbstractOptionsTool<T extends OptionsBase> {
 		
 		String homeDirPath = getHomeDir();
 		
-		String configDirPath = (String)commandLineOptions.get(OPTION_NAME_CONFIG_DIR);
-		if (configDirPath == null) {
-			configDirPath = homeDirPath + "/config";
+		String configurationDirPath = (String)commandLineOptions.get(OPTION_NAME_CONFIGURATION_DIR);
+		if (configurationDirPath == null) {
+			configurationDirPath = homeDirPath + "/configuration";
 			
-			if (!new File(configDirPath).exists()) {
-				configDirPath = new File(homeDirPath).getParent() + "/config";
+			if (!new File(configurationDirPath).exists()) {
+				configurationDirPath = new File(homeDirPath).getParent() + "/configuration";
 			}
 		}
-		commandLineOptions.put(OPTION_NAME_CONFIG_DIR, configDirPath);
+		commandLineOptions.put(OPTION_NAME_CONFIGURATION_DIR, configurationDirPath);
 		
-		File configDir = new File(configDirPath);
-		if (!configDir.exists() || !configDir.isDirectory()) {
-			throw new IllegalArgumentException(String.format("Illegal configruation directory. '%s' doesn't exist or isn't a directory.", configDirPath));
+		File configurationDir = new File(configurationDirPath);
+		if (!configurationDir.exists() || !configurationDir.isDirectory()) {
+			throw new IllegalArgumentException(String.format("Illegal configruation directory. '%s' doesn't exist or isn't a directory.", configurationDirPath));
 		}
 		
-		T options = readAndMergeConfigFile(commandLineOptions, new File(configDir, configFileName));
+		T options = readAndMergeConfigFile(commandLineOptions, new File(configurationDir, configFileName));
 		
 		options.setHomeDir(homeDirPath);
 		

@@ -17,7 +17,7 @@
 
 	<modules>
 		<module>lite</module>
-<!--		<module>cluster-mgtnode</module> -->
+		<module>cluster-mgtnode</module>
 	</modules>
 	
 </project>

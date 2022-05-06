@@ -226,6 +226,11 @@
 				<version>2.5.1</version>
 			</dependency>
 			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-server</artifactId>
+				<version>9.2.9.v20150224</version>
+			</dependency>
+			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-dbcp2</artifactId>
 				<version>2.7.0</version>
@@ -427,6 +432,26 @@
 			<dependency>
 				<groupId>com.thefirstlineofcode.granite.cluster</groupId>
 				<artifactId>granite-cluster-dba</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.thefirstlineofcode.granite.cluster</groupId>
+				<artifactId>granite-cluster-session</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.thefirstlineofcode.granite.cluster</groupId>
+				<artifactId>granite-cluster-auth</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.thefirstlineofcode.granite.cluster</groupId>
+				<artifactId>granite-cluster-im</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.thefirstlineofcode.granite.cluster.xeps</groupId>
+				<artifactId>granite-cluster-xeps-ibr</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			
