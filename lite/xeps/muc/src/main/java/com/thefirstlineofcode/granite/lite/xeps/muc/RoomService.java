@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import javax.annotation.Resource;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,7 +36,7 @@ public class RoomService implements IRoomService, IDataObjectFactoryAware {
 	@Autowired
 	private SqlSession sqlSession;
 	
-	@Autowired
+	@Resource(name = "authenticator")
 	private IAuthenticator authenticator;
 	
 	private IDataObjectFactory dataObjectFactory;

@@ -72,8 +72,11 @@ public class DefaultProtocolProcessingProcessor implements com.thefirstlineofcod
 	
 	private IApplicationComponentService appComponentService;
 	
-	@BeanDependency
+	@BeanDependency("authenticator")
 	private IAuthenticator authenticator;
+	
+	@BeanDependency("deviceAuthenticator")
+	private IAuthenticator deviceAuthenticator;
 	
 	private JabberId domain;
 	private JabberId[] domainAliases;
@@ -486,7 +489,7 @@ public class DefaultProtocolProcessingProcessor implements com.thefirstlineofcod
 		if (userName == null)
 			return false;
 		
-		if (!authenticator.exists(userName)) {
+		if (!authenticator.exists(userName) && deviceAuthenticator.exists(userName)) {
 			return false;
 		}
 		

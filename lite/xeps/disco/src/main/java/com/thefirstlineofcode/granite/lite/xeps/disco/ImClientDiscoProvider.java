@@ -25,7 +25,7 @@ public class ImClientDiscoProvider implements IDiscoProvider, IServerConfigurati
 	@Dependency("standard.im.server.listener")
 	private StandardImServerListener imServerListener;
 	
-	@BeanDependency
+	@BeanDependency("authenticator")
 	private IAuthenticator authenticator;
 	
 	@BeanDependency

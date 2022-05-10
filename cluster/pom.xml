@@ -19,10 +19,10 @@
 		<module>node</module>
 		<module>pipeline</module>
 		<module>session</module>
-		<module>dba</module>
+<!--		<module>dba</module>
 		<module>auth</module>
 		<module>xeps</module>
-		<module>im</module>
+			<module>im</module> -->
 	</modules>
 	
 </project>

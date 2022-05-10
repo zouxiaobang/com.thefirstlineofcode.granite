@@ -26,7 +26,7 @@ import com.thefirstlineofcode.granite.framework.im.Subscription;
 import com.thefirstlineofcode.granite.framework.im.Subscription.State;
 
 public class StandardPresenceProcessor implements IPresenceProcessor, IEventFirerAware {
-	@BeanDependency
+	@BeanDependency("authenticator")
 	private IAuthenticator authenticator;
 	
 	@BeanDependency

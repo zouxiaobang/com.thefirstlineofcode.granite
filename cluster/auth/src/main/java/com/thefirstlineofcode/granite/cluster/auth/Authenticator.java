@@ -4,9 +4,9 @@ import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.reactivestreams.client.MongoCollection;
+import com.mongodb.reactivestreams.client.MongoDatabase;
 import com.thefirstlineofcode.granite.framework.core.auth.IAuthenticator;
 import com.thefirstlineofcode.granite.framework.core.auth.PrincipalNotFoundException;
 

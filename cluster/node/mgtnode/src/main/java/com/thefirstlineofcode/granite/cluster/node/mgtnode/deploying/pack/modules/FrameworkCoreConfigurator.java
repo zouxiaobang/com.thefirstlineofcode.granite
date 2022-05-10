@@ -13,7 +13,7 @@ import com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack.config
 public class FrameworkCoreConfigurator implements IPackConfigurator {	
 	@Override
 	public void configure(IPackContext context, DeployPlan configuration) {
-		configureApplicationIni(context);
+		configureServerIni(context);
 		configureComponentBindingIni(context);
 		configureGlobalFeatureParams(context);
 	}
@@ -41,9 +41,10 @@ public class FrameworkCoreConfigurator implements IPackConfigurator {
 		context.getConfigManager().createOrGetConfig(context.getConfigurationDir(), ConfigFiles.GRANITE_COMPONENT_BINDING_CONFIG_FILE);
 	}
 
-	private void configureApplicationIni(IPackContext context) {
+	private void configureServerIni(IPackContext context) {
 		IConfig config = context.getConfigManager().createOrGetConfig(context.getConfigurationDir(), ConfigFiles.GRANITE_SERVER_CONFIG_FILE);
 		
+		config.addComment("Change domain.name and domain.alias.names to your registered doman names.");
 		config.addOrUpdateProperty("domain.name", context.getDeployConfiguration().getCluster().getDomainName());
 		
 		String[] domainAliasNames = context.getDeployConfiguration().getCluster().getDomainAliasNames();

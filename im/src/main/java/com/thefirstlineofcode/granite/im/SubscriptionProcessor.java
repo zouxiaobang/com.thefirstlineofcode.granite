@@ -36,7 +36,7 @@ public class SubscriptionProcessor implements IPresenceProcessor, IServerConfigu
 	@BeanDependency
 	private ISubscriptionService subscriptionService;
 	
-	@BeanDependency
+	@BeanDependency("authenticator")
 	private IAuthenticator authenticator;
 	
 	@Dependency("roster.operator")

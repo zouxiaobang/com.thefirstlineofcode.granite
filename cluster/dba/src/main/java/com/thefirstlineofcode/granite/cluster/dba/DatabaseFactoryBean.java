@@ -14,11 +14,11 @@ import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.FactoryBean;
 
-import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.reactivestreams.client.MongoClient;
+import com.mongodb.reactivestreams.client.MongoDatabase;
 import com.thefirstlineofcode.granite.framework.core.config.IServerConfiguration;
 import com.thefirstlineofcode.granite.framework.core.config.IServerConfigurationAware;
 import com.thefirstlineofcode.granite.framework.core.utils.IoUtils;

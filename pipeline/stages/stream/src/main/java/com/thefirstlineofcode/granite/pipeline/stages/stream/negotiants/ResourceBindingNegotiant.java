@@ -111,7 +111,7 @@ public class ResourceBindingNegotiant extends AbstractNegotiant {
 		}
 		
 		if (sessionManager.exists(jid)) {
-			throw new ProtocolException(new Conflict(String.format("Conflict JID: %s", jid)));
+			throw new ProtocolException(new Conflict(String.format("Conflict JID: %s.", jid)));
 		}
 		
 		return jid;

@@ -57,6 +57,8 @@ public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurat
 	}
 	
 	private Ignite startIgnite() {
+		configureJavaUtilLogging();
+		
 		IgniteConfiguration igniteConfiguration = configureIgnite();
 		Ignite ignite = Ignition.start(igniteConfiguration);
 		
@@ -67,12 +69,16 @@ public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurat
 		return ignite;
 	}
 	
+	private void configureJavaUtilLogging() {
+		System.setProperty("java.util.logging.config.file", getClusterConfigurationDir() + "/java_util_logging.ini");
+	}
+
 	private boolean isSessionPersistenceEnabled() {
 		return clusteringConfig.getSessionsStorage().isPersistenceEnabled()/* || clusteringConfig.getCacheStorage().isPersistenceEnabled()*/;
 	}
 	
 	private IgniteConfiguration configureIgnite() {
-		File configFile = new File(getIgniteConfigurationDir(), "clustering.ini");
+		File configFile = new File(getClusterConfigurationDir(), "clustering.ini");
 		if (!configFile.exists()) {
 			throw new RuntimeException("Can't get clustering.ini.");
 		}
@@ -264,7 +270,7 @@ public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurat
 		}
 	}
 	
-	private String getIgniteConfigurationDir() {
+	private String getClusterConfigurationDir() {
 		return serverConfiguration.getConfigurationDir() + "/" + CONFIGURATION_DIR_CLUSTER;
 	}
 	

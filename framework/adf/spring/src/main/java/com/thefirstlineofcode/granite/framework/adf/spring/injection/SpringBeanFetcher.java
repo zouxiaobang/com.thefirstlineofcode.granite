@@ -27,6 +27,11 @@ public class SpringBeanFetcher implements IDependencyFetcher {
 			return appContext.getBean(type);
 		}
 		
+		if ("".equals(qualifier))
+			throw new IllegalArgumentException(String.format("Ambiguous bean dependency. Several beans implemented interface %s.",
+					type.getName()));
+			
+		
 		Object bean = appContext.getBean(qualifier);
 		if (bean == null)
 			throw new IllegalArgumentException(String.format("No bean for name '%s' be found in application context.",

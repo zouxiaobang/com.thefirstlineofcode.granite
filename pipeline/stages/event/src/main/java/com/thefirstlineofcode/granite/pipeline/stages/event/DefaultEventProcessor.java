@@ -30,6 +30,8 @@ import com.thefirstlineofcode.granite.framework.core.utils.CommonUtils;
 @Component("default.event.processor")
 public class DefaultEventProcessor implements IMessageProcessor, IInitializable,
 		IServerConfigurationAware, IApplicationComponentServiceAware {
+	private static final String PACKAGE__PREFIX_OF_GRANITE = "com.thefirstlineofcode.granite";
+
 	private Logger logger = LoggerFactory.getLogger(DefaultEventProcessor.class);
 	
 	protected Map<Class<?>, List<IEventListener<?>>> eventToListeners;
@@ -62,6 +64,9 @@ public class DefaultEventProcessor implements IMessageProcessor, IInitializable,
 	private <E extends IEvent> void processEvent(IConnectionContext context, E event) {
 		List<IEventListener<?>> listeners = eventToListeners.get(event.getClass());
 		if (listeners == null || listeners.size() == 0) {
+			if (event.getClass().getName().startsWith(PACKAGE__PREFIX_OF_GRANITE))
+				return;
+			
 			if (logger.isWarnEnabled()) {
 				logger.warn("No event listener is listening to event which's type is {}.", event.getClass().getName());
 			}

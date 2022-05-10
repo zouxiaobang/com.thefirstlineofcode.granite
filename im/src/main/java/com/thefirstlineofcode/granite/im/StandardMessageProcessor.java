@@ -20,7 +20,7 @@ import com.thefirstlineofcode.granite.framework.im.IResourcesService;
 import com.thefirstlineofcode.granite.framework.im.OfflineMessageEvent;
 
 public class StandardMessageProcessor implements IMessageProcessor, IEventFirerAware, IServerConfigurationAware {
-	@BeanDependency
+	@BeanDependency("authenticator")
 	private IAuthenticator authenticator;
 	
 	@BeanDependency

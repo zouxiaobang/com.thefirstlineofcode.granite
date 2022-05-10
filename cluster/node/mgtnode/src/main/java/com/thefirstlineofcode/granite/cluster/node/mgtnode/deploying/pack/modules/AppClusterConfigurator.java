@@ -18,6 +18,19 @@ public class AppClusterConfigurator implements IPackConfigurator {
 	public void configure(IPackContext context, DeployPlan configuration) {
 		copyClusteringConfigFile(context);
 		configureGlobalParams(context, configuration.getGlobal());
+		configureJavaUtilLogging(context);
+	}
+
+	private void configureJavaUtilLogging(IPackContext context) {
+		IConfig javaUtilLoggingConfig = context.getConfigManager().createOrGetConfig(context.getClusterConfigurationDir(), "java_util_logging.ini");
+		javaUtilLoggingConfig.addOrUpdateProperty("handlers", "java.util.logging.FileHandler, java.util.logging.ConsoleHandler");
+		javaUtilLoggingConfig.addOrUpdateProperty(".level", "INFO");
+		javaUtilLoggingConfig.addOrUpdateProperty("java.util.logging.FileHandler.pattern", "%h/appnode_rt.log%g.log");
+		javaUtilLoggingConfig.addOrUpdateProperty("java.util.logging.FileHandler.limit", "50000");
+		javaUtilLoggingConfig.addOrUpdateProperty("java.util.logging.FileHandler.count", "5");
+		javaUtilLoggingConfig.addOrUpdateProperty("java.util.logging.FileHandler.formatter", "java.util.logging.SimpleFormatter");
+		javaUtilLoggingConfig.addOrUpdateProperty("java.util.logging.ConsoleHandler.level", "SEVERE");
+		javaUtilLoggingConfig.addOrUpdateProperty("java.util.logging.ConsoleHandler.formatter", "java.util.logging.SimpleFormatter");
 	}
 
 	private void configureGlobalParams(IPackContext context, Global global) {
@@ -27,11 +40,11 @@ public class AppClusterConfigurator implements IPackConfigurator {
 	}
 
 	private void copyClusteringConfigFile(IPackContext context) {
-		File nodeTypeClusteringConfigFile = new File(context.getClusterConfigurationDir().toFile(), context.getNodeType() + "-clustering.ini");
+		File nodeTypeClusteringConfigFile = new File(context.getConfigurationDir().toFile(), context.getNodeType() + "-clustering.ini");
 		if (copyClusteringConfigFile(context, nodeTypeClusteringConfigFile))
 			return;
 		
-		File defaultClusteringConfigFile = new File(context.getClusterConfigurationDir().toFile(), "default-clustering.ini");
+		File defaultClusteringConfigFile = new File(context.getConfigurationDir().toFile(), "default-clustering.ini");
 		if (!copyClusteringConfigFile(context, defaultClusteringConfigFile)) {
 			throw new RuntimeException(String.format("Can't find a clustering config file to copy. You should put %s or %s to mgtnode cluster configuration directory.",
 					defaultClusteringConfigFile.getName(), nodeTypeClusteringConfigFile.getName()));

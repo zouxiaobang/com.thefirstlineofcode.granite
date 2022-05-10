@@ -39,6 +39,10 @@
 					<groupId>com.thefirstlineofcode.granite.lite</groupId>
 					<artifactId>granite-lite-auth</artifactId>
 			</dependency>
+			<dependency>
+					<groupId>com.thefirstlineofcode.granite.lite</groupId>
+					<artifactId>granite-lite-im</artifactId>
+			</dependency>
 			
 			<!-- Sand Server Plugins -->			
 			<dependency>
