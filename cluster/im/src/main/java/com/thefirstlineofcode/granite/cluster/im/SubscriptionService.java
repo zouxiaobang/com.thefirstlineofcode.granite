@@ -6,10 +6,10 @@ import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
-import com.mongodb.reactivestreams.client.MongoCollection;
-import com.mongodb.reactivestreams.client.MongoDatabase;
 import com.thefirstlineofcode.basalt.protocol.core.JabberId;
 import com.thefirstlineofcode.basalt.protocol.core.ProtocolException;
 import com.thefirstlineofcode.basalt.protocol.core.stanza.error.InternalServerError;

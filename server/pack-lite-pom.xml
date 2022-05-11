@@ -10,9 +10,9 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>	
 	
-	<groupId>com.thefirstlineofcode.granite</groupId>
-	<artifactId>granite-server</artifactId>
-	<name>Granite Server Implementation</name>
+	<groupId>com.thefirstlineofcode.granite.server</groupId>
+	<artifactId>granite-server-pack-lite</artifactId>
+	<name>Granite Server Pack Lite Build Script</name>
 	
 	<properties>
 		<main.class>com.thefirstlineofcode.granite.server.Main</main.class>
@@ -66,32 +66,32 @@
 			<artifactId>hsqldb</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.thefirstlineofcode.granite.framework.adf</groupId>
-			<artifactId>granite-framework-adf-mybatis</artifactId>
+				<groupId>com.thefirstlineofcode.granite.framework.adf</groupId>
+				<artifactId>granite-framework-adf-mybatis</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
-			<artifactId>granite-pipeline-stages-stream</artifactId>
+				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<artifactId>granite-pipeline-stages-stream</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
-			<artifactId>granite-pipeline-stages-parsing</artifactId>
+				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<artifactId>granite-pipeline-stages-parsing</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
-			<artifactId>granite-pipeline-stages-processing</artifactId>
+				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<artifactId>granite-pipeline-stages-processing</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
-			<artifactId>granite-pipeline-stages-routing</artifactId>
+				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<artifactId>granite-pipeline-stages-routing</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
-			<artifactId>granite-pipeline-stages-event</artifactId>
+				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<artifactId>granite-pipeline-stages-event</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.thefirstlineofcode.sand.protocols</groupId>
-			<artifactId>sand-protocols-core</artifactId>
+				<groupId>com.thefirstlineofcode.sand.protocols</groupId>
+				<artifactId>sand-protocols-core</artifactId>
 		</dependency>
 		
 	</dependencies>

@@ -17,7 +17,7 @@ import java.util.zip.ZipOutputStream;
 public class ZipUtils {
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 	
-	public static void zip(File source, File target) throws TargetExistsException, IOException {
+	public static void zip(File source, File target) throws IOException {
 		if (!source.isDirectory()) {
 			throw new IllegalArgumentException(String.format("Not support zip a folder. %s isn't a folder.", source.getPath()));
 		}
@@ -25,7 +25,7 @@ public class ZipUtils {
 		zipFolder(source, target);
 	}
 	
-	public static void zipFolder(File sourceFolder, File targetFile) throws TargetExistsException, IOException {
+	public static void zipFolder(File sourceFolder, File targetFile) throws IOException {
 		if (!sourceFolder.exists()) {
 			throw new IllegalArgumentException(String.format("Source folder[%s] to zip doesn't exist."));
 		}
@@ -35,7 +35,7 @@ public class ZipUtils {
 		}
 		
 		if (targetFile.exists()) {
-			throw new TargetExistsException(String.format("Zip file[%s] has already existed.", targetFile.getPath()));
+			throw new RuntimeException(String.format("Zip file[%s] has already existed.", targetFile.getPath()));
 		}
 		
 		File[] files = getAllAescendantFiles(sourceFolder);

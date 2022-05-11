@@ -18,9 +18,7 @@ public class Options {
 	private String appName;
 	
 	public enum Protocol {
-		LEPS,
 		STANDARD,
-		IOT,
 		SAND
 	}
 	

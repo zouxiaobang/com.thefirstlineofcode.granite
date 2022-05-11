@@ -92,16 +92,12 @@ public class Main {
 					throw new IllegalArgumentException("-protocol should follow a <PROTOCOL> option value.");
 				}
 				
-				if ("leps".equals(args[i])) {
-					options.setProtocol(Options.Protocol.LEPS);
-				} else if ("standard".equals(args[i])) {
+				if ("standard".equals(args[i])) {
 					options.setProtocol(Options.Protocol.STANDARD);
 				} else if ("sand".equals(args[i])) {
 					options.setProtocol(Options.Protocol.SAND);
-				} else if ("iot".equals(args[i])) {
-					options.setProtocol(Options.Protocol.IOT);
 				} else {
-					throw new IllegalArgumentException(String.format("Illegal protocol: %s. Only 'lep', 'standard', 'iot' or 'sand' supported.", args[i]));
+					throw new IllegalArgumentException(String.format("Illegal protocol: %s. Only 'standard' and 'sand' supported.", args[i]));
 				}
 				i++;
 			} else if ("sandProjectName".equals(args[i])) {

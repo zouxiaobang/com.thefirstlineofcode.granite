@@ -14,11 +14,12 @@ import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.FactoryBean;
 
-import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
-import com.mongodb.reactivestreams.client.MongoClient;
-import com.mongodb.reactivestreams.client.MongoDatabase;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
 import com.thefirstlineofcode.granite.framework.core.config.IServerConfiguration;
 import com.thefirstlineofcode.granite.framework.core.config.IServerConfigurationAware;
 import com.thefirstlineofcode.granite.framework.core.utils.IoUtils;
@@ -75,9 +76,17 @@ public class DatabaseFactoryBean implements FactoryBean<MongoDatabase>, IServerC
 			}
 			
 			MongoCredential credential = MongoCredential.createCredential(userName, dbName, password.toCharArray());
-			client = new MongoClient(serverAddresses, credential, new MongoClientOptions.Builder().build());
-			this.dbName = dbName;
+			if (serverAddresses.size() == 1) {				
+				client = MongoClients.create("mongodb://" + serverAddresses.get(0));
+			} else {
+				MongoClientSettings settings = MongoClientSettings.builder().
+						credential(credential).
+						applyToClusterSettings(builder -> builder.hosts(serverAddresses)).
+						build();
+				client = MongoClients.create(settings);
+			}
 			
+			this.dbName = dbName;
 			MongoDatabase database = client.getDatabase(dbName);
 			
 			return database;

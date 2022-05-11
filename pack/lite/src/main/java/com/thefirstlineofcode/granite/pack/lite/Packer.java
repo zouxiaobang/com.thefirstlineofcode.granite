@@ -15,8 +15,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import com.thefirstlineofcode.granite.pack.lite.Options.Protocol;
-
 public class Packer {
 	public static final String CONFIGURATION_DIR = "configuration";
 	
@@ -159,14 +157,7 @@ public class Packer {
 			throw new RuntimeException("Can't determine granite server directory.");
 		
 		File serverTargetDir = new File(serverDir, "target");
-		if (options.getProtocol() == Protocol.IOT ||
-				options.getProtocol() == Protocol.STANDARD) {			
-			Main.runMvn(serverDir, options.isOffline(), "clean", "package");			
-		} else if (options.getProtocol() == Protocol.SAND) {
-			Main.runMvn(serverDir, options.isOffline(), "-fsand-pom.xml", "clean", "package");
-		} else {
-			throw new IllegalArgumentException("Only support 'iot', 'standard' and 'sand' protocols now.");
-		}
+		Main.runMvn(serverDir, options.isOffline(), "-fpack-lite-pom.xml", "clean", "package");
 		
 		if (!serverTargetDir.exists() || !serverTargetDir.isDirectory()) {
 			throw new RuntimeException("Can't determine target directory of Granite Server project.");
@@ -206,10 +197,6 @@ public class Packer {
 	private void copyDependencies() {
 		if (options.getProtocol() == Options.Protocol.STANDARD) {
 			Main.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fstandard-pom.xml", "dependency:copy-dependencies");
-		} else if (options.getProtocol() == Options.Protocol.LEPS) {
-			Main.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fleps-pom.xml", "dependency:copy-dependencies");
-		} else if (options.getProtocol() == Options.Protocol.IOT) {
-			Main.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fiot-pom.xml", "dependency:copy-dependencies");			
 		} else {
 			Main.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fsand-pom.xml", "dependency:copy-dependencies");			
 		}
@@ -221,21 +208,19 @@ public class Packer {
 
 	private void writeGraniteConfigFilesToZip(String targetDirPath, ZipOutputStream zos) throws IOException, URISyntaxException {
 		File targetDir = new File(targetDirPath);
-		File configDir = new File(targetDir.getParent(), "config");
+		File configurationDir = new File(targetDir.getParent(), CONFIGURATION_DIR);
 		
-		File configFilesDir;
-		if (options.getProtocol() == Options.Protocol.IOT) {
-			configFilesDir = new File(configDir, "iot");
-		} else if (options.getProtocol() == Options.Protocol.STANDARD) {
-			configFilesDir = new File(configDir, "standard");			
+		File configurationFilesDir;
+		if (options.getProtocol() == Options.Protocol.STANDARD) {
+			configurationFilesDir = new File(configurationDir, "standard");			
 		} else if (options.getProtocol() == Options.Protocol.SAND) {
-			configFilesDir = new File(configDir, "sand");			
+			configurationFilesDir = new File(configurationDir, "sand");			
 		} else {
 			throw new IllegalArgumentException("Only support 'iot', 'standard' and 'csand' protocols now.");
 		}
 		
-		for (File configFile : configFilesDir.listFiles()) {
-			writeFileToZip(zos, String.format("/%s/%s/%s", options.getAppName(), CONFIGURATION_DIR, configFile.getName()), configFile);
+		for (File configurationFile : configurationFilesDir.listFiles()) {
+			writeFileToZip(zos, String.format("/%s/%s/%s", options.getAppName(), CONFIGURATION_DIR, configurationFile.getName()), configurationFile);
 		}
 	}
 	

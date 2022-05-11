@@ -27,10 +27,6 @@
 				<groupId>com.thefirstlineofcode.granite.xeps</groupId>
 				<artifactId>granite-xeps-ping</artifactId>
 			</dependency>
-			<dependency>
-				<groupId>com.thefirstlineofcode.granite.xeps</groupId>
-				<artifactId>granite-xeps-msgoffline</artifactId>
-			</dependency>
 			
 			<!-- Granite Deploy Lite Plugins -->
 			<dependency>

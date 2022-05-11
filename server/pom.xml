@@ -10,9 +10,9 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>	
 	
-	<groupId>com.thefirstlineofcode.granite</groupId>
-	<artifactId>granite-server</artifactId>
-	<name>Granite Server Implementation</name>
+	<groupId>com.thefirstlineofcode.granite.server</groupId>
+	<artifactId>granite-server-pack-cluster</artifactId>
+	<name>Granite Server Pack Cluster Build Script</name>
 	
 	<properties>
 		<main.class>com.thefirstlineofcode.granite.server.Main</main.class>
@@ -37,55 +37,14 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.0.0</version>
-				<configuration>
-					<appendAssemblyId>false</appendAssemblyId>
-					<descriptors>
-						<descriptor>src/assembly/descriptor.xml</descriptor>
-					</descriptors>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 	
 	<dependencies>
 		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
-			<artifactId>granite-pipeline-stages-stream</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
-			<artifactId>granite-pipeline-stages-parsing</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
-			<artifactId>granite-pipeline-stages-processing</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
-			<artifactId>granite-pipeline-stages-routing</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
-			<artifactId>granite-pipeline-stages-event</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.thefirstlineofcode.granite.framework.adf</groupId>
 			<artifactId>granite-framework-adf-spring</artifactId>
 		</dependency>
-		
 	</dependencies>
 	
 </project>
