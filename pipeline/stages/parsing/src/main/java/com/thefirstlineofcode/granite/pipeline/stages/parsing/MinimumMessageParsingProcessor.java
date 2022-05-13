@@ -47,6 +47,7 @@ import com.thefirstlineofcode.granite.framework.core.utils.CommonUtils;
 public class MinimumMessageParsingProcessor implements IMessageProcessor, IInitializable,
 		IConfigurationAware, IServerConfigurationAware, IApplicationComponentServiceAware {
 	private static final String CONFIGURATION_KEY_STANZA_ERROR_ATTACH_SENDER_MESSAGE = "stanza.error.attach.sender.message";
+	private static final char CHAR_HEART_BEAT = ' ';
 	
 	private static final Logger logger = LoggerFactory.getLogger(MinimumMessageParsingProcessor.class);
 	
@@ -157,6 +158,10 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 		
 		if (logger.isDebugEnabled())
 			logger.debug("Begin to parse the XMPP message. Session JID: '{}'. XMPP message: '{}'.", context.getJid(), msg);
+		
+		// Do nothing. We just need the program runs to here to touch the session.
+		if (isHeartbeats(msg))
+			return;
 		
 		for (IPipesPreprocessor preprocessor : pipesPreprocessors) {
 			String preprocessedMsg = preprocessor.beforeParsing(msg);
@@ -329,5 +334,13 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 	public void setApplicationComponentService(IApplicationComponentService appComponentService) {
 		this.appComponentService = appComponentService;
 	}
-
+	
+	private boolean isHeartbeats(String message) {
+		for (char c : message.toCharArray()) {
+			if (!(CHAR_HEART_BEAT == c))
+				return false;
+		}
+		
+		return true;
+	}
 }

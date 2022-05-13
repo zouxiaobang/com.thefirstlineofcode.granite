@@ -9,7 +9,7 @@ import com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack.config
 public class AbilityEventConfigurator implements IPackConfigurator {
 
 	@Override
-	public void configure(IPackContext context, DeployPlan configuration) {
+	public void configure(IPackContext context, DeployPlan deployPlan) {
 		IConfig config = context.getConfigManager().createOrGetConfig(context.getConfigurationDir(),
 				ConfigFiles.GRANITE_COMPONENT_BINDING_CONFIG_FILE);
 		configureEventService(config);
@@ -24,9 +24,13 @@ public class AbilityEventConfigurator implements IPackConfigurator {
 	}
 
 	private void configureRoutingService(IConfig config) {
-		config.addPropertyIfAbsent("routing.service$processing.message.receiver", "cluster.any.2.routing.message.receiver");
+		config.addPropertyIfAbsent("routing.service$routing.message.receiver", "cluster.any.2.routing.message.receiver");
 		config.addPropertyIfAbsent("cluster.any.2.routing.message.receiver$session.manager", "cluster.session.manager");
 		config.addPropertyIfAbsent("cluster.any.2.routing.message.receiver$message.channel", "cluster.routing.2.stream.message.channel");
+		config.addPropertyIfAbsent("cluster.any.2.routing.message.receiver$message.processor", "default.routing.processor");
+		config.addPropertyIfAbsent("cluster.routing.2.stream.message.channel$node.runtime.configuration", "cluster.node.runtime.configuration");
+		config.addPropertyIfAbsent("cluster.routing.2.stream.message.channel$router", "cluster.router");
+		config.addPropertyIfAbsent("cluster.router$session.manager", "cluster.session.manager");
 		config.addPropertyIfAbsent("cluster.any.2.routing.message.receiver$message.processor", "default.routing.processor");
 	}
 

@@ -57,7 +57,7 @@ public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
 	}
 
 	@Override
-	public void pack(String nodeType, String runtimeName, DeployPlan configuration) {
+	public void pack(String nodeType, String runtimeName, DeployPlan deployPlan) {
 		File runtimeZip = new File(new File(options.getAppnodeRuntimesDir()), runtimeName + ".zip");
 		if (runtimeZip.exists()) {
 			if (!options.isRepack()) {
@@ -76,7 +76,7 @@ public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
 		File packTmpDir = new File(options.getAppnodeRuntimesDir(), DIRECTORY_NAME_PACK_TMP);
 		
 		try {
-			doPack(nodeType, runtimeName, configuration, new File(options.getAppnodeRuntimesDir()), packTmpDir);
+			doPack(nodeType, runtimeName, deployPlan, new File(options.getAppnodeRuntimesDir()), packTmpDir);
 		} catch (IOException e) {
 			throw new RuntimeException(String.format("Can't pack appnode runtime %s.", runtimeName), e);
 		} finally {
@@ -87,7 +87,7 @@ public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
 		}
 	}
 
-	private void doPack(String nodeType, String runtimeName, DeployPlan configuration,
+	private void doPack(String nodeType, String runtimeName, DeployPlan deployPlan,
 			File runtimesDir, File packTmpDir) throws IOException {
 		if (!isPackModulesLoaded()) {
 			logger.debug("Ready to load pack modules.");
@@ -108,14 +108,14 @@ public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
 				new File(options.getConfigurationDir()).toPath(),
 				new File(options.getConfigurationDir(), DIRECTORY_NAME_CLUSTER).toPath(),
 				new File(options.getRepositoryDir()).toPath(),
-				runtimeTmpDirPath, libsDirPath, pluginsDirPath, packModules, nodeType, configuration);
-		NodeType node = configuration.getNodeTypes().get(nodeType);
+				runtimeTmpDirPath, libsDirPath, pluginsDirPath, packModules, nodeType, deployPlan);
+		NodeType node = deployPlan.getNodeTypes().get(nodeType);
 		
 		logger.debug("Packing node {}.", nodeType);
 		
 		copyGraniteServerJar(new File(options.getRepositoryDir()), runtimeTmpDirPath);
-		copyPackModules(context, node, configuration);
-		configure(context, node, configuration);
+		copyPackModules(context, node, deployPlan);
+		configure(context, node, deployPlan);
 		
 		zipRuntime(packTmpDir, runtimesDir, runtimeName);
 	}
@@ -124,7 +124,7 @@ public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
 		for (File file : repoistoryDir.listFiles()) {
 			if (file.getName().startsWith(NAME_PREFIX_GRANITE_SERVER)) {
 				try {
-					Files.copy(file.toPath(), runtimeTmpDirPath, StandardCopyOption.COPY_ATTRIBUTES,
+					Files.copy(file.toPath(), new File(runtimeTmpDirPath.toFile(), file.getName()).toPath(), StandardCopyOption.COPY_ATTRIBUTES,
 							StandardCopyOption.REPLACE_EXISTING);
 					return;
 				} catch (IOException e) {
@@ -161,21 +161,21 @@ public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
 		}
 	}
 
-	private void configure(IPackContext context, NodeType node, DeployPlan configuration) {
+	private void configure(IPackContext context, NodeType node, DeployPlan deployPlan) {
 		for (String abilityName : node.getAbilities()) {
 			IPackModule module = packModules.get(NAME_PREFIX_ABILITY_MODULE + abilityName);
-			module.configure(context, configuration);
+			module.configure(context, deployPlan);
 		}
 		
 		for (String protocolName : node.getProtocols()) {
 			IPackModule module = packModules.get(NAME_PREFIX_PROTOCOL_MODULE + protocolName);
-			module.configure(context, configuration);
+			module.configure(context, deployPlan);
 		}
 		
 		context.getConfigManager().saveConfigs();
 	}
 
-	private void copyPackModules(IPackContext context, NodeType node, DeployPlan configuration) {
+	private void copyPackModules(IPackContext context, NodeType node, DeployPlan deployPlan) {
 		for (String abilityName : node.getAbilities()) {
 			logger.info("Copying ability[{}] libraries...", abilityName);
 			IPackModule module = packModules.get(NAME_PREFIX_ABILITY_MODULE + abilityName);
@@ -194,9 +194,9 @@ public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
 	private IPackContext createContext(Path configDir, Path clusterConfigurationDir,
 			Path repositoryDirPath, Path runtimeDirPath, Path libsDirPath, Path pluginsDirPath,
 			Map<String, IPackModule> packModules, String nodeType,
-					DeployPlan configuration) {
+					DeployPlan deployPlan) {
 		return new PackContext(configDir, clusterConfigurationDir, repositoryDirPath, runtimeDirPath,
-				libsDirPath, pluginsDirPath, packModules, nodeType, configuration);
+				libsDirPath, pluginsDirPath, packModules, nodeType, deployPlan);
 	}
 	
 	private void loadPackModules() {

@@ -17,36 +17,8 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.ignite</groupId>
-			<artifactId>ignite-core</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.thefirstlineofcode.granite</groupId>
 			<artifactId>granite-server</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
-			<artifactId>granite-pipeline-stages-parsing</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
-			<artifactId>granite-pipeline-stages-processing</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
-			<artifactId>granite-pipeline-stages-event</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
-			<artifactId>granite-pipeline-stages-routing</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.thefirstlineofcode.granite.xeps</groupId>
@@ -59,10 +31,6 @@
 		<dependency>
 			<groupId>com.thefirstlineofcode.granite.cluster</groupId>
 			<artifactId>granite-cluster-pipeline</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.thefirstlineofcode.granite.cluster</groupId>
-			<artifactId>granite-cluster-dba</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.thefirstlineofcode.granite.cluster</groupId>

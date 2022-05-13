@@ -7,18 +7,18 @@ import com.thefirstlineofcode.granite.framework.core.pipeline.IMessageReceiver;
 
 @Component("routing.service")
 public class RoutingService implements IService {
-	@Dependency("any.message.receiver")
-	private IMessageReceiver anyMessageReceiver;
+	@Dependency("routing.message.receiver")
+	private IMessageReceiver routingMessageReceiver;
 	
 	@Override
 	public void start() throws Exception {
-		if (anyMessageReceiver != null)
-			anyMessageReceiver.start();
+		if (routingMessageReceiver != null)
+			routingMessageReceiver.start();
 	}
 
 	@Override
 	public void stop() throws Exception {
-		if (anyMessageReceiver != null)
-			anyMessageReceiver.stop();
+		if (routingMessageReceiver != null)
+			routingMessageReceiver.stop();
 	}
 }

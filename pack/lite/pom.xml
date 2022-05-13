@@ -17,7 +17,7 @@
 	<name>Granite deploy lite packer</name>
 	
 	<dependencies>
-		<!-- System Libraries -->
+		<!-- Granite Server -->
 		<dependency>
 			<groupId>com.thefirstlineofcode.granite</groupId>
 			<artifactId>granite-server</artifactId>

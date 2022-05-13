@@ -27,12 +27,12 @@ public class AbilityStreamConfigurator implements IPackConfigurator {
 	}
 
 	protected void configureParsingService(IConfig config) {
-		config.addOrUpdateProperty("parsing.service$stream.message.receiver", "cluster.stream.2.parsing.message.receiver");
+		config.addOrUpdateProperty("parsing.service$parsing.message.receiver", "cluster.stream.2.parsing.message.receiver");
 		config.addOrUpdateProperty("cluster.stream.2.parsing.message.receiver$session.manager", "cluster.session.manager");
 		config.addOrUpdateProperty("cluster.stream.2.parsing.message.receiver$message.channel", "cluster.parsing.2.processing.message.channel");
 		config.addOrUpdateProperty("cluster.stream.2.parsing.message.receiver$message.processor", "default.message.parsing.processor");
 		config.addOrUpdateProperty("cluster.session.manager$ignite", "cluster.ignite");
-		config.addOrUpdateProperty("cluster.parsing.2.processing.message.channel$runtime.configuration", "cluster.runtime.configuration");
+		config.addOrUpdateProperty("cluster.parsing.2.processing.message.channel$node.runtime.configuration", "cluster.node.runtime.configuration");
 	}
 
 	private void configureStandardStreamService(IPackContext context, DeployPlan configuration, IConfig config) {
@@ -106,10 +106,6 @@ public class AbilityStreamConfigurator implements IPackConfigurator {
 	}
 
 	private void configureStandardStreamServiceComponents(IConfig config) {
-		config.addOrUpdateProperty("stream.service$delivery.message.receiver", "cluster.routing.2.stream.message.receiver");
-		config.addOrUpdateProperty("cluster.routing.2.stream.message.receiver$ignite", "cluster.ignite");
-		config.addOrUpdateProperty("cluster.routing.2.stream.message.receiver$local.node.id.provider", "cluster.local.node.id.provider");
-		config.addOrUpdateProperty("cluster.routing.2.stream.message.receiver$message.processor", "default.delivery.message.processor");
 		config.addOrUpdateProperty("stream.service$client.message.receivers", "socket.message.receiver");
 		config.addOrUpdateProperty("socket.message.receiver$session.manager", "cluster.session.manager");
 		config.addOrUpdateProperty("socket.message.receiver$message.processor", "standard.client.message.processor");
@@ -124,6 +120,11 @@ public class AbilityStreamConfigurator implements IPackConfigurator {
 		config.addOrUpdateProperty("standard.client.message.processor$router", "cluster.router");
 		config.addOrUpdateProperty("cluster.router$ignite", "cluster.ignite");
 		config.addOrUpdateProperty("cluster.router$session.manager", "cluster.session.manager");
+		
+		config.addOrUpdateProperty("stream.service$delivery.message.receiver", "cluster.routing.2.stream.message.receiver");
+		config.addOrUpdateProperty("cluster.routing.2.stream.message.receiver$ignite", "cluster.ignite");
+		config.addOrUpdateProperty("cluster.routing.2.stream.message.receiver$local.node.id.provider", "cluster.local.node.id.provider");
+		config.addOrUpdateProperty("cluster.routing.2.stream.message.receiver$message.processor", "default.delivery.message.processor");
 	}
 
 }

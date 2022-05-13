@@ -20,8 +20,8 @@ public class FrameworkCoreConfigurator implements IPackConfigurator {
 
 	private void configureGlobalFeatureParams(IPackContext context) {
 		IConfig config = context.getConfigManager().createOrGetConfig(context.getConfigurationDir(), ConfigFiles.GRANITE_COMPONENTS_CONFIG_FILE);
-		Properties globalParams = context.getDeployConfiguration().getNodeTypes().get(
-				context.getNodeType()).getConfiguration("*");
+		Properties globalParams = context.getDeployPlan().getNodeTypes().get(
+				context.getNodeType()).getConfiguration("global");
 		
 		String sessionCallbackCheckInterval = globalParams.getProperty("session-callback-check-interval");
 		if (sessionCallbackCheckInterval != null) {
@@ -45,9 +45,9 @@ public class FrameworkCoreConfigurator implements IPackConfigurator {
 		IConfig config = context.getConfigManager().createOrGetConfig(context.getConfigurationDir(), ConfigFiles.GRANITE_SERVER_CONFIG_FILE);
 		
 		config.addComment("Change domain.name and domain.alias.names to your registered doman names.");
-		config.addOrUpdateProperty("domain.name", context.getDeployConfiguration().getCluster().getDomainName());
+		config.addOrUpdateProperty("domain.name", context.getDeployPlan().getCluster().getDomainName());
 		
-		String[] domainAliasNames = context.getDeployConfiguration().getCluster().getDomainAliasNames();
+		String[] domainAliasNames = context.getDeployPlan().getCluster().getDomainAliasNames();
 		if (domainAliasNames != null && domainAliasNames.length != 0) {
 			config.addOrUpdateProperty("domain.alias.names", StringUtils.arrayToString(domainAliasNames));
 		}
@@ -56,7 +56,7 @@ public class FrameworkCoreConfigurator implements IPackConfigurator {
 		
 		config.addComment("You can uncomment the line below to disable some services.\r\ndisabled.services=stream.service");
 		
-		String messageFormat = context.getDeployConfiguration().getGlobal().getMessageFormat();
+		String messageFormat = context.getDeployPlan().getGlobal().getMessageFormat();
 		if (Global.MESSAGE_FORMAT_BINARY.equals(messageFormat)) {
 			config.addOrUpdateProperty("message-format", messageFormat);
 		}

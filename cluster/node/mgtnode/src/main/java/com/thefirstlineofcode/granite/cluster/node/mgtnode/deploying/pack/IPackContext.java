@@ -13,7 +13,7 @@ public interface IPackContext {
 	Path getRuntimeLibsDir();
 	Path getRuntimePluginsDir();
 	String getNodeType();
-	DeployPlan getDeployConfiguration();
+	DeployPlan getDeployPlan();
 	IPackModule getPackModule(String moduleName);
 	IConfigManager getConfigManager();
 }

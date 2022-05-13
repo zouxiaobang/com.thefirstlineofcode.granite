@@ -321,6 +321,7 @@
 				<groupId>com.thefirstlineofcode.granite</groupId>
 				<artifactId>granite-server</artifactId>
 				<version>${granite.version}</version>
+				<optional>true</optional>
 			</dependency>
 
 			<!-- Granite framework libraries -->
@@ -524,7 +525,12 @@
 				<artifactId>granite-cluster-node-mgtnode</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
-			
+			<!-- Granite pack cluster mgtnode project -->
+			<dependency>
+				<groupId>com.thefirstlineofcode.granite.pack</groupId>
+				<artifactId>granite-pack-cluster-mgtnode</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
 			<!-- Sand protocols libraries -->
 			<dependency>
 				<groupId>com.thefirstlineofcode.sand.protocols</groupId>

@@ -10,8 +10,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>	
 	
-	<groupId>com.thefirstlineofcode.granite.server</groupId>
-	<artifactId>granite-server-pack-cluster</artifactId>
+	<groupId>com.thefirstlineofcode.granite</groupId>
+	<artifactId>granite-server</artifactId>
 	<name>Granite Server Pack Cluster Build Script</name>
 	
 	<properties>
@@ -57,6 +57,34 @@
 		<dependency>
 			<groupId>com.thefirstlineofcode.granite.framework.adf</groupId>
 			<artifactId>granite-framework-adf-spring</artifactId>
+		</dependency>
+		<dependency>
+				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<artifactId>granite-pipeline-stages-stream</artifactId>
+		</dependency>
+		<dependency>
+				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<artifactId>granite-pipeline-stages-parsing</artifactId>
+		</dependency>
+		<dependency>
+				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<artifactId>granite-pipeline-stages-processing</artifactId>
+		</dependency>
+		<dependency>
+				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<artifactId>granite-pipeline-stages-routing</artifactId>
+		</dependency>
+		<dependency>
+				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<artifactId>granite-pipeline-stages-event</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongodb-driver-sync</artifactId>
+		</dependency>
+		<dependency>
+				<groupId>com.thefirstlineofcode.sand.protocols</groupId>
+				<artifactId>sand-protocols-core</artifactId>
 		</dependency>
 	</dependencies>
 	

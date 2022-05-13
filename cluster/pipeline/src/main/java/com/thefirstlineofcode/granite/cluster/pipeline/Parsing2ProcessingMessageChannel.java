@@ -12,10 +12,11 @@ import com.thefirstlineofcode.granite.framework.core.repository.IInitializable;
 public class Parsing2ProcessingMessageChannel implements IMessageChannel, IInitializable {
 	@Dependency(Constants.COMPONENT_ID_PARSING_2_PROCESSING_MESSAGE_CONNECTOR)
 	private IMessageConnector connector;
-	private boolean hasProcessingAbility;
 	
-	@Dependency(Constants.COMPONENT_ID_NODE_RUNTIME_CONFIGURATION)
+	@Dependency(Constants.DEPENDENCY_ID_NODE_RUNTIME_CONFIGURATION)
 	private NodeRuntimeConfiguration nodeRuntimeConfiguration;
+	
+	private boolean hasProcessingAbility;
 
 	@Override
 	public void send(IMessage message) {

@@ -13,12 +13,12 @@ public class AppDbaConfigurator implements IPackConfigurator {
 	private static final String FILE_NAME_DB_INI = "db.ini";
 
 	@Override
-	public void configure(IPackContext context, DeployPlan configuration) {
+	public void configure(IPackContext context, DeployPlan deployPlan) {
 		IConfig dbConfig = context.getConfigManager().createOrGetConfig(context.getClusterConfigurationDir(), FILE_NAME_DB_INI);
-		dbConfig.addOrUpdateProperty("addresses", getDbAddressesString(configuration.getDb().getAddresses()));
-		dbConfig.addOrUpdateProperty("db.name", configuration.getDb().getDbName());
-		dbConfig.addOrUpdateProperty("user.name", configuration.getDb().getUserName());
-		dbConfig.addOrUpdateProperty("password", new String(configuration.getDb().getPassword()));
+		dbConfig.addOrUpdateProperty("addresses", getDbAddressesString(deployPlan.getDb().getAddresses()));
+		dbConfig.addOrUpdateProperty("db.name", deployPlan.getDb().getDbName());
+		dbConfig.addOrUpdateProperty("user.name", deployPlan.getDb().getUserName());
+		dbConfig.addOrUpdateProperty("password", new String(deployPlan.getDb().getPassword()));
 	}
 
 	private String getDbAddressesString(List<DbAddress> addresses) {

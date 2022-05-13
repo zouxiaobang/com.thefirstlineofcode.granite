@@ -15,6 +15,8 @@ public class Packer {
 	}
 	
 	public void pack() {
+		rebuildGraniteServer();
+		
 		File dependenciesDir = new File(options.getTargetDirPath(), "dependencies");
 		refreshAppnodeDependencies(dependenciesDir);
 		
@@ -98,6 +100,10 @@ public class Packer {
 			repositoryDir.mkdirs();
 		}
 		
+		copyDependenciesToRepository(repositoryDir);
+	}
+
+	private void copyDependenciesToRepository(File repositoryDir) {
 		File dependenciesDir = new File(options.getTargetDirPath(), "dependencies");
 		for (File dependency : dependenciesDir.listFiles()) {
 			try {
@@ -107,6 +113,14 @@ public class Packer {
 				throw new RuntimeException("Can't copy a dependency to repository.", e);
 			}
 		}
+	}
+
+	private void rebuildGraniteServer() {
+		File serverDir = new File(options.getGraniteProjectDirPath(), "server");
+		if (!serverDir.exists() || !serverDir.isDirectory())
+			throw new RuntimeException("Can't determine granite server directory.");
+		
+		Main.runMvn(serverDir, "clean", "install");
 	}
 
 	private File copyMgtnodeArtifact() {

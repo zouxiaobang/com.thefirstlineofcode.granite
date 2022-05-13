@@ -32,7 +32,7 @@ public class DeployClusterComponentsRegistrar implements IRepositoryAware, Appli
 		repository.registerSingleton(Constants.COMPONENT_ID_IGNITE, ignite);
 		
 		DeployPlan deployPlan = readDeployPlan();
-		repository.registerSingleton(Constants.COMPONENT_ID_NODE_RUNTIME_CONFIGURATION,
+		repository.registerSingleton(Constants.COMPONENT_ID_CLUSTER_NODE_RUNTIME_CONFIGURATION,
 				new NodeRuntimeConfiguration(System.getProperty(PROPERTY_KEY_NODE_TYPE), deployPlan));
 	}
 	

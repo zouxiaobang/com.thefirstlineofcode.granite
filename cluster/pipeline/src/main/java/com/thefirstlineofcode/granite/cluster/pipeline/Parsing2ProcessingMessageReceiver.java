@@ -23,7 +23,7 @@ public class Parsing2ProcessingMessageReceiver extends LocalMessageConnector imp
 	private static final String CONFIGURATION_KEY_PARSING_2_PROCESSING_MESSAGE_QUEUE_MAX_SIZE = "parsing.2.processing.message.queue.max.size";
 	private static final int DEFAULT_MESSAGE_QUEUE_MAX_SIZE = 1024 * 64;
 	
-	@Dependency(Constants.COMPONENT_ID_NODE_RUNTIME_CONFIGURATION)
+	@Dependency(Constants.DEPENDENCY_ID_NODE_RUNTIME_CONFIGURATION)
 	private NodeRuntimeConfiguration nodeRuntimeConfiguration;
 	
 	@Override

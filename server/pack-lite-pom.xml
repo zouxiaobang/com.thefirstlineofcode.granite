@@ -10,8 +10,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>	
 	
-	<groupId>com.thefirstlineofcode.granite.server</groupId>
-	<artifactId>granite-server-pack-lite</artifactId>
+	<groupId>com.thefirstlineofcode.granite</groupId>
+	<artifactId>granite-server</artifactId>
 	<name>Granite Server Pack Lite Project</name>
 	
 	<properties>

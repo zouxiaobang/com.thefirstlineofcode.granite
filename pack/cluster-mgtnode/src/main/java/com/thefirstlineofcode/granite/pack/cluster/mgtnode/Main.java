@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class Main {
 	private static final String DEFAULT_VERSION = "0.2.1.RELEASE";
-	private static final String NAME_PREFIX_APP = "granite-cluster-mgtnode-";
+	private static final String NAME_PREFIX_APP = "granite-cluster-node-mgtnode-";
 	
 	public static void main(String[] args) {
 		Main main = new Main();

@@ -16,13 +16,13 @@ public class PackContext implements IPackContext {
 	private Path pluginsDirPath;
 	private Map<String, IPackModule> packModules;
 	private String nodeType;
-	private DeployPlan configuration;
+	private DeployPlan deployPlan;
 	private IConfigManager configManager;
 	
 	public PackContext(Path configurationDir, Path clusterConfigurationDir, Path repositoryDirPath,
 			Path runtimeDirPath, Path libsDirPath, Path pluginsDirPath,
 			Map<String, IPackModule> packModules, String nodeType,
-			DeployPlan configuration) {
+			DeployPlan deployPlan) {
 		this.configurationDir = configurationDir;
 		this.clusterConfigurationDir = clusterConfigurationDir;
 		this.repositoryDirPath = repositoryDirPath;
@@ -31,7 +31,7 @@ public class PackContext implements IPackContext {
 		this.pluginsDirPath = pluginsDirPath;
 		this.packModules = packModules;
 		this.nodeType = nodeType;
-		this.configuration = configuration;
+		this.deployPlan = deployPlan;
 		
 		configManager = new ConfigManager();
 	}
@@ -62,8 +62,8 @@ public class PackContext implements IPackContext {
 	}
 	
 	@Override
-	public DeployPlan getDeployConfiguration() {
-		return configuration;
+	public DeployPlan getDeployPlan() {
+		return deployPlan;
 	}
 
 	@Override

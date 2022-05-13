@@ -77,6 +77,7 @@ public class MessageDecoder extends CumulativeProtocolDecoder {
 						logger.trace("Heartbeats decoded: '{}'. Server will write a heartbeat response to client.", message);
 					
 					writeHeartbeatToClient(session);
+					out.write(message);
 				} else {
 					if (logger.isTraceEnabled())
 						logger.trace("Message decoded: '{}'.", message);

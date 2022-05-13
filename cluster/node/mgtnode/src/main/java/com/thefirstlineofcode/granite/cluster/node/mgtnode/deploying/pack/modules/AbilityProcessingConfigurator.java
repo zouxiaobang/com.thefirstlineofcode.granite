@@ -9,7 +9,7 @@ import com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack.config
 public class AbilityProcessingConfigurator implements IPackConfigurator {
 
 	@Override
-	public void configure(IPackContext context, DeployPlan configuration) {
+	public void configure(IPackContext context, DeployPlan deployPlan) {
 		IConfig config = context.getConfigManager().createOrGetConfig(context.getConfigurationDir(),
 				ConfigFiles.GRANITE_COMPONENT_BINDING_CONFIG_FILE);
 		configureProcessingService(config);
@@ -17,7 +17,7 @@ public class AbilityProcessingConfigurator implements IPackConfigurator {
 	}
 
 	private void configureProcessingService(IConfig config) {
-		config.addOrUpdateProperty("processing.service$parsing.message.receiver", "cluster.parsing.2.processing.message.receiver");
+		config.addOrUpdateProperty("processing.service$processing.message.receiver", "cluster.parsing.2.processing.message.receiver");
 		config.addOrUpdateProperty("cluster.parsing.2.processing.message.receiver$runtime.configuration", "cluster.runtime.configuration");
 		config.addOrUpdateProperty("cluster.parsing.2.processing.message.receiver$session.manager", "cluster.session.manager");
 		config.addOrUpdateProperty("cluster.parsing.2.processing.message.receiver$message.channel", "cluster.any.2.routing.message.channel");
@@ -33,13 +33,13 @@ public class AbilityProcessingConfigurator implements IPackConfigurator {
 	}
 
 	private void configureRoutingService(IConfig config) {
-		config.addOrUpdateProperty("routing.service$processing.message.receiver", "cluster.any.2.routing.message.receiver");
-		config.addOrUpdateProperty("cluster.any.2.routing.message.receiver$session.manager", "cluster.session.manager");
-		config.addOrUpdateProperty("cluster.any.2.routing.message.receiver$message.channel", "cluster.routing.2.stream.message.channel");
-		config.addOrUpdateProperty("cluster.routing.2.stream.message.channel$runtime.configuration", "cluster.runtime.configuration");
-		config.addOrUpdateProperty("cluster.routing.2.stream.message.channel$router", "cluster.router");
-		config.addOrUpdateProperty("cluster.router$session.manager", "cluster.session.manager");
-		config.addOrUpdateProperty("cluster.any.2.routing.message.receiver$message.processor", "default.routing.processor");
+		config.addPropertyIfAbsent("routing.service$routing.message.receiver", "cluster.any.2.routing.message.receiver");
+		config.addPropertyIfAbsent("cluster.any.2.routing.message.receiver$session.manager", "cluster.session.manager");
+		config.addPropertyIfAbsent("cluster.any.2.routing.message.receiver$message.channel", "cluster.routing.2.stream.message.channel");
+		config.addPropertyIfAbsent("cluster.routing.2.stream.message.channel$node.runtime.configuration", "cluster.node.runtime.configuration");
+		config.addPropertyIfAbsent("cluster.routing.2.stream.message.channel$router", "cluster.router");
+		config.addPropertyIfAbsent("cluster.router$session.manager", "cluster.session.manager");
+		config.addPropertyIfAbsent("cluster.any.2.routing.message.receiver$message.processor", "default.routing.processor");
 	}
 
 }

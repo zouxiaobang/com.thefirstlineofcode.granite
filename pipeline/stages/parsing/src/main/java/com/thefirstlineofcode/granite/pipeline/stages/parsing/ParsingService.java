@@ -8,7 +8,7 @@ import com.thefirstlineofcode.granite.framework.core.pipeline.IMessageReceiver;
 @Component("parsing.service")
 public class ParsingService implements IService {
 	
-	@Dependency("stream.message.receiver")
+	@Dependency("parsing.message.receiver")
 	private IMessageReceiver parsingMessageReceiver;
 
 	@Override

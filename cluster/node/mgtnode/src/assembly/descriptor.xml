@@ -13,7 +13,7 @@
 				<include>README*</include>
 				<include>LICENSE*</include>
 				<include>NOTICE*</include>
-				<include>config/*</include>
+				<include>configuration/*</include>
 			</includes>
 		</fileSet>
 		<fileSet>
@@ -30,7 +30,7 @@
 	</fileSets>
 	<dependencySets>
 		<dependencySet>
-			<outputDirectory>/lib</outputDirectory>
+			<outputDirectory>/libs</outputDirectory>
 			<useProjectArtifact>true</useProjectArtifact>
 			<unpack>false</unpack>
 			<scope>runtime</scope>
