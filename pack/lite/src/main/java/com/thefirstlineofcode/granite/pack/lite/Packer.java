@@ -157,7 +157,7 @@ public class Packer {
 			throw new RuntimeException("Can't determine granite server directory.");
 		
 		File serverTargetDir = new File(serverDir, "target");
-		Main.runMvn(serverDir, options.isOffline(), "-fpack-lite-pom.xml", "clean", "package");
+		PackUtils.runMvn(serverDir, options.isOffline(), "-fpack-lite-pom.xml", "clean", "package");
 		
 		if (!serverTargetDir.exists() || !serverTargetDir.isDirectory()) {
 			throw new RuntimeException("Can't determine target directory of Granite Server project.");
@@ -196,13 +196,13 @@ public class Packer {
 	
 	private void copyDependencies() {
 		if (options.getProtocol() == Options.Protocol.STANDARD) {
-			Main.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fstandard-pom.xml", "dependency:copy-dependencies");
+			PackUtils.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fstandard-pom.xml", "dependency:copy-dependencies");
 		} else {
-			Main.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fsand-pom.xml", "dependency:copy-dependencies");			
+			PackUtils.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fsand-pom.xml", "dependency:copy-dependencies");			
 		}
 		
 		if (options.isCommerical()) {
-			Main.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fgem-pom.xml", "dependency:copy-dependencies");
+			PackUtils.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-fgem-pom.xml", "dependency:copy-dependencies");
 		}
 	}
 

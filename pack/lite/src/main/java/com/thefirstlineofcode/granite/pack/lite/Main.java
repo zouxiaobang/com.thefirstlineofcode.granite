@@ -1,9 +1,5 @@
 package com.thefirstlineofcode.granite.pack.lite;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.ProcessBuilder.Redirect;
-import java.net.URL;
 import java.util.Arrays;
 
 public class Main {
@@ -141,13 +137,13 @@ public class Main {
 			options.setProtocol(Options.Protocol.STANDARD);
 		}
 		
-		options.setTargetDirPath(getTargetDirPath());
-		options.setProjectDirPath(getProjectDirPath(options.getTargetDirPath()));
-		options.setGraniteProjectDirPath(getGraniteProjectDirPath(options.getProjectDirPath()));
+		options.setTargetDirPath(PackUtils.getTargetDirPath(this));
+		options.setProjectDirPath(PackUtils.getProjectDirPath(options.getTargetDirPath()));
+		options.setGraniteProjectDirPath(PackUtils.getGraniteProjectDirPath(options.getProjectDirPath()));
 		if (options.getSandProjectName() == null) {
 			options.setSandProjectName(DEFAULT_SAND_PROJECT_NAME);
 		}
-		options.setSandProjectDirPath(getSandProjectDirPath(options.getProjectDirPath(), options.getSandProjectName()));
+		options.setSandProjectDirPath(PackUtils.getSandProjectDirPath(options.getProjectDirPath(), options.getSandProjectName()));
 		
 		return options;
 	}
@@ -165,88 +161,4 @@ public class Main {
 		System.out.println("-protocol <PROTOCOL>                   Specify the protocol. Optional protocols are 'standard', 'iot', 'leps' or 'sand'. Default is 'standard').");
 		System.out.println("-sandProjectName <SAND-PROJECT-NAME>   Specify the sand project name. Default is 'com.thefirstlineofcode.sand'.");
 	}
-
-	private String getTargetDirPath() {
-		URL classPathRoot = this.getClass().getResource("");
-		
-		if (classPathRoot.getPath().indexOf("!") != -1) {
-			int colonIndex =  classPathRoot.getFile().indexOf('!');
-			String jarPath =  classPathRoot.getPath().substring(0, colonIndex);
-			
-			int lastSlashIndex = jarPath.lastIndexOf('/');
-			String jarParentDirPath = jarPath.substring(5, lastSlashIndex);
-			
-			return jarParentDirPath;
-		} else {
-			int classesIndex = classPathRoot.getPath().lastIndexOf("/classes");	
-			return classPathRoot.getPath().substring(0, classesIndex);
-		}
-	}
-	
-	private String getGraniteProjectDirPath(String projectDirPath) {
-		return new File(projectDirPath).getParentFile().getParentFile().getPath();
-	}
-	
-	private String getSandProjectDirPath(String projectDirPath, String sandProjectName) {
-		File lithosphereDir = new File(projectDirPath).getParentFile().getParentFile().getParentFile();
-		
-		File sandProjectDir = new File(lithosphereDir, sandProjectName);
-		if (sandProjectDir.exists()) {
-			return sandProjectDir.getPath();
-		}
-		
-		return null;
-	}
-	
-	private String getProjectDirPath(String targetDirPath) {
-		return new File(targetDirPath).getParentFile().getPath();
-	}
-	
-	public static void runMvn(File workingDir, boolean offline, String... args) {
-		if (args == null || args.length == 0) {
-			throw new IllegalArgumentException("Null mvn args.");
-		}
-		
-		String[] cmdArray;
-		if (offline) {
-			cmdArray = new String[args.length + 2];			
-			
-			cmdArray[0] = getMvnCmd();
-			cmdArray[1] = "-o";
-			for (int i = 0; i < args.length; i++) {
-				cmdArray[i + 2] = args[i];
-			}
-		} else {
-			cmdArray = new String[args.length + 1];
-			
-			cmdArray[0] = getMvnCmd();
-			for (int i = 0; i < args.length; i++) {
-				cmdArray[i + 1] = args[i];
-			}
-		}
-		
-		try {
-			Process process = new ProcessBuilder(cmdArray).
-						redirectError(Redirect.INHERIT).
-						redirectOutput(Redirect.INHERIT).
-						directory(workingDir).
-						start();
-			
-			process.waitFor();
-		} catch (IOException e) {
-			throw new RuntimeException("Can't execute maven.", e);
-		} catch (InterruptedException e) {
-			throw new RuntimeException("Maven execution error.", e);
-		}
-	}
-	
-	private static String getMvnCmd() {
-		String osName = System.getProperty("os.name");
-		if (osName.contains("Windows")) {
-			return "mvn.cmd";
-		}
-		
-		return "mvn";
-	}
-	
 }

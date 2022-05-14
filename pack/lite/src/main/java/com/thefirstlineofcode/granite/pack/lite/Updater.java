@@ -88,9 +88,9 @@ public class Updater {
 		
 		LibraryInfo libraryInfo = libraryInfos.get(library);
 		if (clean) {
-			Main.runMvn(new File(libraryInfo.developmentDir), options.isOffline(), "clean", "install");
+			PackUtils.runMvn(new File(libraryInfo.developmentDir), options.isOffline(), "clean", "install");
 		} else {
-			Main.runMvn(new File(libraryInfo.developmentDir), options.isOffline(), "install");
+			PackUtils.runMvn(new File(libraryInfo.developmentDir), options.isOffline(), "install");
 		}
 		
 		updateLibrary(libraryInfo);
@@ -145,9 +145,9 @@ public class Updater {
 		}
 		
 		if (clean) {
-			Main.runMvn(subsystemProjectDir, options.isOffline(), "clean", "package");
+			PackUtils.runMvn(subsystemProjectDir, options.isOffline(), "clean", "package");
 		} else {
-			Main.runMvn(subsystemProjectDir, options.isOffline(), "package");
+			PackUtils.runMvn(subsystemProjectDir, options.isOffline(), "package");
 		}
 		
 		String[] libraries = subsystems.get(subsystem);
@@ -430,7 +430,7 @@ public class Updater {
 			StringTokenizer st = new StringTokenizer(libraryName, "-");
 			int count = st.countTokens();
 			if (count < 2) {
-				throw new RuntimeException("This is an invalid granite library. Library name: " + libraryName);
+				throw new RuntimeException("It's an invalid lithosphere library. Library name: " + libraryName);
 			}
 			
 			// First token is system name. It's "granite" or "sand".
@@ -441,20 +441,16 @@ public class Updater {
 			}
 			
 			String developmentDir = null;
-			int firstDashIndex = libraryName.indexOf('-');
 			if (isGraniteLibrary(libraryName)) {
-				developmentDir = String.format("%s%s", graniteProjectPath, libraryName.substring(firstDashIndex).replace('-', '/'));
+				developmentDir = PackUtils.getDevelopmentDir(graniteProjectPath, libraryName);
 			} else if (isSandLibrary(libraryName)) {
 				if (options.getSandProjectDirPath() == null)
 					throw new RuntimeException("Can't determine sand project root directoy.");
 				
-				developmentDir = sandProjectPath + libraryName.substring(firstDashIndex).replace('-', '/');
+				developmentDir = PackUtils.getDevelopmentDir(sandProjectPath, libraryName);
 			} else {
 				throw new RuntimeException(String.format("Illegal granite library. %s isn't a system library or a plugin library.", libraryName));
 			}
-			
-			if (!isLibraryDevProjectDir(new File((developmentDir))))
-				throw new RuntimeException(String.format("%s isn't a library development project directory.", developmentDir));
 			
 			libraryInfo.developmentDir = developmentDir;
 			libraryInfos.put(libraryName, libraryInfo);
@@ -478,33 +474,7 @@ public class Updater {
 			}
 		});
 	}
-
-	private boolean isLibraryDevProjectDir(File dir) {
-		if (!dir.exists())
-			return false;
-		
-		if (!dir.isDirectory())
-			return false;
-		
-		boolean pomFound = false;
-		boolean srcFound = false;
-		for (File file : dir.listFiles()) {
-			if (file.getName().equals("src") && file.isDirectory()) {
-				srcFound = true;
-			} else if (file.getName().equals("pom.xml")) {
-				pomFound = true;
-			} else {
-				continue;
-			}
-			
-			if (srcFound && pomFound) {
-				break;
-			}
-		}
-		
-		return srcFound && pomFound;
-	}
-
+	
 	private class LibraryInfo {
 		public String deploymentDir;
 		public String fileName;

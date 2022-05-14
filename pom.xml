@@ -525,7 +525,12 @@
 				<artifactId>granite-cluster-node-mgtnode</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
-			<!-- Granite pack cluster mgtnode project -->
+			<!-- Granite pack projects -->
+			<dependency>
+				<groupId>com.thefirstlineofcode.granite.pack</groupId>
+				<artifactId>granite-pack-commons</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>com.thefirstlineofcode.granite.pack</groupId>
 				<artifactId>granite-pack-cluster-mgtnode</artifactId>

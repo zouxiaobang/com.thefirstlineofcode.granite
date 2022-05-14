@@ -12,6 +12,7 @@ public class Options {
 	private boolean cleanCache;
 	private boolean cleanUpdate;
 	private String[] modules;
+	private boolean offline;
 	private boolean commerical;
 	
 	public Options() {
@@ -19,6 +20,7 @@ public class Options {
 		update = false;
 		cleanCache = false;
 		cleanUpdate = false;
+		offline = false;
 		commerical = false;
 	}
 	
@@ -114,6 +116,14 @@ public class Options {
 		this.cleanCache = cleanCache;
 	}
 	
+	public boolean isOffline() {
+		return offline;
+	}
+
+	public void setOffline(boolean offline) {
+		this.offline = offline;
+	}
+
 	public boolean isCommerical() {
 		return commerical;
 	}

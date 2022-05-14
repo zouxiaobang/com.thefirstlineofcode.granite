@@ -1,9 +1,5 @@
 package com.thefirstlineofcode.granite.pack.cluster.mgtnode;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.ProcessBuilder.Redirect;
-import java.net.URL;
 import java.util.Arrays;
 
 public class Main {
@@ -46,41 +42,6 @@ public class Main {
 				updater.update(false);
 			}
 		}
-	}
-	
-	public static void runMvn(File workingDir, String... args) {
-		if (args == null || args.length == 0) {
-			throw new IllegalArgumentException("Null mvn args.");
-		}
-		
-		String[] cmdArray = new String[args.length + 1];
-		cmdArray[0] = getMvnCmd();
-		for (int i = 0; i < args.length; i++) {
-			cmdArray[i + 1] = args[i];
-		}
-		
-		try {
-			Process process = new ProcessBuilder(cmdArray).
-						redirectError(Redirect.INHERIT).
-						redirectOutput(Redirect.INHERIT).
-						directory(workingDir).
-						start();
-			
-			process.waitFor();
-		} catch (IOException e) {
-			throw new RuntimeException("Can't execute maven.", e);
-		} catch (InterruptedException e) {
-			throw new RuntimeException("Maven execution error.", e);
-		}
-	}
-	
-	private static String getMvnCmd() {
-		String osName = System.getProperty("os.name");
-		if (osName.contains("Windows")) {
-			return "mvn.cmd";
-		}
-		
-		return "mvn";
 	}
 	
 	private Options parseOptions(String[] args) {
@@ -127,6 +88,9 @@ public class Main {
 				
 				options.setRepositoryDirPath(args[i]);
 				i++;
+			} else if ("-offline".equals(args[i])) {
+				options.setOffline(true);
+				i++;
 			} else if ("-commerical".equals(args[i])) {
 				options.setCommerical(true);
 				i++;
@@ -152,36 +116,11 @@ public class Main {
 		
 		options.setAppName(NAME_PREFIX_APP + options.getVersion());
 		
-		options.setTargetDirPath(getTargetDirPath());
-		options.setProjectDirPath(getProjectDirPath(options.getTargetDirPath()));
-		options.setGraniteProjectDirPath(getGraniteProjectDirPath(options.getProjectDirPath()));
+		options.setTargetDirPath(PackUtils.getTargetDirPath(this));
+		options.setProjectDirPath(PackUtils.getProjectDirPath(options.getTargetDirPath()));
+		options.setGraniteProjectDirPath(PackUtils.getGraniteProjectDirPath(options.getProjectDirPath()));
 		
 		return options;
-	}
-	
-	private String getTargetDirPath() {
-		URL classPathRoot = this.getClass().getResource("");
-		
-		if (classPathRoot.getPath().indexOf("!") != -1) {
-			int colonIndex =  classPathRoot.getFile().indexOf('!');
-			String jarPath =  classPathRoot.getPath().substring(0, colonIndex);
-			
-			int lastSlashIndex = jarPath.lastIndexOf('/');
-			String jarParentDirPath = jarPath.substring(5, lastSlashIndex);
-			
-			return jarParentDirPath;
-		} else {
-			int classesIndex = classPathRoot.getPath().lastIndexOf("/classes");	
-			return classPathRoot.getPath().substring(0, classesIndex);
-		}
-	}
-	
-	private String getGraniteProjectDirPath(String projectDirPath) {
-		return new File(projectDirPath).getParentFile().getParentFile().getPath();
-	}
-	
-	private String getProjectDirPath(String targetDirPath) {
-		return new File(targetDirPath).getParentFile().getPath();
 	}
 	
 	private void printUsage() {
@@ -193,6 +132,7 @@ public class Main {
 		System.out.println("-cleanUpdate                     Clean and update specified modules.");
 		System.out.println("-cleanCache                      Clean the packing cache.");
 		System.out.println("-repositoryDir REPOSITORY_DIR    Specify the path of repository directory.");
+		System.out.println("-offline                         Run in offline mode.");
 		System.out.println("-version VERSION                 Specify the version(Default is 0.2.1-RELEASE).");
 	}
 }

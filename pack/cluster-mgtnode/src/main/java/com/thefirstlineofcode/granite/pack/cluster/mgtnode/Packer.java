@@ -120,14 +120,14 @@ public class Packer {
 		if (!serverDir.exists() || !serverDir.isDirectory())
 			throw new RuntimeException("Can't determine granite server directory.");
 		
-		Main.runMvn(serverDir, "clean", "install");
+		PackUtils.runMvn(serverDir, options.isOffline(), "clean", "install");
 	}
 
 	private File copyMgtnodeArtifact() {
 		File deployClusterDir = new File(options.getGraniteProjectDirPath(), "cluster");
 		File nodeProjectDir = new File(deployClusterDir, "node");
 		File mgtnodeProjectDir = new File(nodeProjectDir, "mgtnode");
-		Main.runMvn(mgtnodeProjectDir, "clean", "package");
+		PackUtils.runMvn(mgtnodeProjectDir, options.isOffline(), "clean", "package");
 		
 		File mgtnodeProjectTargetDir = new File(mgtnodeProjectDir, "target");
 		File mgtnodeArtifactSourceFile = new File(mgtnodeProjectTargetDir, options.getAppName() + ".zip");
@@ -149,9 +149,9 @@ public class Packer {
 	}
 
 	private void recopyAppnodeDependencies() {
-		Main.runMvn(new File(options.getProjectDirPath()), "-f", "repository-pom.xml", "dependency:copy-dependencies");
+		PackUtils.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-f", "repository-pom.xml", "dependency:copy-dependencies");
 		if (options.isCommerical()) {			
-			Main.runMvn(new File(options.getProjectDirPath()), "-f", "gem-pom.xml", "dependency:copy-dependencies");
+			PackUtils.runMvn(new File(options.getProjectDirPath()), options.isOffline(), "-f", "gem-pom.xml", "dependency:copy-dependencies");
 		}
 	}
 	

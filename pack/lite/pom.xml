@@ -151,8 +151,7 @@
 		<dependency>
 			<groupId>com.thefirstlineofcode.sand.demo.server.lite</groupId>
 			<artifactId>sand-demo-server-lite-acl</artifactId>
-		</dependency>
-		
+		</dependency>	
 	</dependencies>
 	
 	<build>

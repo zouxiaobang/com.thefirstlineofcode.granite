@@ -93,9 +93,9 @@ public class Updater {
 	private void updateLibrary(String library, boolean clean, List<String> updatedLibraries) {
 		LibraryInfo libraryInfo = libraryInfos.get(library);
 		if (clean) {
-			Main.runMvn(new File(libraryInfo.developmentDir), "clean", "package");
+			PackUtils.runMvn(new File(libraryInfo.developmentDir), options.isOffline(), "clean", "package");
 		} else {
-			Main.runMvn(new File(libraryInfo.developmentDir), "package");
+			PackUtils.runMvn(new File(libraryInfo.developmentDir), options.isOffline(), "package");
 		}
 		
 		updateLibrary(libraryInfo);
@@ -139,9 +139,9 @@ public class Updater {
 		}
 		
 		if (clean) {
-			Main.runMvn(subsystemProjectDir, "clean", "package");
+			PackUtils.runMvn(subsystemProjectDir, options.isOffline(), "clean", "package");
 		} else {
-			Main.runMvn(subsystemProjectDir, "package");
+			PackUtils.runMvn(subsystemProjectDir, options.isOffline(), "package");
 		}
 		
 		String[] libraries = subsystems.get(subsystem);
@@ -415,8 +415,6 @@ public class Updater {
 	}
 
 	private void collectCacheData() {
-		File graniteProjectDir = new File(options.getGraniteProjectDirPath());
-		
 		libraryInfos.forEach((libraryName, libraryInfo) -> {
 			StringTokenizer st = new StringTokenizer(libraryName, "-");
 			int count = st.countTokens();
@@ -432,9 +430,8 @@ public class Updater {
 			}
 			
 			String developmentDir = null;
-			int firstDashIndex = libraryName.indexOf('-');
 			if (isGraniteArtifact(libraryName)) {
-				developmentDir = String.format("%s%s", graniteProjectDir, libraryName.substring(firstDashIndex).replace('-', '/'));
+				developmentDir = PackUtils.getDevelopmentDir(options.getGraniteProjectDirPath(), libraryName);
 			} else {
 				throw new RuntimeException(String.format("Illegal granite library. %s isn't a system library or a plugin library.", libraryName));
 			}
