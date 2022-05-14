@@ -14,7 +14,8 @@ public class AppDbaConfigurator implements IPackConfigurator {
 
 	@Override
 	public void configure(IPackContext context, DeployPlan deployPlan) {
-		IConfig dbConfig = context.getConfigManager().createOrGetConfig(context.getClusterConfigurationDir(), FILE_NAME_DB_INI);
+		IConfig dbConfig = context.getConfigManager().createOrGetConfig(
+				context.getRuntimeConfigurationDir().toPath(), FILE_NAME_DB_INI);
 		dbConfig.addOrUpdateProperty("addresses", getDbAddressesString(deployPlan.getDb().getAddresses()));
 		dbConfig.addOrUpdateProperty("db.name", deployPlan.getDb().getDbName());
 		dbConfig.addOrUpdateProperty("user.name", deployPlan.getDb().getUserName());

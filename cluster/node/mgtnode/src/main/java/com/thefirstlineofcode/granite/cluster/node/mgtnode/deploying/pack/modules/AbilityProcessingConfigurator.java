@@ -10,7 +10,7 @@ public class AbilityProcessingConfigurator implements IPackConfigurator {
 
 	@Override
 	public void configure(IPackContext context, DeployPlan deployPlan) {
-		IConfig config = context.getConfigManager().createOrGetConfig(context.getConfigurationDir(),
+		IConfig config = context.getConfigManager().createOrGetConfig(context.getRuntimeConfigurationDir().toPath(),
 				ConfigFiles.GRANITE_COMPONENT_BINDING_CONFIG_FILE);
 		configureProcessingService(config);
 		configureRoutingService(config);

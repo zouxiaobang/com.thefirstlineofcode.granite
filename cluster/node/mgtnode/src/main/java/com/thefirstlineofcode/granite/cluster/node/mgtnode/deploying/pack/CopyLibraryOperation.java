@@ -25,7 +25,7 @@ public class CopyLibraryOperation {
 	}
 
 	public void copy(IPackContext context) {
-		File repositoryDir = context.getRepositoryDir().toFile();
+		File repositoryDir = context.getRepositoryDir();
 		File library = null;
 		for (File aLibrary : repositoryDir.listFiles()) {
 			if (aLibrary.getName().startsWith(libraryName)) {
@@ -45,9 +45,9 @@ public class CopyLibraryOperation {
 		
 		Path target;
 		if (scope == Scope.SYSTEM) {			
-			target = new File(context.getRuntimeLibsDir().toFile(), library.getName()).toPath();			
+			target = new File(context.getRuntimeLibsDir(), library.getName()).toPath();			
 		} else {
-			target = new File(context.getRuntimePluginsDir().toFile(), library.getName()).toPath();			
+			target = new File(context.getRuntimePluginsDir(), library.getName()).toPath();			
 		}
 		
 		try {

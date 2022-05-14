@@ -14,8 +14,8 @@ public class ProtocolIbrConfigurator extends AbilityStreamConfigurator implement
 
 	@Override
 	public void configure(IPackContext context, DeployPlan configuration) {
-		IConfig config = context.getConfigManager().createOrGetConfig(context.getConfigurationDir(),
-				ConfigFiles.GRANITE_COMPONENT_BINDING_CONFIG_FILE);
+		IConfig config = context.getConfigManager().createOrGetConfig(
+				context.getRuntimeConfigurationDir().toPath(), ConfigFiles.GRANITE_COMPONENT_BINDING_CONFIG_FILE);
 		
 		configureIbrSupportedStreamService(context, configuration, config);
 		configureParsingService(config);
@@ -27,7 +27,8 @@ public class ProtocolIbrConfigurator extends AbilityStreamConfigurator implement
 	}
 	
 	protected void configureStreamFeatureParameters(IPackContext context, DeployPlan configuration) {
-		IConfig config = context.getConfigManager().createOrGetConfig(context.getConfigurationDir(), ConfigFiles.GRANITE_COMPONENTS_CONFIG_FILE);		
+		IConfig config = context.getConfigManager().createOrGetConfig(
+				context.getRuntimeConfigurationDir().toPath(), ConfigFiles.GRANITE_COMPONENTS_CONFIG_FILE);		
 		NodeType nodeType = configuration.getNodeTypes().get(context.getNodeType());
 		Properties properties = nodeType.getConfiguration("ability-stream");
 	

@@ -11,7 +11,8 @@ public class ProtocolBxmppConfigurator implements IPackConfigurator  {
 
 	@Override
 	public void configure(IPackContext context, DeployPlan configuration) {
-		IConfig config = context.getConfigManager().createOrGetConfig(context.getConfigurationDir(), ConfigFiles.GRANITE_SERVER_CONFIG_FILE);
+		IConfig config = context.getConfigManager().createOrGetConfig(
+				context.getRuntimeConfigurationDir().toPath(), ConfigFiles.GRANITE_SERVER_CONFIG_FILE);
 		config.addOrUpdateProperty("message.format", Global.MESSAGE_FORMAT_BINARY);
 	}
 	

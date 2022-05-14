@@ -3,6 +3,6 @@ package com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack.confi
 import java.nio.file.Path;
 
 public interface IConfigManager {
-	IConfig createOrGetConfig(Path parentPath ,String configFileName);
+	IConfig createOrGetConfig(Path parentPath, String configFileName);
 	void saveConfigs();
 }

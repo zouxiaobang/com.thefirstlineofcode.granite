@@ -1,7 +1,6 @@
 package com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack.config;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -119,43 +118,42 @@ public class Config implements IConfig {
 	}
 
 	@Override
-	public void save(Path parentPath, String fileName) {
+	public void save(Path configPath) {
 		if (!properties.isEmpty() && !sections.isEmpty())
 			throw new IllegalArgumentException("The config can be normal config or sectional config. But can't be both.");
 		
 		if (!sections.isEmpty()) {
-			saveSectionalConfigToFile(parentPath, fileName);
+			saveSectionalConfigToFile(configPath);
 		} else if (!properties.isEmpty()) {
-			saveNormalConfigToFile(parentPath, fileName);
+			saveNormalConfigToFile(configPath);
 		} else if (content != null) {
-			saveContentToFile(parentPath, fileName);
+			saveContentToFile(configPath);
 		} else {
 			try {
 				// create an empty file.
-				createConfigFile(parentPath, fileName);
+				createConfigFile(configPath);
 			} catch (Exception e) {
 				throw new RuntimeException(String.format("Can't create configuration file %s.",
-						new File(parentPath.toFile(), fileName).getPath()), e);
+						configPath), e);
 			}
 			
-			logger.warn("Null config. Parent path is {}. File name is {}.", new Object[] {parentPath, fileName});
+			logger.warn("Null config. Config path is {}.", configPath);
 		}
 	}
 	
-	private void saveContentToFile(Path parentPath, String fileName) {
+	private void saveContentToFile(Path configPath) {
 		try {
-			IoUtils.writeToFile(content, new File(parentPath.toFile(), fileName));
+			IoUtils.writeToFile(content, configPath);
 		} catch (IOException e) {
 			throw new RuntimeException(String.format("Can't write config to %s.",
-					new File(parentPath.toFile(), fileName).getPath()), e);
+					configPath), e);
 		}
 	}
 
-	private void saveNormalConfigToFile(Path parentPath, String fileName) {
+	private void saveNormalConfigToFile(Path configPath) {
 		BufferedWriter writer = null;
 		try {
-			File configFile = createConfigFile(parentPath, fileName);
-			writer = new BufferedWriter(new FileWriter(configFile));
+			writer = new BufferedWriter(new FileWriter(configPath.toFile()));
 			
 			int line = 0;
 			for (Property property : properties) {
@@ -178,15 +176,12 @@ public class Config implements IConfig {
 		}
 	}
 
-	private File createConfigFile(Path parentPath, String fileName) throws IOException {
-		File configFile = new File(parentPath.toFile(), fileName);
-		if (configFile.exists()) {
-			throw new RuntimeException(String.format("Can't save config to file %s. File has already exist.", configFile.getPath()));
+	private Path createConfigFile(Path configPath) throws IOException {
+		if (Files.exists(configPath)) {
+			throw new RuntimeException(String.format("Can't save config to file %s. File has already exist.", configPath));
 		}
 		
-		Files.createFile(configFile.toPath());
-		
-		return configFile;
+		return Files.createFile(configPath);
 	}
 
 	private void writeProperty(BufferedWriter writer, String propertyName, String propertyValue) throws IOException {
@@ -215,7 +210,7 @@ public class Config implements IConfig {
 		return (charArray[pos] != '\r' && charArray[pos] != '\n') && (charArray[pos - 1] == '\n' || charArray[pos - 1] == '\r');
 	}
 
-	private void saveSectionalConfigToFile(Path parentPath, String fileName) {
+	private void saveSectionalConfigToFile(Path configPath) {
 		SectionalProperties sp = new SectionalProperties();
 		for (Section section : sections) {
 			Properties properties = new Properties();
@@ -227,19 +222,17 @@ public class Config implements IConfig {
 			sp.setProperties(section.sectionName, properties);
 		}
 		
-		File configFile = new File(parentPath.toFile(), fileName);
-		
 		try {
-			if (configFile.exists()) {
-				Files.delete(configFile.toPath());
+			if (Files.exists(configPath)) {
+				Files.delete(configPath);
 			}
 			
-			Files.createFile(configFile.toPath());
+			Files.createFile(configPath);
 			
-			FileOutputStream output = new FileOutputStream(configFile);
+			FileOutputStream output = new FileOutputStream(configPath.toFile());
 			sp.save(output);
 		} catch (Exception e) {
-			throw new RuntimeException(String.format("Can't save config to file. Config file: %s", configFile), e);
+			throw new RuntimeException(String.format("Can't save config to file. Config file: %s", configPath), e);
 		}
 	}
 

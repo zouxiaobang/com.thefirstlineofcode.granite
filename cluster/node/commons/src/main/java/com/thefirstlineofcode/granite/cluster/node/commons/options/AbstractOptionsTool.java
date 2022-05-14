@@ -102,7 +102,7 @@ public abstract class AbstractOptionsTool<T extends OptionsBase> {
 			String jarPath =  metaInfo.getPath().substring(0, colonIndex);
 			
 			int lastSlashIndex = jarPath.lastIndexOf('/');
-			String jarParentDirPath = jarPath.substring(5, lastSlashIndex);
+			String jarParentDirPath = jarPath.substring(6, lastSlashIndex);
 			
 			return jarParentDirPath;
 		} else {

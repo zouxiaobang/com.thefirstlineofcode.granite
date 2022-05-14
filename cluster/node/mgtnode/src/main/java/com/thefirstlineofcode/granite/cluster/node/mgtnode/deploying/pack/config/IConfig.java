@@ -13,5 +13,5 @@ public interface IConfig {
 	void removeProperty(String name);
 	void addComment(String comment);
 	IConfig getSection(String sectionName);
-	void save(Path parentPath, String fileName);
+	void save(Path configPath);
 }

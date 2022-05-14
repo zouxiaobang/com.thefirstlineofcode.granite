@@ -19,7 +19,7 @@ public class AbilityStreamConfigurator implements IPackConfigurator {
 			return;
 		}
 		
-		IConfig config = context.getConfigManager().createOrGetConfig(context.getConfigurationDir(),
+		IConfig config = context.getConfigManager().createOrGetConfig(context.getRuntimeConfigurationDir().toPath(),
 				ConfigFiles.GRANITE_COMPONENT_BINDING_CONFIG_FILE);
 		
 		configureStandardStreamService(context, configuration, config);
@@ -41,7 +41,8 @@ public class AbilityStreamConfigurator implements IPackConfigurator {
 	}
 
 	protected void configureStreamFeatureParameters(IPackContext context, DeployPlan configuration) {
-		IConfig config = context.getConfigManager().createOrGetConfig(context.getConfigurationDir(), ConfigFiles.GRANITE_COMPONENTS_CONFIG_FILE);		
+		IConfig config = context.getConfigManager().createOrGetConfig(
+				context.getRuntimeConfigurationDir().toPath(), ConfigFiles.GRANITE_COMPONENTS_CONFIG_FILE);		
 		NodeType nodeType = configuration.getNodeTypes().get(context.getNodeType());
 		Properties properties = nodeType.getConfiguration("ability-stream");
 	

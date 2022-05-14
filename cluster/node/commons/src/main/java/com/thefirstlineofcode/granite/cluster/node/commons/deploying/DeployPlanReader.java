@@ -45,14 +45,14 @@ public class DeployPlanReader implements IDeployPlanReader {
 					deployPlanFile.getPath()), e);
 		}
 		
-		DeployPlan configuration = new DeployPlan();
+		DeployPlan deployPlan = new DeployPlan();
 		
 		Properties clusterProp = sp.getSection(SECTION_NAME_CLUSTER);
 		if (clusterProp == null) {
 			throw new DeployPlanException("Deploy plan file must include a cluster section.");
 		}
 		Cluster cluster = readClusterSection(clusterProp);
-		configuration.setCluster(cluster);
+		deployPlan.setCluster(cluster);
 		
 		Properties globalProp = sp.getSection(SECTION_NAME_GLOBAL);
 		Global global;
@@ -61,27 +61,27 @@ public class DeployPlanReader implements IDeployPlanReader {
 		} else {
 			global = readGlobalSection(globalProp);
 		}
-		configuration.setGlobal(global);
+		deployPlan.setGlobal(global);
 		
 		Properties dbProp = sp.getSection(SECTION_NAME_DB);
 		if (dbProp == null) {
 			throw new DeployPlanException("Deploy plan file must include a db section.");
 		} 
 		Db db = readDbSection(dbProp);
-		configuration.setDb(db);
+		deployPlan.setDb(db);
 		
 		List<String> processedSections = new ArrayList<>();
 		processedSections.add(SECTION_NAME_CLUSTER);
 		processedSections.add(SECTION_NAME_GLOBAL);
 		processedSections.add(SECTION_NAME_DB);
 		
-		for (String nodeTypeName : configuration.getCluster().getNodeTypes()) {
+		for (String nodeTypeName : deployPlan.getCluster().getNodeTypes()) {
 			NodeType nodeType = readNodeTypeSection(nodeTypeName, cluster, sp.getSection(nodeTypeName));
 			if (nodeType == null) {
 				throw new DeployPlanException(String.format("Node configuration section lost. Node type name: %s.", nodeType));
 			}
 			
-			configuration.getNodeTypes().put(nodeTypeName, nodeType);
+			deployPlan.getNodeTypes().put(nodeTypeName, nodeType);
 			processedSections.add(nodeTypeName);
 		}
 		
@@ -89,12 +89,12 @@ public class DeployPlanReader implements IDeployPlanReader {
 			if (processedSections.contains(sectionName))
 				continue;
 			
-			NodeTypeAndFeature ntaf = getNodeTypeAndFeature(configuration, sectionName);
-			configuration.getNodeTypes().get(ntaf.nodeTypeName).setConfiguration(
+			NodeTypeAndFeature ntaf = getNodeTypeAndFeature(deployPlan, sectionName);
+			deployPlan.getNodeTypes().get(ntaf.nodeTypeName).setConfiguration(
 					ntaf.featureName, sp.getSection(sectionName));
 		}
 		
-		return configuration;
+		return deployPlan;
 	}
 	
 	private Global readGlobalSection(Properties properties) throws DeployPlanException {

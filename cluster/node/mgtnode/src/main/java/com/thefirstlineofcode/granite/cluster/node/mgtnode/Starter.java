@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 
@@ -44,9 +46,9 @@ public class Starter implements Serializable {
 	
 	public void start(Options options) throws Exception {
 		checkRepository(options.getRepositoryDir());
-		DeployPlan plan = readAndCheckDeplyConfiguration(
+		DeployPlan deployPlan = readAndCheckDeplyConfiguration(
 				options.getConfigurationDir(), options.getDeployDir());
-		checkAndPackAppnodeRuntimes(options, plan);
+		checkAndPackAppnodeRuntimes(options, deployPlan);
 		startJettyServer(options);
 		
 		synchronized (this) {
@@ -74,15 +76,15 @@ public class Starter implements Serializable {
 		}
 	}
 	
-	private DeployPlan readAndCheckDeplyConfiguration(String configDir, String deployDir) {
-		DeployPlan plan = readDeployPlan(configDir);
+	private DeployPlan readAndCheckDeplyConfiguration(String configurationDir, String deployDir) {
+		DeployPlan deployPlan = readDeployPlan(configurationDir);
 		
-		saveDeployPlanToDeployPath(configDir, deployDir, plan);
+		saveDeployPlanToDeployPath(configurationDir, deployDir, deployPlan);
 		
-		return plan;
+		return deployPlan;
 	}
 
-	private void saveDeployPlanToDeployPath(String configDir, String deployDir, DeployPlan plan) {
+	private void saveDeployPlanToDeployPath(String configDir, String deployDir, DeployPlan deployPlan) {
 		File deployDirFile = new File(deployDir);
 		if (!deployDirFile.exists()) {
 			logger.info("Deploy directory doesn't exist. Creating it...");
@@ -98,13 +100,13 @@ public class Starter implements Serializable {
 		
 		logger.info("Checking checksum file to determine if deploy plan changed.");
 		boolean planChanged = false;
-		File localDeployPlanChecksumFile = new File(deployDir, FILE_NAME_DEPLOY_PLAN_CHECKSUM);
-		if (!localDeployPlanChecksumFile.exists()) {
+		Path localDeployPlanChecksumFilePath = Paths.get(deployDir, FILE_NAME_DEPLOY_PLAN_CHECKSUM);
+		if (!Files.exists(localDeployPlanChecksumFilePath)) {
 			planChanged = true;
 		} else {
 			try {
-				String localDeployPlanChecksum = IoUtils.readFile(localDeployPlanChecksumFile);
-				if (!plan.getChecksum().equals(localDeployPlanChecksum)) {
+				String localDeployPlanChecksum = IoUtils.readFile(localDeployPlanChecksumFilePath);
+				if (!deployPlan.getChecksum().equals(localDeployPlanChecksum)) {
 					planChanged = true;
 				}
 			} catch (IOException e) {
@@ -129,42 +131,42 @@ public class Starter implements Serializable {
 		
 		try {
 			logger.info("Saving the deploy plan checksum to local.");
-			IoUtils.writeToFile(plan.getChecksum(), localDeployPlanChecksumFile);
+			IoUtils.writeToFile(deployPlan.getChecksum(), localDeployPlanChecksumFilePath);
 		} catch (IOException e) {
 			throw new RuntimeException("Can't write the deploy plan checksum to local.", e);
 		}
 		logger.info("Deploy plan checksum file has written.");
 	}
 
-	private DeployPlan readDeployPlan(String configDir) {
-		File deployPlanFile = new File(configDir, FILE_NAME_DEPLOY_PLAN);
+	private DeployPlan readDeployPlan(String configurationDir) {
+		File deployPlanFile = new File(configurationDir, FILE_NAME_DEPLOY_PLAN);
 		
 		if (!deployPlanFile.exists()) {
 			throw new RuntimeException(String.format("Can't read %s. It doesn't exist.", deployPlanFile.getPath()));
 		}
 		
 		logger.info("Reading deploy plan...");
-		DeployPlan plan = null;
+		DeployPlan deployPlan = null;
 		try {
-			plan =  new DeployPlanReader().read(deployPlanFile.toPath());
+			deployPlan =  new DeployPlanReader().read(deployPlanFile.toPath());
 		} catch (DeployPlanException e) {
 			throw new RuntimeException("Can't parse deploy plan.", e);
 		}
 		logger.info("Deploy plan has read.");
 		
-		if (plan.getCluster() == null) {
+		if (deployPlan.getCluster() == null) {
 			throw new IllegalArgumentException("Invalid deploy plan file. Must include a custer section");
 		}
 		
-		if (plan.getCluster().getDomainName() == null) {
+		if (deployPlan.getCluster().getDomainName() == null) {
 			throw new IllegalArgumentException("Invalid deploy plan file. Domain name must be defined.");
 		}
 		
-		if (plan.getNodeTypes().isEmpty()) {
+		if (deployPlan.getNodeTypes().isEmpty()) {
 			throw new IllegalArgumentException("Invalid deploy plan file. No node type defined.");
 		}
 		
-		return plan;
+		return deployPlan;
 	}
 
 	private void checkRepository(String repositoryDirPath) {
@@ -180,7 +182,7 @@ public class Starter implements Serializable {
 		logger.info("Repository is fine.");
 	}
 
-	private void checkAndPackAppnodeRuntimes(Options options, DeployPlan plan) {
+	private void checkAndPackAppnodeRuntimes(Options options, DeployPlan deployPlan) {
 		File appnodeRuntimesDir = new File(options.getAppnodeRuntimesDir());
 		if (!appnodeRuntimesDir.exists()) {
 			logger.info("Appnode runtimes directory doesn't exist. Creating it...");
@@ -194,17 +196,17 @@ public class Starter implements Serializable {
 			logger.info("Appnode runtimes directory {} has created.", appnodeRuntimesDir.getPath());
 		}
 		
-		packAppnodeRuntimes(options, plan);
+		packAppnodeRuntimes(options, deployPlan);
 	}
 
-	private void packAppnodeRuntimes(Options options, DeployPlan plan) {
+	private void packAppnodeRuntimes(Options options, DeployPlan deployPlan) {
 		IAppnodeRuntimesPacker deployer = new AppnodeRuntimesPacker(options);
-		for (String nodeType : plan.getNodeTypes().keySet()) {
-			String checksum = plan.getChecksum(nodeType);
+		for (String nodeType : deployPlan.getNodeTypes().keySet()) {
+			String checksum = deployPlan.getChecksum(nodeType);
 			String appnodeRuntimeName = getAppnodeRuntimeName(checksum);
 			
 			logger.info("Ready to pack appnode runtime[{}]. Runtime checksum is {}.", nodeType, checksum);
-			deployer.pack(nodeType, appnodeRuntimeName, plan);
+			deployer.pack(nodeType, appnodeRuntimeName, deployPlan);
 			logger.info("Appnode runtime[{}] has packed.", nodeType);
 		}
 	}

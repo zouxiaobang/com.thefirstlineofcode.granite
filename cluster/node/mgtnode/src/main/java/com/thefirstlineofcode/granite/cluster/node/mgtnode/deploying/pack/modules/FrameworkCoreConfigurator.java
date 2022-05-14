@@ -19,7 +19,8 @@ public class FrameworkCoreConfigurator implements IPackConfigurator {
 	}
 
 	private void configureGlobalFeatureParams(IPackContext context) {
-		IConfig config = context.getConfigManager().createOrGetConfig(context.getConfigurationDir(), ConfigFiles.GRANITE_COMPONENTS_CONFIG_FILE);
+		IConfig config = context.getConfigManager().createOrGetConfig(
+				context.getRuntimeConfigurationDir().toPath(), ConfigFiles.GRANITE_COMPONENTS_CONFIG_FILE);
 		Properties globalParams = context.getDeployPlan().getNodeTypes().get(
 				context.getNodeType()).getConfiguration("global");
 		
@@ -38,11 +39,13 @@ public class FrameworkCoreConfigurator implements IPackConfigurator {
 
 	private void configureComponentBindingIni(IPackContext context) {
 		// Just create an empty component binding configuration file.
-		context.getConfigManager().createOrGetConfig(context.getConfigurationDir(), ConfigFiles.GRANITE_COMPONENT_BINDING_CONFIG_FILE);
+		context.getConfigManager().createOrGetConfig(
+				context.getRuntimeConfigurationDir().toPath(), ConfigFiles.GRANITE_COMPONENT_BINDING_CONFIG_FILE);
 	}
 
 	private void configureServerIni(IPackContext context) {
-		IConfig config = context.getConfigManager().createOrGetConfig(context.getConfigurationDir(), ConfigFiles.GRANITE_SERVER_CONFIG_FILE);
+		IConfig config = context.getConfigManager().createOrGetConfig(
+				context.getRuntimeConfigurationDir().toPath(), ConfigFiles.GRANITE_SERVER_CONFIG_FILE);
 		
 		config.addComment("Change domain.name and domain.alias.names to your registered doman names.");
 		config.addOrUpdateProperty("domain.name", context.getDeployPlan().getCluster().getDomainName());

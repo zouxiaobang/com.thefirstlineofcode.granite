@@ -34,7 +34,7 @@ public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
 	private static final String CONFIGURATION_KEY_SCOPE = "scope";
 	private static final String DIRECTORY_NAME_LIBS = "libs";
 	private static final String DIRECTORY_NAME_PLUGINS = "plugins";
-	private static final String DIRECTORY_NAME_CLUSTER = "cluster";
+	private static final String DIRECTORY_NAME_CONFIGURATION = "configuration";
 	private static final String DIRECTORY_NAME_PACK_TMP = "pack-tmp";
 	private static final String CONFIGURATION_KEY_CONFIGURATOR = "configurator";
 	private static final String CONFIGURATION_KEY_LIBRARIES = "libraries";
@@ -74,7 +74,6 @@ public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
 		}
 		
 		File packTmpDir = new File(options.getAppnodeRuntimesDir(), DIRECTORY_NAME_PACK_TMP);
-		
 		try {
 			doPack(nodeType, runtimeName, deployPlan, new File(options.getAppnodeRuntimesDir()), packTmpDir);
 		} catch (IOException e) {
@@ -100,31 +99,32 @@ public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
 			Files.createDirectories(packTmpDir.toPath());
 		}
 		
-		Path runtimeTmpDirPath = createChildDir(packTmpDir.toPath(), runtimeName);
-		Path libsDirPath = createChildDir(runtimeTmpDirPath, DIRECTORY_NAME_LIBS);
-		Path pluginsDirPath = createChildDir(runtimeTmpDirPath, DIRECTORY_NAME_PLUGINS);
+		Path runtimeDirPath = createChildDir(packTmpDir, runtimeName);
+		Path runtimeLibsDirPath = createChildDir(runtimeDirPath.toFile(), DIRECTORY_NAME_LIBS);
+		Path runtimePluginsDirPath = createChildDir(runtimeDirPath.toFile(), DIRECTORY_NAME_PLUGINS);
+		Path runtimeConfigurationDirPath = createChildDir(runtimeDirPath.toFile(), DIRECTORY_NAME_CONFIGURATION);
 		
 		IPackContext context = createContext(
-				new File(options.getConfigurationDir()).toPath(),
-				new File(options.getConfigurationDir(), DIRECTORY_NAME_CLUSTER).toPath(),
-				new File(options.getRepositoryDir()).toPath(),
-				runtimeTmpDirPath, libsDirPath, pluginsDirPath, packModules, nodeType, deployPlan);
+				new File(options.getConfigurationDir()), new File(options.getRepositoryDir()),
+				runtimeDirPath.toFile(), runtimeLibsDirPath.toFile(), runtimePluginsDirPath.toFile(),
+				runtimeConfigurationDirPath.toFile(), packModules, nodeType, deployPlan);
 		NodeType node = deployPlan.getNodeTypes().get(nodeType);
 		
 		logger.debug("Packing node {}.", nodeType);
 		
-		copyGraniteServerJar(new File(options.getRepositoryDir()), runtimeTmpDirPath);
+		File repositoryDir = new File(options.getRepositoryDir());
+		copyGraniteServerJar(repositoryDir, runtimeDirPath);
 		copyPackModules(context, node, deployPlan);
 		configure(context, node, deployPlan);
 		
 		zipRuntime(packTmpDir, runtimesDir, runtimeName);
 	}
 	
-	private void copyGraniteServerJar(File repoistoryDir, Path runtimeTmpDirPath) {
+	private void copyGraniteServerJar(File repoistoryDir, Path runtimeDirPath) {
 		for (File file : repoistoryDir.listFiles()) {
 			if (file.getName().startsWith(NAME_PREFIX_GRANITE_SERVER)) {
 				try {
-					Files.copy(file.toPath(), new File(runtimeTmpDirPath.toFile(), file.getName()).toPath(), StandardCopyOption.COPY_ATTRIBUTES,
+					Files.copy(file.toPath(), runtimeDirPath.resolve(file.getName()), StandardCopyOption.COPY_ATTRIBUTES,
 							StandardCopyOption.REPLACE_EXISTING);
 					return;
 				} catch (IOException e) {
@@ -150,14 +150,13 @@ public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
 		}
 	}
 
-	private Path createChildDir(Path parentPath, String name) {
-		File childDir = new File(parentPath.toFile(), name);
+	private Path createChildDir(File parentDir, String name) {
+		File childDir = new File(parentDir, name);
 		
 		try {
 			return Files.createDirectory(childDir.toPath());
 		} catch (IOException e) {
-			throw new RuntimeException(String.format("Can't create directory %s",
-					childDir.getPath()), e);
+			throw new RuntimeException(String.format("Can't create directory %s.", childDir), e);
 		}
 	}
 
@@ -191,12 +190,11 @@ public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
 		}
 	}
 
-	private IPackContext createContext(Path configDir, Path clusterConfigurationDir,
-			Path repositoryDirPath, Path runtimeDirPath, Path libsDirPath, Path pluginsDirPath,
-			Map<String, IPackModule> packModules, String nodeType,
-					DeployPlan deployPlan) {
-		return new PackContext(configDir, clusterConfigurationDir, repositoryDirPath, runtimeDirPath,
-				libsDirPath, pluginsDirPath, packModules, nodeType, deployPlan);
+	private IPackContext createContext(File configDir, File repositoryDir, File runtimeDir, File libsDir,
+			File pluginsDir, File configurationDir, Map<String, IPackModule> packModules,
+				String nodeType, DeployPlan deployPlan) {
+		return new PackContext(configDir, repositoryDir, runtimeDir,
+				libsDir, pluginsDir, configurationDir, packModules, nodeType, deployPlan);
 	}
 	
 	private void loadPackModules() {

@@ -1,6 +1,6 @@
 package com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack;
 
-import java.nio.file.Path;
+import java.io.File;
 import java.util.Map;
 
 import com.thefirstlineofcode.granite.cluster.node.commons.deploying.DeployPlan;
@@ -8,27 +8,26 @@ import com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack.config
 import com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack.config.IConfigManager;
 
 public class PackContext implements IPackContext {
-	private Path configurationDir;
-	private Path clusterConfigurationDir;
-	private Path repositoryDirPath;
-	private Path runtimeDirPath;
-	private Path libsDirPath;
-	private Path pluginsDirPath;
+	private File configurationDir;
+	private File runtimeConfigurationDir;
+	private File repositoryDir;
+	private File runtimeDir;
+	private File runtimeLibsDir;
+	private File runtimePluginsDir;
 	private Map<String, IPackModule> packModules;
 	private String nodeType;
 	private DeployPlan deployPlan;
 	private IConfigManager configManager;
 	
-	public PackContext(Path configurationDir, Path clusterConfigurationDir, Path repositoryDirPath,
-			Path runtimeDirPath, Path libsDirPath, Path pluginsDirPath,
-			Map<String, IPackModule> packModules, String nodeType,
-			DeployPlan deployPlan) {
+	public PackContext(File configurationDir, File repositoryDirPath, File runtimeDir,
+			File runtimeLibsDir, File runtimePluginsDir, File runtimeConfigurationDir,
+			Map<String, IPackModule> packModules, String nodeType, DeployPlan deployPlan) {
 		this.configurationDir = configurationDir;
-		this.clusterConfigurationDir = clusterConfigurationDir;
-		this.repositoryDirPath = repositoryDirPath;
-		this.runtimeDirPath = runtimeDirPath;
-		this.libsDirPath = libsDirPath;
-		this.pluginsDirPath = pluginsDirPath;
+		this.repositoryDir = repositoryDirPath;
+		this.runtimeDir = runtimeDir;
+		this.runtimeLibsDir = runtimeLibsDir;
+		this.runtimePluginsDir = runtimePluginsDir;
+		this.runtimeConfigurationDir = runtimeConfigurationDir;
 		this.packModules = packModules;
 		this.nodeType = nodeType;
 		this.deployPlan = deployPlan;
@@ -42,13 +41,13 @@ public class PackContext implements IPackContext {
 	}
 
 	@Override
-	public Path getRepositoryDir() {
-		return repositoryDirPath;
+	public File getRepositoryDir() {
+		return repositoryDir;
 	}
 
 	@Override
-	public Path getRuntimePluginsDir() {
-		return pluginsDirPath;
+	public File getRuntimePluginsDir() {
+		return runtimePluginsDir;
 	}
 
 	@Override
@@ -67,23 +66,23 @@ public class PackContext implements IPackContext {
 	}
 
 	@Override
-	public Path getRuntimeDir() {
-		return runtimeDirPath;
+	public File getRuntimeDir() {
+		return runtimeDir;
 	}
 
 	@Override
-	public Path getConfigurationDir() {
+	public File getConfigurationDir() {
 		return configurationDir;
 	}
 
 	@Override
-	public Path getClusterConfigurationDir() {
-		return clusterConfigurationDir;
+	public File getRuntimeConfigurationDir() {
+		return runtimeConfigurationDir;
 	}
 
 	@Override
-	public Path getRuntimeLibsDir() {
-		return libsDirPath;
+	public File getRuntimeLibsDir() {
+		return runtimeLibsDir;
 	}
 	
 }

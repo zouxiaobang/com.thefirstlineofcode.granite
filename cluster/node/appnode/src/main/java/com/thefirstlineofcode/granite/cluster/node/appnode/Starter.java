@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.lang.ProcessBuilder.Redirect;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -381,7 +383,7 @@ public class Starter {
 
 	private void saveDeployPlanChecksum(String deployPlanChecksum, String configDir) {
 		try {
-			IoUtils.writeToFile(deployPlanChecksum, new File(configDir, FILE_NAME_DEPLOY_PLAN_CHECKSUM));
+			IoUtils.writeToFile(deployPlanChecksum, Paths.get(configDir, FILE_NAME_DEPLOY_PLAN_CHECKSUM));
 		} catch (IOException e) {
 			throw new RuntimeException("Can't save deploy plan checksum.", e);
 		}
@@ -390,30 +392,30 @@ public class Starter {
 	private void downloadDeployPlanFile(String address, int port, String configDir) throws IOException {
 		logger.info("Downloading deploy plan file...");
 		
-		File deployPlanFile = new File(configDir, FILE_NAME_DEPLOY_PLAN);
-		if (deployPlanFile.exists()) {
-			File deployPlanFileBak = new File(configDir, "deploy-plan.ini.bak");
-			if (deployPlanFileBak.exists()) {
-				Files.delete(deployPlanFileBak.toPath());
+		Path deployPlanFilePath = Paths.get(configDir, FILE_NAME_DEPLOY_PLAN);
+		if (Files.exists(deployPlanFilePath)) {
+			Path deployPlanBakFilePath = Paths.get(configDir, "deploy-plan.ini.bak");
+			if (Files.exists(deployPlanBakFilePath)) {
+				Files.delete(deployPlanBakFilePath);
 			}
-			Files.move(deployPlanFile.toPath(), deployPlanFileBak.toPath());
+			Files.move(deployPlanFilePath, deployPlanBakFilePath);
 		}
 		
 		InputStream in = null;
 		try {
 			URL url = new URL("HTTP", address, port, "/deploy/" + FILE_NAME_DEPLOY_PLAN);
 			in = url.openStream();
-			IoUtils.writeToFile(in, deployPlanFile);
+			IoUtils.writeToFile(in, deployPlanFilePath);
 		} finally {
 			IoUtils.close(in);
 		}
 	}
 
 	private String getLocalDeployPlanChecksum(String configDir) {
-		File localDeployPlanChecksumFile = new File(configDir, FILE_NAME_DEPLOY_PLAN_CHECKSUM);
-		if (localDeployPlanChecksumFile.exists()) {
+		Path localDeployPlanChecksumFilePath = Paths.get(configDir, FILE_NAME_DEPLOY_PLAN_CHECKSUM);
+		if (Files.exists(localDeployPlanChecksumFilePath)) {
 			try {
-				return IoUtils.readFile(localDeployPlanChecksumFile);
+				return IoUtils.readFile(localDeployPlanChecksumFilePath);
 			} catch (IOException e) {
 				throw new RuntimeException("Can't read deploy plan checksum file.", e);
 			}

@@ -19,22 +19,13 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 public class Updater {
-	private static final String GRANITE_PROJECT_PACKAGE_PREFIX = "com.firstlinecode.granite.";
+	private static final String GRANITE_PROJECT_PACKAGE_PREFIX = "granite-";
 
 	private static final String DIRECTORY_NAME_CACHE = ".cache";
 
 	private static final String FILE_NAME_SUBSYSTEMS = "subsystems.ini";
 
 	private static final String FILE_NAME_LIBRARYINFOS = "libraryinfos.ini";
-
-	private static final String[] SUBSYSTEM_NAMES = new String[] {
-			"framework",
-			"im",
-			"stream",
-			"xeps",
-			"leps",
-			"deploy.cluster"
-	};
 	
 	private Map<String, String[]> subsystems;
 	private Map<String, LibraryInfo> libraryInfos;
@@ -63,7 +54,7 @@ public class Updater {
 		
 		String[] modules = options.getModules();
 		if (modules == null)
-			modules = SUBSYSTEM_NAMES;
+			modules = getSubsystemNames();
 		
 		List<String> updatedLibraries = new ArrayList<>();
 		for (String module : modules) {
@@ -94,13 +85,17 @@ public class Updater {
 		
 		System.out.println(String.format("Libraries %s updated.", libraries.toString()));
 	}
+
+	private String[] getSubsystemNames() {
+		return subsystems.keySet().toArray(new String[subsystems.size()]);
+	}
 	
 	private void updateLibrary(String library, boolean clean, List<String> updatedLibraries) {
 		LibraryInfo libraryInfo = libraryInfos.get(library);
 		if (clean) {
-			Main.runMvn(new File(libraryInfo.projectDirPath), "clean", "package");
+			Main.runMvn(new File(libraryInfo.developmentDir), "clean", "package");
 		} else {
-			Main.runMvn(new File(libraryInfo.projectDirPath), "package");
+			Main.runMvn(new File(libraryInfo.developmentDir), "package");
 		}
 		
 		updateLibrary(libraryInfo);
@@ -108,7 +103,7 @@ public class Updater {
 	}
 
 	private void updateLibrary(LibraryInfo libraryInfo) {
-		File targetDir = new File(libraryInfo.projectDirPath, "target");
+		File targetDir = new File(libraryInfo.developmentDir, "target");
 		File artifact = new File(targetDir, libraryInfo.fileName);
 		if (!artifact.exists()) {
 			throw new RuntimeException(String.format("Artifact %s doesn't exist.", artifact.getPath()));
@@ -258,7 +253,7 @@ public class Updater {
 		}
 		
 		LibraryInfo libraryInfo = new LibraryInfo();
-		libraryInfo.projectDirPath = st.nextToken();
+		libraryInfo.developmentDir = st.nextToken();
 		libraryInfo.fileName = st.nextToken();
 		
 		return libraryInfo;
@@ -273,23 +268,54 @@ public class Updater {
 		File repositoryDir = getRepositoryDir();
 		
 		for (File library : repositoryDir.listFiles()) {
-			String libraryFileName = library.getName();
-			if (!isGraniteArtifact(libraryFileName)) {
+			String libraryName = library.getName();
+			if (!isGraniteArtifact(libraryName)) {
 				continue;
 			}
 			
-			int dashIndex = libraryFileName.indexOf('-');
-			String libraryName = libraryFileName.substring(0, dashIndex);
-			
 			LibraryInfo libraryInfo = new LibraryInfo();
-			libraryInfo.fileName = libraryFileName;
+			libraryInfo.fileName = libraryName;
 			
-			libraryInfos.put(libraryName, libraryInfo);
+			libraryInfos.put(getLibraryName(libraryName), libraryInfo);
 		}
 		
 		collectCacheData();
 		
 		syncCacheToDisk(cacheDir);
+	}
+	
+	private String getLibraryName(String fileName) {
+		String libraryFullName = fileName.substring(0, fileName.length() - 4);
+		
+		int lastDashIndex = libraryFullName.lastIndexOf('-');
+		if (lastDashIndex == -1)
+			return libraryFullName;
+		
+		String lastVersionIdentifier = libraryFullName.substring(lastDashIndex + 1, libraryFullName.length());
+		String libraryName = libraryFullName.substring(0, lastDashIndex);
+		if (!isVersionCore(lastVersionIdentifier)) {
+			lastDashIndex = libraryName.lastIndexOf('-');
+			if (lastDashIndex == -1)
+				return libraryName;
+			
+			libraryName = libraryName.substring(0, lastDashIndex);
+		}
+		
+		return libraryName;
+	}
+
+	private boolean isVersionCore(String versionIdentifier) {
+		StringTokenizer st = new StringTokenizer(versionIdentifier, ".");
+		while (st.hasMoreTokens()) {
+			String nextLevelVersion = st.nextToken();
+			try {				
+				Integer.parseInt(nextLevelVersion);
+			} catch (NumberFormatException e) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 
 	private File getRepositoryDir() {
@@ -346,7 +372,7 @@ public class Updater {
 
 	private Object convertLibraryInfoToString(LibraryInfo libraryInfo) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(libraryInfo.projectDirPath).
+		sb.append(libraryInfo.developmentDir).
 			append(',').
 			append(libraryInfo.fileName);
 		
@@ -391,55 +417,57 @@ public class Updater {
 	private void collectCacheData() {
 		File graniteProjectDir = new File(options.getGraniteProjectDirPath());
 		
-		collectCacheData(graniteProjectDir, null);
-	}
-
-	private void collectCacheData(File currentDir, String subsystem) {
-		if (".git".equals(currentDir.getName()))
-			return;
-		
-		if (isGraniteArtifactProject(currentDir)) {
-			LibraryInfo libraryInfo = libraryInfos.get(currentDir.getName());
-			libraryInfo.projectDirPath = currentDir.getPath();
+		libraryInfos.forEach((libraryName, libraryInfo) -> {
+			StringTokenizer st = new StringTokenizer(libraryName, "-");
+			int count = st.countTokens();
+			if (count < 2) {
+				throw new RuntimeException("This is an invalid granite library. Library name: " + libraryName);
+			}
 			
-			if (subsystem != null) {
+			// First token is system name. It must be "granite".
+			st.nextToken();
+			String rawSubsystemName = null;
+			if (count > 2) {
+				rawSubsystemName = st.nextToken();
+			}
+			
+			String developmentDir = null;
+			int firstDashIndex = libraryName.indexOf('-');
+			if (isGraniteArtifact(libraryName)) {
+				developmentDir = String.format("%s%s", graniteProjectDir, libraryName.substring(firstDashIndex).replace('-', '/'));
+			} else {
+				throw new RuntimeException(String.format("Illegal granite library. %s isn't a system library or a plugin library.", libraryName));
+			}
+			
+			if (!isLibraryDevProjectDir(new File((developmentDir))))
+				throw new RuntimeException(String.format("%s isn't a library development project directory.", developmentDir));
+			
+			libraryInfo.developmentDir = developmentDir;
+			libraryInfos.put(libraryName, libraryInfo);
+			
+			if (rawSubsystemName != null) {
+				String subsystem = GRANITE_PROJECT_PACKAGE_PREFIX + rawSubsystemName;
 				String[] libraries = subsystems.get(subsystem);
 				if (libraries == null) {
-					libraries = new String[] {currentDir.getName()};
+					subsystems.put(subsystem, new String[] {libraryName});
 				} else {
-					String[] newLibraries = Arrays.copyOf(libraries, libraries.length + 1);
-					newLibraries[newLibraries.length - 1] = currentDir.getName();
-					libraries = newLibraries;
+					 String[] newLibraries = Arrays.copyOf(libraries, libraries.length + 1);
+					 newLibraries[newLibraries.length - 1] = libraryName;
+					 subsystems.put(subsystem, newLibraries);
 				}
-				
-				subsystems.put(subsystem, libraries);
 			}
-			
-			return;
-		}
-		
-		for (File file : currentDir.listFiles()) {
-			if (file.isDirectory()) {
-				collectCacheData(file, subsystem == null ? getSubsystem(file) : subsystem);
-			}
-		}
+		});
 	}
 
-	private String getSubsystem(File file) {
-		String fileName = file.getName();
-		for (String subsystemName : SUBSYSTEM_NAMES) {
-			if (fileName.endsWith("." + subsystemName)) {
-				return subsystemName;
-			}
-		}
+	private boolean isLibraryDevProjectDir(File dir) {
+		if (!dir.exists())
+			return false;
 		
-		return null;
-	}
-
-	private boolean isGraniteArtifactProject(File dir) {
+		if (!dir.isDirectory())
+			return false;
+		
 		boolean pomFound = false;
 		boolean srcFound = false;
-		
 		for (File file : dir.listFiles()) {
 			if (file.getName().equals("src") && file.isDirectory()) {
 				srcFound = true;
@@ -454,12 +482,12 @@ public class Updater {
 			}
 		}
 		
-		return srcFound && pomFound && libraryInfos.containsKey(dir.getName());
+		return srcFound && pomFound;
 	}
 
 	private class LibraryInfo {
 		public String fileName;
-		public String projectDirPath;
+		public String developmentDir;
 	}
 
 	private boolean isGraniteArtifact(String libraryFileName) {
@@ -475,7 +503,7 @@ public class Updater {
 	}
 	
 	private boolean isSubsystem(String module) {
-		for (String subsystemName : SUBSYSTEM_NAMES) {
+		for (String subsystemName : getSubsystemNames()) {
 			if (subsystemName.equals(module))
 				return true;
 		}

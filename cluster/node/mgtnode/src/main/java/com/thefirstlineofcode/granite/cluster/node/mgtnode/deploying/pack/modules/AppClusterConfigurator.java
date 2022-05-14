@@ -1,8 +1,8 @@
 package com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack.modules;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 import com.thefirstlineofcode.granite.cluster.node.commons.deploying.DeployPlan;
 import com.thefirstlineofcode.granite.cluster.node.commons.deploying.Global;
@@ -11,7 +11,6 @@ import com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack.IPackC
 import com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack.config.IConfig;
 
 public class AppClusterConfigurator implements IPackConfigurator {
-
 	private static final String FILE_NAME_CLUSTERING_INI = "clustering.ini";
 
 	@Override
@@ -22,7 +21,8 @@ public class AppClusterConfigurator implements IPackConfigurator {
 	}
 
 	private void configureJavaUtilLogging(IPackContext context) {
-		IConfig javaUtilLoggingConfig = context.getConfigManager().createOrGetConfig(context.getClusterConfigurationDir(), "java_util_logging.ini");
+		IConfig javaUtilLoggingConfig = context.getConfigManager().createOrGetConfig(
+				context.getRuntimeConfigurationDir().toPath(), "java_util_logging.ini");
 		javaUtilLoggingConfig.addOrUpdateProperty("handlers", "java.util.logging.FileHandler, java.util.logging.ConsoleHandler");
 		javaUtilLoggingConfig.addOrUpdateProperty(".level", "INFO");
 		javaUtilLoggingConfig.addOrUpdateProperty("java.util.logging.FileHandler.pattern", "%h/appnode_rt.log%g.log");
@@ -34,28 +34,29 @@ public class AppClusterConfigurator implements IPackConfigurator {
 	}
 
 	private void configureGlobalParams(IPackContext context, Global global) {
-		IConfig clusterConfig = context.getConfigManager().createOrGetConfig(context.getClusterConfigurationDir(), FILE_NAME_CLUSTERING_INI);
+		IConfig clusterConfig = context.getConfigManager().createOrGetConfig(
+				context.getRuntimeConfigurationDir().toPath(), FILE_NAME_CLUSTERING_INI);
 		IConfig sessionStorageConfig = clusterConfig.getSection("session-storage");
 		sessionStorageConfig.addOrUpdateProperty("session-duration-time", Integer.toString(global.getSessionDurationTime()));
 	}
 
 	private void copyClusteringConfigFile(IPackContext context) {
-		File nodeTypeClusteringConfigFile = new File(context.getConfigurationDir().toFile(), context.getNodeType() + "-clustering.ini");
-		if (copyClusteringConfigFile(context, nodeTypeClusteringConfigFile))
+		Path nodeTypeClusteringConfigFilePath = context.getConfigurationDir().toPath().
+				resolve(context.getNodeType() + "-clustering.ini");
+		if (copyClusteringConfigFile(context, nodeTypeClusteringConfigFilePath))
 			return;
 		
-		File defaultClusteringConfigFile = new File(context.getConfigurationDir().toFile(), "default-clustering.ini");
-		if (!copyClusteringConfigFile(context, defaultClusteringConfigFile)) {
+		Path defaultClusteringConfigFilePath = context.getConfigurationDir().toPath().resolve("default-clustering.ini");
+		if (!copyClusteringConfigFile(context, defaultClusteringConfigFilePath)) {
 			throw new RuntimeException(String.format("Can't find a clustering config file to copy. You should put %s or %s to mgtnode cluster configuration directory.",
-					defaultClusteringConfigFile.getName(), nodeTypeClusteringConfigFile.getName()));
+					defaultClusteringConfigFilePath, defaultClusteringConfigFilePath));
 		}
 	}
 	
-	private boolean copyClusteringConfigFile(IPackContext context, File sourceFile) {
-		if (sourceFile.exists()) {
+	private boolean copyClusteringConfigFile(IPackContext context, Path sourceFilePath) {
+		if (sourceFilePath.toFile().exists()) {
 			try {
-				Files.copy(sourceFile.toPath(), new File(context.getClusterConfigurationDir().toFile(),
-						FILE_NAME_CLUSTERING_INI).toPath());
+				Files.copy(sourceFilePath, getClusteringIniFileTargetPath(context.getRuntimeConfigurationDir().toPath()));
 				
 				return true;
 			} catch (IOException e) {
@@ -66,4 +67,7 @@ public class AppClusterConfigurator implements IPackConfigurator {
 		return false;
 	}
 
+	private Path getClusteringIniFileTargetPath(Path runtimeConfigurationDirPath) {
+		return runtimeConfigurationDirPath.resolve(FILE_NAME_CLUSTERING_INI);
+	}
 }

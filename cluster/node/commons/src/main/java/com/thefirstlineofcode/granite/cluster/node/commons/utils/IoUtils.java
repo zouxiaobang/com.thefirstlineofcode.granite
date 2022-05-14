@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,30 +76,30 @@ public class IoUtils {
 		}
 	}
 
-	public static void writeToFile(String content, File file) throws IOException {
-		if (!file.exists()) {
-			Files.createFile(file.toPath());
+	public static void writeToFile(String content, Path path) throws IOException {
+		if (!Files.exists(path)) {
+			Files.createFile(path);
 		}
 		
 		BufferedWriter out = null;
 		try {
-			out = new BufferedWriter(new FileWriter(file));
+			out = new BufferedWriter(new FileWriter(path.toFile()));
 			out.write(content);
 		} finally {
 			IoUtils.close(out);
 		}
 	}
 
-    public static void writeToFile(InputStream in, File file) throws IOException {
-		if (!file.exists()) {
-			Files.createFile(file.toPath());
+    public static void writeToFile(InputStream in, Path path) throws IOException {
+		if (!Files.exists(path)) {
+			Files.createFile(path);
 		}
 		
 		BufferedInputStream BufferedIn = null;
     	BufferedOutputStream out = null;
 		try {
 			BufferedIn = new BufferedInputStream(in);
-			out = new BufferedOutputStream(new FileOutputStream(file));
+			out = new BufferedOutputStream(new FileOutputStream(path.toFile()));
 			
 			byte[] buf = new byte[2048];
 			int size = -1;
@@ -112,11 +113,11 @@ public class IoUtils {
 		}
     }
 	
-	public static String readFile(File file) throws IOException {
+	public static String readFile(Path path) throws IOException {
 		BufferedReader in = null;
 		
 		try {
-			in = new BufferedReader(new FileReader(file));
+			in = new BufferedReader(new FileReader(path.toFile()));
 			
 			char[] buf = new char[1024];
 			int size = -1;
