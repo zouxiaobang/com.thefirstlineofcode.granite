@@ -59,23 +59,23 @@
 			<artifactId>granite-framework-adf-spring</artifactId>
 		</dependency>
 		<dependency>
-				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<groupId>com.thefirstlineofcode.granite.pipeline</groupId>
 				<artifactId>granite-pipeline-stages-stream</artifactId>
 		</dependency>
 		<dependency>
-				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<groupId>com.thefirstlineofcode.granite.pipeline</groupId>
 				<artifactId>granite-pipeline-stages-parsing</artifactId>
 		</dependency>
 		<dependency>
-				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<groupId>com.thefirstlineofcode.granite.pipeline</groupId>
 				<artifactId>granite-pipeline-stages-processing</artifactId>
 		</dependency>
 		<dependency>
-				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<groupId>com.thefirstlineofcode.granite.pipeline</groupId>
 				<artifactId>granite-pipeline-stages-routing</artifactId>
 		</dependency>
 		<dependency>
-				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<groupId>com.thefirstlineofcode.granite.pipeline</groupId>
 				<artifactId>granite-pipeline-stages-event</artifactId>
 		</dependency>
 		<dependency>

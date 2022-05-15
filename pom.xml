@@ -347,27 +347,27 @@
 			</dependency>
 			<!-- Granite pipeline stage implementations -->
 			<dependency>
-				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<groupId>com.thefirstlineofcode.granite.pipeline</groupId>
 				<artifactId>granite-pipeline-stages-stream</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<groupId>com.thefirstlineofcode.granite.pipeline</groupId>
 				<artifactId>granite-pipeline-stages-parsing</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<groupId>com.thefirstlineofcode.granite.pipeline</groupId>
 				<artifactId>granite-pipeline-stages-processing</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<groupId>com.thefirstlineofcode.granite.pipeline</groupId>
 				<artifactId>granite-pipeline-stages-routing</artifactId>
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+				<groupId>com.thefirstlineofcode.granite.pipeline</groupId>
 				<artifactId>granite-pipeline-stages-event</artifactId>
 				<version>${granite.version}</version>
 			</dependency>

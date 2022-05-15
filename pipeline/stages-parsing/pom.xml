@@ -6,17 +6,21 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-        <groupId>com.thefirstlineofcode.granite.pipeline</groupId>
-        <artifactId>granite-pipeline-stages</artifactId>
+        <groupId>com.thefirstlineofcode.granite</groupId>
+        <artifactId>granite-pipeline</artifactId>
         <version>1.0.0-ALPHA1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 	
-	<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
-	<artifactId>granite-pipeline-stages-event</artifactId>
-	<name>Implemention for pipeline event stage</name>
+	<groupId>com.thefirstlineofcode.granite.pipeline</groupId>
+	<artifactId>granite-pipeline-stages-parsing</artifactId>
+	<name>Implemention for pipeline parsing stage</name>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.thefirstlineofcode.basalt</groupId>
+			<artifactId>basalt-oxm</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>com.thefirstlineofcode.granite.framework</groupId>
 			<artifactId>granite-framework-core</artifactId>

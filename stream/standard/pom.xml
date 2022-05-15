@@ -29,7 +29,7 @@
 			<artifactId>granite-framework-adf-spring</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+			<groupId>com.thefirstlineofcode.granite.pipeline</groupId>
 			<artifactId>granite-pipeline-stages-stream</artifactId>
 		</dependency>
 	</dependencies>

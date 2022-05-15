@@ -38,7 +38,11 @@
 	</build>
 
 	<modules>
-		<module>stages</module>
+		<module>stages-stream</module>
+		<module>stages-parsing</module>
+		<module>stages-processing</module>
+		<module>stages-event</module>
+		<module>stages-routing</module>
 	</modules>
 
 </project>

@@ -6,13 +6,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-        <groupId>com.thefirstlineofcode.granite.pipeline</groupId>
-        <artifactId>granite-pipeline-stages</artifactId>
+        <groupId>com.thefirstlineofcode.granite</groupId>
+        <artifactId>granite-pipeline</artifactId>
         <version>1.0.0-ALPHA1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 	
-	<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+	<groupId>com.thefirstlineofcode.granite.pipeline</groupId>
 	<artifactId>granite-pipeline-stages-routing</artifactId>
 	<name>Implemention for pipeline routing stage</name>
 
