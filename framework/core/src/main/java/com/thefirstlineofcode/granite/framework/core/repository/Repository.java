@@ -84,6 +84,8 @@ public class Repository implements IRepository {
 	private void loadContributedComponents() {
 		for (IComponentsContributor componentContributor : appComponentService.getPluginManager().
 				getExtensions(IComponentsContributor.class)) {
+			appComponentService.inject(componentContributor);
+			
 			Class<?>[] componentClasses = componentContributor.getComponentClasses();
 			if (componentClasses == null || componentClasses.length == 0)
 				continue;
@@ -98,6 +100,10 @@ public class Repository implements IRepository {
 					
 					logger.warn("Component class '{}' didn't load as a component because it isn't annotated by @Component. Please check your code.", componentClass.getName());
 				}
+			}
+			
+			if (componentContributor instanceof IComponentsRegisteredCallback) {
+				((IComponentsRegisteredCallback)componentContributor).componentsRegistered(this);
 			}
 		}
 	}
@@ -255,41 +261,49 @@ public class Repository implements IRepository {
 	}
 
 	public void found(Class<?> type, Component componentAnnotation) {
-		if (componentAnnotation != null) {
-			IComponentInfo componentInfo = new GenericComponentInfo(componentAnnotation.value(), type);
-			
-			if (componentInfos.containsKey(componentInfo.getId())) {
-				throw new RuntimeException(String.format("Reduplicated component. Component which's id is '%s' has already existed.",
-						componentInfo.getId()));
-			}
-			
-			if (logger.isDebugEnabled())
-				logger.debug("Component '{}' has been found.", componentInfo.getId());
-			
-			scanDependencies(type, componentInfo);
-			
-			componentFound(componentInfo);
-			
-			IComponentInfo[] aliasComponents = getAliasComponents(componentInfo, componentAnnotation);
-			for (IComponentInfo aliasComponent : aliasComponents) {
-				componentFound(aliasComponent);
-			}
+		registerComponent(componentAnnotation.value(), componentAnnotation.aliases(), type);
+	}
+
+	public void registerComponent(String id, Class<?> type) {
+		registerComponent(id, null, type);
+	}
+	
+	public void registerComponent(String id, String[] aliases, Class<?> type) {
+		if (id == null || type == null)
+			throw new IllegalArgumentException("Null ID or null type.");
+		
+		registerComponent(new GenericComponentInfo(id, type));
+	}
+
+	public void registerComponent(IComponentInfo componentInfo) {
+		if (componentInfos.containsKey(componentInfo.getId())) {
+			throw new RuntimeException(String.format("Reduplicated component. Component which's id is '%s' has already existed.",
+					componentInfo.getId()));
+		}
+		
+		if (logger.isDebugEnabled())
+			logger.debug("Component '{}' has been found.", componentInfo.getId());
+		
+		scanDependencies(componentInfo.getType(), componentInfo);
+		componentFound(componentInfo);
+		
+		IComponentInfo[] aliasComponents = getAliasComponents(componentInfo, null);
+		for (IComponentInfo aliasComponent : aliasComponents) {
+			componentFound(aliasComponent);
 		}
 	}
 
-	private IComponentInfo[] getAliasComponents(IComponentInfo componentInfo, Component componentAnnotation) {
-		String[] alias = componentAnnotation.alias();
-		if (alias.length == 0)
+	private IComponentInfo[] getAliasComponents(IComponentInfo componentInfo, String[] aliases) {
+		if (aliases == null || aliases.length == 0)
 			return new IComponentInfo[0];
 		
-		IComponentInfo[] aliasComponents = new IComponentInfo[alias.length];
-		
-		for (int i = 0; i < alias.length; i++) {
-			IComponentInfo aliasComponent = componentInfo.getAliasComponent(alias[i]);
+		IComponentInfo[] aliasComponents = new IComponentInfo[aliases.length];
+		for (int i = 0; i < aliases.length; i++) {
+			IComponentInfo aliasComponent = componentInfo.getAliasComponent(aliases[i]);
 			
 			for (IDependencyInfo dependency : componentInfo.getDependencies()) {
-				int dependenciesCount = getBindedDependenciesCount(getFullDependencyId(alias[i], dependency.getBareId()));
-				aliasComponent.addDependency(dependency.getAliasDependency(alias[i], dependenciesCount));
+				int dependenciesCount = getBindedDependenciesCount(getFullDependencyId(aliases[i], dependency.getBareId()));
+				aliasComponent.addDependency(dependency.getAliasDependency(aliases[i], dependenciesCount));
 			}
 			
 			aliasComponents[i] = aliasComponent;
@@ -466,7 +480,7 @@ public class Repository implements IRepository {
 		}
 		
 		Class<?> parent = clazz.getSuperclass();
-		if (parent.getAnnotation(Component.class) == null)
+		if (parent == null || parent.getAnnotation(Component.class) == null)
 			return fields;
 		
 		return getClassFields(parent, fields);
@@ -549,8 +563,7 @@ public class Repository implements IRepository {
 		return componentBindings.get(componentId);
 	}
 	
-	@Override
-	public synchronized void registerSingleton(String id, Object component) {
+	private synchronized void registerSingleton(String id, Object component) {
 		if (singletons.containsKey(id))
 			throw new RuntimeException(String.format("Dereplicated component ID: '%s'.", id));
 		
@@ -565,7 +578,7 @@ public class Repository implements IRepository {
 		
 		IComponentInfo componentInfo = getComponentInfo(id);
 		if (componentInfo == null)
-			return component;
+			return null;
 		
 		if (!componentInfo.isSingleton()) {			
 			try {
@@ -587,14 +600,4 @@ public class Repository implements IRepository {
 			return component;
 		}
 	}
-
-	@Override
-	public void removeSingleton(String id) {
-		singletons.remove(id);
-	}
-
-/*	@Override
-	public Object getSingleton(String id) {
-		return singletons.get(id);
-	}*/
 }

@@ -1,16 +1,15 @@
 package com.thefirstlineofcode.granite.cluster.xeps.ibr;
 
-import org.springframework.stereotype.Component;
-
 import com.thefirstlineofcode.basalt.xeps.ibr.IqRegister;
 import com.thefirstlineofcode.basalt.xeps.ibr.RegistrationField;
 import com.thefirstlineofcode.basalt.xeps.ibr.RegistrationForm;
+import com.thefirstlineofcode.granite.framework.core.annotations.Component;
 import com.thefirstlineofcode.granite.framework.core.auth.Account;
 import com.thefirstlineofcode.granite.framework.core.utils.StringUtils;
 import com.thefirstlineofcode.granite.xeps.ibr.IRegistrationStrategy;
 import com.thefirstlineofcode.granite.xeps.ibr.MalformedRegistrationInfoException;
 
-@Component
+@Component("cluster.registration.strategy")
 public class RegistrationStrategy implements IRegistrationStrategy {
 
 	@Override

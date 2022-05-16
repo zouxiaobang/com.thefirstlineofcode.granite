@@ -125,7 +125,7 @@ public class Main {
 	
 	private void printUsage() {
 		System.out.println("Usage:");
-		System.out.println("java -jar com.thefirstlineofcode.granite.deploy.cluster.mgtnode.pack-${VERSION}.jar [OPTIONS] [Bundle-SymbolicNames or SubSystems]");
+		System.out.println("java -jar granite-pack-cluster-mgtnode-${VERSION}.jar [OPTIONS] [Bundle-SymbolicNames or SubSystems]");
 		System.out.println("OPTIONS:");
 		System.out.println("-help                            Display help information.");
 		System.out.println("-update                          Update specified modules.");

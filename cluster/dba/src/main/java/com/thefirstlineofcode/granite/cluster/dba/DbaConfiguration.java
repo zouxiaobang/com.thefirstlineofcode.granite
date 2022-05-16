@@ -21,7 +21,7 @@ public class DbaConfiguration implements ISpringConfiguration {
 	}
 	
 	@Bean
-	public DbInitializationExecutor dbInitialzationExecutor() {
-		return new DbInitializationExecutor();
+	public DbInitializationExecutor dbInitialzationExecutor(MongoDatabase database) {
+		return new DbInitializationExecutor(database);
 	}
 }

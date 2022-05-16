@@ -38,13 +38,13 @@ public class OptionsTool extends AbstractOptionsTool<Options> {
 
 	@Override
 	protected void printUsage() {
-		System.out.println("Usage: java com.thefirstlineofcode.granite.cluster.node.mgtnode.Main [OPTIONS]");
+		System.out.println("Usage: java -jar granite-cluster-node-mgtnode-${VERSION}.jar [OPTIONS]");
 		System.out.println("OPTIONS:");
 		System.out.println("--help                                 Display help information.");
 		System.out.println("--http-port=HTTP_PORT                  Specify the http port that mgt node to use.");
 		System.out.println("--configuration-dir=CONFIGURATION_DIR  Specify the path of configuration directory.");
 		System.out.println("--repository-dir=REPOSITORY_DIR        Specify the path of repository directory.");
-		System.out.println("--repack                               Repack the runtime package.");
+		System.out.println("--repack                               Repack the runtime packages.");
 	}
 
 }

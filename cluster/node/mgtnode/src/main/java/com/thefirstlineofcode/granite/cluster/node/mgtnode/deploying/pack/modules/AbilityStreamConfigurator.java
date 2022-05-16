@@ -118,6 +118,7 @@ public class AbilityStreamConfigurator implements IPackConfigurator {
 		config.addOrUpdateProperty("standard.client.message.processor$session.manager", "cluster.session.manager");
 		config.addOrUpdateProperty("standard.client.message.processor$message.channel", "cluster.stream.2.parsing.message.channel");
 		config.addOrUpdateProperty("standard.client.message.processor$event.message.channel", "cluster.any.2.event.message.channel");
+		config.addOrUpdateProperty("cluster.any.2.event.message.channel$node.runtime.configuration", "cluster.node.runtime.configuration");
 		config.addOrUpdateProperty("standard.client.message.processor$router", "cluster.router");
 		config.addOrUpdateProperty("cluster.router$ignite", "cluster.ignite");
 		config.addOrUpdateProperty("cluster.router$session.manager", "cluster.session.manager");

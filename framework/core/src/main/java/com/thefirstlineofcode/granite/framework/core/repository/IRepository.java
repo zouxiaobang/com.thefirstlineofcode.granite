@@ -10,10 +10,6 @@ public interface IRepository {
 	IComponentInfo[] getComponentInfos();
 	IComponentInfo getComponentInfo(String componentId);
 	String[] getComponentBinding(String componentId);
-	
-	void registerSingleton(String id, Object component);
-	//Object getSingleton(String id);
-	void removeSingleton(String id);
 	Object get(String id);
 	
 	void setServiceListener(IServiceListener listener);

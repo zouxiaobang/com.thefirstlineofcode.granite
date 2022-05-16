@@ -40,7 +40,7 @@ public class DatabaseFactoryBean implements FactoryBean<MongoDatabase>, IServerC
 			if (client != null)
 				return client.getDatabase(dbName);
 			
-			File dbConfigFile = new File(configurationDir, "/cluster/db.ini");
+			File dbConfigFile = new File(configurationDir, "/db.ini");
 			Properties properties = new Properties();
 			BufferedReader reader = null;
 			try {
@@ -75,10 +75,12 @@ public class DatabaseFactoryBean implements FactoryBean<MongoDatabase>, IServerC
 				throw new RuntimeException("Invalid DB configuration. Password is null.");
 			}
 			
-			MongoCredential credential = MongoCredential.createCredential(userName, dbName, password.toCharArray());
-			if (serverAddresses.size() == 1) {				
-				client = MongoClients.create("mongodb://" + serverAddresses.get(0));
+			if (serverAddresses.size() == 1) {
+				String connectionString = String.format("mongodb://%s:%s@%s/%s",
+						userName, password, serverAddresses.get(0), dbName);
+				client = MongoClients.create(connectionString);
 			} else {
+				MongoCredential credential = MongoCredential.createCredential(userName, dbName, password.toCharArray());
 				MongoClientSettings settings = MongoClientSettings.builder().
 						credential(credential).
 						applyToClusterSettings(builder -> builder.hosts(serverAddresses)).

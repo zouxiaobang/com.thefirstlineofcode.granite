@@ -1,14 +1,14 @@
 package com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack.config;
 
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConfigManager implements IConfigManager {
-	private Map<Path, IConfig> configs;
+	private List<IConfig> configs;
 	
 	public ConfigManager() {
-		configs = new HashMap<>();
+		configs = new ArrayList<>();
 	}
 	
 	@Override
@@ -20,19 +20,28 @@ public class ConfigManager implements IConfigManager {
 			throw new IllegalArgumentException("Null config file name.");
 		
 		Path configPath = parentPath.resolve(configFileName);
-		IConfig config = configs.get(configPath);
+		IConfig config = getConfig(configPath);
 		if (config == null) {
-			config = new Config();
-			configs.put(configPath, config);
+			config = new Config(configPath);
+			configs.add(config);
 		}
 		
 		return config;
 	}
 
+	private IConfig getConfig(Path configPath) {
+		for (IConfig config : configs) {
+			if (config.getConfigPath().equals(configPath))
+				return config;
+		}
+		
+		return null;
+	}
+
 	@Override
 	public void saveConfigs() {
-		for (Path configPath : configs.keySet()) {
-			configs.get(configPath).save(configPath);
+		for (IConfig config : configs) {
+			config.save();
 		}
 	}
 

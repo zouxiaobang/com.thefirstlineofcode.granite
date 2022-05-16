@@ -15,7 +15,7 @@
 				<include>README*</include>
 				<include>LICENSE*</include>
 				<include>NOTICE*</include>
-				<include>config/*</include>
+				<include>configuration/*</include>
 			</includes>
 		</fileSet>
 		<fileSet>

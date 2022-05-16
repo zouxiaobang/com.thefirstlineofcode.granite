@@ -150,7 +150,7 @@ public class Main {
 	
 	private void printUsage() {
 		System.out.println("Usage:");
-		System.out.println("java -jar com.thefirstlineofcode.granite.pack.lite-${VERSION}.jar [OPTIONS] [Bundle-SymbolicNames or SubSystems]");
+		System.out.println("java -jar granite-pack-lite-${VERSION}.jar [OPTIONS] [Bundle-SymbolicNames or SubSystems]");
 		System.out.println("OPTIONS:");
 		System.out.println("-help                                  Display help information.");
 		System.out.println("-update                                Update specified modules.");
@@ -158,7 +158,7 @@ public class Main {
 		System.out.println("-cleanCache                            Clean the packing cache.");
 		System.out.println("-offline                               Run in offline mode.");
 		System.out.println("-version <VERSION>                     Specify the version. Default is 0.2.1-RELEASE.");
-		System.out.println("-protocol <PROTOCOL>                   Specify the protocol. Optional protocols are 'standard', 'iot', 'leps' or 'sand'. Default is 'standard').");
+		System.out.println("-protocol <PROTOCOL>                   Specify the protocol. Optional protocols are 'standard' or 'sand'. Default is 'standard').");
 		System.out.println("-sandProjectName <SAND-PROJECT-NAME>   Specify the sand project name. Default is 'com.thefirstlineofcode.sand'.");
 	}
 }

@@ -109,9 +109,8 @@ public class Updater {
 			throw new RuntimeException(String.format("Artifact %s doesn't exist.", artifact.getPath()));
 		}
 		
-		if (isFileModified(artifact)) {
-			File repositoryDir = getRepositoryDir();
-			File target = new File(repositoryDir, artifact.getName());
+		if (isFileModified(libraryInfo.deployDir, artifact)) {
+			File target = new File(libraryInfo.deployDir, artifact.getName());
 			try {
 				Files.copy(artifact.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING,
 						StandardCopyOption.COPY_ATTRIBUTES);
@@ -122,9 +121,8 @@ public class Updater {
 		}
 	}
 
-	private boolean isFileModified(File artifact) {
-		File repositoryDir = getRepositoryDir();
-		File existing = new File(repositoryDir, artifact.getName());
+	private boolean isFileModified(String sDeployDir, File artifact) {
+		File existing = new File(sDeployDir, artifact.getName());
 		if (!existing.exists())
 			return true;
 		
@@ -248,13 +246,14 @@ public class Updater {
 
 	private LibraryInfo stringToLibraryInfo(String string) {
 		StringTokenizer st = new StringTokenizer(string, ",");
-		if (st.countTokens() != 2) {
+		if (st.countTokens() != 3) {
 			throw new RuntimeException("Bad cache format[Library Info].");
 		}
 		
 		LibraryInfo libraryInfo = new LibraryInfo();
-		libraryInfo.developmentDir = st.nextToken();
 		libraryInfo.fileName = st.nextToken();
+		libraryInfo.developmentDir = st.nextToken();
+		libraryInfo.deployDir = st.nextToken();
 		
 		return libraryInfo;
 	}
@@ -279,7 +278,7 @@ public class Updater {
 			libraryInfos.put(getLibraryName(libraryName), libraryInfo);
 		}
 		
-		collectCacheData();
+		collectCacheData(repositoryDir.getAbsolutePath());
 		
 		syncCacheToDisk(cacheDir);
 	}
@@ -350,7 +349,7 @@ public class Updater {
 	private void syncLibraryInfosToDisk(File cacheDir) {
 		Properties pLibraryInfos = new Properties();
 		for (Map.Entry<String, LibraryInfo> entry : libraryInfos.entrySet()) {
-			pLibraryInfos.put(entry.getKey(), convertLibraryInfoToString(entry.getValue()));
+			pLibraryInfos.put(entry.getKey(), libraryInfoToString(entry.getValue()));
 		}
 		
 		Writer writer = null;
@@ -370,11 +369,13 @@ public class Updater {
 		}
 	}
 
-	private Object convertLibraryInfoToString(LibraryInfo libraryInfo) {
+	private String libraryInfoToString(LibraryInfo libraryInfo) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(libraryInfo.developmentDir).
+		sb.append(libraryInfo.fileName).
 			append(',').
-			append(libraryInfo.fileName);
+			append(libraryInfo.developmentDir).
+			append(',').
+			append(libraryInfo.deployDir);
 		
 		return sb.toString();
 	}
@@ -414,7 +415,7 @@ public class Updater {
 		return sb.toString();	
 	}
 
-	private void collectCacheData() {
+	private void collectCacheData(String repositoryDir) {
 		libraryInfos.forEach((libraryName, libraryInfo) -> {
 			StringTokenizer st = new StringTokenizer(libraryName, "-");
 			int count = st.countTokens();
@@ -440,6 +441,7 @@ public class Updater {
 				throw new RuntimeException(String.format("%s isn't a library development project directory.", developmentDir));
 			
 			libraryInfo.developmentDir = developmentDir;
+			libraryInfo.deployDir = repositoryDir;
 			libraryInfos.put(libraryName, libraryInfo);
 			
 			if (rawSubsystemName != null) {
@@ -485,6 +487,7 @@ public class Updater {
 	private class LibraryInfo {
 		public String fileName;
 		public String developmentDir;
+		public String deployDir;
 	}
 
 	private boolean isGraniteArtifact(String libraryFileName) {

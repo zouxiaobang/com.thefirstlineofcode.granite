@@ -18,12 +18,13 @@ public class AbilityProcessingConfigurator implements IPackConfigurator {
 
 	private void configureProcessingService(IConfig config) {
 		config.addOrUpdateProperty("processing.service$processing.message.receiver", "cluster.parsing.2.processing.message.receiver");
-		config.addOrUpdateProperty("cluster.parsing.2.processing.message.receiver$runtime.configuration", "cluster.runtime.configuration");
+		config.addOrUpdateProperty("cluster.parsing.2.processing.message.receiver$node.runtime.configuration", "cluster.node.runtime.configuration");
 		config.addOrUpdateProperty("cluster.parsing.2.processing.message.receiver$session.manager", "cluster.session.manager");
 		config.addOrUpdateProperty("cluster.parsing.2.processing.message.receiver$message.channel", "cluster.any.2.routing.message.channel");
 		config.addOrUpdateProperty("cluster.parsing.2.processing.message.receiver$message.processor", "default.protocol.processing.processor");
 		config.addOrUpdateProperty("default.protocol.processing.processor$authenticator", "cluster.authenticator");
 		config.addOrUpdateProperty("default.protocol.processing.processor$event.message.channel", "cluster.any.2.event.message.channel");
+		config.addOrUpdateProperty("cluster.any.2.event.message.channel$node.runtime.configuration", "cluster.node.runtime.configuration");
 		config.addOrUpdateProperty("default.protocol.processing.processor$presence.processor", "default.presence.processor");
 		config.addOrUpdateProperty("default.presence.processor$event.message.channel", "cluster.any.2.event.message.channel");
 		config.addOrUpdateProperty("default.protocol.processing.processor$message.processor", "default.message.processor");

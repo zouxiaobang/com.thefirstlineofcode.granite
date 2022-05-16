@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.util.Set;
 
 public interface IConfig {
+	Path getConfigPath();
 	void setContent(String content);
 	String getContent();
 	void addOrUpdateProperty(String name, String value);
@@ -13,5 +14,5 @@ public interface IConfig {
 	void removeProperty(String name);
 	void addComment(String comment);
 	IConfig getSection(String sectionName);
-	void save(Path configPath);
+	void save();
 }

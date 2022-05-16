@@ -1,38 +1,44 @@
 package com.thefirstlineofcode.granite.cluster.node.commons.utils;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 public class SectionalProperties {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
-	private Map<String, Properties> sections;
+	private List<Section> sections;
 	
 	public SectionalProperties() {
-		sections = new HashMap<>();
+		sections = new ArrayList<>();
 	}
 	
-	public void setProperties(String name, Properties properties) {
-		sections.put(name, properties);
+	public void addProperties(String name, Properties properties) {
+		sections.add(new Section(name, properties));
 	}
 	
-	public Set<String> getSectionNames() {
-		return sections.keySet();
+	public String[] getSectionNames() {
+		String[] sectionNames = new String[sections.size()];
+		for (int i = 0; i < sections.size(); i++) {
+			sectionNames[i] = sections.get(i).name;
+		}
+		
+		return sectionNames;
 	}
 	
 	public Properties getSection(String name) {
-		return sections.get(name);
+		for (Section section : sections) {
+			if (section.name.equals(name))
+				return section.properties;
+		}
+		
+		return null;
 	}
 	
 	public void load(InputStream inputStream) throws IOException {
@@ -42,7 +48,8 @@ public class SectionalProperties {
 			
 			String line = null;
 			boolean lineContinuation = false;
-			Section section = null;
+			String sectionName = null;
+			StringBuilder sectionContent = null;
 			
 			int currentLines = 0;
 			while ((line = in.readLine()) != null) {
@@ -55,27 +62,27 @@ public class SectionalProperties {
 				}
 				
 				if (isSectionName(line)) {
-					if (section != null) {
-						sections.put(section.name, loadProperties(section.content.toString()));
+					if (sectionName != null) {
+						sections.add(new Section(sectionName, loadProperties(sectionContent.toString())));
 					}
 					
-					section = new Section();
-					section.name = getSectionName(line);
-					if (sections.containsKey(section.name))
-						throw new IllegalArgumentException(String.format("Duplicated section: %s.", section.name));
+					sectionName = getSectionName(line);
+					sectionContent = new StringBuilder();
+					if (getSection(sectionName) != null)
+						throw new IllegalArgumentException(String.format("Duplicated section: %s.", sectionName));
 					
 					lineContinuation = false;
 				} else if (isComment(line)) {
 					// ignore
 				} else if (isSectionContent(line) || lineContinuation) {
-					if (section == null) {
+					if (sectionName == null) {
 						throw new IllegalArgumentException(String.format("Illegal sectional properties file. Null section name. Illegal line is [line number: %d, line content: '%s'].", currentLines, line));
 					}
 					
-					if (section.content.length() == 0) {
-						section.content.append(line);
+					if (sectionContent.length() == 0) {
+						sectionContent.append(line);
 					} else {
-						section.content.append(LINE_SEPARATOR).append(line);
+						sectionContent.append(LINE_SEPARATOR).append(line);
 					}
 					
 					if (isLineContinuation(line))
@@ -87,8 +94,8 @@ public class SectionalProperties {
 				}
 			}
 			
-			if (section != null) {
-				sections.put(section.name, loadProperties(section.content.toString()));
+			if (sectionName != null) {
+				sections.add(new Section(sectionName, loadProperties(sectionContent.toString())));
 			}
 		} finally {
 			IoUtils.close(in);
@@ -132,7 +139,12 @@ public class SectionalProperties {
 	
 	private class Section {
 		public String name;
-		public StringBuilder content = new StringBuilder();
+		public Properties properties;
+		
+		public Section(String name, Properties properties) {
+			this.name = name;
+			this.properties = properties;
+		}
 	}
 	
 	private boolean isSectionName(String line) {
@@ -140,30 +152,34 @@ public class SectionalProperties {
 	}
 	
 	public void save(OutputStream outputStream) throws IOException {
-		BufferedWriter writer = null;
+		StringBuilder sb = new StringBuilder();
 		try {
-			writer = new BufferedWriter(new OutputStreamWriter(outputStream));
 			if (sections != null && !sections.isEmpty()) {
-				for (Entry<String, Properties> entry : sections.entrySet()) {
-					// ignore empty section.
-					if (entry.getValue().size() == 0)
+				for (int i = 0; i < sections.size(); i++) {
+					Section section = sections.get(i);
+					
+					// Ignore empty section.
+					if (section.properties.size() == 0)
 						continue;
 					
-					writer.write(String.format("[%s]\r\n", entry.getKey()));
+					sb.append(String.format("[%s]%s", section.name, LINE_SEPARATOR));
 					
-					Properties properties = entry.getValue();
-					
-					for (String propertyName : properties.stringPropertyNames()) {
-						writer.write(String.format("%s=%s\r\n", propertyName, properties.getProperty(propertyName)));
+					for (String propertyName : section.properties.stringPropertyNames()) {
+						sb.append(String.format("%s=%s%s", propertyName,
+								section.properties.getProperty(propertyName),
+								LINE_SEPARATOR));
 					}
+					
+					if (i != sections.size() - 1)
+						sb.append(LINE_SEPARATOR);
 				}
 				
-				writer.flush();
+				outputStream.write(sb.toString().getBytes());
+				outputStream.flush();
 			}
 		} finally {
 			IoUtils.close(outputStream);
 		}
 		
 	}
-	
 }

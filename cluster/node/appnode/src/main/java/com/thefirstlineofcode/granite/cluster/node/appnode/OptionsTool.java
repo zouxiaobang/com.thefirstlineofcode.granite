@@ -74,20 +74,22 @@ public class OptionsTool extends AbstractOptionsTool<Options> {
 	
 	@Override
 	protected void printUsage() {
-		System.out.println("Usage: java com.thefirstlineofcode.granite.cluster.node.appnode.Main [OPTIONS]");
+		System.out.println("Usage: java granite-cluster-node-appnode-${VERSION}.jar [OPTIONS]");
 		System.out.println("OPTIONS:");
-		System.out.println("--help                              Display help information.");
-		System.out.println("--config-dir=CONFIG_DIR             Specify the path of configuration directory.");
-		System.out.println("--mgtnode-ip=IP                     Specify the mgtnode ip address that appnode to connect.");
-		System.out.println("--mgtnode-http-port=HTTP_PORT       Specify the mgtnode http port that appnode to connect.");
-		System.out.println("--redeploy                          Force to redeploy runtime from mgtnode.");
-		System.out.println("--no-deploy                         Don't deploy runtime from mgtnode.");
-		System.out.println("--rt-debug                          Run runtime process in debug mode.");
-		System.out.println("--rt-debug-port=RT_DEBUG_PORT       Specify JDWP port the runtime process listens in debug mode.");
-		System.out.println("--rt-jvm-options=RT_JVM_OPTIONS     Specify additional JVM options the runtime process uses.");
-		System.out.println("--rt-log-level=RT_LOG_LEVEL         Specify log level the runtime process uses.");
-		System.out.println("--rt-enable-thirdparties            Enable thirdparty libraries's log in runtime process.");
-		System.out.println("--rt-console                        Open the runtime process console.");
+		System.out.println("--help                                 Display help information.");
+		System.out.println("--runtimes-dir=RUNTIMES_DIR            Specify the path of runtimes directory.");
+		System.out.println("--configuration-dir=CONFIGURATION_DIR  Specify the path of configuration directory.");
+		System.out.println("--mgtnode-ip=IP                        Specify the mgtnode ip address that appnode to connect.");
+		System.out.println("--mgtnode-http-port=HTTP_PORT          Specify the mgtnode http port that appnode to connect.");
+		System.out.println("--redeploy                             Force to redeploy runtime from mgtnode.");
+		System.out.println("--no-deploy                            Don't deploy runtime from mgtnode.");
+		System.out.println("--node-type                            Specify the node type which the node should deploy.");
+		System.out.println("--rt-debug                             Run runtime process in debug mode.");
+		System.out.println("--rt-debug-port=RT_DEBUG_PORT          Specify JDWP port the runtime process listens in debug mode.");
+		System.out.println("--rt-jvm-options=RT_JVM_OPTIONS        Specify additional JVM options the runtime process uses.");
+		System.out.println("--rt-log-level=RT_LOG_LEVEL            Specify log level the runtime process uses.");
+		System.out.println("--rt-enable-thirdparties               Enable thirdparty libraries's log in runtime process.");
+		System.out.println("--rt-console                           Open the runtime process console.");
 	}
 
 }

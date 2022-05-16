@@ -36,7 +36,6 @@ import com.thefirstlineofcode.granite.framework.core.session.ISession;
 import com.thefirstlineofcode.granite.framework.core.utils.IoUtils;
 
 public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurationAware {
-	private static final String CONFIGURATION_DIR_CLUSTER = "cluster";
 	private static final String PROPERTY_KEY_NODE_TYPE = "granite.node.type";
 	private static final String PROPERTY_KEY_MGTNODE_IP = "granite.mgtnode.ip";
 	
@@ -56,6 +55,11 @@ public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurat
 		return Ignite.class;
 	}
 	
+	@Override
+	public boolean isSingleton() {
+		return true;
+	}
+	
 	private Ignite startIgnite() {
 		configureJavaUtilLogging();
 		
@@ -70,7 +74,7 @@ public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurat
 	}
 	
 	private void configureJavaUtilLogging() {
-		System.setProperty("java.util.logging.config.file", getClusterConfigurationDir() + "/java_util_logging.ini");
+		System.setProperty("java.util.logging.config.file", serverConfiguration.getConfigurationDir() + "/java_util_logging.ini");
 	}
 
 	private boolean isSessionPersistenceEnabled() {
@@ -78,7 +82,7 @@ public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurat
 	}
 	
 	private IgniteConfiguration configureIgnite() {
-		File configFile = new File(getClusterConfigurationDir(), "clustering.ini");
+		File configFile = new File(serverConfiguration.getConfigurationDir(), "clustering.ini");
 		if (!configFile.exists()) {
 			throw new RuntimeException("Can't get clustering.ini.");
 		}
@@ -268,10 +272,6 @@ public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurat
 			
 			return addressesIncludeMgtnodeIp;
 		}
-	}
-	
-	private String getClusterConfigurationDir() {
-		return serverConfiguration.getConfigurationDir() + "/" + CONFIGURATION_DIR_CLUSTER;
 	}
 	
 	public void destroy() {

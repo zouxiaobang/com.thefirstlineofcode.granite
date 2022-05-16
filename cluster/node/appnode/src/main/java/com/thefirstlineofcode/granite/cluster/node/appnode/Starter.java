@@ -70,7 +70,7 @@ public class Starter {
 			throw new RuntimeException("Can't determine which node type the appnode is. Please check your deploy plan.");
 		}
 		
-		String runtimeName = getRuntimeName(plan.getAppnodeRuntimeString(nodeType));
+		String runtimeName = getRuntimeName(plan.getChecksum(nodeType));
 		
 		if ((!isLocalRuntimeZipExisted(options.getRuntimesDir(), runtimeName) || options.isRedeploy()) && mgtnodeIpAndDeployPlanChecksum != null) {
 			downloadRuntimeZip(mgtnodeIpAndDeployPlanChecksum.mgtnodeIp, options.getMgtnodeHttpPort(), options.getRuntimesDir(), runtimeName);
@@ -361,7 +361,7 @@ public class Starter {
 			if (filterNode(configuration.getNodeTypes().get(nodeType), configuration)) {
 				if (filteredNodeType != null) {
 					throw new RuntimeException(String.format(
-						"Appnode can be %s and %s node type. Adjust your deploy plan to guarantee that one appnode corresponds to only one node type.",
+						"Appnode can be %s or %s node type, but not both. Adjust your deploy plan to guarantee that one appnode corresponds to only one node type.",
 							filteredNodeType, nodeType));
 				}
 				

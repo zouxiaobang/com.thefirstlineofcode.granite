@@ -1,11 +1,18 @@
 package com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack.modules;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Properties;
 
 import com.thefirstlineofcode.granite.cluster.node.commons.deploying.DeployPlan;
 import com.thefirstlineofcode.granite.cluster.node.commons.deploying.Global;
+import com.thefirstlineofcode.granite.cluster.node.commons.utils.IoUtils;
+import com.thefirstlineofcode.granite.cluster.node.commons.utils.SectionalProperties;
 import com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack.IPackConfigurator;
 import com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack.IPackContext;
 import com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack.config.IConfig;
@@ -16,7 +23,23 @@ public class AppClusterConfigurator implements IPackConfigurator {
 	@Override
 	public void configure(IPackContext context, DeployPlan configuration) {
 		copyClusteringConfigFile(context);
-		configureGlobalParams(context, configuration.getGlobal());
+		File defaultClusteringConfigFile = new File(context.getRuntimeConfigurationDir(), FILE_NAME_CLUSTERING_INI);
+		if (!defaultClusteringConfigFile.exists())
+			throw new RuntimeException(String.format("Configuration file '%s' not exists.",
+					defaultClusteringConfigFile.getAbsolutePath()));
+		
+		InputStream in = null;
+		SectionalProperties defaultClusteringConfig = new SectionalProperties();
+		try {
+			in = new BufferedInputStream(new FileInputStream(defaultClusteringConfigFile));
+			defaultClusteringConfig.load(in);
+		} catch (IOException e) {
+			throw new RuntimeException("Can't read clustering.ini.", e);
+		} finally {
+			IoUtils.close(in);
+		}
+		
+		configureGlobalParams(context, defaultClusteringConfig, configuration.getGlobal());
 		configureJavaUtilLogging(context);
 	}
 
@@ -33,10 +56,19 @@ public class AppClusterConfigurator implements IPackConfigurator {
 		javaUtilLoggingConfig.addOrUpdateProperty("java.util.logging.ConsoleHandler.formatter", "java.util.logging.SimpleFormatter");
 	}
 
-	private void configureGlobalParams(IPackContext context, Global global) {
+	private void configureGlobalParams(IPackContext context, SectionalProperties defaultClusteringConfig, Global global) {
 		IConfig clusterConfig = context.getConfigManager().createOrGetConfig(
 				context.getRuntimeConfigurationDir().toPath(), FILE_NAME_CLUSTERING_INI);
-		IConfig sessionStorageConfig = clusterConfig.getSection("session-storage");
+		for (String sectionName : defaultClusteringConfig.getSectionNames()) {
+			Properties properties = defaultClusteringConfig.getSection(sectionName);
+			IConfig config = clusterConfig.getSection(sectionName);
+			for (Object oName : properties.keySet()) {
+				String name = (String)oName;
+				config.addOrUpdateProperty(name, properties.getProperty(name));
+			}
+		}
+		
+		IConfig sessionStorageConfig = clusterConfig.getSection("sessions-storage");
 		sessionStorageConfig.addOrUpdateProperty("session-duration-time", Integer.toString(global.getSessionDurationTime()));
 	}
 

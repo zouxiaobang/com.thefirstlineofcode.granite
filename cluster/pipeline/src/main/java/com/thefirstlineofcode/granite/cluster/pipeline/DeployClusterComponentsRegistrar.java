@@ -6,21 +6,24 @@ import org.apache.ignite.Ignite;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
 
 import com.thefirstlineofcode.granite.cluster.node.commons.deploying.DeployPlan;
 import com.thefirstlineofcode.granite.cluster.node.commons.deploying.DeployPlanException;
 import com.thefirstlineofcode.granite.cluster.node.commons.deploying.DeployPlanReader;
+import com.thefirstlineofcode.granite.framework.core.annotations.Component;
+import com.thefirstlineofcode.granite.framework.core.repository.CreationException;
+import com.thefirstlineofcode.granite.framework.core.repository.GenericComponentInfo;
 import com.thefirstlineofcode.granite.framework.core.repository.IInitializable;
 import com.thefirstlineofcode.granite.framework.core.repository.IRepository;
 import com.thefirstlineofcode.granite.framework.core.repository.IRepositoryAware;
+import com.thefirstlineofcode.granite.framework.core.repository.Repository;
 
-@Component
+@Component("deploy.cluster.components.registrar")
 public class DeployClusterComponentsRegistrar implements IRepositoryAware, ApplicationContextAware, IInitializable {
 	private static final String PROPERTY_KEY_NODE_TYPE = "granite.node.type";
 	private static final String PROPERTY_KEY_GRANITE_DEPLOY_PLAN_FILE = "granite.deploy.plan.file";
 	
-	private IRepository repository;
+	private Repository repository;
 	private ApplicationContext applicationContext;
 	
 	@Override
@@ -29,11 +32,21 @@ public class DeployClusterComponentsRegistrar implements IRepositoryAware, Appli
 		if (ignite == null)
 			throw new RuntimeException("Null ignite instance.");
 		
-		repository.registerSingleton(Constants.COMPONENT_ID_IGNITE, ignite);
+		repository.registerComponent(new GenericComponentInfo(Constants.COMPONENT_ID_IGNITE, Ignite.class) {
+			@Override
+			public Object doCreate() throws CreationException {
+				return ignite;
+			}
+		});
 		
 		DeployPlan deployPlan = readDeployPlan();
-		repository.registerSingleton(Constants.COMPONENT_ID_CLUSTER_NODE_RUNTIME_CONFIGURATION,
-				new NodeRuntimeConfiguration(System.getProperty(PROPERTY_KEY_NODE_TYPE), deployPlan));
+		repository.registerComponent(new GenericComponentInfo(Constants.COMPONENT_ID_CLUSTER_NODE_RUNTIME_CONFIGURATION,
+				NodeRuntimeConfiguration.class) {
+			@Override
+			public Object doCreate() throws CreationException {
+				return new NodeRuntimeConfiguration(System.getProperty(PROPERTY_KEY_NODE_TYPE), deployPlan);
+			}
+		});
 	}
 	
 	private DeployPlan readDeployPlan() {
@@ -48,7 +61,7 @@ public class DeployClusterComponentsRegistrar implements IRepositoryAware, Appli
 	
 	@Override
 	public void setRepository(IRepository repository) {
-		this.repository = repository;
+		this.repository = (Repository)repository;
 	}
 
 	@Override

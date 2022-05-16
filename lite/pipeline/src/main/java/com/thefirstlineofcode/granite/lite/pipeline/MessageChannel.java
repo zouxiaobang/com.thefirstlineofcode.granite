@@ -9,7 +9,7 @@ import com.thefirstlineofcode.granite.framework.core.repository.IRepository;
 import com.thefirstlineofcode.granite.framework.core.repository.IRepositoryAware;
 
 @Component(value="lite.stream.2.parsing.message.channel",
-	alias={
+	aliases={
 			"lite.parsing.2.processing.message.channel",
 			"lite.any.2.event.message.channel",
 			"lite.any.2.routing.message.channel",

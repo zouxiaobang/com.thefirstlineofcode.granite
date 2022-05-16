@@ -139,7 +139,7 @@ public class Main {
 	
 	private void printUsage() {
 		System.out.println("Usage:");
-		System.out.println("java -jar com.thefirstlineofcode.granite.server-${VERSION}.jar [OPTIONS]");
+		System.out.println("java -jar granite-server-${VERSION}.jar [OPTIONS]");
 		System.out.println("OPTIONS:");
 		System.out.println("-help                            Display help information.");
 		System.out.println("-console                         Start the server with console.");

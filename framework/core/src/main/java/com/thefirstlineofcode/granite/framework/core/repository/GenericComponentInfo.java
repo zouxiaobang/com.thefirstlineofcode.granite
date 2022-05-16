@@ -2,7 +2,7 @@ package com.thefirstlineofcode.granite.framework.core.repository;
 
 import com.thefirstlineofcode.granite.framework.core.IService;
 
-public final class GenericComponentInfo extends AbstractComponentInfo implements IComponentInfo {
+public class GenericComponentInfo extends AbstractComponentInfo implements IComponentInfo {
 	
 	public GenericComponentInfo(String id, Class<?> type) {
 		super(id, type, true);

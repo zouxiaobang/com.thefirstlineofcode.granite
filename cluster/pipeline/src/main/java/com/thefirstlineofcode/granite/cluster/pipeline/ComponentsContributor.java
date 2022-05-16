@@ -1,12 +1,19 @@
 package com.thefirstlineofcode.granite.cluster.pipeline;
 
 import org.pf4j.Extension;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import com.thefirstlineofcode.granite.framework.core.repository.IComponentsContributor;
+import com.thefirstlineofcode.granite.framework.core.repository.IComponentsRegisteredCallback;
+import com.thefirstlineofcode.granite.framework.core.repository.IRepository;
 
 @Extension
-public class ComponentsContributor implements IComponentsContributor {
-
+public class ComponentsContributor implements IComponentsContributor,
+		IComponentsRegisteredCallback, ApplicationContextAware {	
+	private ApplicationContext appContext;
+	
 	@Override
 	public Class<?>[] getComponentClasses() {
 		return new Class<?>[] {
@@ -20,8 +27,24 @@ public class ComponentsContributor implements IComponentsContributor {
 			Routing2StreamMessageReceiver.class,
 			Stream2ParsingMessageChannel.class,
 			Stream2ParsingMessageReceiver.class,
+			LocalNodeIdProvider.class,
+			Router.class,
 			DeployClusterComponentsRegistrar.class
 		};
+	}
+
+	@Override
+	public void componentsRegistered(IRepository repository) {
+		DeployClusterComponentsRegistrar registrar = (DeployClusterComponentsRegistrar)repository.get("deploy.cluster.components.registrar");
+		registrar.setApplicationContext(appContext);
+		registrar.setRepository(repository);
+		
+		registrar.init();
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.appContext = applicationContext;
 	}
 
 }

@@ -55,6 +55,10 @@
 	
 	<dependencies>
 		<dependency>
+			<groupId>com.thefirstlineofcode.granite.cluster.node</groupId>
+			<artifactId>granite-cluster-node-commons</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.thefirstlineofcode.granite.framework.adf</groupId>
 			<artifactId>granite-framework-adf-spring</artifactId>
 		</dependency>
@@ -77,6 +81,10 @@
 		<dependency>
 				<groupId>com.thefirstlineofcode.granite.pipeline</groupId>
 				<artifactId>granite-pipeline-stages-event</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ignite</groupId>
+			<artifactId>ignite-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.mongodb</groupId>

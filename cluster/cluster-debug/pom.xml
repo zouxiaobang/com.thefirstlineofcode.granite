@@ -30,23 +30,27 @@
 			<artifactId>granite-cluster-node-appnode</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.thefirstlineofcode.granite</groupId>
+			<artifactId>granite-server</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.thefirstlineofcode.granite.stream</groupId>
 			<artifactId>granite-stream-standard</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+			<groupId>com.thefirstlineofcode.granite.pipeline</groupId>
 			<artifactId>granite-pipeline-stages-parsing</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+			<groupId>com.thefirstlineofcode.granite.pipeline</groupId>
 			<artifactId>granite-pipeline-stages-processing</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+			<groupId>com.thefirstlineofcode.granite.pipeline</groupId>
 			<artifactId>granite-pipeline-stages-routing</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.thefirstlineofcode.granite.pipeline.stages</groupId>
+			<groupId>com.thefirstlineofcode.granite.pipeline</groupId>
 			<artifactId>granite-pipeline-stages-event</artifactId>
 		</dependency>
 		<dependency>

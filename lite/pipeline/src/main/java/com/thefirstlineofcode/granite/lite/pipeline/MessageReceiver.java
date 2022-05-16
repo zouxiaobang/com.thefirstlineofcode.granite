@@ -27,7 +27,7 @@ import com.thefirstlineofcode.granite.lite.pipeline.AbstractConnectionContext.Pr
 import com.thefirstlineofcode.granite.lite.pipeline.AbstractConnectionContext.StringOutConnectionContext;
 
 @Component(value="lite.stream.2.parsing.message.receiver",
-	alias={
+	aliases={
 		"lite.parsing.2.processing.message.receiver",
 		"lite.any.2.event.message.receiver",
 		"lite.any.2.routing.message.receiver"
