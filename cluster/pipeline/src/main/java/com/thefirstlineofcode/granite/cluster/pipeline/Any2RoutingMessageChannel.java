@@ -8,7 +8,7 @@ import com.thefirstlineofcode.granite.framework.core.pipeline.IMessageConnector;
 
 @Component("cluster.any.2.routing.message.channel")
 public class Any2RoutingMessageChannel implements IMessageChannel {
-	@Dependency(Constants.COMPONENT_ID_ANY_2_ROUTING_MESSAGE_CONNECTOR)
+	@Dependency("connector")
 	private IMessageConnector connector;
 
 	@Override

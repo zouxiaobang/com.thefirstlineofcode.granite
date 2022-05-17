@@ -44,10 +44,13 @@ public class Starter implements Serializable {
 	
 	private ConsoleThread consoleThread;
 	
-	public void start(Options options) throws Exception {
+	public boolean start(Options options) throws Exception {
 		checkRepository(options.getRepositoryDir());
 		DeployPlan deployPlan = readAndCheckDeplyConfiguration(
 				options.getConfigurationDir(), options.getDeployDir());
+		if (deployPlan == null)
+			return false;
+		
 		checkAndPackAppnodeRuntimes(options, deployPlan);
 		startJettyServer(options);
 		
@@ -58,8 +61,8 @@ public class Starter implements Serializable {
 		if (server.isStarted()) {
 			logger.info("HTTP Server has started.");
 		} else {
-			logger.info("Can't start HTTP Server. Application will terminated.");
-			return;
+			logger.error("Can't start HTTP Server.");
+			return false;
 		}
 		
 		boolean clusterJoined = joinCluster(options);
@@ -70,14 +73,21 @@ public class Starter implements Serializable {
 			// ignore
 		}
 		
-		if (clusterJoined) {
-			logger.info("Starting console...");
-			startConsoleThread();
+		if (!clusterJoined) {
+			logger.error("Can't join the cluster.");
+			return false;
 		}
+		
+		logger.info("Starting console...");
+		startConsoleThread();
+		
+		return true;
 	}
 	
 	private DeployPlan readAndCheckDeplyConfiguration(String configurationDir, String deployDir) {
 		DeployPlan deployPlan = readDeployPlan(configurationDir);
+		if (deployPlan == null)
+			return null;
 		
 		saveDeployPlanToDeployPath(configurationDir, deployDir, deployPlan);
 		
@@ -142,7 +152,8 @@ public class Starter implements Serializable {
 		File deployPlanFile = new File(configurationDir, FILE_NAME_DEPLOY_PLAN);
 		
 		if (!deployPlanFile.exists()) {
-			throw new RuntimeException(String.format("Can't read %s. It doesn't exist.", deployPlanFile.getPath()));
+			logger.error("Can't read {}. It doesn't exist.", deployPlanFile.getPath());
+			return null;
 		}
 		
 		logger.info("Reading deploy plan...");
@@ -155,15 +166,18 @@ public class Starter implements Serializable {
 		logger.info("Deploy plan has read.");
 		
 		if (deployPlan.getCluster() == null) {
-			throw new IllegalArgumentException("Invalid deploy plan file. Must include a custer section");
+			logger.error("Invalid deploy plan file. Must include a custer section");
+			return null;
 		}
 		
 		if (deployPlan.getCluster().getDomainName() == null) {
-			throw new IllegalArgumentException("Invalid deploy plan file. Domain name must be defined.");
+			logger.error("Invalid deploy plan file. Domain name must be defined.");
+			return null;
 		}
 		
 		if (deployPlan.getNodeTypes().isEmpty()) {
-			throw new IllegalArgumentException("Invalid deploy plan file. No node type defined.");
+			logger.error("Invalid deploy plan file. No node type defined.");
+			return null;
 		}
 		
 		return deployPlan;

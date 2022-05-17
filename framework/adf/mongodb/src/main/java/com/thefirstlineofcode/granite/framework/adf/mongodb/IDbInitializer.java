@@ -1,4 +1,4 @@
-package com.thefirstlineofcode.granite.cluster.dba;
+package com.thefirstlineofcode.granite.framework.adf.mongodb;
 
 import org.pf4j.ExtensionPoint;
 

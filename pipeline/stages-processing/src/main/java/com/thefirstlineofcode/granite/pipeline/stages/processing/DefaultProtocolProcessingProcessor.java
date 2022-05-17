@@ -489,7 +489,7 @@ public class DefaultProtocolProcessingProcessor implements com.thefirstlineofcod
 		if (userName == null)
 			return false;
 		
-		if (!authenticator.exists(userName) && deviceAuthenticator.exists(userName)) {
+		if (!authenticator.exists(userName) && !deviceAuthenticator.exists(userName)) {
 			return false;
 		}
 		

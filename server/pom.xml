@@ -55,12 +55,16 @@
 	
 	<dependencies>
 		<dependency>
+			<groupId>com.thefirstlineofcode.basalt</groupId>
+			<artifactId>basalt-xmpp-im</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.thefirstlineofcode.granite.cluster.node</groupId>
 			<artifactId>granite-cluster-node-commons</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.thefirstlineofcode.granite.framework.adf</groupId>
-			<artifactId>granite-framework-adf-spring</artifactId>
+			<artifactId>granite-framework-adf-mongodb</artifactId>
 		</dependency>
 		<dependency>
 				<groupId>com.thefirstlineofcode.granite.pipeline</groupId>

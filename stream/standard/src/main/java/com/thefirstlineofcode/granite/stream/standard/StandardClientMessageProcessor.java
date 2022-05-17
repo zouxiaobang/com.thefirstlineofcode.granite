@@ -51,6 +51,8 @@ import com.thefirstlineofcode.granite.framework.core.pipeline.SimpleMessage;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.IPipelineExtendersContributor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.ConnectionClosedEvent;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.ConnectionOpenedEvent;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEventFirer;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEventFirerAware;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IRouter;
 import com.thefirstlineofcode.granite.framework.core.repository.IInitializable;
 import com.thefirstlineofcode.granite.framework.core.session.ISessionListener;
@@ -66,7 +68,7 @@ import com.thefirstlineofcode.granite.pipeline.stages.stream.negotiants.TlsNegot
 
 @Component("standard.client.message.processor")
 public class StandardClientMessageProcessor implements IClientMessageProcessor, IConfigurationAware,
-		IServerConfigurationAware, IApplicationComponentServiceAware, IInitializable {
+		IServerConfigurationAware, IApplicationComponentServiceAware, IEventFirerAware, IInitializable {
 	private static final String BEAN_NAME_AUTHENTICATOR = "authenticator";
 
 	private static final Logger logger = LoggerFactory.getLogger(StandardClientMessageProcessor.class);
@@ -86,7 +88,7 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 	protected IAuthenticator authenticator;	
 	protected ISessionManager sessionManager;
 	protected IMessageChannel messageChannel;
-	protected IMessageChannel eventMessageChannel;
+	protected IEventFirer eventFirer;
 	protected IRouter router;
 	
 	protected String hostName;
@@ -208,13 +210,13 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 	private void fireConnectionOpenedEvent(IClientConnectionContext context) {
 		ConnectionOpenedEvent event = new ConnectionOpenedEvent(context.getConnectionId().toString(),
 				context.getRemoteIp(), context.getRemotePort());	
-		eventMessageChannel.send(new SimpleMessage(event));
+		eventFirer.fire(event);
 	}
 	
 	private void fireConnectionClosedEvent(IClientConnectionContext context) {
 		ConnectionClosedEvent event = new ConnectionClosedEvent(context.getConnectionId().toString(),
 				context.getJid(), context.getStreamId());	
-		eventMessageChannel.send(new SimpleMessage(event));
+		eventFirer.fire(event);
 	}
 
 	private boolean isCloseStreamRequest(String message) {
@@ -250,7 +252,7 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 		IStreamNegotiant resourceBinding = new ResourceBindingNegotiant(
 				hostName, sessionManager);
 		IStreamNegotiant sessionEstablishment = new SessionEstablishmentNegotiant(
-				router, sessionManager, eventMessageChannel, sessionListenerDelegate);
+				router, sessionManager, eventFirer, sessionListenerDelegate);
 		
 		resourceBinding.setNext(sessionEstablishment);
 		sasl.setNext(resourceBinding);
@@ -362,11 +364,6 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 		this.messageChannel = messageChannel;
 	}
 	
-	@Dependency("event.message.channel")
-	public void setEventMessageChannel(IMessageChannel eventMessageChannel) {
-		this.eventMessageChannel = eventMessageChannel;
-	}
-	
 	@Dependency("router")
 	public void setRouter(IRouter router) {
 		this.router = router;
@@ -410,6 +407,11 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 		this.appComponentService = appComponentService;
 		authenticator = ((AdfComponentService)appComponentService).getApplicationContext().
 				getBean(BEAN_NAME_AUTHENTICATOR, IAuthenticator.class);
+	}
+
+	@Override
+	public void setEventFirer(IEventFirer eventFirer) {
+		this.eventFirer = eventFirer;
 	}
 
 }

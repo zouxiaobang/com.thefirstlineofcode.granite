@@ -6,24 +6,24 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<groupId>com.thefirstlineofcode.granite</groupId>
-		<artifactId>granite-lite</artifactId>
+		<groupId>com.thefirstlineofcode.granite.framework</groupId>
+		<artifactId>granite-framework-adf</artifactId>
 		<version>1.0.0-ALPHA1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
-	<groupId>com.thefirstlineofcode.granite.lite</groupId>
-	<artifactId>granite-lite-dba</artifactId>
-	<name>Granite lite DBA implementation</name>
-
+	<groupId>com.thefirstlineofcode.granite.framework.adf</groupId>
+	<artifactId>granite-framework-adf-mongodb</artifactId>
+	<name>MongoDB integration for granite application developement framework</name>
+	
 	<dependencies>
 		<dependency>
 			<groupId>com.thefirstlineofcode.granite.framework.adf</groupId>
-			<artifactId>granite-framework-adf-mybatis</artifactId>
+			<artifactId>granite-framework-adf-spring</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongodb-driver-sync</artifactId>
 		</dependency>
 	</dependencies>
 

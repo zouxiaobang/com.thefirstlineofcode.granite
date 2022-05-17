@@ -18,16 +18,8 @@
 
 	<dependencies>
 		<dependency>
-        		<groupId>org.slf4j</groupId>
-        		<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.thefirstlineofcode.granite.framework.adf</groupId>
-			<artifactId>granite-framework-adf-spring</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.mongodb</groupId>
-			<artifactId>mongodb-driver-sync</artifactId>
+			<artifactId>granite-framework-adf-mongodb</artifactId>
 		</dependency>
 	</dependencies>
 

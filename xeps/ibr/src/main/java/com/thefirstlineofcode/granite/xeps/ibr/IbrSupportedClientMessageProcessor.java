@@ -47,7 +47,7 @@ public class IbrSupportedClientMessageProcessor extends StandardClientMessagePro
 			IStreamNegotiant resourceBinding = new ResourceBindingNegotiant(
 					hostName, sessionManager);
 			IStreamNegotiant sessionEstablishment = new SessionEstablishmentNegotiant(
-					router, sessionManager, eventMessageChannel, sessionListenerDelegate);
+					router, sessionManager, eventFirer, sessionListenerDelegate);
 			
 			resourceBinding.setNext(sessionEstablishment);
 			sasl.setNext(resourceBinding);
@@ -76,7 +76,7 @@ public class IbrSupportedClientMessageProcessor extends StandardClientMessagePro
 			IStreamNegotiant resourceBinding = new ResourceBindingNegotiant(
 					hostName, sessionManager);
 			IStreamNegotiant sessionEstablishment = new SessionEstablishmentNegotiant(
-					router, sessionManager, eventMessageChannel, sessionListenerDelegate);
+					router, sessionManager, eventFirer, sessionListenerDelegate);
 			
 			resourceBinding.setNext(sessionEstablishment);
 			sasl.setNext(resourceBinding);

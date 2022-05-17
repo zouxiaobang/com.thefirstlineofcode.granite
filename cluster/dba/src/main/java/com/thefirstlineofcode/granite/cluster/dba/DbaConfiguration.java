@@ -11,13 +11,8 @@ import com.thefirstlineofcode.granite.framework.adf.spring.ISpringConfiguration;
 @Configuration
 public class DbaConfiguration implements ISpringConfiguration {
 	@Bean
-	public DatabaseFactoryBean databaseFactoryBean() {
+	public DatabaseFactoryBean database() {
 		return new DatabaseFactoryBean();
-	}
-	
-	@Bean
-	public MongoDatabase database(DatabaseFactoryBean databaseFactoryBean) {
-		return databaseFactoryBean.getObject();
 	}
 	
 	@Bean

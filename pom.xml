@@ -341,6 +341,11 @@
 				<version>${granite.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>com.thefirstlineofcode.granite.framework.adf</groupId>
+				<artifactId>granite-framework-adf-mongodb</artifactId>
+				<version>${granite.version}</version>
+			</dependency>
+			<dependency>
  				<groupId>com.thefirstlineofcode.granite.framework</groupId>
 				<artifactId>granite-framework-im</artifactId>
 				<version>${granite.version}</version>

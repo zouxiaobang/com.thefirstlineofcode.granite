@@ -239,7 +239,7 @@ public class AppnodeRuntimesPacker implements IAppnodeRuntimesPacker {
 			CopyLibraryOperation[] copyLibraries = getCopyLibraryOperations(scope, StringUtils.stringToArray(properties.getProperty(CONFIGURATION_KEY_LIBRARIES)));
 			IPackConfigurator configurator = getConfigurator(properties.getProperty(CONFIGURATION_KEY_CONFIGURATOR));
 			
-			packModules.put(sectionName, new PackModule(scope, dependedModules, copyLibraries, configurator));
+			packModules.put(sectionName, new PackModule(sectionName, scope, dependedModules, copyLibraries, configurator));
 		}
 		
 	}

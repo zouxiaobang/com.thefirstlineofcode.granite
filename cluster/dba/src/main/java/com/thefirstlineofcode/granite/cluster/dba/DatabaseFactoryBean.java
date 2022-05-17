@@ -127,7 +127,7 @@ public class DatabaseFactoryBean implements FactoryBean<MongoDatabase>, IServerC
 
 	@Override
 	public boolean isSingleton() {
-		return true;
+		return false;
 	}
 
 	@PreDestroy

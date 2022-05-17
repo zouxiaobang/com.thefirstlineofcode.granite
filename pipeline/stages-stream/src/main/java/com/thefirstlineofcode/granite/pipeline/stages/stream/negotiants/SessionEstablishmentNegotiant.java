@@ -1,8 +1,5 @@
 package com.thefirstlineofcode.granite.pipeline.stages.stream.negotiants;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,8 +19,7 @@ import com.thefirstlineofcode.basalt.protocol.core.stanza.error.NotAuthorized;
 import com.thefirstlineofcode.basalt.protocol.core.stream.Session;
 import com.thefirstlineofcode.granite.framework.core.connection.IClientConnectionContext;
 import com.thefirstlineofcode.granite.framework.core.pipeline.IMessage;
-import com.thefirstlineofcode.granite.framework.core.pipeline.IMessageChannel;
-import com.thefirstlineofcode.granite.framework.core.pipeline.SimpleMessage;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEventFirer;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.SessionEstablishedEvent;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IRouter;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.RoutingRegistrationException;
@@ -54,14 +50,14 @@ public class SessionEstablishmentNegotiant extends AbstractNegotiant {
 	
 	private IRouter router;
 	private ISessionManager sessionManager;
-	private IMessageChannel eventMessageChannel;
+	private IEventFirer eventFirer;
 	private ISessionListener sessionListener;
 	
 	public SessionEstablishmentNegotiant(IRouter router, ISessionManager sessionManager,
-			IMessageChannel eventMessageChannel, ISessionListener sessionListener) {
+			IEventFirer eventFirer, ISessionListener sessionListener) {
 		this.sessionManager = sessionManager;
 		this.router = router;
-		this.eventMessageChannel = eventMessageChannel;
+		this.eventFirer = eventFirer;
 		this.sessionListener = sessionListener;
 	}
 	
@@ -140,10 +136,7 @@ public class SessionEstablishmentNegotiant extends AbstractNegotiant {
 	private void fireSessionEstablishedEvent(IClientConnectionContext context, JabberId jid) {
 		SessionEstablishedEvent event = new SessionEstablishedEvent(context.getConnectionId().toString(), jid);
 		
-		Map<Object, Object> headers = new HashMap<>();
-		headers.put(IMessage.KEY_SESSION_JID, jid);
-		
-		eventMessageChannel.send(new SimpleMessage(headers, event));
+		eventFirer.fire(event);
 	}
 
 }

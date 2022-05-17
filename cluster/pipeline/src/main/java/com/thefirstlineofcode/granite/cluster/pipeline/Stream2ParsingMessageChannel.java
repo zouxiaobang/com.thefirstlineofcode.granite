@@ -8,7 +8,7 @@ import com.thefirstlineofcode.granite.framework.core.pipeline.IMessageConnector;
 
 @Component("cluster.stream.2.parsing.message.channel")
 public class Stream2ParsingMessageChannel implements IMessageChannel {
-	@Dependency(Constants.COMPONENT_ID_STREAM_2_PARSING_MESSAGE_CONNECTOR)
+	@Dependency("connector")
 	private IMessageConnector connector;
 
 	@Override

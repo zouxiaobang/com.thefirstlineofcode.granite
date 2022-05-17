@@ -10,7 +10,7 @@ import com.thefirstlineofcode.granite.framework.core.repository.IInitializable;
 
 @Component("cluster.any.2.event.message.channel")
 public class Any2EventMessageChannel implements IMessageChannel, IInitializable {
-	@Dependency(Constants.COMPONENT_ID_ANY_2_EVENT_MESSAGE_CONNECTOR)
+	@Dependency("connector")
 	private IMessageConnector connector;
 	
 	@Dependency(Constants.DEPENDENCY_ID_NODE_RUNTIME_CONFIGURATION)

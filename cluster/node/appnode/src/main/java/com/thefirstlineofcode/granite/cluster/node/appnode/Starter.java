@@ -208,7 +208,7 @@ public class Starter {
 		String[] cmdArray = new String[cmdList.size()];
 		cmdArray = cmdList.toArray(cmdArray);
 		try {
-			logger.info("Starting runtime process...");
+			logger.info("Starting runtime[{}] process...", runtimeName);
 			ProcessBuilder pb = new ProcessBuilder(cmdArray).
 					redirectInput(Redirect.INHERIT).
 					redirectError(Redirect.INHERIT).

@@ -19,6 +19,7 @@
 	<modules>
 		<module>spring</module>
 		<module>mybatis</module>
+		<module>mongodb</module>
 	</modules>
 
 </project>

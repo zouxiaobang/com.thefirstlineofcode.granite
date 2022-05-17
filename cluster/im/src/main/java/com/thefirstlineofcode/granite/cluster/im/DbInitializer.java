@@ -6,7 +6,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
-import com.thefirstlineofcode.granite.cluster.dba.AbstractDbInitializer;
+import com.thefirstlineofcode.granite.framework.adf.mongodb.AbstractDbInitializer;
 
 public class DbInitializer extends AbstractDbInitializer {
 

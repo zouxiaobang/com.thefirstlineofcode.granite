@@ -30,11 +30,14 @@ public class Main {
 			options.setRepositoryDir(options.getHomeDir() + "/repository");
 		}
 		
-		// set log directory for logback(see logback.xml)
+		// Set log directory for logback(see logback.xml)
 		System.setProperty("mgtnode.log.dir", options.getHomeDir() + "/log");
 		
 		try {
-			new Starter().start(options);
+			boolean started = new Starter().start(options);
+			if (!started) {
+				System.err.println("There was something wrong. Application terminated.");
+			}
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
 			System.err.println("There was something wrong. Application terminated.");

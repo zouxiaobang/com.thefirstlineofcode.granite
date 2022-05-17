@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 import com.mongodb.client.MongoDatabase;
+import com.thefirstlineofcode.granite.framework.adf.mongodb.IDbInitializer;
 import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentService;
 import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentServiceAware;
 

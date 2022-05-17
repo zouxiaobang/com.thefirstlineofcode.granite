@@ -8,6 +8,7 @@ public interface IPackModule {
 		PLUGIN
 	}
 	
+	String getName();
 	Scope getScope();
 	String[] getDependedModules();
 	CopyLibraryOperation[] getCopyLibraries();

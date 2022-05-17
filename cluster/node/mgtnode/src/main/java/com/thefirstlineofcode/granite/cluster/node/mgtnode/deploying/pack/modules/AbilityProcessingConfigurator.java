@@ -21,22 +21,16 @@ public class AbilityProcessingConfigurator implements IPackConfigurator {
 		config.addOrUpdateProperty("cluster.parsing.2.processing.message.receiver$node.runtime.configuration", "cluster.node.runtime.configuration");
 		config.addOrUpdateProperty("cluster.parsing.2.processing.message.receiver$session.manager", "cluster.session.manager");
 		config.addOrUpdateProperty("cluster.parsing.2.processing.message.receiver$message.channel", "cluster.any.2.routing.message.channel");
+		config.addOrUpdateProperty("cluster.any.2.routing.message.channel$connector", "cluster.any.2.routing.message.receiver");
 		config.addOrUpdateProperty("cluster.parsing.2.processing.message.receiver$message.processor", "default.protocol.processing.processor");
 		config.addOrUpdateProperty("default.protocol.processing.processor$authenticator", "cluster.authenticator");
-		config.addOrUpdateProperty("default.protocol.processing.processor$event.message.channel", "cluster.any.2.event.message.channel");
-		config.addOrUpdateProperty("cluster.any.2.event.message.channel$node.runtime.configuration", "cluster.node.runtime.configuration");
-		config.addOrUpdateProperty("default.protocol.processing.processor$presence.processor", "default.presence.processor");
-		config.addOrUpdateProperty("default.presence.processor$event.message.channel", "cluster.any.2.event.message.channel");
-		config.addOrUpdateProperty("default.protocol.processing.processor$message.processor", "default.message.processor");
-		config.addOrUpdateProperty("default.message.processor$event.message.channel", "cluster.any.2.event.message.channel");
-		config.addOrUpdateProperty("default.protocol.processing.processor$iq.result.processor", "default.iq.result.processor");
-		config.addOrUpdateProperty("default.iq.result.processor$event.message.channel", "cluster.any.2.event.message.channel");
 	}
 
 	private void configureRoutingService(IConfig config) {
 		config.addPropertyIfAbsent("routing.service$routing.message.receiver", "cluster.any.2.routing.message.receiver");
 		config.addPropertyIfAbsent("cluster.any.2.routing.message.receiver$session.manager", "cluster.session.manager");
 		config.addPropertyIfAbsent("cluster.any.2.routing.message.receiver$message.channel", "cluster.routing.2.stream.message.channel");
+		config.addPropertyIfAbsent("cluster.any.2.routing.message.receiver$message.processor", "default.routing.processor");
 		config.addPropertyIfAbsent("cluster.routing.2.stream.message.channel$node.runtime.configuration", "cluster.node.runtime.configuration");
 		config.addPropertyIfAbsent("cluster.routing.2.stream.message.channel$router", "cluster.router");
 		config.addPropertyIfAbsent("cluster.router$session.manager", "cluster.session.manager");

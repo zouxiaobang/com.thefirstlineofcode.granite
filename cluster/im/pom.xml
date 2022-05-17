@@ -26,8 +26,8 @@
 			<artifactId>granite-im</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.thefirstlineofcode.granite.cluster</groupId>
-			<artifactId>granite-cluster-dba</artifactId>
+			<groupId>com.thefirstlineofcode.granite.framework.adf</groupId>
+			<artifactId>granite-framework-adf-mongodb</artifactId>
 		</dependency>
 	</dependencies>
 

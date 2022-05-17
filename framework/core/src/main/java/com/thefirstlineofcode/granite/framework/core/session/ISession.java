@@ -3,7 +3,7 @@ package com.thefirstlineofcode.granite.framework.core.session;
 import com.thefirstlineofcode.basalt.protocol.core.JabberId;
 
 public interface ISession {
-	public static final Object KEY_SESSION_JID = "granite.session.jid";
+	public static final String KEY_SESSION_JID = "granite.session.jid";
 	
 	<T> T setAttribute(Object key, T value);
 	<T> T setAttribute(Object key, ValueWrapper<T> wrapper);

@@ -3,6 +3,7 @@ package com.thefirstlineofcode.granite.cluster.node.mgtnode.deploying.pack;
 import com.thefirstlineofcode.granite.cluster.node.commons.deploying.DeployPlan;
 
 public class PackModule implements IPackModule {
+	private String name;
 	private Scope scope;
 	private String[] dependedModules;
 	private CopyLibraryOperation[] copyLibraries;
@@ -10,8 +11,9 @@ public class PackModule implements IPackModule {
 	private boolean librariesCopied;
 	private boolean configured;
 	
-	public PackModule(Scope scope, String[] dependedModules, CopyLibraryOperation[] copyLibraries,
+	public PackModule(String name, Scope scope, String[] dependedModules, CopyLibraryOperation[] copyLibraries,
 			IPackConfigurator configurator) {
+		this.name = name;
 		this.scope = scope;
 		this.dependedModules = dependedModules;
 		this.copyLibraries = copyLibraries;
@@ -87,5 +89,10 @@ public class PackModule implements IPackModule {
 	@Override
 	public Scope getScope() {
 		return scope;
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 }
