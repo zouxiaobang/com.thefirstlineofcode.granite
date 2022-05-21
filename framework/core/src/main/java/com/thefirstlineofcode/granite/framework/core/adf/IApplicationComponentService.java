@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.pf4j.PluginManager;
 
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEventFirer;
+
 public interface IApplicationComponentService {
 	void start();
 	void stop();
@@ -15,4 +17,5 @@ public interface IApplicationComponentService {
 	<T> T getAppComponent(String id, Class<T> type);
 	PluginManager getPluginManager();
 	IPluginConfigurations getPluginConfigurations();
+	IEventFirer createEventFirer();
 }

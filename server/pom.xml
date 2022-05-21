@@ -95,6 +95,10 @@
 			<artifactId>mongodb-driver-sync</artifactId>
 		</dependency>
 		<dependency>
+				<groupId>com.thefirstlineofcode.basalt</groupId>
+				<artifactId>basalt-xmpp-im</artifactId>
+		</dependency>
+		<dependency>
 				<groupId>com.thefirstlineofcode.sand.protocols</groupId>
 				<artifactId>sand-protocols-core</artifactId>
 		</dependency>

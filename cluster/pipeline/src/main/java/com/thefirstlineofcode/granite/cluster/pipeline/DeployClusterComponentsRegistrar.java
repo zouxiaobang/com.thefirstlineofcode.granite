@@ -10,24 +10,20 @@ import org.springframework.context.ApplicationContextAware;
 import com.thefirstlineofcode.granite.cluster.node.commons.deploying.DeployPlan;
 import com.thefirstlineofcode.granite.cluster.node.commons.deploying.DeployPlanException;
 import com.thefirstlineofcode.granite.cluster.node.commons.deploying.DeployPlanReader;
-import com.thefirstlineofcode.granite.framework.core.annotations.Component;
 import com.thefirstlineofcode.granite.framework.core.repository.CreationException;
 import com.thefirstlineofcode.granite.framework.core.repository.GenericComponentInfo;
-import com.thefirstlineofcode.granite.framework.core.repository.IInitializable;
 import com.thefirstlineofcode.granite.framework.core.repository.IRepository;
 import com.thefirstlineofcode.granite.framework.core.repository.IRepositoryAware;
 import com.thefirstlineofcode.granite.framework.core.repository.Repository;
 
-@Component("deploy.cluster.components.registrar")
-public class DeployClusterComponentsRegistrar implements IRepositoryAware, ApplicationContextAware, IInitializable {
+public class DeployClusterComponentsRegistrar implements IRepositoryAware, ApplicationContextAware {
 	private static final String PROPERTY_KEY_NODE_TYPE = "granite.node.type";
 	private static final String PROPERTY_KEY_GRANITE_DEPLOY_PLAN_FILE = "granite.deploy.plan.file";
 	
 	private Repository repository;
 	private ApplicationContext applicationContext;
 	
-	@Override
-	public void init() {
+	public void registerDeployClusterComponents() {
 		Ignite ignite = applicationContext.getBean(Ignite.class);
 		if (ignite == null)
 			throw new RuntimeException("Null ignite instance.");

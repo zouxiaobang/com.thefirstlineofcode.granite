@@ -37,10 +37,11 @@ import com.thefirstlineofcode.granite.framework.core.utils.CommonUtils;
 import com.thefirstlineofcode.granite.framework.core.utils.IoUtils;
 
 public class Repository implements IRepository {
-	private static final String CLASS_FILE_EXTENSION_NAME = ".class";
-	private static final String JAR_FILE_EXTENSION_NAME = ".jar";
 	public static final String GRANITE_LIBRARY_NAME_PREFIX = "granite-";
 	public static final String SAND_LIBRARY_NAME_PREFIX = "sand-";
+	
+	private static final String CLASS_FILE_EXTENSION_NAME = ".class";
+	private static final String JAR_FILE_EXTENSION_NAME = ".jar";
 
 	private static final Logger logger = LoggerFactory.getLogger(Repository.class);
 	
@@ -272,10 +273,14 @@ public class Repository implements IRepository {
 		if (id == null || type == null)
 			throw new IllegalArgumentException("Null ID or null type.");
 		
-		registerComponent(new GenericComponentInfo(id, type));
+		registerComponent(new GenericComponentInfo(id, type), aliases);
+	}
+	
+	public void registerComponent(IComponentInfo componentInfo) {
+		registerComponent(componentInfo, null);
 	}
 
-	public void registerComponent(IComponentInfo componentInfo) {
+	public void registerComponent(IComponentInfo componentInfo, String[] aliases) {
 		if (componentInfos.containsKey(componentInfo.getId())) {
 			throw new RuntimeException(String.format("Reduplicated component. Component which's id is '%s' has already existed.",
 					componentInfo.getId()));
@@ -287,7 +292,7 @@ public class Repository implements IRepository {
 		scanDependencies(componentInfo.getType(), componentInfo);
 		componentFound(componentInfo);
 		
-		IComponentInfo[] aliasComponents = getAliasComponents(componentInfo, null);
+		IComponentInfo[] aliasComponents = getAliasComponents(componentInfo, aliases);
 		for (IComponentInfo aliasComponent : aliasComponents) {
 			componentFound(aliasComponent);
 		}

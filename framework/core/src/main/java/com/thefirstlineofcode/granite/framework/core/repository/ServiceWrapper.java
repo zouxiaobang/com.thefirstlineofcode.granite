@@ -3,11 +3,12 @@ package com.thefirstlineofcode.granite.framework.core.repository;
 import com.thefirstlineofcode.granite.framework.core.IService;
 import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentService;
 import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentServiceAware;
+import com.thefirstlineofcode.granite.framework.core.config.IComponentConfigurations;
 import com.thefirstlineofcode.granite.framework.core.config.IConfiguration;
 import com.thefirstlineofcode.granite.framework.core.config.IConfigurationAware;
-import com.thefirstlineofcode.granite.framework.core.config.IComponentConfigurations;
 import com.thefirstlineofcode.granite.framework.core.config.IServerConfiguration;
 import com.thefirstlineofcode.granite.framework.core.config.IServerConfigurationAware;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEventFirerAware;
 
 public class ServiceWrapper implements IServiceWrapper {
 	private IServerConfiguration serverConfiguration;
@@ -92,6 +93,10 @@ public class ServiceWrapper implements IServiceWrapper {
 		
 		if (component instanceof IApplicationComponentServiceAware) {
 			((IApplicationComponentServiceAware)component).setApplicationComponentService(appComponentService);
+		}
+		
+		if (component instanceof IEventFirerAware) {
+			((IEventFirerAware)component).setEventFirer(appComponentService.createEventFirer());
 		}
 		
 		if (component instanceof IInitializable) {

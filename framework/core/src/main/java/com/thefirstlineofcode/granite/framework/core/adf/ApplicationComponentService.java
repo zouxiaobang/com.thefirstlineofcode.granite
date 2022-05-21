@@ -36,6 +36,7 @@ import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEven
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEventFirer;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEventFirerAware;
 import com.thefirstlineofcode.granite.framework.core.repository.CreationException;
+import com.thefirstlineofcode.granite.framework.core.repository.IComponentIdAware;
 import com.thefirstlineofcode.granite.framework.core.repository.IComponentInfo;
 import com.thefirstlineofcode.granite.framework.core.repository.IDependencyInfo;
 import com.thefirstlineofcode.granite.framework.core.repository.IInitializable;
@@ -406,40 +407,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 			ITranslator.class.isAssignableFrom(clazz) ||
 			IPipelineExtender.class.isAssignableFrom(clazz);
 	}
-
-	private IEventFirer createEventFirer() {
-		return new EventFirer(repository);
-	}
 	
-	private class EventFirer implements IEventFirer {
-		private IRepository repository;
-		private IMessageChannel messageChannel;
-		
-		public EventFirer(IRepository repository) {
-			this.repository = repository;
-		}
-
-		@Override
-		public void fire(IEvent event) {
-			if (messageChannel == null) {
-				messageChannel = getAnyToEventMessageChannel();
-			}
-			
-			messageChannel.send(new SimpleMessage(event));
-		}
-		
-		private IMessageChannel getAnyToEventMessageChannel() {
-			IMessageChannel messageChannerl = (IMessageChannel)repository.get(COMPONENT_ID_CLUSTER_ANY_2_EVENT_MESSAGE_CHANNEL);
-			if (messageChannerl == null)
-				messageChannerl = (IMessageChannel)repository.get(COMPONENT_ID_LITE_ANY_2_EVENT_MESSAGE_CHANNEL);
-			
-			if (messageChannerl == null)
-				throw new RuntimeException("Can't fire event because the any to event message channel is null.");
-			
-			return messageChannerl;
-		}
-	}
-
 	@Override
 	public void setRepository(IRepository repository) {
 		this.repository = repository;
@@ -508,6 +476,50 @@ public class ApplicationComponentService implements IApplicationComponentService
 			
 			return component;
 		}
+	}
+	
+	@Override
+	public IEventFirer createEventFirer() {
+		return new EventFirer(repository);
+	}
+	
+	private class EventFirer implements IEventFirer {
+		private IRepository repository;
+		private IMessageChannel messageChannel;
 		
+		public EventFirer(IRepository repository) {
+			this.repository = repository;
+		}
+		
+		@Override
+		public void fire(IEvent event) {
+			if (messageChannel == null) {
+				messageChannel = getAnyToEventMessageChannel();
+			}
+			
+			messageChannel.send(new SimpleMessage(event));
+		}
+		
+		private IMessageChannel getAnyToEventMessageChannel() {
+			String componentId = COMPONENT_ID_CLUSTER_ANY_2_EVENT_MESSAGE_CHANNEL;
+			IMessageChannel messageChannel = (IMessageChannel)repository.get(componentId);
+			if (messageChannel == null) {
+				componentId = COMPONENT_ID_LITE_ANY_2_EVENT_MESSAGE_CHANNEL;
+				messageChannel = (IMessageChannel)repository.get(componentId);
+			}
+			
+			if (messageChannel == null)
+				throw new RuntimeException("Can't fire event because the any to event message channel is null.");
+			
+			if (messageChannel instanceof IComponentIdAware) {
+				((IComponentIdAware) messageChannel).setComponentId(componentId);
+			}
+			
+			if (messageChannel instanceof IRepositoryAware) {
+				((IRepositoryAware)messageChannel).setRepository(repository);
+			}
+			
+			return messageChannel;
+		}
 	}
 }

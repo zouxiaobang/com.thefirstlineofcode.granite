@@ -32,36 +32,57 @@ public abstract class AbstractConnectionContext implements IConnectionContext {
 
 	@Override
 	public <T> T setAttribute(Object key, T value) {
+		if (session == null)
+			return null;
+		
 		return session.setAttribute(key, value);
 	}
 
 	@Override
 	public <T> T getAttribute(Object key) {
+		if (session == null)
+			return null;
+		
 		return session.getAttribute(key);
 	}
 
 	@Override
 	public <T> T getAttribute(Object key, T defaultValue) {
+		if (session == null)
+			return defaultValue;
+		
 		return session.getAttribute(key, defaultValue);
 	}
 
 	@Override
 	public <T> T removeAttribute(Object key) {
+		if (session == null)
+			return null;
+		
 		return session.removeAttribute(key);
 	}
 	
 	@Override
 	public <T> T setAttribute(Object key, ValueWrapper<T> wrapper) {
+		if (session == null)
+			return null;
+		
 		return session.setAttribute(key, wrapper);
 	}
 
 	@Override
 	public Object[] getAttributeKeys() {
+		if (session == null)
+			return new Object[0];
+		
 		return session.getAttributeKeys();
 	}
 
 	@Override
 	public JabberId getJid() {
+		if (session == null)
+			return null;
+		
 		return session.getJid();
 	}
 	

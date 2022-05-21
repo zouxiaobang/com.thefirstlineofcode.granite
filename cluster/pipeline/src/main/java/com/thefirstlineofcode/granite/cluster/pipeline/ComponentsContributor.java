@@ -28,18 +28,17 @@ public class ComponentsContributor implements IComponentsContributor,
 			Stream2ParsingMessageChannel.class,
 			Stream2ParsingMessageReceiver.class,
 			LocalNodeIdProvider.class,
-			Router.class,
-			DeployClusterComponentsRegistrar.class
+			Router.class
 		};
 	}
 
 	@Override
 	public void componentsRegistered(IRepository repository) {
-		DeployClusterComponentsRegistrar registrar = (DeployClusterComponentsRegistrar)repository.get("deploy.cluster.components.registrar");
+		DeployClusterComponentsRegistrar registrar = new DeployClusterComponentsRegistrar();
 		registrar.setApplicationContext(appContext);
 		registrar.setRepository(repository);
 		
-		registrar.init();
+		registrar.registerDeployClusterComponents();
 	}
 
 	@Override

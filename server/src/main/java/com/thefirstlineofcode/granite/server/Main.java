@@ -121,6 +121,15 @@ public class Main {
 				options.setConsole(true);
 				i++;
 			} else if ("-logLevel".equals(args[i])) {
+				if (i == (args.length - 1)) {
+					throw new IllegalArgumentException("-logLevel should follow a <LOG_LEVEL> option value.");
+				}
+				i++;
+				
+				if (args[i].startsWith("-")) {
+					throw new IllegalArgumentException("-logLevel should follow a <LOG_LEVEL> option value.");
+				}
+				
 				if ("info".equals(args[i]) || "debug".equals(args[i]) || "trace".equals(args[i])) {
 					options.setLogLevel(args[i]);
 				} else {
