@@ -63,13 +63,13 @@ public class Router implements IRouter, IInitializable {
 			
 			String localNodeId = session.getAttribute(KEY_LOCAL_NODE_ID);
 			if (localNodeId == null) {
-				logger.warn("Null local node id. Session jid: {}", session.getJid());
+				logger.warn("Null local node id. Session jid: {}.", session.getJid());
 				return new IForward[0];
 			}
 			
 			return new IForward[] {new Forward(localNodeId)};
 		} else {
-			throw new UnsupportedOperationException("Delivery message to a bare jid not supported yet.");
+			throw new UnsupportedOperationException("Delivery message to a bare JID not supported yet.");
 		}
 	}
 	
@@ -89,6 +89,9 @@ public class Router implements IRouter, IInitializable {
 			}
 			
 			messaging.send(deliveryMessageQueueName, message);
+			
+			if (logger.isTraceEnabled())
+				logger.trace("Message {} has forwad to local node '{}'.", message, localNodeId);
 		}
 		
 	}

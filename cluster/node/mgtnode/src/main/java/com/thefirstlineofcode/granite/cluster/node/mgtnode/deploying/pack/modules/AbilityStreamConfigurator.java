@@ -30,7 +30,7 @@ public class AbilityStreamConfigurator implements IPackConfigurator {
 		config.addOrUpdateProperty("parsing.service$parsing.message.receiver", "cluster.stream.2.parsing.message.receiver");
 		config.addOrUpdateProperty("cluster.stream.2.parsing.message.receiver$session.manager", "cluster.session.manager");
 		config.addOrUpdateProperty("cluster.stream.2.parsing.message.receiver$message.channel", "cluster.parsing.2.processing.message.channel");
-		config.addOrUpdateProperty("cluster.parsing.2.processing.message.channel$connector", "parsing.2.processing.message.receiver");
+		config.addOrUpdateProperty("cluster.parsing.2.processing.message.channel$connector", "cluster.parsing.2.processing.message.receiver");
 		config.addOrUpdateProperty("cluster.stream.2.parsing.message.receiver$message.processor", "default.message.parsing.processor");
 		config.addOrUpdateProperty("cluster.session.manager$ignite", "cluster.ignite");
 		config.addOrUpdateProperty("cluster.parsing.2.processing.message.channel$node.runtime.configuration", "cluster.node.runtime.configuration");
@@ -118,7 +118,7 @@ public class AbilityStreamConfigurator implements IPackConfigurator {
 		config.addOrUpdateProperty("standard.client.message.processor$authenticator", "cluster.authenticator");
 		config.addOrUpdateProperty("standard.client.message.processor$session.manager", "cluster.session.manager");
 		config.addOrUpdateProperty("standard.client.message.processor$message.channel", "cluster.stream.2.parsing.message.channel");
-		config.addOrUpdateProperty("cluster.stream.2.parsing.message.channel$connector", "stream.2.parsing.message.receiver");
+		config.addOrUpdateProperty("cluster.stream.2.parsing.message.channel$connector", "cluster.stream.2.parsing.message.receiver");
 		config.addOrUpdateProperty("standard.client.message.processor$router", "cluster.router");
 		config.addOrUpdateProperty("cluster.router$ignite", "cluster.ignite");
 		config.addOrUpdateProperty("cluster.router$session.manager", "cluster.session.manager");

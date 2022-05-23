@@ -2,10 +2,12 @@ package com.thefirstlineofcode.granite.cluster.pipeline;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -22,26 +24,32 @@ import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.internal.processors.cache.persistence.filename.PdsConsistentIdProcessor;
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
 import org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder;
+import org.pf4j.PluginWrapper;
 import org.springframework.beans.factory.FactoryBean;
 
 import com.thefirstlineofcode.basalt.protocol.core.JabberId;
-import com.thefirstlineofcode.granite.cluster.pipeline.ignite.config.ClusteringConfig;
+import com.thefirstlineofcode.granite.cluster.pipeline.ignite.config.ClusteringConfiguration;
 import com.thefirstlineofcode.granite.cluster.pipeline.ignite.config.Discovery;
 import com.thefirstlineofcode.granite.cluster.pipeline.ignite.config.ResourcesStorage;
 import com.thefirstlineofcode.granite.cluster.pipeline.ignite.config.SessionsStorage;
 import com.thefirstlineofcode.granite.cluster.pipeline.ignite.config.StorageGlobal;
+import com.thefirstlineofcode.granite.framework.core.adf.CompositeClassLoader;
+import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentService;
+import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentServiceAware;
 import com.thefirstlineofcode.granite.framework.core.config.IServerConfiguration;
 import com.thefirstlineofcode.granite.framework.core.config.IServerConfigurationAware;
 import com.thefirstlineofcode.granite.framework.core.session.ISession;
 import com.thefirstlineofcode.granite.framework.core.utils.IoUtils;
 
-public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurationAware {
+public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurationAware,
+			IApplicationComponentServiceAware {
 	private static final String PROPERTY_KEY_NODE_TYPE = "granite.node.type";
 	private static final String PROPERTY_KEY_MGTNODE_IP = "granite.mgtnode.ip";
 	
-	private ClusteringConfig clusteringConfig;
-	private IgniteConfiguration configuration;
+	private ClusteringConfiguration clusteringConfiguration;
+	private IgniteConfiguration igniteConfiguration;
 	private DataStorageConfiguration dataStorageConfiguration;
+	private ClassLoader pluginsClassLoader;
 	
 	private IServerConfiguration serverConfiguration;
 	
@@ -63,7 +71,7 @@ public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurat
 	private Ignite startIgnite() {
 		configureJavaUtilLogging();
 		
-		IgniteConfiguration igniteConfiguration = configureIgnite();
+		configureIgnite();
 		Ignite ignite = Ignition.start(igniteConfiguration);
 		
 		if (isSessionPersistenceEnabled()) {
@@ -78,29 +86,28 @@ public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurat
 	}
 
 	private boolean isSessionPersistenceEnabled() {
-		return clusteringConfig.getSessionsStorage().isPersistenceEnabled()/* || clusteringConfig.getCacheStorage().isPersistenceEnabled()*/;
+		return clusteringConfiguration.getSessionsStorage().isPersistenceEnabled()/* || clusteringConfig.getCacheStorage().isPersistenceEnabled()*/;
 	}
 	
-	private IgniteConfiguration configureIgnite() {
+	private void configureIgnite() {
 		File configFile = new File(serverConfiguration.getConfigurationDir(), "clustering.ini");
 		if (!configFile.exists()) {
 			throw new RuntimeException("Can't get clustering.ini.");
 		}
 		
-		clusteringConfig = new ClusteringConfig();
-		clusteringConfig.load(configFile);
+		clusteringConfiguration = new ClusteringConfiguration();
+		clusteringConfiguration.load(configFile);
 		
-		configuration = new IgniteConfiguration();
+		igniteConfiguration = new IgniteConfiguration();
+		igniteConfiguration.setClassLoader(pluginsClassLoader);
 		
 		Map<String, Object> userAttributes = new HashMap<>();
 		userAttributes.put("ROLE", "appnode-rt");
 		userAttributes.put("NODE-TYPE", System.getProperty(PROPERTY_KEY_NODE_TYPE));
-		configuration.setUserAttributes(userAttributes);
+		igniteConfiguration.setUserAttributes(userAttributes);
 		
 		configureDiscovery();
 		configureStorages();
-		
-		return configuration;
 	}
 	
 	private void configureStorages() {
@@ -118,7 +125,7 @@ public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurat
 	}
 	
 	private void deletePersistedSessionData() throws IOException {
-		String workDirectory = configuration.getWorkDirectory();
+		String workDirectory = igniteConfiguration.getWorkDirectory();
 		
 		try {
 			String walArchivePath = dataStorageConfiguration.getWalArchivePath();
@@ -150,9 +157,9 @@ public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurat
 	}
 
 	private void configureCaches() {
-		configuration.setCacheConfiguration(
-				configureResources(clusteringConfig.getResourcesStorage().getBackups()),
-				configureSessions(clusteringConfig.getSessionsStorage().getBackups())/*,
+		igniteConfiguration.setCacheConfiguration(
+				configureResources(clusteringConfiguration.getResourcesStorage().getBackups()),
+				configureSessions(clusteringConfiguration.getSessionsStorage().getBackups())/*,
 				configureCaches()*/
 		);
 	}
@@ -173,15 +180,15 @@ public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurat
 		cacheConfiguration.setDataRegionName(SessionsStorage.NAME_SESSIONS_STORAGE);
 		cacheConfiguration.setBackups(backups >= 0 ? backups : 1);
 		cacheConfiguration.setExpiryPolicyFactory(TouchedExpiryPolicy.factoryOf(new Duration(TimeUnit.SECONDS,
-				clusteringConfig.getSessionsStorage().getSessionDurationTime())));
+				clusteringConfiguration.getSessionsStorage().getSessionDurationTime())));
 		
 		return cacheConfiguration;
 	}
 
 	private void configureDataRegions() {
 		dataStorageConfiguration.setDataRegionConfigurations(
-				configureResourcesDataRegion(clusteringConfig.getResourcesStorage()),
-				configureSessionsDataRegion(clusteringConfig.getSessionsStorage())/*,
+				configureResourcesDataRegion(clusteringConfiguration.getResourcesStorage()),
+				configureSessionsDataRegion(clusteringConfiguration.getSessionsStorage())/*,
 				configureCacheDataRegion(clusteringConfig.getCacheStorage())*/
 		);
 	}
@@ -207,12 +214,12 @@ public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurat
 	}
 	
 	private DataStorageConfiguration configureStorageGlobal() {
-		StorageGlobal storageGlobal = clusteringConfig.getStorageGlobal();
+		StorageGlobal storageGlobal = clusteringConfiguration.getStorageGlobal();
 		
 		if (storageGlobal.getWorkDirectory() != null) {
-			configuration.setWorkDirectory(storageGlobal.getWorkDirectory());
+			igniteConfiguration.setWorkDirectory(storageGlobal.getWorkDirectory());
 		} else {
-			configuration.setWorkDirectory(serverConfiguration.getServerHome() + "/ignite_work");
+			igniteConfiguration.setWorkDirectory(serverConfiguration.getServerHome() + "/ignite_work");
 		}
 		
 		DataStorageConfiguration dataStorageConfiguration = new DataStorageConfiguration();
@@ -227,13 +234,13 @@ public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurat
 		if (storageGlobal.getWalArchivePath() != null)
 			dataStorageConfiguration.setWalArchivePath(storageGlobal.getWalArchivePath());
 		
-		configuration.setDataStorageConfiguration(dataStorageConfiguration);
+		igniteConfiguration.setDataStorageConfiguration(dataStorageConfiguration);
 		
 		return dataStorageConfiguration;
 	}
 	
 	private void configureDiscovery() {
-		Discovery discovery = clusteringConfig.getDiscovery();
+		Discovery discovery = clusteringConfiguration.getDiscovery();
 		TcpDiscoveryMulticastIpFinder ipFinder = new TcpDiscoveryMulticastIpFinder();
 		if (discovery != null) {
 			Discovery.Strategy strategy = discovery.getStrategy();
@@ -255,7 +262,7 @@ public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurat
 		}
 		TcpDiscoverySpi spi = new TcpDiscoverySpi();
 		spi.setIpFinder(ipFinder);
-		configuration.setDiscoverySpi(spi);
+		igniteConfiguration.setDiscoverySpi(spi);
 	}
 	
 	private Collection<String> getAddresses(String[] addresses, String mgtnodeIp) {
@@ -281,5 +288,15 @@ public class IgniteFactoryBean implements FactoryBean<Ignite>, IServerConfigurat
 	@Override
 	public void setServerConfiguration(IServerConfiguration serverConfiguration) {
 		this.serverConfiguration = serverConfiguration;
+	}
+
+	@Override
+	public void setApplicationComponentService(IApplicationComponentService appComponentService) {
+		List<ClassLoader> classLoaders = new ArrayList<>();
+		for (PluginWrapper pluginWrapper : appComponentService.getPluginManager().getPlugins()) {
+			classLoaders.add(pluginWrapper.getPluginClassLoader());
+		}
+		
+		pluginsClassLoader = new CompositeClassLoader(classLoaders.toArray(new ClassLoader[classLoaders.size()]));
 	}
 }

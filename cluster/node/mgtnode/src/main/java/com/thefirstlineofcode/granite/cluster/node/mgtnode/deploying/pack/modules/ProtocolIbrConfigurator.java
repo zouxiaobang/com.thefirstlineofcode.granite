@@ -77,7 +77,7 @@ public class ProtocolIbrConfigurator extends AbilityStreamConfigurator implement
 		config.addOrUpdateProperty("ibr.supported.client.message.processor$authenticator", "cluster.authenticator");
 		config.addOrUpdateProperty("ibr.supported.client.message.processor$session.manager", "cluster.session.manager");
 		config.addOrUpdateProperty("ibr.supported.client.message.processor$message.channel", "cluster.stream.2.parsing.message.channel");
-		config.addOrUpdateProperty("ibr.supported.client.message.processor$event.message.channel", "cluster.any.2.event.message.channel");
+		config.addOrUpdateProperty("cluster.stream.2.parsing.message.channel$connector", "cluster.stream.2.parsing.message.receiver");
 		config.addOrUpdateProperty("ibr.supported.client.message.processor$router", "cluster.router");
 		config.addOrUpdateProperty("cluster.router$ignite", "cluster.ignite");
 		config.addOrUpdateProperty("cluster.router$session.manager", "cluster.session.manager");

@@ -44,8 +44,13 @@ public class Starter {
 		if (!options.isNoDeploy()) {
 			mgtnodeIpAndDeployPlanChecksum = getMgtnodeIpAndDeployChecksum(options);
 			
+			if (options.isRedeploy())
+				removeLocalDeployPlanCheckSum(options.getConfigurationDir());
+			
 			String localDeployPlanChecksum = getLocalDeployPlanChecksum(options.getConfigurationDir());
-			if (mgtnodeIpAndDeployPlanChecksum != null && mgtnodeIpAndDeployPlanChecksum.deployPlanChecksum != null && !mgtnodeIpAndDeployPlanChecksum.deployPlanChecksum.equals(localDeployPlanChecksum)) {
+			if (mgtnodeIpAndDeployPlanChecksum != null &&
+					mgtnodeIpAndDeployPlanChecksum.deployPlanChecksum != null &&
+					!mgtnodeIpAndDeployPlanChecksum.deployPlanChecksum.equals(localDeployPlanChecksum)) {
 				if (localDeployPlanChecksum == null) {
 					logger.info("Local deploy plan doesn't existed. Trying to deploy appnode...");
 				} else {
@@ -80,6 +85,17 @@ public class Starter {
 		startRuntime(options, nodeType, mgtnodeIpAndDeployPlanChecksum == null ? null : mgtnodeIpAndDeployPlanChecksum.mgtnodeIp, runtimeName);
 	}
 	
+	private void removeLocalDeployPlanCheckSum(String configurationDir) {
+		Path localDeployPlanChecksumFilePath = Paths.get(configurationDir, FILE_NAME_DEPLOY_PLAN_CHECKSUM);
+		if (Files.exists(localDeployPlanChecksumFilePath)) {
+			try {
+				Files.delete(localDeployPlanChecksumFilePath);
+			} catch (IOException e) {
+				throw new RuntimeException("Can't delete local deploy plan checksum file.", e);
+			}
+		}
+	}
+
 	private MgtnodeIpAndDeployPlanChecksum getMgtnodeIpAndDeployChecksum(Options options) {
 		String deployPlanChecksum = null;
 		String validMgtnodeIp = null;
@@ -156,7 +172,7 @@ public class Starter {
 	private String getNodeType(Options options, DeployPlan plan) {
 		String nodeType = filterNodeType(options, plan);
 		if (nodeType == null) {
-			throw new RuntimeException("Can't determine which type of node the application node should be. Please check your deploy configuration.");
+			throw new RuntimeException("Can't determine which type of node the application node should be. Please check your deploy plan.");
 		}
 		
 		return nodeType;
@@ -342,23 +358,23 @@ public class Starter {
 		return new File(runtimesDir, runtimeName + ".zip").exists();
 	}
 
-	private String filterNodeType(Options options, DeployPlan configuration) {
+	private String filterNodeType(Options options, DeployPlan deployPlan) {
 		if (options.getNodeType() != null) {
-			for (String nodeType : configuration.getCluster().getNodeTypes()) {
+			for (String nodeType : deployPlan.getCluster().getNodeTypes()) {
 				if (nodeType.equals(options.getNodeType()))
 					return nodeType;
 			}
 		}
 		
-		if (configuration.getNodeTypes().size() == 1) {
-			// There is only one node type in deploy configuration.
+		if (deployPlan.getNodeTypes().size() == 1) {
+			// There is only one node type in deploy plan.
 			// So we select it as appnode's node type.
-			return configuration.getNodeTypes().keySet().iterator().next();
+			return deployPlan.getNodeTypes().keySet().iterator().next();
 		}
 		
 		String filteredNodeType = null;
-		for (String nodeType : configuration.getNodeTypes().keySet()) {
-			if (filterNode(configuration.getNodeTypes().get(nodeType), configuration)) {
+		for (String nodeType : deployPlan.getNodeTypes().keySet()) {
+			if (filterNode(deployPlan.getNodeTypes().get(nodeType), deployPlan)) {
 				if (filteredNodeType != null) {
 					throw new RuntimeException(String.format(
 						"Appnode can be %s or %s node type, but not both. Adjust your deploy plan to guarantee that one appnode corresponds to only one node type.",
@@ -372,7 +388,7 @@ public class Starter {
 		return filteredNodeType;
 	}
 
-	private boolean filterNode(NodeType node, DeployPlan configuration) {
+	private boolean filterNode(NodeType node, DeployPlan deployPlan) {
 		// TODO Provide some mechanisms to filter node type in subsequent version. e.g., IP filter. 
 		return false;
 	}
@@ -411,13 +427,13 @@ public class Starter {
 		}
 	}
 
-	private String getLocalDeployPlanChecksum(String configDir) {
-		Path localDeployPlanChecksumFilePath = Paths.get(configDir, FILE_NAME_DEPLOY_PLAN_CHECKSUM);
+	private String getLocalDeployPlanChecksum(String configurationDir) {
+		Path localDeployPlanChecksumFilePath = Paths.get(configurationDir, FILE_NAME_DEPLOY_PLAN_CHECKSUM);
 		if (Files.exists(localDeployPlanChecksumFilePath)) {
 			try {
 				return IoUtils.readFile(localDeployPlanChecksumFilePath);
 			} catch (IOException e) {
-				throw new RuntimeException("Can't read deploy plan checksum file.", e);
+				throw new RuntimeException("Can't read local deploy plan checksum file.", e);
 			}
 		}
 		

@@ -28,7 +28,7 @@ public class DeployClusterComponentsRegistrar implements IRepositoryAware, Appli
 		if (ignite == null)
 			throw new RuntimeException("Null ignite instance.");
 		
-		repository.registerComponent(new GenericComponentInfo(Constants.COMPONENT_ID_IGNITE, Ignite.class) {
+		repository.registerComponent(new GenericComponentInfo(Constants.COMPONENT_ID_CLUSTER_IGNITE, Ignite.class) {
 			@Override
 			public Object doCreate() throws CreationException {
 				return ignite;

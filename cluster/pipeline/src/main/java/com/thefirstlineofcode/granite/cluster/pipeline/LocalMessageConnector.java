@@ -52,7 +52,7 @@ public abstract class LocalMessageConnector extends AbstractMessageReceiver
 						}
 					} catch (InterruptedException e) {
 						if (logger.isTraceEnabled()) {
-							logger.trace(String.format("Message reader thread interrupted. Message receiver: %s.", getClass().getName()), e);
+							logger.trace("Message reader thread interrupted. Message receiver: {}.", getClass().getName(), e);
 						}
 					}
 				}

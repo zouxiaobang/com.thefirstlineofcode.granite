@@ -10,7 +10,7 @@ import com.thefirstlineofcode.granite.framework.core.repository.IInitializable;
 
 @Component("cluster.parsing.2.processing.message.channel")
 public class Parsing2ProcessingMessageChannel implements IMessageChannel, IInitializable {
-	@Dependency(Constants.COMPONENT_ID_PARSING_2_PROCESSING_MESSAGE_CONNECTOR)
+	@Dependency("connector")
 	private IMessageConnector connector;
 	
 	@Dependency(Constants.DEPENDENCY_ID_NODE_RUNTIME_CONFIGURATION)

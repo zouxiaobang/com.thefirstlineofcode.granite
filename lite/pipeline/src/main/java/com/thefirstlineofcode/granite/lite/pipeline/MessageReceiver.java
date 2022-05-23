@@ -68,7 +68,7 @@ public class MessageReceiver extends AbstractMessageReceiver implements IMessage
 						}
 					} catch (InterruptedException e) {
 						if (logger.isTraceEnabled()) {
-							logger.trace(String.format("Error[message receiver]. Connector ID: %s.", componentId), e);
+							logger.trace("Error[message receiver]. Connector ID: {}.", componentId, e);
 						}
 					}
 				}

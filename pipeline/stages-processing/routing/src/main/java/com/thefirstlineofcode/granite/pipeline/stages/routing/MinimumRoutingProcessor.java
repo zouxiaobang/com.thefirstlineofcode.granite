@@ -298,7 +298,7 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 			
 			routeToTarget(context, sessionJid, sessionJid, msgString);
 		} catch (Exception exception) {
-			logger.error("routing error", exception);
+			logger.error("Routing error.", exception);
 		}
 	}
 

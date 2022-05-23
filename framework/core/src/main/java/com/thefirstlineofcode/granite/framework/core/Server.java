@@ -55,7 +55,7 @@ public class Server implements IServer, IServiceListener {
 				entry.getValue().stop();
 			} catch (Exception e) {
 				if (logger.isErrorEnabled()) {
-					logger.error("Can't stop service which's ID is '{}'.", entry.getKey(), e);
+					logger.error(String.format("Can't stop service which's ID is '%s'.", entry.getKey()), e);
 				}
 				
 				throw new RuntimeException(String.format("Can't stop service which's ID is '%s' correctly.",
@@ -85,14 +85,14 @@ public class Server implements IServer, IServiceListener {
 			createAndRunService(serviceWrapper);
 		} catch (ServiceCreationException e) {
 			if (logger.isErrorEnabled()) {
-				logger.error("Can't create service which's ID is '{}'.", serviceWrapper.getId(), e);
+				logger.error(String.format("Can't create service which's ID is '%s'.", serviceWrapper.getId()), e);
 			}
 			
 			throw new RuntimeException(String.format("Can't create service which's ID is '%s'.",
 					serviceWrapper.getId()), e);
 		} catch (Exception e) {
 			if (logger.isErrorEnabled()) {
-				logger.error("Can't start service which's ID is {}.", serviceWrapper.getId(), e);
+				logger.error(String.format("Can't start service which's ID is %s.", serviceWrapper.getId()), e);
 			}
 			
 			throw new RuntimeException(String.format("Can't start service which's ID is '%s'.",

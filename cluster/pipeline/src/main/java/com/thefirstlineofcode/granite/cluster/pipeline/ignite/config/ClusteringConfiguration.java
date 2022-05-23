@@ -8,7 +8,7 @@ import com.thefirstlineofcode.basalt.oxm.SectionalProperties;
 import com.thefirstlineofcode.granite.cluster.pipeline.ignite.config.Discovery.Strategy;
 import com.thefirstlineofcode.granite.framework.core.utils.StringUtils;
 
-public class ClusteringConfig {
+public class ClusteringConfiguration {
 	private Discovery discovery;
 	private StorageGlobal storageGlobal;
 	private ResourcesStorage resourcesStorage;

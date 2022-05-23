@@ -97,9 +97,10 @@ public class SessionEstablishmentNegotiant extends AbstractNegotiant {
 			
 			try {
 				router.register(sessionJid, context.getLocalNodeId());
+				if (logger.isDebugEnabled())
+					logger.debug("Session[{}] registered on local node[{}].", sessionJid, context.getLocalNodeId());
 			} catch (RoutingRegistrationException e) {
-				logger.error(String.format("Can't register to router. JID: %s.", sessionJid),
-						e);
+				logger.error(String.format("Can't register to router. JID: %s.", sessionJid), e);
 				sessionManager.remove(sessionJid);
 				throw new ProtocolException(new InternalServerError(e.getMessage()));
 			}

@@ -28,11 +28,16 @@ import org.slf4j.LoggerFactory;
 
 import com.thefirstlineofcode.granite.framework.core.IService;
 import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentService;
+import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentServiceAware;
 import com.thefirstlineofcode.granite.framework.core.annotations.Component;
 import com.thefirstlineofcode.granite.framework.core.annotations.Dependency;
 import com.thefirstlineofcode.granite.framework.core.config.ComponentConfigurations;
 import com.thefirstlineofcode.granite.framework.core.config.IComponentConfigurations;
+import com.thefirstlineofcode.granite.framework.core.config.IConfiguration;
+import com.thefirstlineofcode.granite.framework.core.config.IConfigurationAware;
 import com.thefirstlineofcode.granite.framework.core.config.IServerConfiguration;
+import com.thefirstlineofcode.granite.framework.core.config.IServerConfigurationAware;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEventFirerAware;
 import com.thefirstlineofcode.granite.framework.core.utils.CommonUtils;
 import com.thefirstlineofcode.granite.framework.core.utils.IoUtils;
 
@@ -332,8 +337,7 @@ public class Repository implements IRepository {
 		
 		for (String availableService : availableServices) {
 			IComponentInfo serviceInfo = componentInfos.get(availableService);			
-			IServiceWrapper serviceWrapper = new ServiceWrapper(serverConfiguration, componentConfigurations,
-					this, appComponentService, serviceInfo);
+			IServiceWrapper serviceWrapper = new ServiceWrapper(this, serviceInfo);
 			serviceListener.available(serviceWrapper);
 		}
 		
@@ -586,23 +590,69 @@ public class Repository implements IRepository {
 			return null;
 		
 		if (!componentInfo.isSingleton()) {			
-			try {
-				return componentInfo.create();
-			} catch (CreationException e) {
-				throw new RuntimeException(String.format("Can't create component which's component info is '%s'.", componentInfo), e);
-			}
+			return createComponent(componentInfo);
 		} else {
+			component = createComponent(componentInfo);
 			synchronized (this) {
-				try {
-					component = componentInfo.create();
-				} catch (CreationException e) {
-					throw new RuntimeException(String.format("Can't create component which's component info is '%s'.", componentInfo), e);
-				}
-				
 				registerSingleton(id, component);
 			}
 			
 			return component;
+		}
+	}
+
+	private Object createComponent(IComponentInfo componentInfo) {
+		Object component = null;
+		try {
+			component = componentInfo.create();
+		} catch (CreationException e) {
+			throw new RuntimeException(String.format("Can't create component which's component info is '%s'.", componentInfo), e);
+		}
+		
+		if (component == null) {
+			throw new RuntimeException(String.format("Component which's ID is '%s' not be found.", componentInfo.getId()));
+		}
+		
+		for (IDependencyInfo dependency : componentInfo.getDependencies()) {
+			for (IComponentInfo bindedIComponentInfo : dependency.getBindedComponents()) {
+				Object bindedComponent = get(bindedIComponentInfo.getId());
+				dependency.injectDependency(component, bindedComponent);
+			}
+		}
+		
+		injectByAwareInterfaces(componentInfo, component);
+		
+		return component;
+	}
+	
+	private void injectByAwareInterfaces(IComponentInfo componentInfo, Object component) {
+		if (component instanceof IServerConfigurationAware) {
+			((IServerConfigurationAware)component).setServerConfiguration(serverConfiguration);
+		}
+		
+		if (component instanceof IConfigurationAware) {
+			IConfiguration configuration = componentConfigurations.getConfiguration(componentInfo.getId());
+			((IConfigurationAware)component).setConfiguration(configuration);
+		}
+		
+		if (component instanceof IComponentIdAware) {
+			((IComponentIdAware)component).setComponentId(componentInfo.getId());
+		}
+		
+		if (component instanceof IRepositoryAware) {
+			((IRepositoryAware)component).setRepository(this);
+		}
+		
+		if (component instanceof IApplicationComponentServiceAware) {
+			((IApplicationComponentServiceAware)component).setApplicationComponentService(appComponentService);
+		}
+		
+		if (component instanceof IEventFirerAware) {
+			((IEventFirerAware)component).setEventFirer(appComponentService.createEventFirer());
+		}
+		
+		if (component instanceof IInitializable) {
+			((IInitializable)component).init();
 		}
 	}
 }

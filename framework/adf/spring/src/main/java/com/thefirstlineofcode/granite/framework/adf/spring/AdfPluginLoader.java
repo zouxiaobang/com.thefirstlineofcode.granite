@@ -47,8 +47,8 @@ public class AdfPluginLoader extends JarPluginLoader {
 			if (nonPluginDependency != null) {
 				lNonPluginDependencies.add(nonPluginDependency);
 			} else {
-				logger.warn(String.format("Non-plugin dependency which's id is '%s' not be found. It's needed by plugin: %s.",
-						nonPluginDependencyId, pluginId));
+				logger.warn("Non-plugin dependency which's id is '{}' not be found. It's needed by plugin: {}.",
+						nonPluginDependencyId, pluginId);
 			}
 		}
 		

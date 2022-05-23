@@ -164,8 +164,8 @@ public class DefaultProtocolProcessingProcessor implements com.thefirstlineofcod
 						xepProcessor = processorFactory.createProcessor();
 						xepProcessor = appComponentService.inject(xepProcessor);
 					} catch (Exception e) {
-						logger.error("Can't create singleton XEP processor by factory: '{}'.",
-								processorFactory.getClass().getName(), e);
+						logger.error(String.format("Can't create singleton XEP processor by factory: '%s'.",
+								processorFactory.getClass().getName()), e);
 						
 						throw new RuntimeException(String.format("Can't create singleton XEP processor by factory: '%s'",
 								processorFactory.getClass().getName()), e);
@@ -687,8 +687,8 @@ public class DefaultProtocolProcessingProcessor implements com.thefirstlineofcod
 			IXepProcessor<K, V> xepProcessor = (IXepProcessor<K, V>)processorFactory.createProcessor();
 			return appComponentService.inject(xepProcessor);
 		} catch (Exception e) {
-			logger.error("Can't instantiate XEP processor by factory: '{}'.",
-					processorFactory.getClass().getName(), e);
+			logger.error(String.format("Can't instantiate XEP processor by factory: '%s'.",
+					processorFactory.getClass().getName()), e);
 			throw new ProtocolException(new InternalServerError(
 					String.format("Can't instantiate XEP processor by factory: '%s'.",
 					processorFactory.getClass().getName()), e));

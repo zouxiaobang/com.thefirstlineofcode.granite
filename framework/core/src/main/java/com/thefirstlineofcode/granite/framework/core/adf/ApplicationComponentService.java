@@ -368,7 +368,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 				Object dependencyAnnotation = method.getAnnotation(injectionProvider.getAnnotationType());				
 				if (dependencyAnnotation != null) {
 					if (!CommonUtils.isSetterMethod(method))
-						logger.warn(String.format("Dependency method '%s' isn't a setter method.", method));
+						logger.warn("Dependency method '{}' isn't a setter method.", method);
 					
 					Object mark = injectionProvider.getMark(method, dependencyAnnotation);
 					IDependencyFetcher fetcher = injectionProvider.getFetcher(mark);

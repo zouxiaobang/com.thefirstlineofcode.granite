@@ -21,6 +21,8 @@ public class AbilityEventConfigurator implements IPackConfigurator {
 		config.addOrUpdateProperty("cluster.any.2.event.message.receiver$message.processor", "default.event.processor");
 		config.addOrUpdateProperty("cluster.any.2.event.message.receiver$message.channel", "cluster.any.2.routing.message.channel");
 		config.addOrUpdateProperty("cluster.any.2.event.message.receiver$session.manager", "cluster.session.manager");
+		config.addOrUpdateProperty("cluster.any.2.event.message.channel$connector", "cluster.any.2.event.message.receiver");
+		config.addOrUpdateProperty("cluster.any.2.event.message.channel$node.runtime.configuration", "cluster.node.runtime.configuration");
 	}
 
 	private void configureRoutingService(IConfig config) {

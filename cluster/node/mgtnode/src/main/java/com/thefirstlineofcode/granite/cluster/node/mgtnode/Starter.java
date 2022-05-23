@@ -46,8 +46,8 @@ public class Starter implements Serializable {
 	
 	public boolean start(Options options) throws Exception {
 		checkRepository(options.getRepositoryDir());
-		DeployPlan deployPlan = readAndCheckDeplyConfiguration(
-				options.getConfigurationDir(), options.getDeployDir());
+		DeployPlan deployPlan = readAndCheckDeployConfiguration(options.getConfigurationDir(),
+				options.getDeployDir(), options.isRepack());
 		if (deployPlan == null)
 			return false;
 		
@@ -84,17 +84,17 @@ public class Starter implements Serializable {
 		return true;
 	}
 	
-	private DeployPlan readAndCheckDeplyConfiguration(String configurationDir, String deployDir) {
+	private DeployPlan readAndCheckDeployConfiguration(String configurationDir, String deployDir, boolean repack) {
 		DeployPlan deployPlan = readDeployPlan(configurationDir);
 		if (deployPlan == null)
 			return null;
 		
-		saveDeployPlanToDeployPath(configurationDir, deployDir, deployPlan);
+		saveDeployPlanToDeployPath(configurationDir, deployDir, deployPlan, repack);
 		
 		return deployPlan;
 	}
 
-	private void saveDeployPlanToDeployPath(String configDir, String deployDir, DeployPlan deployPlan) {
+	private void saveDeployPlanToDeployPath(String configDir, String deployDir, DeployPlan deployPlan, boolean repack) {
 		File deployDirFile = new File(deployDir);
 		if (!deployDirFile.exists()) {
 			logger.info("Deploy directory doesn't exist. Creating it...");
@@ -111,6 +111,15 @@ public class Starter implements Serializable {
 		logger.info("Checking checksum file to determine if deploy plan changed.");
 		boolean planChanged = false;
 		Path localDeployPlanChecksumFilePath = Paths.get(deployDir, FILE_NAME_DEPLOY_PLAN_CHECKSUM);
+		
+		if (repack && Files.exists(localDeployPlanChecksumFilePath)) {
+			try {
+				Files.delete(localDeployPlanChecksumFilePath);
+			} catch (IOException e) {
+				throw new RuntimeException("Can't delete local deploy plan checksum file.", e);
+			}
+		}
+		
 		if (!Files.exists(localDeployPlanChecksumFilePath)) {
 			planChanged = true;
 		} else {
@@ -363,7 +372,7 @@ public class Starter implements Serializable {
 				logger.info("Starting HTTP Server...");
 				server.start();
 				server.dumpStdErr();
-				logger.info(String.format("HTTP Server has started on port %s", options.getHttpPort()));
+				logger.info("HTTP Server has started on port {}.", options.getHttpPort());
 			} catch (Exception e) {
 				try {
 					server.stop();
