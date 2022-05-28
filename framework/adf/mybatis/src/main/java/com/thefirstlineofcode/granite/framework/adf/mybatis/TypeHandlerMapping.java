@@ -2,15 +2,15 @@ package com.thefirstlineofcode.granite.framework.adf.mybatis;
 
 import org.apache.ibatis.type.TypeHandler;
 
-public class TypeHandlerMapping<T> {
-	public Class<T> type;
-	public Class<TypeHandler<T>> typeHandlerType;
+public class TypeHandlerMapping {
+	public Class<?> type;
+	public Class<?> typeHandlerType;
 	
-	public TypeHandlerMapping(Class<TypeHandler<T>> typeHandler) {
-		this(null, typeHandler);
+	public <T> TypeHandlerMapping(Class<? extends TypeHandler<T>> typeHandlerType) {
+		this((Class<T>)null, (Class<? extends TypeHandler<T>>)typeHandlerType);
 	}
-
-	public TypeHandlerMapping(Class<T> type, Class<TypeHandler<T>> typeHandlerType) {
+	
+	public <T> TypeHandlerMapping(Class<T> type, Class<? extends TypeHandler<T>> typeHandlerType) {
 		this.type = type;
 		this.typeHandlerType = typeHandlerType;
 	}

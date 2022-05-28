@@ -5,8 +5,9 @@ import java.util.List;
 import org.pf4j.PluginManager;
 
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEventFirer;
+import com.thefirstlineofcode.granite.framework.core.repository.IRepositoryAware;
 
-public interface IApplicationComponentService {
+public interface IApplicationComponentService extends IRepositoryAware {
 	void start();
 	void stop();
 	boolean isStarted();

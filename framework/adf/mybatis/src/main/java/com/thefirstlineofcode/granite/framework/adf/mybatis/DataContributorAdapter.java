@@ -7,7 +7,7 @@ public abstract class DataContributorAdapter implements IDataContributor {
 	private static final String DIRECTORY_OF_INIT_SCRIPT_RESOURCES = "META-INF/data/";
 
 	@Override
-	public TypeHandlerMapping<?>[] getTypeHandlerMappings() {
+	public TypeHandlerMapping[] getTypeHandlerMappings() {
 		return null;
 	}
 	

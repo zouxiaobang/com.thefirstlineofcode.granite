@@ -28,7 +28,7 @@
 	</select>
 	
 	<resultMap id="roomItemResultMap" type="RoomItem">
-	    <result property="jid" column="r_room_jid" typeHandler="JabberIdTypeHandler"/>
+	    <result property="jid" column="r_room_jid"/>
 	    <result property="name" column="rc_room_name"/>
 	</resultMap>
 	
@@ -81,8 +81,8 @@
 	
 	<resultMap id="roomResultMap" type="Room">
 	    <id property="id" column="r_id"/>
-	    <result property="roomJid" column="r_room_jid" typeHandler="JabberIdTypeHandler"/>
-	    <result property="creator" column="r_creator" typeHandler="JabberIdTypeHandler"/>
+	    <result property="roomJid" column="r_room_jid"/>
+	    <result property="creator" column="r_creator"/>
 	    <result property="createTime" column="r_create_time"/>
 	    <result property="locked" column="r_locked"/>
 	    <association property="roomConfig" javaType="RoomConfig">
@@ -123,7 +123,7 @@
 	</resultMap>
 	
 	<resultMap id="affiliatedUserResultMap" type="AffiliatedUser">
-	    <result property="jid" column="jid" typeHandler="JabberIdTypeHandler"/>
+	    <result property="jid" column="jid"/>
 	</resultMap>
 	
 	<select id="selectAffiliatedUsersByRoomId" resultMap="affiliatedUserResultMap">
@@ -135,7 +135,7 @@
 	</insert>
 	
 	<insert id="insert" parameterType="Room">
-		INSERT INTO ROOMS(id, room_jid, creator) VALUES(#{id}, #{roomJid, typeHandler=JabberIdTypeHandler}, #{creator, typeHandler=JabberIdTypeHandler})
+		INSERT INTO ROOMS(id, room_jid, creator) VALUES(#{id}, #{roomJid}, #{creator})
 	</insert>
 	
 	<insert id="insertRoomConfig" parameterType="RoomConfig">
@@ -156,7 +156,7 @@
 	</insert>
 	
 	<insert id="insertRoomAffiliatedUser" parameterType="AffiliatedUser">
-		INSERT INTO ROOM_AFFILIATED_USERS(id, room_id, jid, affiliation, role, nick) VALUES(#{id}, #{roomId}, #{jid, typeHandler=JabberIdTypeHandler}, #{affiliation, typeHandler=EnumTypeHandler}, #{role, typeHandler=EnumTypeHandler}, #{nick})
+		INSERT INTO ROOM_AFFILIATED_USERS(id, room_id, jid, affiliation, role, nick) VALUES(#{id}, #{roomId}, #{jid}, #{affiliation, typeHandler=EnumTypeHandler}, #{role, typeHandler=EnumTypeHandler}, #{nick})
 	</insert>
 	
 	<insert id="updateRoomConfig" parameterType="RoomConfig">
@@ -221,10 +221,10 @@
 		FROM ROOM_AFFILIATED_USERS RAU
 			LEFT OUTER JOIN ROOMS R ON
 				RAU.room_id = R.id
-		WHERE R.room_jid = #{arg0, typeHandler=JabberIdTypeHandler} AND RAU.nick = #{arg1}
+		WHERE R.room_jid = #{arg0} AND RAU.nick = #{arg1}
 	</select>
 	
 	<resultMap id="affiliatedUserJidResultMap" type="JabberId">
-		<result property="jid" column="jid" typeHandler="JabberIdTypeHandler"/>
+		<result property="jid" column="jid"/>
 	</resultMap>
 </mapper>

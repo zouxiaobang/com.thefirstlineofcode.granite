@@ -69,7 +69,7 @@ public class SectionalProperties {
 					sectionName = getSectionName(line);
 					sectionContent = new StringBuilder();
 					if (getSection(sectionName) != null)
-						throw new IllegalArgumentException(String.format("Duplicated section: %s.", sectionName));
+						throw new IllegalArgumentException(String.format("Reduplicate section: %s.", sectionName));
 					
 					lineContinuation = false;
 				} else if (isComment(line)) {

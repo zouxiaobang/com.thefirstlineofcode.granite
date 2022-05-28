@@ -24,18 +24,6 @@ public class AdfComponentService extends ApplicationComponentService {
 	
 	public AdfComponentService(IServerConfiguration serverConfiguration) {
 		super(serverConfiguration);
-		
-		appContext = new AnnotationConfigApplicationContext();
-		
-		ConfigurableListableBeanFactory beanFactory = (ConfigurableListableBeanFactory)appContext.getBeanFactory();
-		beanFactory.addBeanPostProcessor(new AdfSpringBeanPostProcessor(this));
-		
-		ClassLoader[] classLoaders = registerSpringConfigurations();
-		if (classLoaders != null) {
-			appContext.setClassLoader(new CompositeClassLoader(classLoaders));
-		}
-		
-		appContext.refresh();
 	}
 	
 	protected ClassLoader[] registerSpringConfigurations() {		
@@ -129,6 +117,23 @@ public class AdfComponentService extends ApplicationComponentService {
 	@Override
 	protected IInjectionProvider[] getInjectionProviders() {
 		return new IInjectionProvider[] {new AppComponentInjectionProvider(this), new SpringBeanInjectionProvider(appContext)};
+	}
+	
+	@Override
+	public void start() {
+		super.start();
+		
+		appContext = new AnnotationConfigApplicationContext();
+		
+		ConfigurableListableBeanFactory beanFactory = (ConfigurableListableBeanFactory)appContext.getBeanFactory();
+		beanFactory.addBeanPostProcessor(new AdfSpringBeanPostProcessor(this));
+		
+		ClassLoader[] classLoaders = registerSpringConfigurations();
+		if (classLoaders != null) {
+			appContext.setClassLoader(new CompositeClassLoader(classLoaders));
+		}
+		
+		appContext.refresh();
 	}
 	
 	@Override

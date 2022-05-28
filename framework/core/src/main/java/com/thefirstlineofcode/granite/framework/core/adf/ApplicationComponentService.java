@@ -47,7 +47,7 @@ import com.thefirstlineofcode.granite.framework.core.utils.CommonUtils;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.InvocationHandler;
 
-public class ApplicationComponentService implements IApplicationComponentService, IRepositoryAware {
+public class ApplicationComponentService implements IApplicationComponentService {
 	private static final String COMPONENT_ID_LITE_ANY_2_EVENT_MESSAGE_CHANNEL = "lite.any.2.event.message.channel";
 	private static final String COMPONENT_ID_CLUSTER_ANY_2_EVENT_MESSAGE_CHANNEL = "cluster.any.2.event.message.channel";
 	
@@ -66,11 +66,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 		this.serverConfiguration = serverConfiguration;
 		
 		appComponentInfos = new HashMap<>();
-		dependencyInjectors = new HashMap<>();		
-		
-		pluginConfigurations = readPluginConfigurations(serverConfiguration);
-		
-		initPlugins();
+		dependencyInjectors = new HashMap<>();
 	}
 	
 	protected PluginConfigurations readPluginConfigurations(IServerConfiguration serverConfiguration) {
@@ -123,6 +119,9 @@ public class ApplicationComponentService implements IApplicationComponentService
 		if (started)
 			return;
 		
+		pluginConfigurations = readPluginConfigurations(serverConfiguration);
+		initPlugins();
+		
 		loadContributedAppComponents();
 		
 		started = true;
@@ -156,7 +155,7 @@ public class ApplicationComponentService implements IApplicationComponentService
 		IComponentInfo componentInfo = new AppComponentInfo(appComponentId, appComponentClass,
 				appComponentAnnotation.isSingleton());
 		if (appComponentInfos.containsKey(appComponentId)) {
-			throw new RuntimeException(String.format("Reduplicated application component ID: %s", appComponentId));
+			throw new RuntimeException(String.format("Reduplicate application component ID: %s.", appComponentId));
 		}
 		
 		appComponentInfos.put(appComponentId, componentInfo);
@@ -326,9 +325,6 @@ public class ApplicationComponentService implements IApplicationComponentService
 		}
 		
 		if (rawInstance instanceof IEventFirerAware) {
-			if (repository == null)
-				throw new RuntimeException("Can't create event firer because the repository hasn't been set yet.");
-			
 			((IEventFirerAware)rawInstance).setEventFirer(createEventFirer());
 		}
 	}

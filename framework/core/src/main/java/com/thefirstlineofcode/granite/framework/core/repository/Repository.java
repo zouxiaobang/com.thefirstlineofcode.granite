@@ -80,10 +80,6 @@ public class Repository implements IRepository {
 		loadSystemComponents();
 		loadContributedComponents();
 		
-		if (appComponentService instanceof IRepositoryAware) {
-			((IRepositoryAware)appComponentService).setRepository(this);
-		}
-		
 		processAvailableServices();
 	}
 	
@@ -287,7 +283,7 @@ public class Repository implements IRepository {
 
 	public void registerComponent(IComponentInfo componentInfo, String[] aliases) {
 		if (componentInfos.containsKey(componentInfo.getId())) {
-			throw new RuntimeException(String.format("Reduplicated component. Component which's id is '%s' has already existed.",
+			throw new RuntimeException(String.format("Reduplicate component. Component which's id is '%s' has already existed.",
 					componentInfo.getId()));
 		}
 		

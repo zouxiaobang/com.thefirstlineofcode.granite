@@ -767,7 +767,7 @@ public class MucProtocolsDelegator implements IServerConfigurationAware,
 		try {
 			RoomConfig roomConfig = getDefaultRoomConfig();
 			roomService.createRoom(roomJid, creator, roomConfig);
-		} catch (DuplicateRoomException e) {
+		} catch (ReduplicateRoomException e) {
 			throw new ProtocolException(new Conflict());
 		}
 	}

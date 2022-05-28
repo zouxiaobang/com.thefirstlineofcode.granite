@@ -93,7 +93,7 @@ public class DiscoProcessor implements IDiscoProcessor, IApplicationComponentSer
 		
 		processItemNotFound(itemNotFound);
 		
-		Iq result = new Iq(discoInfo, Iq.Type.RESULT, iq.getId());
+		Iq result = new Iq(Iq.Type.RESULT, discoInfo, iq.getId());
 		result.setFrom(jid);
 		
 		context.write(result);
@@ -139,7 +139,7 @@ public class DiscoProcessor implements IDiscoProcessor, IApplicationComponentSer
 		
 		processItemNotFound(itemNotFound);
 		
-		Iq result = new Iq(discoItems, Iq.Type.RESULT, iq.getId());
+		Iq result = new Iq(Iq.Type.RESULT, discoItems, iq.getId());
 		result.setFrom(jid);
 		
 		context.write(result);

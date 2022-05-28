@@ -47,7 +47,7 @@ public class DataObjectFactory implements IDataObjectFactory, IInitializable, IA
 						domainType = mapping.dataType.getSuperclass();
 					
 					if (dataObjectMappings.containsKey(domainType))
-						throw new IllegalArgumentException(String.format("Reduplicated domain data object type: '%s'.", mapping.domainType));
+						throw new IllegalArgumentException(String.format("Reduplicate domain data object type: '%s'.", mapping.domainType));
 					
 					dataObjectMappings.put(domainType, mapping.dataType);
 				}

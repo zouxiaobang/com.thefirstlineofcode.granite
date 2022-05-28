@@ -159,7 +159,7 @@ public class ConsoleSystem implements Runnable, IConsoleSystem {
 			}
 			
 			if (commandsProcessors.containsKey(group)) {
-				throw new IllegalArgumentException(String.format("Reduplicated command group: '%s'.", group));
+				throw new IllegalArgumentException(String.format("Reduplicate command group: '%s'.", group));
 			}
 			
 			commandsProcessors.put(group, appComponentService.inject(contributedCommandsProcessor));
