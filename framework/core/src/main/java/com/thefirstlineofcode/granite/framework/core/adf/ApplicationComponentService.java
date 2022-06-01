@@ -338,18 +338,26 @@ public class ApplicationComponentService implements IApplicationComponentService
 		IInjectionProvider[] injectionProviders = getInjectionProviders();
 		
 		injectors = new ArrayList<>();
-		for (Field field : getClassFields(clazz, null)) {
-			for (IInjectionProvider injectionProvider : injectionProviders) {
-				Object dependencyAnnotation = field.getAnnotation(injectionProvider.getAnnotationType());				
-				if (dependencyAnnotation != null) {
-					Object mark = injectionProvider.getMark(field, dependencyAnnotation);
-					IDependencyFetcher fetcher = injectionProvider.getFetcher(mark);
-					IDependencyInjector injector = new FieldDependencyInjector(field, fetcher);
-					injectors.add(injector);
-				}
-			}
-		}
+		scanInjectors(clazz, injectors, injectionProviders);	
 		
+		List<IDependencyInjector> old = dependencyInjectors.putIfAbsent(clazz, injectors);
+		return old == null ? injectors : old;
+	}
+
+	private void scanInjectors(Class<?> clazz, List<IDependencyInjector> injectors,
+			IInjectionProvider[] injectionProviders) {
+		scanFieldInjectors(clazz, injectionProviders, injectors);
+		scanMethodInjectors(clazz, injectionProviders, injectors);
+		
+		Class<?> parentClass = clazz.getSuperclass();
+		if (parentClass != Object.class) {
+			scanFieldInjectors(parentClass, injectionProviders, injectors);
+			scanMethodInjectors(parentClass, injectionProviders, injectors);
+		}
+	}
+
+	private void scanMethodInjectors(Class<?> clazz, IInjectionProvider[] injectionProviders,
+			List<IDependencyInjector> injectors) {
 		for (Method method : clazz.getMethods()) {
 			for (IInjectionProvider injectionProvider : injectionProviders) {
 				if (method.getDeclaringClass().equals(Object.class))
@@ -373,10 +381,21 @@ public class ApplicationComponentService implements IApplicationComponentService
 				}
 			}
 		}
-		
-		List<IDependencyInjector> old = dependencyInjectors.putIfAbsent(clazz, injectors);
-		
-		return old == null ? injectors : old;
+	}
+
+	private void scanFieldInjectors(Class<?> clazz, IInjectionProvider[] injectionProviders,
+			List<IDependencyInjector> injectors) {
+		for (Field field : getClassFields(clazz, null)) {
+			for (IInjectionProvider injectionProvider : injectionProviders) {
+				Object dependencyAnnotation = field.getAnnotation(injectionProvider.getAnnotationType());				
+				if (dependencyAnnotation != null) {
+					Object mark = injectionProvider.getMark(field, dependencyAnnotation);
+					IDependencyFetcher fetcher = injectionProvider.getFetcher(mark);
+					IDependencyInjector injector = new FieldDependencyInjector(field, fetcher);
+					injectors.add(injector);
+				}
+			}
+		}
 	}
 	
 	protected IInjectionProvider[] getInjectionProviders() {
