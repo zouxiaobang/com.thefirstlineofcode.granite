@@ -171,25 +171,28 @@ public class StandardClientMessageProcessor implements IClientMessageProcessor, 
 			
 			messageChannel.send(out);
 		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Begin to negotiate stream. Connection ID: {}.", context.getConnectionId());
-			}
-			
 			IStreamNegotiant negotiant = context.getAttribute(KEY_NEGOTIANT);
 			if (negotiant == null) {
 				negotiant = createNegotiant();
 				context.setAttribute(KEY_NEGOTIANT, negotiant);
+				
+				if (logger.isDebugEnabled()) {
+					logger.debug("Begin to negotiate stream. Connection ID: {}.", context.getConnectionId());
+				}
 			}
 			
 			try {
 				if (negotiant.negotiate(context, message)) {
 					context.removeAttribute(KEY_NEGOTIANT);
 					if (logger.isDebugEnabled()) {
-						logger.debug("Stream has negitiated. Connection ID: {}, Session JID: {}.",
+						logger.debug("Stream has negotiated. Connection ID: {}, Session JID: {}.",
 								context.getConnectionId(), context.getJid());
 					}
 				}
 			} catch (ProtocolException e) {
+				if (logger.isDebugEnabled())
+					logger.debug("Failed to negotiate stream.", e);
+				
 				context.write(translatingFactory.translate(e.getError()));
 				if (e.getError() instanceof StreamError) {
 					closeStream(context);
