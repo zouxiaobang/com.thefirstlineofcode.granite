@@ -8,14 +8,14 @@ import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.Event
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEvent;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEventListener;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEventListenerFactory;
-import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.IPipesPreprocessor;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.IPipelinePreprocessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.IProtocolParserFactory;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.NamingConventionProtocolParserFactory;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.processing.IIqResultProcessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.processing.IXepProcessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.processing.IXepProcessorFactory;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.processing.SingletonXepProcessorFactory;
-import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IPipesPostprocessor;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IPipelinePostprocessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IProtocolTranslatorFactory;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.NamingConventionProtocolTranslatorFactory;
 import com.thefirstlineofcode.granite.framework.core.session.ISessionListener;
@@ -25,8 +25,8 @@ public abstract class PipelineExtendersConfigurator implements IPipelineExtender
 	protected List<IXepProcessorFactory<?, ?>> xepProcessorFactories;
 	protected List<IProtocolTranslatorFactory<?>> translatorFactories;
 	
-	protected List<IPipesPreprocessor> pipesPreprocessors;
-	protected List<IPipesPostprocessor> pipesPostprocessors;
+	protected List<IPipelinePreprocessor> pipelinePreprocessors;
+	protected List<IPipelinePostprocessor> pipelinePostprocessors;
 	
 	protected List<IEventListenerFactory<?>> eventListenerFactories;
 	
@@ -39,8 +39,8 @@ public abstract class PipelineExtendersConfigurator implements IPipelineExtender
 		xepProcessorFactories = new ArrayList<>();
 		translatorFactories = new ArrayList<>();
 		
-		pipesPreprocessors = new ArrayList<>();
-		pipesPostprocessors = new ArrayList<>();
+		pipelinePreprocessors = new ArrayList<>();
+		pipelinePostprocessors = new ArrayList<>();
 		
 		eventListenerFactories = new ArrayList<>();
 		
@@ -92,15 +92,15 @@ public abstract class PipelineExtendersConfigurator implements IPipelineExtender
 	}
 
 	@Override
-	public IPipelineExtendersConfigurator registerPipesPreprocessors(IPipesPreprocessor preprocessor) {
-		pipesPreprocessors.add(preprocessor);
+	public IPipelineExtendersConfigurator registerPipelinePreprocessor(IPipelinePreprocessor pipelinePreprocessor) {
+		pipelinePreprocessors.add(pipelinePreprocessor);
 		
 		return this;
 	}
 
 	@Override
-	public IPipelineExtendersConfigurator registerPipesPostprocessors(IPipesPostprocessor postprocessor) {
-		pipesPostprocessors.add(postprocessor);
+	public IPipelineExtendersConfigurator registerPipelinePostprocessor(IPipelinePostprocessor pipelinePostprocessor) {
+		pipelinePostprocessors.add(pipelinePostprocessor);
 		
 		return this;
 	}
@@ -157,19 +157,19 @@ public abstract class PipelineExtendersConfigurator implements IPipelineExtender
 	}
 
 	@Override
-	public IPipesPreprocessor[] getPipesPreprocessors() {
-		if (pipesPreprocessors.size() == 0)
+	public IPipelinePreprocessor[] getPipelinePreprocessors() {
+		if (pipelinePreprocessors.size() == 0)
 			return null;
 		
-		return pipesPreprocessors.toArray(new IPipesPreprocessor[pipesPreprocessors.size()]);
+		return pipelinePreprocessors.toArray(new IPipelinePreprocessor[pipelinePreprocessors.size()]);
 	}
 
 	@Override
-	public IPipesPostprocessor[] getPipesPostprocessors() {
-		if (pipesPostprocessors.size() == 0)
+	public IPipelinePostprocessor[] getPipelinePostprocessors() {
+		if (pipelinePostprocessors.size() == 0)
 			return null;
 		
-		return pipesPostprocessors.toArray(new IPipesPostprocessor[pipesPostprocessors.size()]);
+		return pipelinePostprocessors.toArray(new IPipelinePostprocessor[pipelinePostprocessors.size()]);
 	}
 
 	@Override

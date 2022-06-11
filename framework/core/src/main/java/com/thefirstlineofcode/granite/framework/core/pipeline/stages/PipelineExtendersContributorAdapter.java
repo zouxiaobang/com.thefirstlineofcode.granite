@@ -2,12 +2,12 @@ package com.thefirstlineofcode.granite.framework.core.pipeline.stages;
 
 import com.thefirstlineofcode.basalt.protocol.core.ProtocolChain;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEventListenerFactory;
-import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.IPipesPreprocessor;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.IPipelinePreprocessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.IProtocolParserFactory;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.NamingConventionProtocolParserFactory;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.processing.IIqResultProcessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.processing.IXepProcessorFactory;
-import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IPipesPostprocessor;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IPipelinePostprocessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IProtocolTranslatorFactory;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.NamingConventionProtocolTranslatorFactory;
 import com.thefirstlineofcode.granite.framework.core.session.ISessionListener;
@@ -136,12 +136,12 @@ public class PipelineExtendersContributorAdapter implements IPipelineExtendersCo
 	}
 
 	@Override
-	public IPipesPreprocessor[] getPipesPreprocessors() {
+	public IPipelinePreprocessor[] getPipelinePreprocessors() {
 		return null;
 	}
 
 	@Override
-	public IPipesPostprocessor[] getPipesPostprocessors() {
+	public IPipelinePostprocessor[] getPipelinePostprocessors() {
 		return null;
 	}
 

@@ -629,6 +629,12 @@
 
 			<dependency>
 				<groupId>com.thefirstlineofcode.sand.server</groupId>
+				<artifactId>sand-server-location</artifactId>
+				<version>${sand.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.thefirstlineofcode.sand.server</groupId>
 				<artifactId>sand-server-actuator</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
@@ -680,18 +686,13 @@
 			
 			<!-- Sand demo plugins -->
 			<dependency>
-				<groupId>com.thefirstlineofcode.sand.demo.server</groupId>
-				<artifactId>sand-demo-server-models</artifactId>
-				<version>${sand.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.thefirstlineofcode.sand.demo.server</groupId>
+				<groupId>com.thefirstlineofcode.sand.demo</groupId>
 				<artifactId>sand-demo-server-console</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.thefirstlineofcode.sand.demo.server.lite</groupId>
-				<artifactId>sand-demo-server-lite-acl</artifactId>
+				<groupId>com.thefirstlineofcode.sand.demo</groupId>
+				<artifactId>sand-demo-server-lite</artifactId>
 				<version>${sand.version}</version>
 			</dependency>
 			

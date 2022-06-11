@@ -34,7 +34,7 @@ import com.thefirstlineofcode.granite.framework.core.pipeline.IMessage;
 import com.thefirstlineofcode.granite.framework.core.pipeline.IMessageProcessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.SimpleMessage;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.IPipelineExtendersContributor;
-import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IPipesPostprocessor;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IPipelinePostprocessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IProtocolTranslatorFactory;
 import com.thefirstlineofcode.granite.framework.core.repository.IInitializable;
 import com.thefirstlineofcode.granite.framework.core.utils.CommonUtils;
@@ -45,7 +45,7 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 	
 	protected ITranslatingFactory translatingFactory;
 	
-	private List<IPipesPostprocessor> pipesPostprocessors;
+	private List<IPipelinePostprocessor> pipesPostprocessors;
 	private String domain;
 	
 	private IApplicationComponentService appComponentService;
@@ -61,7 +61,7 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 		
 		IPipelineExtendersContributor[] extendersFactories = CommonUtils.getExtendersContributors(appComponentService);
 		loadContributedTranslators(extendersFactories);
-		loadContributedPostprocessors(extendersFactories);
+		loadContributedPipelinePostprocessors(extendersFactories);
 	}
 	
 	private void loadContributedTranslators(IPipelineExtendersContributor[] extendersContributors) {
@@ -107,19 +107,19 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 		
 	}
 
-	private void loadContributedPostprocessors(IPipelineExtendersContributor[] extendersContributors) {
+	private void loadContributedPipelinePostprocessors(IPipelineExtendersContributor[] extendersContributors) {
 		for (IPipelineExtendersContributor extendersContributor : extendersContributors) {
-			IPipesPostprocessor[] postproessors = extendersContributor.getPipesPostprocessors();
-			if (postproessors == null || postproessors.length == 0)
+			IPipelinePostprocessor[] pipelinePostproessors = extendersContributor.getPipelinePostprocessors();
+			if (pipelinePostproessors == null || pipelinePostproessors.length == 0)
 				continue;
 			
-			for (IPipesPostprocessor postprocessor : postproessors) {
-				pipesPostprocessors.add(appComponentService.inject(postprocessor));
+			for (IPipelinePostprocessor pipelinePostprocessor : pipelinePostproessors) {
+				pipesPostprocessors.add(appComponentService.inject(pipelinePostprocessor));
 				
 				if (logger.isDebugEnabled()) {
-					logger.debug("Plugin '{}' contributed a pipes postprocessor: '{}'.",
+					logger.debug("Plugin '{}' contributed a pipeline postprocessor: '{}'.",
 							appComponentService.getPluginManager().whichPlugin(extendersContributor.getClass()),
-							postprocessor.getClass().getName()
+							pipelinePostprocessor.getClass().getName()
 					);
 				}
 			}
@@ -174,8 +174,8 @@ public class MinimumRoutingProcessor implements IMessageProcessor, IInitializabl
 		IMessage message = new SimpleMessage(headers, out);
 		Object originalRoutingObject = out;
 		
-		for (IPipesPostprocessor postprocessor : pipesPostprocessors) {
-			message = postprocessor.beforeRouting(message);
+		for (IPipelinePostprocessor postprocessor : pipesPostprocessors) {
+			message = postprocessor.beforeRouting(context.getJid(), message);
 			
 			if (message == null) {
 				logger.info("Protocol object has dropped by postprcessor before routing. Session JID: {}. Protocol object: {}.",

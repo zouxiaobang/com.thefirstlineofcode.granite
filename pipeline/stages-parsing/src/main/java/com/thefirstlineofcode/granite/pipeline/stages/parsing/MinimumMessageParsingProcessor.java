@@ -38,7 +38,7 @@ import com.thefirstlineofcode.granite.framework.core.connection.IConnectionConte
 import com.thefirstlineofcode.granite.framework.core.pipeline.IMessage;
 import com.thefirstlineofcode.granite.framework.core.pipeline.IMessageProcessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.IPipelineExtendersContributor;
-import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.IPipesPreprocessor;
+import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.IPipelinePreprocessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.IProtocolParserFactory;
 import com.thefirstlineofcode.granite.framework.core.repository.IInitializable;
 import com.thefirstlineofcode.granite.framework.core.utils.CommonUtils;
@@ -55,7 +55,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 	private boolean stanzaErrorAttachSenderMessage;
 	private IServerConfiguration serverConfiguration;
 	
-	private List<IPipesPreprocessor> pipesPreprocessors;
+	private List<IPipelinePreprocessor> pipesPreprocessors;
 	
 	private IApplicationComponentService appComponentService;
 	
@@ -71,22 +71,22 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 		IPipelineExtendersContributor[] extendersFactories = CommonUtils.getExtendersContributors(appComponentService);
 		
 		loadContributedProtocolParsers(extendersFactories);
-		loadContributedPreprocessors(extendersFactories);
+		loadContributedPipelinePreprocessors(extendersFactories);
 	}
 
-	protected void loadContributedPreprocessors(IPipelineExtendersContributor[] extendersContributors) {
+	protected void loadContributedPipelinePreprocessors(IPipelineExtendersContributor[] extendersContributors) {
 		for (IPipelineExtendersContributor extendersContributor : extendersContributors) {
-			IPipesPreprocessor[] preproessors = extendersContributor.getPipesPreprocessors();
-			if (preproessors == null || preproessors.length == 0)
+			IPipelinePreprocessor[] pipelinePreproessors = extendersContributor.getPipelinePreprocessors();
+			if (pipelinePreproessors == null || pipelinePreproessors.length == 0)
 				continue;
 			
-			for (IPipesPreprocessor preprocessor : preproessors) {
-				pipesPreprocessors.add(appComponentService.inject(preprocessor));
+			for (IPipelinePreprocessor pipelinePreprocessor : pipelinePreproessors) {
+				pipesPreprocessors.add(appComponentService.inject(pipelinePreprocessor));
 				
 				if (logger.isDebugEnabled()) {
-					logger.debug("Plugin '{}' contributed a pipes preprocessor: '{}'.",
+					logger.debug("Plugin '{}' contributed a pipeline preprocessor: '{}'.",
 							appComponentService.getPluginManager().whichPlugin(extendersContributor.getClass()),
-							preprocessor.getClass().getName()
+							pipelinePreprocessor.getClass().getName()
 					);
 				}
 			}
@@ -163,14 +163,55 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 		if (isHeartbeats(msg))
 			return;
 		
-		for (IPipesPreprocessor preprocessor : pipesPreprocessors) {
-			String preprocessedMsg = preprocessor.beforeParsing(msg);
+		String originalMsg = msg;
+		Object out = null;
+		try {
+			out = doProcess(context, msg);
 			
-			if (preprocessedMsg == null) {
-				logger.info("Message has dropped by preprcessor before parsing. Session JID: '{}'. XMPP message: '{}'.",
-						context.getJid(), msg);
+			if (out instanceof StreamError) {
+				logger.warn("Received a stream error. We will close the stream. Session JID: '{}'. XMPP message: '{}'.",
+						context.getJid(), originalMsg);
 				
-				return;
+				context.close();
+			} else {
+				context.write(out);
+				
+				if (logger.isDebugEnabled())
+					logger.debug("End of parsing the XMPP message. Session JID: '{}'. XMPP message: '{}'.", context.getJid(), originalMsg);
+			}
+		} catch (ProtocolException e) {
+			IError error = e.getError();
+			if ((error instanceof StanzaError)) {
+				amendStanzaError(out, (StanzaError)error);
+			}
+			
+			if (logger.isTraceEnabled())
+				logger.trace("Parsing protocol exception. Session JID: '{}'. XMPP message: '{}'.",
+						context.getJid(), message);
+			
+			context.write(error);
+		} catch (RuntimeException e) {
+			StanzaError error = new InternalServerError(CommonUtils.getInternalServerErrorMessage(e));
+			amendStanzaError(out, error);
+			
+			logger.error(String.format("Parsing internal server error. Session JID: '{}'. XMPP message: '{}'.",
+					context.getJid(), message), e);
+			
+			context.write(error);
+		}
+		
+	}
+
+	private Object doProcess(IConnectionContext context, String msg) {
+		String originalMsg = msg;
+		for (IPipelinePreprocessor preprocessor : pipesPreprocessors) {
+			msg = preprocessor.beforeParsing(context.getJid(), msg);
+			
+			if (msg == null) {
+				logger.info("Message has dropped by preprcessor before parsing. Session JID: '{}'. XMPP message: '{}'.",
+						context.getJid(), originalMsg);
+				
+				return null;
 			}
 		}
 		
@@ -178,32 +219,23 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 		
 		if (out == null) {
 			logger.warn("Null parsed object. Session JID: '{}'. XMPP message: '{}'.",
-					context.getJid(), msg);
-			return;
+					context.getJid(), originalMsg);
+			return null;
 		}
 		
-		for (IPipesPreprocessor preprocessor : pipesPreprocessors) {
-			Object preprocessedOut = preprocessor.afterParsing(out);
+		Object originalOut = out;
+		for (IPipelinePreprocessor preprocessor : pipesPreprocessors) {
+			out = preprocessor.afterParsing(context.getJid(), out);
 			
-			if (preprocessedOut == null) {
+			if (out == null) {
 				logger.info("Message object has dropped by preprcessor after parsing. Session JID: '{}'. XMPP message: '{}'. Out object type: '{}'.",
-						new Object[] {context.getJid(), msg, out.getClass().getName()});
+						new Object[] {context.getJid(), originalMsg, originalOut.getClass().getName()});
 				
-				return;
+				return null;
 			}
 		}
 		
-		if (out instanceof StreamError) {
-			logger.warn("Received a stream error. We will close the stream. Session JID: '{}'. XMPP message: '{}'.",
-					context.getJid(), msg);
-			
-			context.close();
-		} else {
-			context.write(out);
-			
-			if (logger.isDebugEnabled())
-				logger.debug("End of parsing the XMPP message. Session JID: '{}'. XMPP message: '{}'.", context.getJid(), msg);
-		}
+		return out;
 	}
 
 	private Object parseMessage(IConnectionContext context, String message) {
@@ -308,7 +340,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 			}
 		}
 	}
-
+	
 	private boolean isValidFrom(IConnectionContext context, Stanza stanza) {
 		if (stanza.getFrom().isBareId() && context.getJid().getBareId().equals(stanza.getFrom()))
 			return true;
