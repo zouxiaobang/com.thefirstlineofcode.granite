@@ -249,7 +249,7 @@ public class DefaultProtocolProcessingProcessor implements com.thefirstlineofcod
 			context.close();
 		}
 		
-		logger.error(String.format("Processing runtime exception. Session JID: {}. Protocol object: {}",
+		logger.error(String.format("Processing runtime exception. Session JID: %s. Protocol object: %s.",
 				context.getJid(), message), e);
 	}
 
@@ -298,7 +298,7 @@ public class DefaultProtocolProcessingProcessor implements com.thefirstlineofcod
 		
 		context.write(e.getError());
 		
-		logger.error(String.format("Processing protocol exception. Session JID: {}. Protocol object: {}",
+		logger.error(String.format("Processing protocol exception. Session JID: %s. Protocol object: %s.",
 				context.getJid(), message), e);
 		
 		if (error instanceof StreamError) {
@@ -659,7 +659,7 @@ public class DefaultProtocolProcessingProcessor implements com.thefirstlineofcod
 		
 		if (logger.isDebugEnabled())
 			logger.debug("Stanza is processed by XEP processor. Session JID: {}. Stanza: {}. XEP processor: {}.",
-					new Object[] {context.getJid(), stanza, xepProcessor});
+					context.getJid(), stanza, xepProcessor);
 		
 		return true;
 	}
