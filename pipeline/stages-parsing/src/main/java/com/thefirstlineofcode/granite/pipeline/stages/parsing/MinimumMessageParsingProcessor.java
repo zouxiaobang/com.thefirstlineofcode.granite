@@ -342,10 +342,7 @@ public class MinimumMessageParsingProcessor implements IMessageProcessor, IIniti
 	}
 	
 	private boolean isValidFrom(IConnectionContext context, Stanza stanza) {
-		if (stanza.getFrom().isBareId() && context.getJid().getBareId().equals(stanza.getFrom()))
-			return true;
-		
-		return stanza.getFrom().equals(context.getJid());
+		return stanza.getFrom().getBareId().equals(context.getJid().getBareId());
 	}
 
 	private boolean isServerRecipient(Stanza stanza) {
