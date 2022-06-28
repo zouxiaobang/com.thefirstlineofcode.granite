@@ -512,7 +512,7 @@ public class DefaultProtocolProcessingProcessor implements com.thefirstlineofcod
 	}
 
 	private boolean processSimpleStanza(IProcessingContext context, Stanza stanza) {
-		if (!stanza.getObjects().isEmpty())
+		if (isXep(stanza) && !isIqResult(stanza))
 			return false;
 		
 		if (stanza instanceof Presence) {
@@ -539,7 +539,18 @@ public class DefaultProtocolProcessingProcessor implements com.thefirstlineofcod
 			return true;
 		}
 	}
+
+	private boolean isXep(Stanza stanza) {
+		return !stanza.getObjects().isEmpty();
+	}
 	
+	private boolean isIqResult(Stanza stanza) {
+		if (!(stanza instanceof Iq))
+			return false;
+		
+		return Iq.Type.RESULT == ((Iq)stanza).getType();
+	}
+
 	private void processIqError(IProcessingContext context, StanzaError error) {
 		if (error.getId() == null) {
 			logger.error("Null stanza error ID. Session JID: {}. Stanza error object: {}.", context.getJid(), error);
