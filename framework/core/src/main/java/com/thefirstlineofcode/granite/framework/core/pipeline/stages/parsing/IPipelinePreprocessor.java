@@ -1,6 +1,6 @@
 package com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.IPipelineExtender;
 
 public interface IPipelinePreprocessor extends IPipelineExtender {

@@ -2,7 +2,7 @@ package com.thefirstlineofcode.granite.framework.im;
 
 import java.util.Iterator;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
 
 public interface IOfflineMessageStore {
 	void save(JabberId jid, String messageId, String message);

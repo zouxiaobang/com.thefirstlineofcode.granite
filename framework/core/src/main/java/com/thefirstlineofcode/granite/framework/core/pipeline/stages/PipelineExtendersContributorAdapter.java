@@ -1,6 +1,6 @@
 package com.thefirstlineofcode.granite.framework.core.pipeline.stages;
 
-import com.thefirstlineofcode.basalt.protocol.core.ProtocolChain;
+import com.thefirstlineofcode.basalt.xmpp.core.ProtocolChain;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEventListenerFactory;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.IPipelinePreprocessor;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.IProtocolParserFactory;

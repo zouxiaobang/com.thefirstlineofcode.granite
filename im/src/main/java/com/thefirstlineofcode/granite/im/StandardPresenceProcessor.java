@@ -2,14 +2,14 @@ package com.thefirstlineofcode.granite.im;
 
 import java.util.List;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
-import com.thefirstlineofcode.basalt.protocol.core.ProtocolException;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.FeatureNotImplemented;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.NotAllowed;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.UnexpectedRequest;
-import com.thefirstlineofcode.basalt.protocol.core.stream.error.InternalServerError;
-import com.thefirstlineofcode.basalt.protocol.im.stanza.Presence;
-import com.thefirstlineofcode.basalt.protocol.im.stanza.Presence.Type;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.ProtocolException;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.FeatureNotImplemented;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.NotAllowed;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.UnexpectedRequest;
+import com.thefirstlineofcode.basalt.xmpp.core.stream.error.InternalServerError;
+import com.thefirstlineofcode.basalt.xmpp.im.stanza.Presence;
+import com.thefirstlineofcode.basalt.xmpp.im.stanza.Presence.Type;
 import com.thefirstlineofcode.granite.framework.core.annotations.BeanDependency;
 import com.thefirstlineofcode.granite.framework.core.auth.IAuthenticator;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEventFirer;

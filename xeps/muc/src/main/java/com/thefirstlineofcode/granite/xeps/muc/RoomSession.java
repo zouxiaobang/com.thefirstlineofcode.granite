@@ -1,18 +1,18 @@
 package com.thefirstlineofcode.granite.xeps.muc;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
-import com.thefirstlineofcode.basalt.protocol.core.ProtocolException;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.Forbidden;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.NotAuthorized;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.RegistrationRequired;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.ServiceUnavailable;
-import com.thefirstlineofcode.basalt.protocol.datetime.DateTime;
-import com.thefirstlineofcode.basalt.protocol.im.stanza.Message;
 import com.thefirstlineofcode.basalt.xeps.address.Address;
 import com.thefirstlineofcode.basalt.xeps.address.Addresses;
 import com.thefirstlineofcode.basalt.xeps.delay.Delay;
 import com.thefirstlineofcode.basalt.xeps.muc.Affiliation;
 import com.thefirstlineofcode.basalt.xeps.muc.Role;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.ProtocolException;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.Forbidden;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.NotAuthorized;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.RegistrationRequired;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.ServiceUnavailable;
+import com.thefirstlineofcode.basalt.xmpp.datetime.DateTime;
+import com.thefirstlineofcode.basalt.xmpp.im.stanza.Message;
 import com.thefirstlineofcode.granite.framework.core.utils.StanzaCloner;
 
 public class RoomSession implements IRoomSession {

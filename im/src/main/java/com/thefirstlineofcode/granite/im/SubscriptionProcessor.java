@@ -2,14 +2,14 @@ package com.thefirstlineofcode.granite.im;
 
 import java.util.List;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
-import com.thefirstlineofcode.basalt.protocol.core.ProtocolException;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.BadRequest;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.FeatureNotImplemented;
-import com.thefirstlineofcode.basalt.protocol.im.roster.Item;
-import com.thefirstlineofcode.basalt.protocol.im.roster.Roster;
-import com.thefirstlineofcode.basalt.protocol.im.stanza.Presence;
-import com.thefirstlineofcode.basalt.protocol.im.stanza.Presence.Type;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.ProtocolException;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.BadRequest;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.FeatureNotImplemented;
+import com.thefirstlineofcode.basalt.xmpp.im.roster.Item;
+import com.thefirstlineofcode.basalt.xmpp.im.roster.Roster;
+import com.thefirstlineofcode.basalt.xmpp.im.stanza.Presence;
+import com.thefirstlineofcode.basalt.xmpp.im.stanza.Presence.Type;
 import com.thefirstlineofcode.granite.framework.core.adf.data.IDataObjectFactory;
 import com.thefirstlineofcode.granite.framework.core.adf.data.IDataObjectFactoryAware;
 import com.thefirstlineofcode.granite.framework.core.annotations.BeanDependency;

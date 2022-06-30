@@ -5,12 +5,6 @@ import java.util.List;
 
 import org.pf4j.Extension;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
-import com.thefirstlineofcode.basalt.protocol.core.ProtocolException;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.Iq;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.FeatureNotImplemented;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.ItemNotFound;
-import com.thefirstlineofcode.basalt.protocol.im.stanza.Message;
 import com.thefirstlineofcode.basalt.xeps.disco.DiscoInfo;
 import com.thefirstlineofcode.basalt.xeps.disco.DiscoItems;
 import com.thefirstlineofcode.basalt.xeps.disco.Feature;
@@ -22,6 +16,12 @@ import com.thefirstlineofcode.basalt.xeps.muc.RoomConfig.WhoIs;
 import com.thefirstlineofcode.basalt.xeps.rsm.Set;
 import com.thefirstlineofcode.basalt.xeps.xdata.Field;
 import com.thefirstlineofcode.basalt.xeps.xdata.XData;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.ProtocolException;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.Iq;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.FeatureNotImplemented;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.ItemNotFound;
+import com.thefirstlineofcode.basalt.xmpp.im.stanza.Message;
 import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentService;
 import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentServiceAware;
 import com.thefirstlineofcode.granite.framework.core.annotations.BeanDependency;

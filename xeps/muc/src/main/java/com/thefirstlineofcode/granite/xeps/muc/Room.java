@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
 import com.thefirstlineofcode.basalt.xeps.muc.RoomConfig;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
 
 public class Room {
 	private JabberId roomJid;

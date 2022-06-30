@@ -8,9 +8,9 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
-import com.thefirstlineofcode.basalt.protocol.core.ProtocolException;
-import com.thefirstlineofcode.basalt.protocol.core.stream.error.NotAuthorized;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.ProtocolException;
+import com.thefirstlineofcode.basalt.xmpp.core.stream.error.NotAuthorized;
 import com.thefirstlineofcode.granite.framework.core.config.IConfiguration;
 import com.thefirstlineofcode.granite.framework.core.config.IConfigurationAware;
 import com.thefirstlineofcode.granite.framework.core.connection.IConnectionContext;

@@ -10,7 +10,7 @@ import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedTypes;
 
-import com.thefirstlineofcode.basalt.protocol.datetime.DateTime;
+import com.thefirstlineofcode.basalt.xmpp.datetime.DateTime;
 
 @MappedTypes(DateTime.class)
 public class DateTimeTypeHandler extends BaseTypeHandler<DateTime> {

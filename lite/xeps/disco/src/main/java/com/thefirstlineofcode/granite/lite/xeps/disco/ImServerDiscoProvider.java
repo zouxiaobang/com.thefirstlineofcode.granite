@@ -2,12 +2,12 @@ package com.thefirstlineofcode.granite.lite.xeps.disco;
 
 import org.pf4j.Extension;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.Iq;
 import com.thefirstlineofcode.basalt.xeps.disco.DiscoInfo;
 import com.thefirstlineofcode.basalt.xeps.disco.DiscoItems;
 import com.thefirstlineofcode.basalt.xeps.disco.Feature;
 import com.thefirstlineofcode.basalt.xeps.disco.Identity;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.Iq;
 import com.thefirstlineofcode.granite.framework.core.annotations.Dependency;
 import com.thefirstlineofcode.granite.framework.core.config.IServerConfiguration;
 import com.thefirstlineofcode.granite.framework.core.config.IServerConfigurationAware;

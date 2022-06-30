@@ -1,10 +1,10 @@
 package com.thefirstlineofcode.granite.xeps.msgoffline;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.Iq;
 import com.thefirstlineofcode.basalt.xeps.disco.DiscoInfo;
 import com.thefirstlineofcode.basalt.xeps.disco.DiscoItems;
 import com.thefirstlineofcode.basalt.xeps.disco.Feature;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.Iq;
 import com.thefirstlineofcode.granite.framework.core.config.IConfiguration;
 import com.thefirstlineofcode.granite.framework.core.config.IConfigurationAware;
 import com.thefirstlineofcode.granite.framework.core.config.IServerConfiguration;

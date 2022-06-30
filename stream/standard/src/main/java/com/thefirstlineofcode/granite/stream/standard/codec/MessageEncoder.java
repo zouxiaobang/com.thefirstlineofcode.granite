@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.thefirstlineofcode.basalt.oxm.binary.IBinaryXmppProtocolConverter;
-import com.thefirstlineofcode.basalt.protocol.Constants;
+import com.thefirstlineofcode.basalt.xmpp.Constants;
 
 public class MessageEncoder extends ProtocolEncoderAdapter {
 	private static final Logger logger = LoggerFactory.getLogger(MessageEncoder.class);

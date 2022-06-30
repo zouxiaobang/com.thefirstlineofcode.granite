@@ -1,6 +1,6 @@
 package com.thefirstlineofcode.granite.framework.core.session;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
 import com.thefirstlineofcode.granite.framework.core.connection.IConnectionContext;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.IPipelineExtender;
 

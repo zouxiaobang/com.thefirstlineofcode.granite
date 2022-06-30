@@ -2,7 +2,7 @@ package com.thefirstlineofcode.granite.framework.im;
 
 import java.util.Date;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
 
 public class OfflineMessage {
 	private String messageId;

@@ -2,10 +2,10 @@ package com.thefirstlineofcode.granite.lite.xeps.muc;
 
 import java.util.List;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
 import com.thefirstlineofcode.basalt.xeps.muc.GetMemberList;
 import com.thefirstlineofcode.basalt.xeps.muc.PresenceBroadcast;
 import com.thefirstlineofcode.basalt.xeps.muc.RoomConfig;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
 import com.thefirstlineofcode.granite.xeps.muc.AffiliatedUser;
 import com.thefirstlineofcode.granite.xeps.muc.Room;
 import com.thefirstlineofcode.granite.xeps.muc.RoomItem;

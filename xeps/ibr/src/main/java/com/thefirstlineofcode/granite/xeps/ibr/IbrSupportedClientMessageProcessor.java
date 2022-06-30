@@ -2,10 +2,10 @@ package com.thefirstlineofcode.granite.xeps.ibr;
 
 import java.util.List;
 
-import com.thefirstlineofcode.basalt.protocol.core.stream.Feature;
-import com.thefirstlineofcode.basalt.protocol.core.stream.Features;
 import com.thefirstlineofcode.basalt.xeps.ibr.Register;
 import com.thefirstlineofcode.basalt.xeps.ibr.oxm.RegisterTranslatorFactory;
+import com.thefirstlineofcode.basalt.xmpp.core.stream.Feature;
+import com.thefirstlineofcode.basalt.xmpp.core.stream.Features;
 import com.thefirstlineofcode.granite.framework.core.annotations.Component;
 import com.thefirstlineofcode.granite.framework.core.annotations.Dependency;
 import com.thefirstlineofcode.granite.framework.core.config.IConfiguration;

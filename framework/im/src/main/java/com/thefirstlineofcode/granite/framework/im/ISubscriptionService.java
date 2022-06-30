@@ -2,7 +2,7 @@ package com.thefirstlineofcode.granite.framework.im;
 
 import java.util.List;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
 
 public interface ISubscriptionService {
 	List<Subscription> get(String user);

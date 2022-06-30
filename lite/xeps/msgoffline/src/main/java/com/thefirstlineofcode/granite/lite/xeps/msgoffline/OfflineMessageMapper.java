@@ -2,7 +2,7 @@ package com.thefirstlineofcode.granite.lite.xeps.msgoffline;
 
 import java.util.List;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
 import com.thefirstlineofcode.granite.framework.im.OfflineMessage;
 
 public interface OfflineMessageMapper {

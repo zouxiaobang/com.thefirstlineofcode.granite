@@ -2,7 +2,7 @@ package com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing;
 
 import com.thefirstlineofcode.basalt.oxm.parsers.SimpleObjectParserFactory;
 import com.thefirstlineofcode.basalt.oxm.parsing.IParser;
-import com.thefirstlineofcode.basalt.protocol.core.ProtocolChain;
+import com.thefirstlineofcode.basalt.xmpp.core.ProtocolChain;
 
 public class SimpleObjectProtocolParserFactory<T> implements IProtocolParserFactory<T> {
 	private ProtocolChain protocolChain;

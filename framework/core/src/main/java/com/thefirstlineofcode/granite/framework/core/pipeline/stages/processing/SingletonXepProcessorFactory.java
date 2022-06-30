@@ -1,7 +1,7 @@
 package com.thefirstlineofcode.granite.framework.core.pipeline.stages.processing;
 
-import com.thefirstlineofcode.basalt.protocol.core.ProtocolChain;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.Stanza;
+import com.thefirstlineofcode.basalt.xmpp.core.ProtocolChain;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.Stanza;
 
 public class SingletonXepProcessorFactory<S extends Stanza, X> implements IXepProcessorFactory<S, X> {
 	private ProtocolChain protocolChain;

@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.thefirstlineofcode.basalt.oxm.preprocessing.IMessagePreprocessor;
 import com.thefirstlineofcode.basalt.oxm.preprocessing.XmlMessagePreprocessorAdapter;
-import com.thefirstlineofcode.basalt.protocol.Constants;
+import com.thefirstlineofcode.basalt.xmpp.Constants;
 
 public class MessageParser implements IMessageParser {
 	private Logger logger = LoggerFactory.getLogger(MessageParser.class);

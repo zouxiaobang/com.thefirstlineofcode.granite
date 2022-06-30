@@ -3,7 +3,7 @@ package com.thefirstlineofcode.granite.cluster.session;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
 import com.thefirstlineofcode.granite.framework.core.session.ISession;
 import com.thefirstlineofcode.granite.framework.core.session.ValueWrapper;
 

@@ -10,22 +10,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.thefirstlineofcode.basalt.oxm.parsing.FlawedProtocolObject;
-import com.thefirstlineofcode.basalt.protocol.core.IError;
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
-import com.thefirstlineofcode.basalt.protocol.core.Protocol;
-import com.thefirstlineofcode.basalt.protocol.core.ProtocolChain;
-import com.thefirstlineofcode.basalt.protocol.core.ProtocolException;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.Iq;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.Stanza;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.BadRequest;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.FeatureNotImplemented;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.InternalServerError;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.NotAllowed;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.ServiceUnavailable;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.StanzaError;
-import com.thefirstlineofcode.basalt.protocol.core.stream.error.StreamError;
-import com.thefirstlineofcode.basalt.protocol.im.stanza.Message;
-import com.thefirstlineofcode.basalt.protocol.im.stanza.Presence;
+import com.thefirstlineofcode.basalt.xmpp.core.IError;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.Protocol;
+import com.thefirstlineofcode.basalt.xmpp.core.ProtocolChain;
+import com.thefirstlineofcode.basalt.xmpp.core.ProtocolException;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.Iq;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.Stanza;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.BadRequest;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.FeatureNotImplemented;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.InternalServerError;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.NotAllowed;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.ServiceUnavailable;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.StanzaError;
+import com.thefirstlineofcode.basalt.xmpp.core.stream.error.StreamError;
+import com.thefirstlineofcode.basalt.xmpp.im.stanza.Message;
+import com.thefirstlineofcode.basalt.xmpp.im.stanza.Presence;
 import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentService;
 import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentServiceAware;
 import com.thefirstlineofcode.granite.framework.core.annotations.BeanDependency;
@@ -245,7 +245,7 @@ public class DefaultProtocolProcessingProcessor implements com.thefirstlineofcod
 		if (message instanceof Stanza) {
 			context.write(createStanzaError(context, e, message));
 		} else {
-			context.write(new com.thefirstlineofcode.basalt.protocol.core.stream.error.InternalServerError(CommonUtils.getInternalServerErrorMessage(e)));
+			context.write(new com.thefirstlineofcode.basalt.xmpp.core.stream.error.InternalServerError(CommonUtils.getInternalServerErrorMessage(e)));
 			context.close();
 		}
 		
@@ -255,7 +255,7 @@ public class DefaultProtocolProcessingProcessor implements com.thefirstlineofcod
 
 	private StanzaError createStanzaError(IConnectionContext context, RuntimeException e, Object message) {
 		Stanza stanza = (Stanza)message;
-		StanzaError error = new com.thefirstlineofcode.basalt.protocol.core.stanza.error.InternalServerError(CommonUtils.getInternalServerErrorMessage(e));
+		StanzaError error = new com.thefirstlineofcode.basalt.xmpp.core.stanza.error.InternalServerError(CommonUtils.getInternalServerErrorMessage(e));
 		
 		error = amendStanzaError(context, error, stanza);
 		

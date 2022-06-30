@@ -1,6 +1,6 @@
 package com.thefirstlineofcode.granite.framework.core.session;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
 
 public interface ISession {
 	public static final String KEY_SESSION_JID = "granite.session.jid";

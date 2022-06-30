@@ -1,6 +1,6 @@
 package com.thefirstlineofcode.granite.framework.im;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEvent;
 
 public class ResourceAvailabledEvent implements IEvent {

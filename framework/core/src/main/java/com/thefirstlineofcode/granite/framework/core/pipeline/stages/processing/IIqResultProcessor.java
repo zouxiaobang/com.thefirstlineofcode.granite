@@ -1,7 +1,7 @@
 package com.thefirstlineofcode.granite.framework.core.pipeline.stages.processing;
 
-import com.thefirstlineofcode.basalt.protocol.core.stanza.Iq;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.StanzaError;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.Iq;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.StanzaError;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.IPipelineExtender;
 
 public interface IIqResultProcessor extends IPipelineExtender {

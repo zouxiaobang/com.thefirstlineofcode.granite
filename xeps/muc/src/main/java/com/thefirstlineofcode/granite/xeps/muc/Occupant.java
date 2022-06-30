@@ -3,8 +3,8 @@ package com.thefirstlineofcode.granite.xeps.muc;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
 import com.thefirstlineofcode.basalt.xeps.muc.Role;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
 
 public class Occupant {
 	private List<JabberId> jids;

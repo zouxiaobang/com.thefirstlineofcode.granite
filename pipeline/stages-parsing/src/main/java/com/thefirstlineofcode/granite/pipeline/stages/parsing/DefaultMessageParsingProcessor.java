@@ -2,8 +2,8 @@ package com.thefirstlineofcode.granite.pipeline.stages.parsing;
 
 import com.thefirstlineofcode.basalt.oxm.parsers.im.MessageParserFactory;
 import com.thefirstlineofcode.basalt.oxm.parsers.im.PresenceParserFactory;
-import com.thefirstlineofcode.basalt.protocol.core.MessageProtocolChain;
-import com.thefirstlineofcode.basalt.protocol.core.PresenceProtocolChain;
+import com.thefirstlineofcode.basalt.xmpp.core.MessageProtocolChain;
+import com.thefirstlineofcode.basalt.xmpp.core.PresenceProtocolChain;
 import com.thefirstlineofcode.granite.framework.core.annotations.Component;
 
 @Component("default.message.parsing.processor")

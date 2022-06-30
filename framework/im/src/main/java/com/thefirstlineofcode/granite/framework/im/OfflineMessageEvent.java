@@ -1,7 +1,7 @@
 package com.thefirstlineofcode.granite.framework.im;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
-import com.thefirstlineofcode.basalt.protocol.im.stanza.Message;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.im.stanza.Message;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEvent;
 
 public class OfflineMessageEvent implements IEvent {

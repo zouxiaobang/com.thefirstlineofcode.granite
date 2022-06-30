@@ -2,16 +2,16 @@ package com.thefirstlineofcode.granite.xeps.muc;
 
 import org.pf4j.Extension;
 
-import com.thefirstlineofcode.basalt.protocol.core.IqProtocolChain;
-import com.thefirstlineofcode.basalt.protocol.core.MessageProtocolChain;
-import com.thefirstlineofcode.basalt.protocol.core.PresenceProtocolChain;
-import com.thefirstlineofcode.basalt.protocol.core.ProtocolChain;
 import com.thefirstlineofcode.basalt.xeps.muc.Muc;
 import com.thefirstlineofcode.basalt.xeps.muc.admin.MucAdmin;
 import com.thefirstlineofcode.basalt.xeps.muc.owner.MucOwner;
 import com.thefirstlineofcode.basalt.xeps.muc.user.MucUser;
 import com.thefirstlineofcode.basalt.xeps.muc.xconference.XConference;
 import com.thefirstlineofcode.basalt.xeps.xdata.XData;
+import com.thefirstlineofcode.basalt.xmpp.core.IqProtocolChain;
+import com.thefirstlineofcode.basalt.xmpp.core.MessageProtocolChain;
+import com.thefirstlineofcode.basalt.xmpp.core.PresenceProtocolChain;
+import com.thefirstlineofcode.basalt.xmpp.core.ProtocolChain;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.IPipelineExtendersConfigurator;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.PipelineExtendersConfigurator;
 

@@ -1,9 +1,9 @@
 package com.thefirstlineofcode.granite.xeps.ibr;
 
-import com.thefirstlineofcode.basalt.protocol.core.ProtocolException;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.Conflict;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.NotAcceptable;
 import com.thefirstlineofcode.basalt.xeps.ibr.IqRegister;
+import com.thefirstlineofcode.basalt.xmpp.core.ProtocolException;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.Conflict;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.NotAcceptable;
 import com.thefirstlineofcode.granite.framework.adf.spring.AdfComponentService;
 import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentService;
 import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentServiceAware;

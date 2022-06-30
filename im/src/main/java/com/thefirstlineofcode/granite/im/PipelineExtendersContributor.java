@@ -3,10 +3,10 @@ package com.thefirstlineofcode.granite.im;
 import org.pf4j.Extension;
 
 import com.thefirstlineofcode.basalt.oxm.annotation.AnnotatedParserFactory;
-import com.thefirstlineofcode.basalt.protocol.core.IqProtocolChain;
-import com.thefirstlineofcode.basalt.protocol.im.roster.Roster;
-import com.thefirstlineofcode.basalt.protocol.im.roster.RosterParser;
-import com.thefirstlineofcode.basalt.protocol.im.roster.RosterTranslatorFactory;
+import com.thefirstlineofcode.basalt.xmpp.core.IqProtocolChain;
+import com.thefirstlineofcode.basalt.xmpp.im.roster.Roster;
+import com.thefirstlineofcode.basalt.xmpp.im.roster.RosterParser;
+import com.thefirstlineofcode.basalt.xmpp.im.roster.RosterTranslatorFactory;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.IPipelineExtendersConfigurator;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.PipelineExtendersConfigurator;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.parsing.ProtocolParserFactory;

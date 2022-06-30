@@ -3,7 +3,7 @@ package com.thefirstlineofcode.granite.xeps.muc;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
 import com.thefirstlineofcode.granite.framework.core.annotations.Dependency;
 import com.thefirstlineofcode.granite.framework.core.connection.IConnectionContext;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.processing.IProcessingContext;

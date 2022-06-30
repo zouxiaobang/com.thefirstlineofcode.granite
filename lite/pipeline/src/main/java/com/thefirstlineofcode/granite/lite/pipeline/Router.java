@@ -1,6 +1,6 @@
 package com.thefirstlineofcode.granite.lite.pipeline;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
 import com.thefirstlineofcode.granite.framework.core.annotations.Component;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IForward;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing.IRouter;

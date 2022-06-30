@@ -3,7 +3,7 @@ package com.thefirstlineofcode.granite.cluster.session;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
 import com.thefirstlineofcode.granite.framework.core.annotations.Component;
 import com.thefirstlineofcode.granite.framework.core.annotations.Dependency;
 import com.thefirstlineofcode.granite.framework.core.repository.IInitializable;

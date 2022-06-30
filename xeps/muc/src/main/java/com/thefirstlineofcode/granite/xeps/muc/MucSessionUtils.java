@@ -3,7 +3,7 @@ package com.thefirstlineofcode.granite.xeps.muc;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
 import com.thefirstlineofcode.granite.framework.core.session.ISession;
 
 public abstract class MucSessionUtils {

@@ -1,7 +1,7 @@
 package com.thefirstlineofcode.granite.pipeline.stages.stream.negotiants;
 
 import com.thefirstlineofcode.basalt.oxm.IOxmFactory;
-import com.thefirstlineofcode.basalt.protocol.core.stream.Stream;
+import com.thefirstlineofcode.basalt.xmpp.core.stream.Stream;
 import com.thefirstlineofcode.granite.framework.core.connection.IClientConnectionContext;
 import com.thefirstlineofcode.granite.framework.core.pipeline.IMessage;
 import com.thefirstlineofcode.granite.pipeline.stages.stream.IStreamNegotiant;

@@ -3,7 +3,7 @@ package com.thefirstlineofcode.granite.framework.core.pipeline.stages;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.thefirstlineofcode.basalt.protocol.core.ProtocolChain;
+import com.thefirstlineofcode.basalt.xmpp.core.ProtocolChain;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.EventListenerFactory;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEvent;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEventListener;

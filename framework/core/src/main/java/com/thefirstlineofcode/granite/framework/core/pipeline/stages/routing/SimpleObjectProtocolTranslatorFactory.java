@@ -3,7 +3,7 @@ package com.thefirstlineofcode.granite.framework.core.pipeline.stages.routing;
 import com.thefirstlineofcode.basalt.oxm.translating.ITranslator;
 import com.thefirstlineofcode.basalt.oxm.translating.ITranslatorFactory;
 import com.thefirstlineofcode.basalt.oxm.translators.SimpleObjectTranslatorFactory;
-import com.thefirstlineofcode.basalt.protocol.core.Protocol;
+import com.thefirstlineofcode.basalt.xmpp.core.Protocol;
 
 public class SimpleObjectProtocolTranslatorFactory<T> implements IProtocolTranslatorFactory<T> {
 	private ITranslatorFactory<T> translatorFactory;

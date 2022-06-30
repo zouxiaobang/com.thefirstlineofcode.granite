@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 
 import com.thefirstlineofcode.basalt.oxm.IOxmFactory;
 import com.thefirstlineofcode.basalt.oxm.OxmService;
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
-import com.thefirstlineofcode.basalt.protocol.core.stream.Stream;
-import com.thefirstlineofcode.basalt.protocol.core.stream.error.Conflict;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.stream.Stream;
+import com.thefirstlineofcode.basalt.xmpp.core.stream.error.Conflict;
 import com.thefirstlineofcode.granite.framework.core.annotations.BeanDependency;
 import com.thefirstlineofcode.granite.framework.core.connection.IClientConnectionContext;
 import com.thefirstlineofcode.granite.framework.core.connection.IConnectionContext;

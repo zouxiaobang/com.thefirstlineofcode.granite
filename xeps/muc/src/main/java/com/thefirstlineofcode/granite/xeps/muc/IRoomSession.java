@@ -1,7 +1,7 @@
 package com.thefirstlineofcode.granite.xeps.muc;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
-import com.thefirstlineofcode.basalt.protocol.im.stanza.Message;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.im.stanza.Message;
 
 public interface IRoomSession {
 	Room getRoom();

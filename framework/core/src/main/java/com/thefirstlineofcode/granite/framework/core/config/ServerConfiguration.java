@@ -8,7 +8,7 @@ import java.io.Reader;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import com.thefirstlineofcode.basalt.protocol.Constants;
+import com.thefirstlineofcode.basalt.xmpp.Constants;
 
 
 public class ServerConfiguration implements IServerConfiguration {

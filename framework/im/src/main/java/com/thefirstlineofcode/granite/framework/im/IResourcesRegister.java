@@ -1,7 +1,7 @@
 package com.thefirstlineofcode.granite.framework.im;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
-import com.thefirstlineofcode.basalt.protocol.im.stanza.Presence;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.im.stanza.Presence;
 
 public interface IResourcesRegister {
 	void register(JabberId jid) throws ResourceRegistrationException;

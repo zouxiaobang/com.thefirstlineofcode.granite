@@ -27,7 +27,7 @@ import org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMultic
 import org.pf4j.PluginWrapper;
 import org.springframework.beans.factory.FactoryBean;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
 import com.thefirstlineofcode.granite.cluster.pipeline.ignite.config.ClusteringConfiguration;
 import com.thefirstlineofcode.granite.cluster.pipeline.ignite.config.Discovery;
 import com.thefirstlineofcode.granite.cluster.pipeline.ignite.config.ResourcesStorage;

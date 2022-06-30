@@ -7,11 +7,11 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
-import com.thefirstlineofcode.basalt.protocol.core.ProtocolException;
-import com.thefirstlineofcode.basalt.protocol.core.stanza.error.Conflict;
-import com.thefirstlineofcode.basalt.protocol.im.stanza.Message;
 import com.thefirstlineofcode.basalt.xeps.muc.Role;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.ProtocolException;
+import com.thefirstlineofcode.basalt.xmpp.core.stanza.error.Conflict;
+import com.thefirstlineofcode.basalt.xmpp.im.stanza.Message;
 
 public class RoomRuntimeInstance implements IRoomRuntimeInstance {
 	private OccupantsManager occupantsManager;

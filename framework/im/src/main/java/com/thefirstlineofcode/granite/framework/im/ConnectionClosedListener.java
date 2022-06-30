@@ -2,8 +2,8 @@ package com.thefirstlineofcode.granite.framework.im;
 
 import java.util.List;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
-import com.thefirstlineofcode.basalt.protocol.im.stanza.Presence;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.im.stanza.Presence;
 import com.thefirstlineofcode.granite.framework.core.annotations.Dependency;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.ConnectionClosedEvent;
 import com.thefirstlineofcode.granite.framework.core.pipeline.stages.event.IEventContext;

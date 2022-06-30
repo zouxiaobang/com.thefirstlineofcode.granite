@@ -9,8 +9,8 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.type.EnumTypeHandler;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
-import com.thefirstlineofcode.basalt.protocol.datetime.DateTime;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.datetime.DateTime;
 import com.thefirstlineofcode.granite.framework.core.adf.IApplicationComponentService;
 
 public class AdfSqlSessionFactoryBuilder extends SqlSessionFactoryBuilder {

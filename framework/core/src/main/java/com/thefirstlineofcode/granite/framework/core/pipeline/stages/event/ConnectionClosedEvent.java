@@ -1,6 +1,6 @@
 package com.thefirstlineofcode.granite.framework.core.pipeline.stages.event;
 
-import com.thefirstlineofcode.basalt.protocol.core.JabberId;
+import com.thefirstlineofcode.basalt.xmpp.core.JabberId;
 
 public class ConnectionClosedEvent implements IEvent {
 	private String connectionId;

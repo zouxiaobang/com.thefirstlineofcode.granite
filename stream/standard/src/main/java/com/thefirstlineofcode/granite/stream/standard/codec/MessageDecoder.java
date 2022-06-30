@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.thefirstlineofcode.basalt.oxm.preprocessing.IMessagePreprocessor;
-import com.thefirstlineofcode.basalt.protocol.Constants;
+import com.thefirstlineofcode.basalt.xmpp.Constants;
 
 public class MessageDecoder extends CumulativeProtocolDecoder {
 	private static final char CHAR_HEART_BEAT = ' ';
